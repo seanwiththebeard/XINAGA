@@ -1,5 +1,8 @@
 #include "xinaga.h"
 
+#if _apple2_
+int RowsHGR[192];
+#endif
 void InitializeGraphics()
 {
   #if _apple2_
@@ -30,7 +33,6 @@ void InitializeGraphics()
 byte* TextScreen = (byte*)(0x0400);
 byte* HGR = (byte*)0x2000;
 byte* HGRBuffer = (byte*)0x4000;
-int RowsHGR[192];
 byte charset[];
 
 
