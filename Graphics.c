@@ -1,7 +1,7 @@
 #include "xinaga.h"
 
 #if _apple2_
-int RowsHGR[192];
+int RowsHGR[192]; //Addresses of each line in HGR page 1
 #endif
 void InitializeGraphics()
 {
