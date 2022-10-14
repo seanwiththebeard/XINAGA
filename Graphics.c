@@ -3,6 +3,12 @@
 #if _apple2_
 int RowsHGR[192]; //Addresses of each line in HGR page 1
 #endif
+
+//#if _C64_
+bool bufferselect = false;
+#include <peekpoke.h>
+//#endif
+
 void InitializeGraphics()
 {
   #if _apple2_
@@ -18,6 +24,46 @@ void InitializeGraphics()
   #endif
   
   #if _C64_
+  #define bank 3
+  byte screenpos = 2;
+  byte charpos = 7;
+  byte *CharRam = 0;
+  #define CharacterRom 0xD000
+  #define ColorRam 0xD800
+  byte lastBank, lastScreenPos, lastCharPos;
+  byte *ScreenCharBuffer = (byte *)0x0400;
+  byte *ScreenColorBuffer = (byte *)0xF400;
+  byte *ScreenChars = (byte *)0x0400;
+  byte *ScreenColors = (byte *)0xD800;
+  int screenposition;
+  int* regd018 = (int*)0xd018;
+  byte vicreg = 0x00;
+  lastBank = bank;
+  lastScreenPos = screenpos;
+  lastCharPos = charpos;
+  screenposition = (bank * (16*1024) + (screenpos * 1024));
+  ScreenChars = 0;
+  ScreenChars += screenposition;
+  CharRam += 2;
+  CharRam += (bank * (16*1024) + charpos * 2048);
+  ScreenCharBuffer = 0;
+  ScreenCharBuffer += screenposition;
+  if (bufferselect)
+    ScreenCharBuffer -= 0x0400; // Buffer location 1024b after the screen position
+  else
+    ScreenCharBuffer += 0x0400; // Buffer location 1024b after the screen position
+  ScreenColorBuffer = 0;
+  ScreenColorBuffer += 0x0400; // Use the default screen character space for color buffer
+   //Select Bank
+  POKE (0xDD00, (PEEK(0XDD00)&(255 - bank)));
+  //Set Screen and Character Ram Position
+  screenpos = screenpos << 4;
+  charpos = charpos << 1;
+  vicreg = screenpos + charpos;
+  //raster_wait(252);
+  regd018[0] = vicreg;
+  //Cursor Position
+  POKE (0x0288, screenposition / 256);
   #endif
 }
 
