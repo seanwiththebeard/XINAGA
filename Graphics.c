@@ -25,12 +25,11 @@ void InitializeGraphics()
 {
   #if defined(__APPLE2__)
   byte y;
-  memset((byte*)0x0400, ' ', 0x0400); // clear text page 1
+  ClearScreen();
   STROBE(0xc052); // turn off mixed-mode
   STROBE(0xc054); // page 1
   STROBE(0xc057); // hi-res
   STROBE(0xc050); // set graphics mode
-  memset((byte*)0x2000, 0, 0x2000); // clear HGR page 1
   for (y = 0; y < 192; ++y)
     RowsHGR[y] = (y/64)*0x28 + (y%8)*0x400 + ((y/8)&7)*0x80;
   #endif
@@ -136,7 +135,6 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
     for (x = origin_x; x < origin_x + width; ++x)
     {
       DrawChar(ScreenChars[i],x, y);
-      //DrawChar(TextScreen[x + y * COLS],x, y);
       ++i;
     }
   }
