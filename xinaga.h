@@ -1,7 +1,13 @@
 #ifndef _XINAGA_H
 #define _XINAGA_H
 
+#include <string.h>
+#include <conio.h>
 #include <stdint.h>
+
+#define COLS 40
+#define ROWS 24
+
 typedef uint8_t byte;
 typedef enum { false, true } bool;
 
@@ -11,6 +17,7 @@ void InitializeGraphics(void);
 //	Drawing
 void ClearScreen(void);
 void SetChar(byte x, byte y, byte index);
+void SetCharBuffer(byte x, byte y, byte index);
 void DrawLineH(char index, byte x, byte y, byte length);
 void DrawLineV(char index, byte x, byte y, byte length);
 void DrawBorder(byte xPos, byte yPos, byte width, byte height, bool fill);
@@ -22,8 +29,8 @@ void PrintString(char text[16], byte posx, byte posy, bool fast, bool buffer);
 
 //	Buffer
 void UpdateColors(void);
-void CopyDoubleBuffer(void);
-void CopyDoubleBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
+void CopyBuffer(void);
+void CopyBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
 void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
 
 //	Scrolling

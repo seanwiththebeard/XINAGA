@@ -1,17 +1,29 @@
 #include "xinaga.h"
 
-#if _apple2_
-int RowsHGR[192]; //Addresses of each line in HGR page 1
+#if defined(__APPLE2__)
+byte charset[];
+byte* ScreenChars = (byte*)(0x0400);
+byte* HGR = (byte*)0x2000;
+byte* HGRBuffer = (byte*)0x4000;
+int RowsHGR[192];
+#define STROBE(addr) __asm__ ("sta %w", addr)
 #endif
 
-//#if _C64_
+#if defined(__C64__)
+byte* ScreenChars = (byte*)(0x0400);
 bool bufferselect = false;
 #include <peekpoke.h>
-//#endif
+#endif
+
+void ClearScreen()
+{
+  memset((byte*)0x0400, ' ', 0x0400); // clear text page 1
+  memset((byte*)0x2000, 0, 0x2000); // clear HGR page 1  
+}
 
 void InitializeGraphics()
 {
-  #if _apple2_
+  #if defined(__APPLE2__)
   byte y;
   memset((byte*)0x0400, ' ', 0x0400); // clear text page 1
   STROBE(0xc052); // turn off mixed-mode
@@ -23,7 +35,7 @@ void InitializeGraphics()
     RowsHGR[y] = (y/64)*0x28 + (y%8)*0x400 + ((y/8)&7)*0x80;
   #endif
   
-  #if _C64_
+  #if defined(__C64__)
   #define bank 3
   byte screenpos = 2;
   byte charpos = 7;
@@ -67,68 +79,11 @@ void InitializeGraphics()
   #endif
 }
 
-/*
-#include <string.h>
-#include <conio.h>
-#include "xinaga.h"
-
-#define STROBE(addr) __asm__ ("sta %w", addr)
-#define COLS 40
-#define ROWS 24
-
-byte* TextScreen = (byte*)(0x0400);
-byte* HGR = (byte*)0x2000;
-byte* HGRBuffer = (byte*)0x4000;
-byte charset[];
-
-
-//Prototypes
-//#if _apple2_
-void DrawHGRScreen(void);
-void DrawHGRScreenArea(byte origin_x, byte origin_y, byte width, byte height);
-//#endif
-
-//#if _C64_
-//#endif
-void SetGraphicsMode(void);
-void DrawChar(int index, byte xpos, byte ypos);
-void SetChar(byte index, byte x, byte y);
-void SetCharBuffer(byte index, byte x, byte y);
-
-//Functions
-void InitGraphics()
-{
-  //#if __apple2__
-  byte y;
-  memset((byte*)0x0400, ' ', 0x0400); // clear text page 1
-  STROBE(0xc052); // turn off mixed-mode
-  STROBE(0xc054); // page 1
-  STROBE(0xc057); // hi-res
-  STROBE(0xc050); // set graphics mode
-  memset((byte*)0x2000, 0, 0x2000); // clear HGR page 1
-  for (y = 0; y < 192; ++y)
-    RowsHGR[y] = (y/64)*0x28 + (y%8)*0x400 + ((y/8)&7)*0x80;
-  //#endif
-  
-  //#if __C64__
-  //#endif
-}
-
-void SetChar(byte index, byte x, byte y)
-{
-  TextScreen[x + COLS * y] = index;
-  DrawChar(index, x, y);
-}
-
-void SetCharBuffer(byte index, byte x, byte y)
-{
-  TextScreen[x + COLS * y] = index;
-}
-
-byte y;
-int offset, i;
 void DrawChar(int index, byte xpos, byte ypos)
 {
+  #if defined(__APPLE2__)
+  byte y;
+  int offset, i;
   i = index <<3;
   ypos = ypos << 3;
   offset= RowsHGR[ypos] + xpos;
@@ -138,22 +93,41 @@ void DrawChar(int index, byte xpos, byte ypos)
     offset += 0x400;
     ++i;
   }
+  #endif
+}
+
+void SetChar(byte index, byte x, byte y)
+{
+  #if defined(__APPLE2__)
+  ScreenChars[x + COLS * y] = index;
+  DrawChar(index, x, y);
+  #endif
+}
+
+void SetCharBuffer(byte index, byte x, byte y)
+{
+  #if defined(__APPLE2__)
+  ScreenChars[x + COLS * y] = index;
+  #endif
 }
 
 void CopyBuffer()
 {
+  #if defined(__APPLE2__)
   byte x, y;
   int i = 0;
   for (y = 0; y < ROWS; ++y)
     for (x = 0; x < COLS; ++x)
     {
-      DrawChar(TextScreen[i],x, y);
+      DrawChar(ScreenChars[i],x, y);
       ++i;
     }
+  #endif
 }
 
 void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
 {
+  #if defined(__APPLE2__)
   byte x, y;
   int i = x + y * COLS;
   for (y = origin_y; y < origin_y + height; ++y)
@@ -161,14 +135,14 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
     i = y * COLS;
     for (x = origin_x; x < origin_x + width; ++x)
     {
-      DrawChar(TextScreen[i],x, y);
+      DrawChar(ScreenChars[i],x, y);
       //DrawChar(TextScreen[x + y * COLS],x, y);
       ++i;
     }
   }
+  #endif
 }
 
-*/
 byte charset[] = {/*{w:8,h:8,bpp:1,count:256}*/
     0x00, 0xE0, 0x30, 0x50, 0xD0, 0xB0, 0xD8, 0x08, 0x00, 0x07, 0x0C, 0x08,
 	0x08, 0x0D, 0x1B, 0x10, 0x00, 0xC0, 0xE0, 0xE0, 0xA0, 0x60, 0x90, 0x18,
