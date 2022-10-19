@@ -17,7 +17,8 @@ void main()
         SetCharBuffer(i, x, y);
         ++i; 
       }
-    CopyBufferArea(0, 0, 16, 16);
+    //CopyBufferArea(0, 0, 16, 16);
+    CopyBuffer();
     i += 16;
   }
 }

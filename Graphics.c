@@ -21,7 +21,14 @@ bool bufferselect = false;
 
 void ClearScreen()
 {
-  memset(ScreenChars, ' ', 0x0400); // clear text page 1
+  memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
+  
+  #if defined(__C64__)
+  memset(ScreenCharBuffer, ' ', 0x0400); // Clear Buffer
+  memset(ScreenColors, 0, 0x0400); // clear Colors
+  memset(ScreenColorBuffer, 0, 0x0400); // clear Color Buffer
+  #endif
+  
   #if defined(__APPLE2__)
   memset(HGR, 0, 0x2000); // clear HGR page 1
   #endif
@@ -139,7 +146,8 @@ void CopyBuffer()
     }
   #endif
   #if defined(__C64__)
-  
+  memcpy(&ScreenChars[0], &ScreenCharBuffer[0], 1000);
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 1000);
   #endif
 }
 
