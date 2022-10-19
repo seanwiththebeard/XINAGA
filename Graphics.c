@@ -1,7 +1,8 @@
 #include "xinaga.h"
 
-#if defined(__APPLE2__)
 byte charset[];
+
+#if defined(__APPLE2__)
 byte* ScreenChars = (byte*)(0x0400);
 byte* HGR = (byte*)0x2000;
 byte* HGRBuffer = (byte*)0x4000;
@@ -10,15 +11,21 @@ int RowsHGR[192];
 #endif
 
 #if defined(__C64__)
-byte* ScreenChars = (byte*)(0x0400);
+byte *ScreenCharBuffer = (byte *)0x0400;
+byte *ScreenColorBuffer = (byte *)0xF400;
+byte *ScreenChars = (byte *)0x0400;
+byte *ScreenColors = (byte *)0xD800;
 bool bufferselect = false;
 #include <peekpoke.h>
 #endif
 
 void ClearScreen()
 {
-  memset((byte*)0x0400, ' ', 0x0400); // clear text page 1
-  memset((byte*)0x2000, 0, 0x2000); // clear HGR page 1  
+  memset(ScreenChars, ' ', 0x0400); // clear text page 1
+  #if defined(__APPLE2__)
+  memset(HGR, 0, 0x2000); // clear HGR page 1
+  #endif
+  
 }
 
 void InitializeGraphics()
@@ -42,21 +49,21 @@ void InitializeGraphics()
   #define CharacterRom 0xD000
   #define ColorRam 0xD800
   byte lastBank, lastScreenPos, lastCharPos;
-  byte *ScreenCharBuffer = (byte *)0x0400;
-  byte *ScreenColorBuffer = (byte *)0xF400;
-  byte *ScreenChars = (byte *)0x0400;
-  byte *ScreenColors = (byte *)0xD800;
   int screenposition;
   int* regd018 = (int*)0xd018;
   byte vicreg = 0x00;
+  
   lastBank = bank;
   lastScreenPos = screenpos;
   lastCharPos = charpos;
   screenposition = (bank * (16*1024) + (screenpos * 1024));
   ScreenChars = 0;
   ScreenChars += screenposition;
-  CharRam += 2;
+  //CharRam += 2;
   CharRam += (bank * (16*1024) + charpos * 2048);
+  
+  memcpy(&CharRam[0], &charset[0], 256*8);
+  
   ScreenCharBuffer = 0;
   ScreenCharBuffer += screenposition;
   if (bufferselect)
@@ -75,12 +82,13 @@ void InitializeGraphics()
   regd018[0] = vicreg;
   //Cursor Position
   POKE (0x0288, screenposition / 256);
+  ClearScreen();
   #endif
 }
 
+#if defined(__APPLE2__)
 void DrawChar(int index, byte xpos, byte ypos)
 {
-  #if defined(__APPLE2__)
   byte y;
   int offset, i;
   i = index <<3;
@@ -92,8 +100,8 @@ void DrawChar(int index, byte xpos, byte ypos)
     offset += 0x400;
     ++i;
   }
-  #endif
 }
+#endif
 
 void SetChar(byte index, byte x, byte y)
 {
@@ -101,12 +109,20 @@ void SetChar(byte index, byte x, byte y)
   ScreenChars[x + COLS * y] = index;
   DrawChar(index, x, y);
   #endif
+  #if defined(__C64__)
+  ScreenChars[x + COLS*y] = index;
+  ScreenColors[x + COLS*y] = 3;
+  #endif
 }
 
 void SetCharBuffer(byte index, byte x, byte y)
 {
   #if defined(__APPLE2__)
   ScreenChars[x + COLS * y] = index;
+  #endif
+  #if defined(__C64__)
+  ScreenCharBuffer[x + COLS*y] = index;
+  ScreenColorBuffer[x + COLS*y] = 2;
   #endif
 }
 
@@ -122,11 +138,13 @@ void CopyBuffer()
       ++i;
     }
   #endif
+  #if defined(__C64__)
+  
+  #endif
 }
 
 void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
 {
-  #if defined(__APPLE2__)
   byte x, y;
   int i = x + y * COLS;
   for (y = origin_y; y < origin_y + height; ++y)
@@ -134,11 +152,16 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
     i = y * COLS;
     for (x = origin_x; x < origin_x + width; ++x)
     {
+      #if defined(__APPLE2__)
       DrawChar(ScreenChars[i],x, y);
+      #endif
+      #if defined(__C64__)
+      ScreenChars[i] = ScreenCharBuffer[i];
+      ScreenColors[i] = ScreenColorBuffer[i];
+      #endif
       ++i;
     }
   }
-  #endif
 }
 
 byte charset[] = {/*{w:8,h:8,bpp:1,count:256}*/
