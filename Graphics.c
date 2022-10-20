@@ -1,5 +1,12 @@
 #include "xinaga.h"
 
+int YColumnIndex[25] = {
+  0, 40, 80, 120, 160,
+  200, 240, 280, 320, 360,
+  400, 440, 480, 520, 560,
+  600, 640, 680, 720, 760,
+  800, 840, 880, 920, 960};
+
 byte charset[];
 
 #if defined(__APPLE2__)
@@ -153,6 +160,7 @@ void CopyBuffer()
 
 void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
 {
+  #if defined(__APPLE2__)
   byte x, y;
   int i = x + y * COLS;
   for (y = origin_y; y < origin_y + height; ++y)
@@ -160,19 +168,25 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
     i = y * COLS;
     for (x = origin_x; x < origin_x + width; ++x)
     {
-      #if defined(__APPLE2__)
       DrawChar(ScreenChars[i],x, y);
-      #endif
-      #if defined(__C64__)
-      ScreenChars[i] = ScreenCharBuffer[i];
-      ScreenColors[i] = ScreenColorBuffer[i];
-      #endif
       ++i;
     }
   }
+  #endif
+  
+  #if defined(__C64__)
+  int offset = origin_x + YColumnIndex[origin_y];
+  byte column;
+  for (column = 0; column < height; ++column)
+    {
+      	memcpy(&ScreenChars[offset], &ScreenCharBuffer[offset], width);
+      	memcpy(&ScreenColors[offset], &ScreenColorBuffer[offset], width);
+      	offset += COLS;
+    }
+  #endif
 }
 
-byte charset[] = {/*{w:8,h:8,bpp:1,count:256}*/
+byte charset[] = {/*{w:8,h:8,count:256}*/
     0x00, 0xE0, 0x30, 0x50, 0xD0, 0xB0, 0xD8, 0x08, 0x00, 0x07, 0x0C, 0x08,
 	0x08, 0x0D, 0x1B, 0x10, 0x00, 0xC0, 0xE0, 0xE0, 0xA0, 0x60, 0x90, 0x18,
 	0x00, 0x03, 0x07, 0x07, 0x05, 0x06, 0x09, 0x18, 0x00, 0xF8, 0xF4, 0x10,
