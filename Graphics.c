@@ -24,21 +24,6 @@ byte *ScreenChars = (byte *)0x0400;
 byte *ScreenColors = (byte *)0xD800;
 bool bufferselect = false;
 #include <peekpoke.h>
-
-void raster_wait(byte line)
-{
-  while ((VIC.rasterline < line))
-  {}
-}
-
-void wait_vblank(byte frames) 
-{
-  byte count = frames;
-  for (count = frames; count; --count)
-  {
-    raster_wait(255);    
-  }
-}
 #endif
 
 void ClearScreen()
@@ -54,7 +39,26 @@ void ClearScreen()
   #if defined(__APPLE2__)
   memset(HGR, 0, 0x2000); // clear HGR page 1
   #endif
-  
+}
+
+void raster_wait(byte line)
+{
+  #if defined(__C64__)
+  while ((VIC.rasterline < line)){}
+  #endif
+  #if defined(__APPLE2__)
+  byte x;
+  while (++x < line){};
+  #endif
+}
+
+void wait_vblank(byte frames) 
+{
+  byte count = frames;
+  for (count = frames; count; --count)
+  {
+    raster_wait(255);    
+  }
 }
 
 void InitializeGraphics()
@@ -206,7 +210,6 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
 
 void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
 {
-  #if defined(__C64__)
   byte count;
   for(count = 0; count < 20; ++count)
   {
@@ -219,7 +222,6 @@ void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
     else
       SetChar(text[count], posx + count, posy);      
   }
-  #endif
 }
 
 
