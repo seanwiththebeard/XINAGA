@@ -24,6 +24,21 @@ byte *ScreenChars = (byte *)0x0400;
 byte *ScreenColors = (byte *)0xD800;
 bool bufferselect = false;
 #include <peekpoke.h>
+
+void raster_wait(byte line)
+{
+  while ((VIC.rasterline < line))
+  {}
+}
+
+void wait_vblank(byte frames) 
+{
+  byte count = frames;
+  for (count = frames; count; --count)
+  {
+    raster_wait(255);    
+  }
+}
 #endif
 
 void ClearScreen()
@@ -188,6 +203,25 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
     }
   #endif
 }
+
+void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
+{
+  #if defined(__C64__)
+  byte count;
+  for(count = 0; count < 20; ++count)
+  {
+    if (text[count] == '@')
+      break;
+    if (!fast)
+      raster_wait(255);
+    if (buffer)
+      SetCharBuffer(text[count], posx + count, posy);
+    else
+      SetChar(text[count], posx + count, posy);      
+  }
+  #endif
+}
+
 
 byte charset[] = {/*{w:8,h:8,count:256}*/
     0x00, 0x07, 0x0C, 0x0A, 0x0B, 0x0D, 0x1B, 0x10, 0x00, 0xE0, 0x30, 0x10,
