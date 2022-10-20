@@ -19,6 +19,11 @@ void main()
     CopyBufferArea(0, 0, 16, 16);
     //CopyBuffer();
     i += 16;
-    PrintString("Hello World!@", 16, y, false, false);
+    #if defined(__APPLE2__)
+    PrintString("Hello Apple!@", 16, y, false, false);
+    #endif
+    #if defined(__C64__)
+    PrintString("Hello C64!@", 16, y, false, false);
+    #endif
   }
 }
