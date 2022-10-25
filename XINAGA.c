@@ -25,5 +25,6 @@ void main()
     #if defined(__C64__)
     PrintString("Hello C64!@", 16, y, false, false);
     #endif
+    ClearScreen();
   }
 }

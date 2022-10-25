@@ -28,7 +28,6 @@ bool bufferselect = false;
 
 void ClearScreen()
 {
-  memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
   
   #if defined(__C64__)
   memset(ScreenCharBuffer, ' ', 0x0400); // Clear Buffer
@@ -37,8 +36,13 @@ void ClearScreen()
   #endif
   
   #if defined(__APPLE2__)
-  memset(HGR, 0, 0x2000); // clear HGR page 1
+  byte i;
+  for (i = 0; i < 192; ++i)
+    memset(&HGR[RowsHGR[i]], 0, 40); //Or just disable screen and clear it?
+  //memset(HGR, 0, 0x2000); // clear HGR page 1
   #endif
+  
+  memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
 }
 
 void raster_wait(byte line)
