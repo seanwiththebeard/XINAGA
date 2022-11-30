@@ -1,3 +1,29 @@
+/*TO DO
+void ScrollingMaskOn()
+void ScrollingMaskOff()
+void ScrollReset()
+void ScrollUp()
+void ScrollDown()
+
+void UpdateColors()
+void SetChar(byte x, byte y, byte index)
+void SetCharBuffer(byte x, byte y, byte index)
+void DrawCharacterSet(byte destX, byte destY)
+void SetTileOrigin(byte x, byte y)
+void DrawTileFast(byte index, byte x, byte y)
+void FlipBuffer()
+void CopyDoubleBuffer()
+void CopyDoubleBufferArea(byte posX, byte posY, byte sizeX, byte sizeY)
+void ClearScreen()
+void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY)
+void SelectVICBanks(byte bank, byte screenpos, byte charpos)
+void DrawLineH(char index, byte x, byte y, byte length)
+void DrawLineV(char index, byte x, byte y, byte length)
+void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
+void ScrollChar(byte index, byte direction)
+void DrawBorder(byte xPos, byte yPos, byte width, byte height, bool fill)
+*/
+
 #ifndef _XINAGA_H
 #define _XINAGA_H
 
@@ -44,6 +70,7 @@ void DrawCharacterSet(byte destX, byte destY);
 //Audio
 extern void PlaySong(void);
 extern void StopSong(void);
+extern void PlaySound(void);
 
 
 //File I/O
