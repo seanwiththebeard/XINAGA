@@ -276,26 +276,25 @@ void DrawLineH(char index, byte x, byte y, byte length)
 {
   byte count = 0;
   for (count = 0; count < length; ++count)
-    SetChar(x + count, y, index);
+    SetChar(index, x + count, y);
 }
 void DrawLineV(char index, byte x, byte y, byte length)
 {
   byte count = 0;
   for (count = 0; count < length; ++count)
-    SetChar(x, y + count, index);
+    SetChar(index, x, y + count);
 }
 void DrawBorder(byte xPos, byte yPos, byte width, byte height, bool fill)
 {
   byte x;
-  
   DrawLineH(239, xPos + 1, yPos, width - 2);
   DrawLineH(239, xPos + 1, yPos + height - 1, width - 1);
   DrawLineV(255, xPos, yPos + 1, height - 1);
   DrawLineV(255, xPos + width - 1, yPos + 1, height - 1);
-  SetChar(xPos, yPos, 238);
-  SetChar(xPos + width - 1, yPos, 238);
-  SetChar(xPos, yPos + height - 1, 238);
-  SetChar(xPos + width - 1, yPos + height - 1, 238);
+  SetChar(238, xPos, yPos);
+  SetChar(238, xPos + width - 1, yPos);
+  SetChar(238, xPos, yPos + height - 1);
+  SetChar(238, xPos + width - 1, yPos + height - 1);
   if (fill)
     for (x = 0; x < height - 2; ++x)
     {
