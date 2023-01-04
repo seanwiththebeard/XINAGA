@@ -248,19 +248,24 @@ void DrawTileFast(byte index, byte x, byte y)
   
   x = x << 1;
   y = y << 1;
-
+  #if defined(__C64__)
   offset1 = YColumnIndex[y] + x + originOffset;
   {
     memcpy(&ScreenChars[offset1], &indexes[0], 2);
-    #if defined(__C64__)
     memcpy(&ScreenColors[offset1], &attributeset[indexes[0]], 2);
-    #endif
     offset1 += COLS;
     memcpy(&ScreenChars[offset1], &indexes[2], 2);
-    #if defined(__C64__)
     memcpy(&ScreenColors[offset1], &attributeset[indexes[2]], 2);
-    #endif
   }
+  #endif
+  
+  #if defined(__APPLE2__)
+  DrawChar(indexes[0], x + originOffset, YColumnIndex[y]);
+  DrawChar(indexes[1], x + originOffset + 1, YColumnIndex[y]);
+  DrawChar(indexes[2], x + originOffset, YColumnIndex[y]);
+  DrawChar(indexes[3], x + originOffset + 1, YColumnIndex[y + 1]);
+  #endif
+             
 }
 
 #if defined(__C64__)
