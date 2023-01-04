@@ -26,7 +26,7 @@ void main()
     PrintString("Hello C64!@", 16, y, false, false);
     #endif
     
-    SetTileOrigin(15, 0);
+    SetTileOrigin(17, 0);
     while (1)
     {
       for (y= 0; y < 8; ++y)
