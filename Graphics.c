@@ -229,6 +229,40 @@ void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
   }
 }
 
+int originOffset = 0;
+void SetTileOrigin(byte x, byte y)
+{
+  originOffset = YColumnIndex[y] + x;  
+}
+
+byte indexes[4];
+
+unsigned short offset1;
+void DrawTileFast(byte index, byte x, byte y)
+{
+  index = (index << 1) + ((index >> 3) << 4);
+  indexes[0] = index;
+  indexes[1] = index + 1;
+  indexes[2] = index + 16;
+  indexes[3] = index + 17;
+  
+  x = x << 1;
+  y = y << 1;
+
+  offset1 = YColumnIndex[y] + x + originOffset;
+  {
+    memcpy(&ScreenChars[offset1], &indexes[0], 2);
+    #if defined(__C64__)
+    memcpy(&ScreenColors[offset1], &attributeset[indexes[0]], 2);
+    #endif
+    offset1 += COLS;
+    memcpy(&ScreenChars[offset1], &indexes[2], 2);
+    #if defined(__C64__)
+    memcpy(&ScreenColors[offset1], &attributeset[indexes[2]], 2);
+    #endif
+  }
+}
+
 #if defined(__C64__)
 byte attributeset[] = {
 0x01,0x01,0x0A,0x0A,0x0F,0x0F,0x01,0x01,0x01,0x01,0x0F,0x0F,0x01,0x01,0x03,0x03

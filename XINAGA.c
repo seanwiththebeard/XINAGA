@@ -5,7 +5,7 @@
 
 void main()
 {
-  byte x, y;
+  byte x, y, z;
   byte i = 0;
   InitializeGraphics();  
   while (1)
@@ -25,6 +25,10 @@ void main()
     #if defined(__C64__)
     PrintString("Hello C64!@", 16, y, false, false);
     #endif
+    
+    SetTileOrigin(16, 0);
+    DrawTileFast(z, 0, 0);
+    ++z;
     //ClearScreen();
   }
 }
