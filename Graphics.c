@@ -230,9 +230,12 @@ void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
 }
 
 int originOffset = 0;
+byte originX, originY = 0;
 void SetTileOrigin(byte x, byte y)
 {
-  originOffset = YColumnIndex[y] + x;  
+  originOffset = YColumnIndex[y] + x;
+  originX = x;
+  originY = y;
 }
 
 byte indexes[4];
@@ -248,6 +251,7 @@ void DrawTileFast(byte index, byte x, byte y)
   
   x = x << 1;
   y = y << 1;
+  
   #if defined(__C64__)
   offset1 = YColumnIndex[y] + x + originOffset;
   {
@@ -260,10 +264,10 @@ void DrawTileFast(byte index, byte x, byte y)
   #endif
   
   #if defined(__APPLE2__)
-  DrawChar(indexes[0], x + originOffset, YColumnIndex[y]);
-  DrawChar(indexes[1], x + originOffset + 1, YColumnIndex[y]);
-  DrawChar(indexes[2], x + originOffset, YColumnIndex[y]);
-  DrawChar(indexes[3], x + originOffset + 1, YColumnIndex[y + 1]);
+  DrawChar(indexes[0], x + originX, y + originY);
+  DrawChar(indexes[1], x + originX + 1, y + originY);
+  DrawChar(indexes[2], x + originX, y + 1 + originY);
+  DrawChar(indexes[3], x + originX + 1, y + 1 + originY);
   #endif
              
 }
