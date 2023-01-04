@@ -264,12 +264,43 @@ void DrawTileFast(byte index, byte x, byte y)
   #endif
   
   #if defined(__APPLE2__)
-  DrawChar(indexes[0], x + originX, y + originY);
-  DrawChar(indexes[1], x + originX + 1, y + originY);
-  DrawChar(indexes[2], x + originX, y + 1 + originY);
-  DrawChar(indexes[3], x + originX + 1, y + 1 + originY);
+  SetChar(indexes[0], x + originX, y + originY);
+  SetChar(indexes[1], x + originX + 1, y + originY);
+  SetChar(indexes[2], x + originX, y + 1 + originY);
+  SetChar(indexes[3], x + originX + 1, y + 1 + originY);
   #endif
              
+}
+
+void DrawLineH(char index, byte x, byte y, byte length)
+{
+  byte count = 0;
+  for (count = 0; count < length; ++count)
+    SetChar(x + count, y, index);
+}
+void DrawLineV(char index, byte x, byte y, byte length)
+{
+  byte count = 0;
+  for (count = 0; count < length; ++count)
+    SetChar(x, y + count, index);
+}
+void DrawBorder(byte xPos, byte yPos, byte width, byte height, bool fill)
+{
+  byte x;
+  
+  DrawLineH(239, xPos + 1, yPos, width - 2);
+  DrawLineH(239, xPos + 1, yPos + height - 1, width - 1);
+  DrawLineV(255, xPos, yPos + 1, height - 1);
+  DrawLineV(255, xPos + width - 1, yPos + 1, height - 1);
+  SetChar(xPos, yPos, 238);
+  SetChar(xPos + width - 1, yPos, 238);
+  SetChar(xPos, yPos + height - 1, 238);
+  SetChar(xPos + width - 1, yPos + height - 1, 238);
+  if (fill)
+    for (x = 0; x < height - 2; ++x)
+    {
+      DrawLineH(' ', xPos + 1, yPos + x + 1, width - 2);
+    }
 }
 
 #if defined(__C64__)

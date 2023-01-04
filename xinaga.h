@@ -5,17 +5,10 @@ void ScrollReset()
 void ScrollUp()
 void ScrollDown()
 
-void UpdateColors()
-void SetChar(byte x, byte y, byte index)
-void SetCharBuffer(byte x, byte y, byte index)
-void DrawCharacterSet(byte destX, byte destY)
 void FlipBuffer()
 void CopyDoubleBuffer()
 void CopyDoubleBufferArea(byte posX, byte posY, byte sizeX, byte sizeY)
 void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY)
-void DrawLineH(char index, byte x, byte y, byte length)
-void DrawLineV(char index, byte x, byte y, byte length)
-void DrawBorder(byte xPos, byte yPos, byte width, byte height, bool fill)
 */
 
 #ifndef _XINAGA_H
