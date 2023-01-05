@@ -19,6 +19,7 @@ void main()
   #endif
   while (1)
   {
+    z = i;
     
     for (y= 0; y < 16; ++y)
       for (x = 0; x < 16; ++x)
@@ -30,12 +31,11 @@ void main()
     //CopyBuffer();
     i += 16;
     
-    z = i;
     SetTileOrigin(19, 1);
-    for (y = 8; y != 0; --y)
-      for (x = 8; x != 0; --x)
+    for (y = 0; y < 8; ++y)
+      for (x = 0; x < 8; ++x)
       {
-        DrawTileFast(z, x - 1, y - 1);
+        DrawTileFast(x*y - z, x, y);
         ++z;
       }
     
