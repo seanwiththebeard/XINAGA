@@ -32,7 +32,7 @@ void main()
     SetTileOrigin(19, 1);
     while (1)
     {
-      for (y= 0; y < 4; ++y)
+      for (y= 0; y < 8; ++y)
         for (x = 0; x < 8; ++x)
         {
           DrawTileFast(z, x, y);
