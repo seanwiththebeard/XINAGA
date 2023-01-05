@@ -2,9 +2,10 @@
 void ScrollingMaskOn()
 void ScrollingMaskOff()
 void ScrollReset()
-void ScrollUp()
-void ScrollDown()
+void ScrollH()
+void ScrollV()
 
+void SetBuffer(bool value)
 void FlipBuffer()
 void CopyDoubleBuffer()
 void CopyDoubleBufferArea(byte posX, byte posY, byte sizeX, byte sizeY)
@@ -33,7 +34,9 @@ void SetChar(byte x, byte y, byte index);
 void SetCharBuffer(byte x, byte y, byte index);
 void DrawLineH(char index, byte x, byte y, byte length);
 void DrawLineV(char index, byte x, byte y, byte length);
-void DrawBorder(byte xPos, byte yPos, byte width, byte height, bool fill);
+void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bool fill);
+
+//Tiles
 void SetTileOrigin(byte x, byte y);
 void DrawTileFast(byte index, byte x, byte y);
 

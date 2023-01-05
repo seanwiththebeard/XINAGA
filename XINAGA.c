@@ -8,8 +8,8 @@ void main()
   byte x, y, z;
   byte i = 0;
   InitializeGraphics();  
-  DrawBorder(0, 0, 18, 18, false);
-  DrawBorder(18, 0, 18, 18, false);
+  DrawBorder("Character Set@", 0, 0, 18, 18, false);
+  DrawBorder("Tiles@", 18, 0, 18, 18, false);
   
   
   {
@@ -23,19 +23,19 @@ void main()
     //CopyBuffer();
     i += 16;
     #if defined(__APPLE2__)
-    PrintString("Hello Apple!@", 0, 23, false, false);
+    DrawBorder("Hello Apple!@", 0, ROWS - 3, 16, 2, false);
     #endif
     #if defined(__C64__)
-    PrintString("Hello C64!@", 0, 24, false, false);
+    DrawBorder("Hello C64!@", 0, ROWS - 3, 16, 3, false);
     #endif
     
     SetTileOrigin(19, 1);
     while (1)
     {
-      for (y= 0; y < 8; ++y)
-        for (x = 0; x < 8; ++x)
+      for (y = 8; y != 0; --y)
+        for (x = 8; x != 0; --x)
         {
-          DrawTileFast(z, x, y);
+          DrawTileFast(z, x - 1, y - 1);
           ++z;
         }
       
