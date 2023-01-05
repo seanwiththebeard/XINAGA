@@ -23,7 +23,7 @@ void main()
     //CopyBuffer();
     i += 16;
     #if defined(__APPLE2__)
-    PrintString("Hello Apple!@", 0, 24, false, false);
+    PrintString("Hello Apple!@", 0, 23, false, false);
     #endif
     #if defined(__C64__)
     PrintString("Hello C64!@", 0, 24, false, false);
@@ -32,7 +32,7 @@ void main()
     SetTileOrigin(19, 1);
     while (1)
     {
-      for (y= 0; y < 7; ++y)
+      for (y= 0; y < 4; ++y)
         for (x = 0; x < 8; ++x)
         {
           DrawTileFast(z, x, y);
