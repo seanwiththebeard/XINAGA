@@ -1,7 +1,8 @@
 #include "xinaga.h"
+#include "Common.h"
 
 //#link "Graphics.c"
-
+//#link "Common.c"
 
 void main()
 {
@@ -37,7 +38,8 @@ void main()
         DrawTileFast(x*y - z, x, y);
         ++z;
       }
-    z -= 63;    
+    z -= 63;
+    Scroll(up);
     //ClearScreen();
   }
 }

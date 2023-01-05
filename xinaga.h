@@ -73,6 +73,13 @@ bool InputLeft();
 bool InputRight();
 bool InputFire();
 
+//Common Functions
+byte ReadBit(byte byteToRead, char bit); //These are old
+void WriteBit(byte *byteToSet, char bit, bool value); //These are old
+bool CheckBit(byte source, byte position); //These are old
+
+byte SetBit(byte byteToSet , byte k); //These work right
+byte ClearBit(byte byteToSet , byte k); //These work right
 
 /*****************************************************************************/
 /*                                                                           */
