@@ -29,20 +29,20 @@ byte attributeset[];
 
 void ClearScreen()
 {
-  
+
   #if defined(__C64__)
   memset(ScreenCharBuffer, ' ', 0x0400); // Clear Buffer
   memset(ScreenColors, 0, 0x0400); // clear Colors
   memset(ScreenColorBuffer, 0, 0x0400); // clear Color Buffer
   #endif
-  
+
   #if defined(__APPLE2__)
   byte i;
   for (i = 0; i < 192; ++i)
     memset(&HGR[RowsHGR[i]], 0, 40); //Or just disable screen and clear it?
   //memset(HGR, 0, 0x2000); // clear HGR page 1
   #endif
-  
+
   memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
 }
 
@@ -78,7 +78,7 @@ void InitializeGraphics()
   for (y = 0; y < 192; ++y)
     RowsHGR[y] = (y/64)*0x28 + (y%8)*0x400 + ((y/8)&7)*0x80;
   #endif
-  
+
   #if defined(__C64__)
   #define bank 3
   byte screenpos = 2;
@@ -90,10 +90,10 @@ void InitializeGraphics()
   int screenposition;
   int* regd018 = (int*)0xd018;
   byte vicreg = 0x00;
-  
+
   bgcolor(0);
   bordercolor(0);
-  
+
   lastBank = bank;
   lastScreenPos = screenpos;
   lastCharPos = charpos;
@@ -102,9 +102,9 @@ void InitializeGraphics()
   ScreenChars += screenposition;
   //CharRam += 2;
   CharRam += (bank * (16*1024) + charpos * 2048);
-  
+
   memcpy(&CharRam[0], &charset[0], 256*8);
-  
+
   ScreenCharBuffer = 0;
   ScreenCharBuffer += screenposition;
   if (bufferselect)
@@ -113,7 +113,7 @@ void InitializeGraphics()
     ScreenCharBuffer += 0x0400; // Buffer location 1024b after the screen position
   ScreenColorBuffer = 0;
   ScreenColorBuffer += 0x0400; // Use the default screen character space for color buffer
-   //Select Bank
+  //Select Bank
   POKE (0xDD00, (PEEK(0XDD00)&(255 - bank)));
   //Set Screen and Character Ram Position
   screenpos = screenpos << 4;
@@ -167,6 +167,29 @@ void SetCharBuffer(byte index, byte x, byte y)
   #endif
 }
 
+//Scrolling
+void ScrollReset()
+{
+}
+
+void Scroll(direction)
+{
+  switch (direction)
+  {
+    case up:
+      break;
+    case down:
+      break;
+    case left:
+      break;
+    case right:
+      break;
+    default:
+      break;
+  }
+}
+
+//Buffer
 void CopyBuffer()
 {
   #if defined(__APPLE2__)
@@ -200,16 +223,16 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
     }
   }
   #endif
-  
+
   #if defined(__C64__)
   int offset = origin_x + YColumnIndex[origin_y];
   byte column;
   for (column = 0; column < height; ++column)
-    {
-      	memcpy(&ScreenChars[offset], &ScreenCharBuffer[offset], width);
-      	memcpy(&ScreenColors[offset], &ScreenColorBuffer[offset], width);
-      	offset += COLS;
-    }
+  {
+    memcpy(&ScreenChars[offset], &ScreenCharBuffer[offset], width);
+    memcpy(&ScreenColors[offset], &ScreenColorBuffer[offset], width);
+    offset += COLS;
+  }
   #endif
 }
 
@@ -250,10 +273,10 @@ void DrawTileFast(byte index, byte x, byte y)
   indexes[1] = index + 1;
   indexes[2] = index + 16;
   indexes[3] = index + 17;
-  
+
   x = x << 1;
   y = y << 1;
-  
+
   #if defined(__C64__)
   offset1 = YColumnIndex[y] + x + originOffset;
   {
@@ -264,14 +287,14 @@ void DrawTileFast(byte index, byte x, byte y)
     memcpy(&ScreenColors[offset1], &attributeset[indexes[2]], 2);
   }
   #endif
-  
+
   #if defined(__APPLE2__)
   SetChar(indexes[0], x + originX, y + originY);
   SetChar(indexes[1], x + originX + 1, y + originY);
   SetChar(indexes[2], x + originX, y + 1 + originY);
   SetChar(indexes[3], x + originX + 1, y + 1 + originY);
   #endif
-             
+
 }
 
 void DrawLineH(char index, byte x, byte y, byte length)

@@ -22,10 +22,10 @@ void main()
     for (y= 0; y < 16; ++y)
       for (x = 0; x < 16; ++x)
       {
-        SetCharBuffer(i, x+1, y+1);
+        SetChar(i, x+1, y+1);
         ++i;
       }    
-    CopyBufferArea(1, 1, 16, 16);
+    //CopyBufferArea(1, 1, 16, 16);
     //CopyBuffer();
     i += 16;
     

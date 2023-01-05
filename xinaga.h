@@ -1,12 +1,5 @@
 /*TO DO
-void ScrollingMaskOn()
-void ScrollingMaskOff()
-void ScrollReset()
-void ScrollH()
-void ScrollV()
 
-void SetBuffer(bool value)
-void FlipBuffer()
 void CopyDoubleBuffer()
 void CopyDoubleBufferArea(byte posX, byte posY, byte sizeX, byte sizeY)
 void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY)
@@ -24,6 +17,7 @@ void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY)
 
 typedef uint8_t byte;
 typedef enum { false, true } bool;
+typedef enum { up, down, left, right } direction;
 
 //Graphics
 void InitializeGraphics(void);
@@ -36,6 +30,10 @@ void DrawLineH(char index, byte x, byte y, byte length);
 void DrawLineV(char index, byte x, byte y, byte length);
 void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bool fill);
 
+//Scrolling
+void ScrollReset();
+void Scroll(direction);
+
 //Tiles
 void SetTileOrigin(byte x, byte y);
 void DrawTileFast(byte index, byte x, byte y);
@@ -44,15 +42,12 @@ void DrawTileFast(byte index, byte x, byte y);
 void PrintString(char text[16], byte posx, byte posy, bool fast, bool buffer);
 
 //	Buffer
+void SetBuffer(bool value);
+void FlipBuffer();
 void UpdateColors(void);
 void CopyBuffer(void);
 void CopyBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
 void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
-
-//	Scrolling
-void ScrollReset(void);
-void MoveScreenUp(void);
-void MoveScreenDown(void);
 
 //	Debug
 void DrawCharacterSet(byte destX, byte destY);
