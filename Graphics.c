@@ -1,4 +1,5 @@
 #include "xinaga.h"
+#include "Common.h"
 
 int YColumnIndex[25] = {
   0, 40, 80, 120, 160,
@@ -66,9 +67,12 @@ void wait_vblank(byte frames)
   }
 }
 
-byte screenpos = 2;
-byte charpos = 7;
-byte *CharRam = 0;
+void SelectScreenPos(byte pos)
+{
+  byte a = pos * 16;
+  POKE (0xD018,(PEEK(0xD018) & 15) | a);
+}
+
 void InitializeGraphics()
 {
   #if defined(__APPLE2__)
@@ -84,20 +88,21 @@ void InitializeGraphics()
 
   #if defined(__C64__)
   #define bank 3
-  
   #define CharacterRom 0xD000
   #define ColorRam 0xD800
-  byte lastBank, lastScreenPos, lastCharPos;
+  byte charpos = 7;
+  byte *CharRam = 0;
+  byte screenpos = 2;
   int screenposition;
   int* regd018 = (int*)0xd018;
   byte vicreg = 0x00;
 
+  if (bufferselect)
+    ++screenpos;
+
   bgcolor(0);
   bordercolor(0);
 
-  lastBank = bank;
-  lastScreenPos = screenpos;
-  lastCharPos = charpos;
   screenposition = (bank * (16*1024) + (screenpos * 1024));
   ScreenChars = 0;
   ScreenChars += screenposition;
@@ -108,10 +113,12 @@ void InitializeGraphics()
 
   ScreenCharBuffer = 0;
   ScreenCharBuffer += screenposition;
+  
   if (bufferselect)
-    ScreenCharBuffer -= 0x0400; // Buffer location 1024b after the screen position
+    ScreenCharBuffer -= 0x0400; // Buffer location 1024b before the screen position
   else
     ScreenCharBuffer += 0x0400; // Buffer location 1024b after the screen position
+  
   ScreenColorBuffer = 0;
   ScreenColorBuffer += 0x0400; // Use the default screen character space for color buffer
   //Select Bank
@@ -120,12 +127,29 @@ void InitializeGraphics()
   screenpos = screenpos << 4;
   charpos = charpos << 1;
   vicreg = screenpos + charpos;
-  //raster_wait(252);
   regd018[0] = vicreg;
   //Cursor Position
   POKE (0x0288, screenposition / 256);
-  ClearScreen();
+  //ClearScreen();
   #endif
+}
+
+void SwapBuffer()
+{
+  if (bufferselect)
+  {
+    bufferselect = false;
+    SelectScreenPos(2);
+    ScreenChars -= 0x400;
+    ScreenCharBuffer += 0x400;
+  }
+  else
+  {
+    bufferselect = true;
+    SelectScreenPos(3);
+    ScreenChars += 0x400;
+    ScreenCharBuffer -= 0x400;    
+  }
 }
 
 #if defined(__APPLE2__)
@@ -188,39 +212,33 @@ void ScrollingMaskOff()
 void ScrollReset()
 {
   #if __C64__
-    VIC.ctrl1 = 0x1b;
-    VIC.ctrl2 = 0xc8;
+  VIC.ctrl1 = 0x1b;
+  VIC.ctrl2 = 0xc8;
   #endif
 }
 
-void Scroll(direction dir)
+void ShiftChars(direction dir)
 {
-  byte ys, ColCount;
-  //ScrollReset();
-  
+  byte ColCount;
   switch (dir)
   {
     case up:
-      #if __C64__
-  wait_vblank(1);
-  memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], YColumnIndex[ROWS - 1]);
-  FlipBuffer();
-  for (ColCount = 0; ColCount < COLS; ++ColCount)
-    ScreenCharBuffer[YColumnIndex[ROWS - 1]+ColCount] = ' ';
-  for (ys = 7; ys != 0; --ys)
-  {
-    // set scroll registers
-    #if __C64__
-    VIC.ctrl1 = 144 | (ys & 7);
-    #endif
-    wait_vblank(4);
-  }
-      #endif
-
-      #if __apple2__
-      #endif
+      memcpy(&ScreenColorBuffer[0], &ScreenColors[COLS], YColumnIndex[ROWS - 1]);
+      memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], YColumnIndex[ROWS - 1]);
+      for (ColCount = 0; ColCount < COLS; ++ColCount)
+      {
+        ScreenCharBuffer[YColumnIndex[ROWS - 1]+ColCount] = ' ';
+        ScreenColorBuffer[YColumnIndex[ROWS - 1]+ColCount] = ' ';
+      }
       break;
     case down:
+      memcpy(&ScreenColorBuffer[COLS], &ScreenColors[0], YColumnIndex[ROWS - 1]);
+      memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], YColumnIndex[ROWS - 1]);
+      for (ColCount = 0; ColCount < COLS; ++ColCount)
+      {
+        ScreenCharBuffer[ColCount] = ' ';
+        ScreenColorBuffer[ColCount] = ' ';
+      }
       break;
     case left:
       break;
@@ -229,24 +247,71 @@ void Scroll(direction dir)
     default:
       break;
   }
+  wait_vblank(1);
+  SwapBuffer();
+}
+
+
+
+// set scrolling registers
+#define SET_SCROLL_Y(_y) \
+  VIC.ctrl1 = (VIC.ctrl1 & 0xf8) | (_y);
+
+#define SET_SCROLL_X(_x) \
+  VIC.ctrl2 = (VIC.ctrl2 & 0xf8) | (_x);
+
+sbyte scroll_fine_x = 0;
+sbyte scroll_fine_y = 0;
+
+void scroll_update_regs() {
+  SET_SCROLL_X(scroll_fine_x);
+  SET_SCROLL_Y(scroll_fine_y);
+}
+
+void scroll_up() {
+  memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], YColumnIndex[ROWS - 1]);
+  SwapBuffer();
+}
+
+void scroll_down() {
+  memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], YColumnIndex[ROWS - 1]);
+  SwapBuffer();
+}
+
+void scroll_vert(sbyte delta_y) {
+  scroll_fine_y += delta_y;
+  while (scroll_fine_y < 0) {
+    scroll_fine_y += 8;
+    scroll_up();
+  }
+  while (scroll_fine_y >= 8) {
+    scroll_fine_y -= 8;
+    scroll_down();
+  }
+}
+
+void Scroll(direction dir)
+{
+  switch (dir)
+  {
+    case up:
+      scroll_vert(-1);
+      break;
+    case down:
+      scroll_vert(1);
+      break;
+    case left:
+      break;
+    case right:
+      break;
+    default:
+      break;
+  }
+  wait_vblank(1);
+  scroll_update_regs();
 }
 
 //Buffer
-void FlipBuffer()
-{
-  {
-    if (bufferselect)
-    {
-      bufferselect = false;
-      //SelectVICBanks(lastBank, lastScreenPos - 1, lastCharPos);
-    }
-    else
-    {
-      bufferselect = true;
-      //SelectVICBanks(lastBank, lastScreenPos + 1, lastCharPos);
-    }
-  }
-}
 void CopyBuffer()
 {
   #if defined(__APPLE2__)
@@ -260,8 +325,8 @@ void CopyBuffer()
     }
   #endif
   #if defined(__C64__)
-  memcpy(&ScreenChars[0], &ScreenCharBuffer[0], 1000);
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 1000);
+  memcpy(&ScreenChars[0], &ScreenCharBuffer[0], 0x400);
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
   #endif
 }
 
