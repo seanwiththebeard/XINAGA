@@ -25,9 +25,7 @@ void main()
       {
         SetChar(i, x+1, y+1);
         ++i;
-      }    
-    //CopyBufferArea(1, 1, 16, 16);
-    //CopyBuffer();
+      }
     i += 16;
     
     
@@ -41,10 +39,16 @@ void main()
     z -= 63;
   while (1)
   {
+    //Scroll(right);
+    //Scroll(right);
+    //Scroll(down);
     Scroll(down);
+    //Scroll(left);
+    //Scroll(left);
+    //Scroll(up);
+    Scroll(up);
     //DrawBorder("Hello C64!@", 0, 0, COLS, 3, false);
     
   }
-    //ClearScreen();
   }
 }

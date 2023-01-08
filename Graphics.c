@@ -25,6 +25,8 @@ byte *ScreenChars = (byte *)0x0400;
 byte *ScreenColors = (byte *)0xD800;
 bool bufferselect = false;
 byte attributeset[];
+#define ScreenDisable() (POKE(0xD011, PEEK(0xD011)&239))
+#define ScreenEnable() (POKE(0xD011, PEEK(0xD011)|16))
 #include <peekpoke.h>
 #endif
 
@@ -100,7 +102,7 @@ void InitializeGraphics()
   if (bufferselect)
     ++screenpos;
 
-  bgcolor(0);
+  bgcolor(11);
   bordercolor(0);
 
   screenposition = (bank * (16*1024) + (screenpos * 1024));
@@ -196,16 +198,20 @@ void SetCharBuffer(byte index, byte x, byte y)
 void ScrollingMaskOn()
 {
   #if __C64__
-  ClearBit(VIC.ctrl1, 3);
-  ClearBit(VIC.ctrl2, 3);
+  VIC.ctrl1 &= ~0x08; // 24 lines
+  VIC.ctrl2 &= ~0x08; // 38 columns  
+  //ClearBit(VIC.ctrl1, 3);
+  //ClearBit(VIC.ctrl2, 3);
   #endif
 }
 
 void ScrollingMaskOff()
 {
   #if __C64__
-  SetBit(VIC.ctrl1, 3);
-  SetBit(VIC.ctrl2, 3);
+  VIC.ctrl1 &= ~0x08; // 24 lines
+  VIC.ctrl2 &= ~0x08; // 38 columns  
+  //SetBit(VIC.ctrl1, 3);
+  //SetBit(VIC.ctrl2, 3);
   #endif
 }
 
@@ -247,7 +253,6 @@ void ShiftChars(direction dir)
     default:
       break;
   }
-  wait_vblank(1);
   SwapBuffer();
 }
 
@@ -269,13 +274,76 @@ void scroll_update_regs() {
 }
 
 void scroll_up() {
-  memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], YColumnIndex[ROWS - 1]);
+  int length = YColumnIndex[ROWS - 1];
+  
+  memset(&ScreenCharBuffer[length], ' ', COLS);
+  memset(&ScreenChars[0], ' ', COLS);
+  
+  memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], length);
+  memcpy(&ScreenColorBuffer[0], &ScreenColors[COLS], length);
+  
+  wait_vblank(1);
+  //ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
   SwapBuffer();
+  ScreenEnable();
 }
 
 void scroll_down() {
-  memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], YColumnIndex[ROWS - 1]);
+  int length = YColumnIndex[ROWS - 1];
+  
+  memset(&ScreenCharBuffer[0], ' ', COLS);
+  memset(&ScreenChars[length], ' ', COLS);
+  
+  memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], length);
+  memcpy(&ScreenColorBuffer[COLS], &ScreenColors[0], length);
+  
+  wait_vblank(1);
+  //ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
   SwapBuffer();
+  ScreenEnable();
+}
+
+void scroll_right()
+{
+  byte z;
+  int offset = 0;
+  
+  for (z = 0; z < ROWS; z++)
+  {
+    SetChar(' ', 0, z);
+    SetChar(' ', COLS - 1, z);
+    memcpy(&ScreenCharBuffer[offset + 1], &ScreenChars[offset], COLS - 1);
+    memcpy(&ScreenColorBuffer[offset + 1], &ScreenColors[offset], COLS - 1);
+    offset += COLS;
+  }
+  wait_vblank(1);
+  //ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  SwapBuffer();
+  ScreenEnable();
+}
+
+void scroll_left()
+{
+  byte z;
+  int offset = 0;
+  
+  for (z = 0; z < ROWS; z++)
+  {
+    SetChar(' ', 0, z);
+    SetChar(' ', COLS - 1, z);
+    memcpy(&ScreenCharBuffer[offset], &ScreenChars[offset + 1], COLS - 1);
+    memcpy(&ScreenColorBuffer[offset], &ScreenColors[offset + 1], COLS - 1);
+    offset += COLS;
+  }
+  wait_vblank(1);
+  //ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  SwapBuffer();
+  
+  ScreenEnable();
 }
 
 void scroll_vert(sbyte delta_y) {
@@ -286,29 +354,50 @@ void scroll_vert(sbyte delta_y) {
   }
   while (scroll_fine_y >= 8) {
     scroll_fine_y -= 8;
-    scroll_down();
+    scroll_down();    
+  }
+}
+
+void scroll_horiz(sbyte delta_x) {
+  scroll_fine_x += delta_x;
+  while (scroll_fine_x < 0) {
+    scroll_fine_x += 8;
+    scroll_left();
+  }
+  while (scroll_fine_x >= 8) {
+    scroll_fine_x -= 8;
+    scroll_right();
   }
 }
 
 void Scroll(direction dir)
 {
-  switch (dir)
+  byte count;
+  ScrollingMaskOn();
+  for (count = 0; count < 8; ++count)
   {
-    case up:
-      scroll_vert(-1);
-      break;
-    case down:
-      scroll_vert(1);
-      break;
-    case left:
-      break;
-    case right:
-      break;
-    default:
-      break;
+  wait_vblank(8);
+    switch (dir)
+    {
+      case up:
+        scroll_vert(-1);
+        break;
+      case down:
+        scroll_vert(1);
+        break;
+      case left:
+        scroll_horiz(-1);
+        break;
+      case right:
+        scroll_horiz(1);
+        break;
+      default:
+        break;
+    }
+    wait_vblank(1);
+    scroll_update_regs();
   }
-  wait_vblank(1);
-  scroll_update_regs();
+  ScrollingMaskOff();
 }
 
 //Buffer
