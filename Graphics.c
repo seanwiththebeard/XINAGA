@@ -102,7 +102,7 @@ void InitializeGraphics()
   if (bufferselect)
     ++screenpos;
 
-  bgcolor(11);
+  bgcolor(0);
   bordercolor(0);
 
   screenposition = (bank * (16*1024) + (screenpos * 1024));
@@ -208,10 +208,6 @@ void ScrollingMaskOn()
 void ScrollingMaskOff()
 {
   #if __C64__
-  VIC.ctrl1 &= ~0x08; // 24 lines
-  VIC.ctrl2 &= ~0x08; // 38 columns  
-  //SetBit(VIC.ctrl1, 3);
-  //SetBit(VIC.ctrl2, 3);
   #endif
 }
 
@@ -222,41 +218,6 @@ void ScrollReset()
   VIC.ctrl2 = 0xc8;
   #endif
 }
-
-void ShiftChars(direction dir)
-{
-  byte ColCount;
-  switch (dir)
-  {
-    case up:
-      memcpy(&ScreenColorBuffer[0], &ScreenColors[COLS], YColumnIndex[ROWS - 1]);
-      memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], YColumnIndex[ROWS - 1]);
-      for (ColCount = 0; ColCount < COLS; ++ColCount)
-      {
-        ScreenCharBuffer[YColumnIndex[ROWS - 1]+ColCount] = ' ';
-        ScreenColorBuffer[YColumnIndex[ROWS - 1]+ColCount] = ' ';
-      }
-      break;
-    case down:
-      memcpy(&ScreenColorBuffer[COLS], &ScreenColors[0], YColumnIndex[ROWS - 1]);
-      memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], YColumnIndex[ROWS - 1]);
-      for (ColCount = 0; ColCount < COLS; ++ColCount)
-      {
-        ScreenCharBuffer[ColCount] = ' ';
-        ScreenColorBuffer[ColCount] = ' ';
-      }
-      break;
-    case left:
-      break;
-    case right:
-      break;
-    default:
-      break;
-  }
-  SwapBuffer();
-}
-
-
 
 // set scrolling registers
 #define SET_SCROLL_Y(_y) \
@@ -272,18 +233,20 @@ void scroll_update_regs() {
   SET_SCROLL_X(scroll_fine_x);
   SET_SCROLL_Y(scroll_fine_y);
 }
-
+#define fillchar ' '
 void scroll_up() {
   int length = YColumnIndex[ROWS - 1];
   
-  memset(&ScreenCharBuffer[length], ' ', COLS);
-  memset(&ScreenChars[0], ' ', COLS);
   
   memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], length);
   memcpy(&ScreenColorBuffer[0], &ScreenColors[COLS], length);
   
+  memset(&ScreenCharBuffer[length], fillchar, COLS + 1);
+  memset(&ScreenColorBuffer[length], 1, COLS + 1);
+  
   wait_vblank(1);
   //ScreenDisable();
+  memset(&ScreenColors[0], 0, 0x400);
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
   SwapBuffer();
   ScreenEnable();
@@ -292,13 +255,15 @@ void scroll_up() {
 void scroll_down() {
   int length = YColumnIndex[ROWS - 1];
   
-  memset(&ScreenCharBuffer[0], ' ', COLS);
-  memset(&ScreenChars[length], ' ', COLS);
   
   memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], length);
   memcpy(&ScreenColorBuffer[COLS], &ScreenColors[0], length);
   
+  memset(&ScreenCharBuffer[0], fillchar, COLS + 1);
+  memset(&ScreenColorBuffer[0], 1, COLS + 1);
+  
   wait_vblank(1);
+  memset(&ScreenColors[0], 0, 0x400);
   //ScreenDisable();
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
   SwapBuffer();
@@ -312,13 +277,13 @@ void scroll_right()
   
   for (z = 0; z < ROWS; z++)
   {
-    SetChar(' ', 0, z);
-    SetChar(' ', COLS - 1, z);
     memcpy(&ScreenCharBuffer[offset + 1], &ScreenChars[offset], COLS - 1);
     memcpy(&ScreenColorBuffer[offset + 1], &ScreenColors[offset], COLS - 1);
     offset += COLS;
+    SetCharBuffer(fillchar, 0, z);
   }
   wait_vblank(1);
+  memset(&ScreenColors[0], 0, 0x400);
   //ScreenDisable();
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
   SwapBuffer();
@@ -332,14 +297,14 @@ void scroll_left()
   
   for (z = 0; z < ROWS; z++)
   {
-    SetChar(' ', 0, z);
-    SetChar(' ', COLS - 1, z);
     memcpy(&ScreenCharBuffer[offset], &ScreenChars[offset + 1], COLS - 1);
     memcpy(&ScreenColorBuffer[offset], &ScreenColors[offset + 1], COLS - 1);
     offset += COLS;
+    SetCharBuffer(fillchar, COLS - 1, z);
   }
   wait_vblank(1);
   //ScreenDisable();
+  memset(&ScreenColors[0], 0, 0x400);
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
   SwapBuffer();
   
@@ -376,7 +341,7 @@ void Scroll(direction dir)
   ScrollingMaskOn();
   for (count = 0; count < 8; ++count)
   {
-  wait_vblank(8);
+  wait_vblank(1);
     switch (dir)
     {
       case up:
@@ -394,7 +359,7 @@ void Scroll(direction dir)
       default:
         break;
     }
-    wait_vblank(1);
+    //wait_vblank(1);
     scroll_update_regs();
   }
   ScrollingMaskOff();
