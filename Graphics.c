@@ -371,9 +371,44 @@ void scroll_vert(sbyte delta_y)
 }
 
 void scroll_horiz(sbyte delta_x) {
-  scroll_fine_x += delta_x;
   #if defined(__APPLE2__)
+  byte colcount, rowcount;
+  int offset;
+  if (delta_x > 0)
+  {
+    for (rowcount = 0; rowcount < 192; ++rowcount) 
+    {
+      for (colcount = 0; colcount < COLS; ++colcount)
+      {
+        offset  = RowsHGR[rowcount] + colcount;
+        HGR[offset] = HGR[offset] << 1;
+        if (colcount > 0)
+        {
+          if ((HGR[offset - 1] >> 7) & 1)
+            HGR[offset] += 1;
+        }
+      }
+    }
+  }
+  if (delta_x < 0)
+  {
+    for (rowcount = 0; rowcount < 192; ++rowcount) 
+    {
+      for (colcount = 0; colcount < COLS; ++colcount)
+      {
+        offset  = RowsHGR[rowcount] + colcount;
+        HGR[offset] = HGR[offset] >> 1;
+        if (colcount < COLS - 1)
+        {
+          if ((HGR[offset + 1]) & 2)
+            HGR[offset] += 128;
+        }
+      }
+    }
+  }
   #endif
+  
+  scroll_fine_x += delta_x;
   while (scroll_fine_x < 0) {
     scroll_fine_x += 8;
     scroll_left();

@@ -44,13 +44,13 @@ void main()
   while (1)
   {
     Scroll(right);
-    Scroll(right);
-    Scroll(down);
-    Scroll(down);
-    Scroll(left);
-    Scroll(left);
-    Scroll(up);
-    Scroll(up);
+    //Scroll(right);
+    //Scroll(down);
+    //Scroll(down);
+    //Scroll(left);
+    //Scroll(left);
+    //Scroll(up);
+    //Scroll(up);
     //DrawBorder("Hello C64!@", 0, 0, COLS, 3, false);
     
   }
