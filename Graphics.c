@@ -370,6 +370,33 @@ void scroll_vert(sbyte delta_y)
   
 }
 
+void push_left()
+{
+  byte colcount, rowcount;
+  int offset;
+  for (rowcount = 0; rowcount < 192; ++rowcount) 
+  {
+    for (colcount = 0; colcount < COLS - 1; ++colcount)
+    {
+      offset  = RowsHGR[rowcount] + colcount;
+      HGR[offset] = HGR[offset + 1];
+    }
+  }
+}
+void push_right()
+{
+  byte colcount, rowcount;
+  int offset;
+  for (rowcount = 0; rowcount < 192; ++rowcount) 
+  {
+    for (colcount = COLS - 1; colcount > 0; --colcount)
+    {
+      offset  = RowsHGR[rowcount] + colcount;
+      HGR[offset] = HGR[offset - 1];
+    }
+  }
+}
+
 void scroll_horiz(sbyte delta_x) {
   #if defined(__APPLE2__)
   byte colcount, rowcount;
@@ -463,10 +490,12 @@ void Scroll(direction dir)
         scroll_vert(1);
         break;
       case left:
-        scroll_horiz(-1);
+        push_left();
+        //scroll_horiz(-1);
         break;
       case right:
-        scroll_horiz(1);
+        push_right();
+        //scroll_horiz(1);
         break;
       default:
         break;
