@@ -77,7 +77,7 @@ void SelectBank(byte bank)
 void SelectScreenPos(byte pos)
 {
   byte a = pos * 16;
-    raster_wait(255);    
+  raster_wait(255);
   POKE (0xD018,(PEEK(0xD018) & 15) | a);
 }
 void SelectCharPos(byte charpos)
@@ -335,16 +335,10 @@ void scroll_left()
 
 void scroll_vert(sbyte delta_y)
 {
-  #if defined(__APPLE2__)
   byte rowcount;
-  for (rowcount = 0; rowcount < 192; ++rowcount)
-  {
-    memcpy(&HGR[RowsHGR[rowcount]], &HGR[RowsHGR[rowcount+1]], COLS);
-  }
-  #endif
-    
+
   scroll_fine_y += delta_y;
-  
+
   while (scroll_fine_y < 0) {
     scroll_fine_y += 8;
     scroll_up();
@@ -353,6 +347,19 @@ void scroll_vert(sbyte delta_y)
     scroll_fine_y -= 8;
     scroll_down();    
   }
+  
+  #if defined(__APPLE2__)
+  if (delta_y > 0)
+    for (rowcount = 191; rowcount > 0; --rowcount)
+    {
+      memcpy(&HGR[RowsHGR[rowcount]], &HGR[RowsHGR[rowcount - 1]], COLS);
+    }
+  if (delta_y < 0)
+    for (rowcount = 0; rowcount < 192; ++rowcount)
+    {
+      memcpy(&HGR[RowsHGR[rowcount - 1]], &HGR[RowsHGR[rowcount]], COLS);
+    }
+  #endif
 }
 
 void scroll_horiz(sbyte delta_x) {
@@ -371,10 +378,10 @@ void scroll_horiz(sbyte delta_x) {
 
 void Scroll(direction dir)
 {
-  #if __C64__
   byte count;
+  #if __C64__
   ScrollingMaskOn();
-  
+
   for (count = 0; count < 8; ++count)
   {
     wait_vblank(1);
@@ -402,7 +409,6 @@ void Scroll(direction dir)
   #endif
 
   #if defined(__APPLE2__)
-  byte count;
   for (count = 0; count < 8; ++count)
   {
     switch (dir)
