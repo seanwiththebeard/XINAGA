@@ -112,7 +112,7 @@ void InitializeGraphics()
   if (bufferselect)
     ++screenpos;
 
-  bgcolor(11);
+  bgcolor(0);
   bordercolor(0);
 
   screenposition = (bank * (16*1024) + (screenpos * 1024));
@@ -338,7 +338,7 @@ void scroll_vert(sbyte delta_y)
   byte rowcount;
   for (rowcount = 0; rowcount < 192; ++rowcount)
   {
-    memcpy(&HGR[RowsHGR[rowcount]], &HGR[RowsHGR[rowcount]], COLS);
+    memcpy(&HGR[RowsHGR[rowcount]], &HGR[RowsHGR[rowcount+1]], COLS);
   }
   #endif
     
@@ -375,7 +375,7 @@ void Scroll(direction dir)
   ScrollingMaskOn();
   for (count = 0; count < 8; ++count)
   {
-    wait_vblank(8);
+    //wait_vblank(8);
     switch (dir)
     {
       case up:
