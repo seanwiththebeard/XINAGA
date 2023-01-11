@@ -3,10 +3,10 @@
 
 //#link "Graphics.c"
 //#link "Common.c"
-
+#if defined(__APPLE2__)
 #define CFGFILE apple2-hgr2.cfg
 //#resource "apple2-hgr2.cfg"
-
+#endif
 
 void main()
 {
