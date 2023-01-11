@@ -335,20 +335,9 @@ void scroll_left()
 
 void scroll_vert(sbyte delta_y)
 {
-  byte rowcount;
-
-  scroll_fine_y += delta_y;
-
-  while (scroll_fine_y < 0) {
-    scroll_fine_y += 8;
-    scroll_up();
-  }
-  while (scroll_fine_y >= 8) {
-    scroll_fine_y -= 8;
-    scroll_down();    
-  }
-  
   #if defined(__APPLE2__)
+  byte rowcount;
+  
   if (delta_y > 0)
     for (rowcount = 191; rowcount > 0; --rowcount)
     {
@@ -360,6 +349,19 @@ void scroll_vert(sbyte delta_y)
       memcpy(&HGR[RowsHGR[rowcount - 1]], &HGR[RowsHGR[rowcount]], COLS);
     }
   #endif
+  
+  scroll_fine_y += delta_y;
+
+  while (scroll_fine_y < 0) {
+    scroll_fine_y += 8;
+    scroll_up();
+  }
+  while (scroll_fine_y >= 8) {
+    scroll_fine_y -= 8;
+    scroll_down();    
+  }
+  
+  
 }
 
 void scroll_horiz(sbyte delta_x) {
