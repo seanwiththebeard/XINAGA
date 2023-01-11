@@ -77,6 +77,7 @@ void SelectBank(byte bank)
 void SelectScreenPos(byte pos)
 {
   byte a = pos * 16;
+    raster_wait(255);    
   POKE (0xD018,(PEEK(0xD018) & 15) | a);
 }
 void SelectCharPos(byte charpos)
@@ -262,10 +263,10 @@ void scroll_up() {
   memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], length);
   memcpy(&ScreenColorBuffer[0], &ScreenColors[COLS], length);
 
-  wait_vblank(1);
-  //ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
+  //wait_vblank(1);
+  ScreenDisable();
   SwapBuffer();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
   ScreenEnable();
   #endif
 
@@ -280,10 +281,10 @@ void scroll_down() {
   memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], length);
   memcpy(&ScreenColorBuffer[COLS], &ScreenColors[0], length);
 
-  wait_vblank(1);
-  //ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
+  //wait_vblank(1);
+  ScreenDisable();
   SwapBuffer();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
   ScreenEnable();
   #endif
 }
@@ -302,10 +303,10 @@ void scroll_right()
     memcpy(&ScreenColorBuffer[offset + 1], &ScreenColors[offset], COLS - 1);
     offset += COLS;
   }
-  wait_vblank(1);
-  //ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  //wait_vblank(1);
+  ScreenDisable();
   SwapBuffer();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
   ScreenEnable();
   #endif
 }
@@ -324,10 +325,10 @@ void scroll_left()
     memcpy(&ScreenColorBuffer[offset], &ScreenColors[offset + 1], COLS - 1);
     offset += COLS;
   }
-  wait_vblank(1);
-  //ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  //wait_vblank(1);
+  ScreenDisable();
   SwapBuffer();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
   ScreenEnable();
   #endif
 }
@@ -373,9 +374,10 @@ void Scroll(direction dir)
   #if __C64__
   byte count;
   ScrollingMaskOn();
+  
   for (count = 0; count < 8; ++count)
   {
-    //wait_vblank(8);
+    wait_vblank(1);
     switch (dir)
     {
       case up:
@@ -393,7 +395,7 @@ void Scroll(direction dir)
       default:
         break;
     }
-    wait_vblank(1);
+    //wait_vblank(1);
     scroll_update_regs();
   }
   ScrollingMaskOff();
