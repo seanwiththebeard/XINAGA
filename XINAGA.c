@@ -4,6 +4,10 @@
 //#link "Graphics.c"
 //#link "Common.c"
 
+#define CFGFILE apple2-hgr2.cfg
+//#resource "apple2-hgr2.cfg"
+
+
 void main()
 {
   byte x, y, z;

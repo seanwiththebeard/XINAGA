@@ -339,15 +339,21 @@ void scroll_vert(sbyte delta_y)
   byte rowcount;
   
   if (delta_y > 0)
-    for (rowcount = 191; rowcount > 0; --rowcount)
+  {
+    for (rowcount = 192; rowcount > 0; --rowcount) 
     {
       memcpy(&HGR[RowsHGR[rowcount]], &HGR[RowsHGR[rowcount - 1]], COLS);
     }
+      memset(&HGR[RowsHGR[0]], 0, COLS);
+  }
   if (delta_y < 0)
-    for (rowcount = 0; rowcount < 192; ++rowcount)
+  {
+    for (rowcount = 1; rowcount < 192; ++rowcount)
     {
       memcpy(&HGR[RowsHGR[rowcount - 1]], &HGR[RowsHGR[rowcount]], COLS);
     }
+      memset(&HGR[RowsHGR[rowcount - 1]], 0, COLS);
+  }
   #endif
   
   scroll_fine_y += delta_y;
