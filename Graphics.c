@@ -382,7 +382,7 @@ void Scroll(direction dir)
 {
   byte count;
   #if __C64__
-  ScrollingMaskOn();
+  //ScrollingMaskOn();
 
   for (count = 0; count < 8; ++count)
   {
@@ -407,7 +407,7 @@ void Scroll(direction dir)
     //wait_vblank(1);
     scroll_update_regs();
   }
-  ScrollingMaskOff();
+  //ScrollingMaskOff();
   #endif
 
   #if defined(__APPLE2__)
