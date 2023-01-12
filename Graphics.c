@@ -368,6 +368,7 @@ void scroll_vert(sbyte delta_y)
   }  
 }
 
+#if defined(__APPLE2__)
 void push_up()
 {
   byte colcount, rowcount;
@@ -426,6 +427,7 @@ void push_right()
     HGR[offset - 1] = 0;
   }
 }
+#endif
 
 void scroll_horiz(sbyte delta_x) {
   #if defined(__APPLE2__)
