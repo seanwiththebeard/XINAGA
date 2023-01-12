@@ -365,9 +365,37 @@ void scroll_vert(sbyte delta_y)
   while (scroll_fine_y >= 8) {
     scroll_fine_y -= 8;
     scroll_down();    
+  }  
+}
+
+void push_up()
+{
+  byte colcount, rowcount;
+  for (rowcount = 0; rowcount < 192; ++rowcount) 
+  {
+    if (rowcount > 183)
+      memset(&HGR[RowsHGR[rowcount]], 0, COLS);
+    else
+    for (colcount = 0; colcount < COLS; ++colcount)
+    {
+      HGR[RowsHGR[rowcount] + colcount] = HGR[RowsHGR[rowcount + 8] + colcount];
+    }
+    if (rowcount > 183)
+      memset(&HGR[RowsHGR[rowcount]], 0, COLS);
   }
-  
-  
+}
+void push_down()
+{
+  byte colcount, rowcount;
+  for (rowcount = 191; rowcount != 255; --rowcount) 
+  {
+    for (colcount = 0; colcount < COLS; ++colcount)
+    {
+      HGR[RowsHGR[rowcount] + colcount] = HGR[RowsHGR[rowcount - 8] + colcount];
+    }
+    if (rowcount < 8)
+      memset(&HGR[RowsHGR[rowcount]], 0, COLS);
+  }
 }
 
 void push_left()
@@ -381,6 +409,7 @@ void push_left()
       offset  = RowsHGR[rowcount] + colcount;
       HGR[offset] = HGR[offset + 1];
     }
+    HGR[offset + 1] = 0;
   }
 }
 void push_right()
@@ -394,6 +423,7 @@ void push_right()
       offset  = RowsHGR[rowcount] + colcount;
       HGR[offset] = HGR[offset - 1];
     }
+    HGR[offset - 1] = 0;
   }
 }
 
@@ -448,8 +478,8 @@ void scroll_horiz(sbyte delta_x) {
 
 void Scroll(direction dir)
 {
-  byte count;
   #if __C64__
+  byte count;
   //ScrollingMaskOn();
 
   for (count = 0; count < 8; ++count)
@@ -479,15 +509,17 @@ void Scroll(direction dir)
   #endif
 
   #if defined(__APPLE2__)
-  for (count = 0; count < 8; ++count)
+  //for (count = 0; count < 8; ++count)
   {
     switch (dir)
     {
       case up:
-        scroll_vert(-1);
+        push_up();
+        //scroll_vert(-1);
         break;
       case down:
-        scroll_vert(1);
+        push_down();
+        //scroll_vert(1);
         break;
       case left:
         push_left();
