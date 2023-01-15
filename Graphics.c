@@ -265,8 +265,8 @@ void scroll_up() {
 
   //wait_vblank(1);
   ScreenDisable();
-  SwapBuffer();
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
+  SwapBuffer();
   ScreenEnable();
   #endif
 
@@ -283,8 +283,8 @@ void scroll_down() {
 
   //wait_vblank(1);
   ScreenDisable();
-  SwapBuffer();
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
+  SwapBuffer();
   ScreenEnable();
   #endif
 }
@@ -303,8 +303,8 @@ void scroll_right()
     memcpy(&ScreenColorBuffer[offset + 1], &ScreenColors[offset], COLS - 1);
     offset += COLS;
   }
-  //wait_vblank(1);
-  ScreenDisable();
+  wait_vblank(1);
+  //ScreenDisable();
   SwapBuffer();
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
   ScreenEnable();
@@ -325,8 +325,8 @@ void scroll_left()
     memcpy(&ScreenColorBuffer[offset], &ScreenColors[offset + 1], COLS - 1);
     offset += COLS;
   }
-  //wait_vblank(1);
-  ScreenDisable();
+  wait_vblank(1);
+  //ScreenDisable();
   SwapBuffer();
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
   ScreenEnable();
@@ -483,6 +483,8 @@ void Scroll(direction dir)
   #if __C64__
   byte count;
   //ScrollingMaskOn();
+  scroll_fine_y = 3;
+  scroll_fine_x = 0;
 
   for (count = 0; count < 8; ++count)
   {
