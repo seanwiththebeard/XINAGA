@@ -164,6 +164,8 @@ void SwapBuffer()
     ScreenChars += 0x400;
     ScreenCharBuffer -= 0x400;    
   }
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  
   #endif
 }
 
@@ -263,7 +265,7 @@ void scroll_up() {
   memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], length);
   memcpy(&ScreenColorBuffer[0], &ScreenColors[COLS], length);
 
-  //wait_vblank(1);
+  wait_vblank(1);
   ScreenDisable();
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
   SwapBuffer();
@@ -281,7 +283,7 @@ void scroll_down() {
   memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], length);
   memcpy(&ScreenColorBuffer[COLS], &ScreenColors[0], length);
 
-  //wait_vblank(1);
+  wait_vblank(1);
   ScreenDisable();
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
   SwapBuffer();
@@ -304,9 +306,9 @@ void scroll_right()
     offset += COLS;
   }
   wait_vblank(1);
-  //ScreenDisable();
-  SwapBuffer();
+  ScreenDisable();
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  SwapBuffer();
   ScreenEnable();
   #endif
 }
@@ -326,9 +328,9 @@ void scroll_left()
     offset += COLS;
   }
   wait_vblank(1);
-  //ScreenDisable();
-  SwapBuffer();
+  ScreenDisable();
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  SwapBuffer();
   ScreenEnable();
   #endif
 }
@@ -559,6 +561,16 @@ void CopyBuffer()
   #endif
 }
 
+void StoreBuffer()
+{
+  #if defined(__APPLE2__)
+  #endif
+  #if defined(__C64__)
+  memcpy(&ScreenCharBuffer[0], &ScreenChars[0], 0x400);
+  memcpy(&ScreenColorBuffer[0], &ScreenColors[0], 0x400);
+  #endif
+}
+
 void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
 {
   #if defined(__APPLE2__)
@@ -627,15 +639,14 @@ void DrawTileFast(byte index, byte x, byte y)
 
   x = x << 1;
   y = y << 1;
-
   #if defined(__C64__)
   offset1 = YColumnIndex[y] + x + originOffset;
   {
-    memcpy(&ScreenChars[offset1], &indexes[0], 2);
-    memcpy(&ScreenColors[offset1], &attributeset[indexes[0]], 2);
+    memcpy(&ScreenCharBuffer[offset1], &indexes[0], 2);
+    memcpy(&ScreenColorBuffer[offset1], &attributeset[indexes[0]], 2);
     offset1 += COLS;
-    memcpy(&ScreenChars[offset1], &indexes[2], 2);
-    memcpy(&ScreenColors[offset1], &attributeset[indexes[2]], 2);
+    memcpy(&ScreenCharBuffer[offset1], &indexes[2], 2);
+    memcpy(&ScreenColorBuffer[offset1], &attributeset[indexes[2]], 2);
   }
   #endif
 
@@ -645,7 +656,6 @@ void DrawTileFast(byte index, byte x, byte y)
   SetChar(indexes[2], x + originX, y + 1 + originY);
   SetChar(indexes[3], x + originX + 1, y + 1 + originY);
   #endif
-
 }
 
 void DrawLineH(char index, byte x, byte y, byte length)

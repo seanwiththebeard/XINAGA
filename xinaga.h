@@ -1,10 +1,3 @@
-/*TO DO
-
-void CopyDoubleBuffer()
-void CopyDoubleBufferArea(byte posX, byte posY, byte sizeX, byte sizeY)
-void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY)
-*/
-
 #ifndef _XINAGA_H
 #define _XINAGA_H
 
@@ -21,6 +14,8 @@ typedef enum { up, down, left, right } direction;
 
 //Graphics
 void InitializeGraphics(void);
+void wait_vblank(byte frames);
+void raster_wait(byte line);
 
 //	Drawing
 void ClearScreen(void);
@@ -43,9 +38,10 @@ void PrintString(char text[16], byte posx, byte posy, bool fast, bool buffer);
 
 //	Buffer
 void SetBuffer(bool value);
-void FlipBuffer();
+void SwapBuffer(void);
 void UpdateColors(void);
 void CopyBuffer(void);
+void StoreBuffer(void);
 void CopyBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
 void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
 
