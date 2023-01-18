@@ -49,6 +49,39 @@ void ClearScreen()
   memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
 }
 
+void InvertCharacterSet()
+{
+  int i;
+  for (i = 0; i < 2048; ++i)
+  {
+    charset[i] = ~charset[i];
+  }
+}
+
+void InvertScreen()
+{
+  #if defined(__C64__)
+  InvertCharacterSet();
+  bgcolor(1);
+  bordercolor(1);
+  #endif
+
+  #if defined(__APPLE2__)
+  int i;
+  /*for (i = 0; i < 192; ++i)
+  {
+    byte y;
+    for (y = 0; y < COLS; ++y)
+      HGR[RowsHGR[i] + y] = ~(HGR[RowsHGR[i] + y]);
+  }*/
+  for (i = 0; i < 8096; ++i)
+  {
+    //byte y;
+    HGR[i] = ~(HGR[i]);
+  }
+  #endif
+}
+
 void raster_wait(byte line)
 {
   #if defined(__C64__)

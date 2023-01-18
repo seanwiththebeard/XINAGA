@@ -16,6 +16,8 @@ typedef enum { up, down, left, right } direction;
 void InitializeGraphics(void);
 void wait_vblank(byte frames);
 void raster_wait(byte line);
+void InvertCharacterSet(void);
+void InvertScreen(void);
 
 //	Drawing
 void ClearScreen(void);

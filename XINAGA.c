@@ -4,7 +4,7 @@
 //#link "Graphics.c"
 //#link "Common.c"
 #if defined(__APPLE2__)
-//#define CFGFILE apple2-hgr2.cfg
+#define CFGFILE apple2-hgr2.cfg
 //#resource "apple2-hgr2.cfg"
 #endif
 
@@ -39,7 +39,7 @@ void DrawTiles()
   for (y = 0; y < 8; ++y)
     for (x = 0; x < 8; ++x)
     {
-      DrawTileFast(x*y - z, x, y);
+      DrawTileFast(/*x*y - */z, x, y);
       ++z;
     }
     SwapBuffer();
@@ -47,8 +47,8 @@ void DrawTiles()
 
 void DrawMap()
 {
-  #define sizeX 11
-  #define sizeY 11
+  #define sizeX 9
+  #define sizeY 9
   byte MapData[sizeX * sizeY];
   byte x, y, z;
   DrawBorder("Map@", 0, 0, sizeX * 2 + 2, sizeY * 2 + 2, false);
@@ -99,10 +99,13 @@ void main()
   InitializeGraphics();
   while(1)
   {
-    ClearScreen();
-    //DrawCharset();
-    //DrawTiles();
-    DrawMap();
+    //ClearScreen();
+    DrawCharset();
+    DrawTiles();
+    InvertScreen();
+    InvertScreen();
+    InvertCharacterSet();
+    //DrawMap();
     ScrollScreen();
   }
 }
