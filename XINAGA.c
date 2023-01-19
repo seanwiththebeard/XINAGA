@@ -50,24 +50,36 @@ void DrawMap()
   #define sizeX 9
   #define sizeY 9
   byte MapData[sizeX * sizeY];
+  byte MapTemp[sizeX * sizeY];
+  byte charX, charY, charI;
   byte x, y, z;
   DrawBorder("Map@", 0, 0, sizeX * 2 + 2, sizeY * 2 + 2, false);
   for (x = 0; x < (sizeX * sizeY); ++x)
     MapData[x] = 36;
   MapData[36] = 47;
   MapData[26] = 44;
-  MapData[10] = 2;
+  //MapData[10] = 2;
   SetTileOrigin(1, 1);
   
+  charX = 2;
+  charY = 0;
   while(1)
   {
-    bgcolor(0);
+    memcpy(&MapTemp[0], &MapData[0], sizeX * sizeY);
+    MapTemp[charY*sizeX + charX] = charI;
+    //charX++;
+    charY++;
+    if (charX > sizeX - 1)
+      charX -= sizeX;
+    if (charY > sizeY - 1)
+      charY -= sizeY;
+    
     z = 0;
     StoreBuffer();
     for (y = 0; y < sizeY; ++y)
       for (x = 0; x < sizeX; ++x)
       {        
-        DrawTileFast(MapData[z], x, y);
+        DrawTileFast(MapTemp[z], x, y);
         ++z;
     }
     SwapBuffer();
@@ -76,13 +88,13 @@ void DrawMap()
     for (y = 0; y < sizeY; ++y)
       for (x = 0; x < sizeX; ++x)
       {        
-        MapData[z - 1] = MapData[z];
+        //MapData[z - 1] = MapData[z];
         ++z;
     }
   }
 }
 
-void ScrollScreen()
+/*void ScrollScreen()
 {
     Scroll(right);
     Scroll(right);
@@ -92,20 +104,20 @@ void ScrollScreen()
     Scroll(left);
     Scroll(up);
     Scroll(up);
-}
+}*/
 
 void main()
 {
   InitializeGraphics();
+  ClearScreen();
+  
   while(1)
   {
-    //ClearScreen();
-    DrawCharset();
+    //DrawCharset();
     //DrawTiles();
     //InvertScreen();
-    InvertScreen();
     //InvertCharacterSet();
-    //DrawMap();
+    DrawMap();
     //ScrollScreen();
   }
 }

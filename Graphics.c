@@ -50,55 +50,6 @@ void ClearScreen()
   memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
 }
 
-void InvertCharacterSet()
-{
-  int i;
-  for (i = 0; i < 2048; ++i)
-  {
-    charset[i] = ~charset[i];
-    CharRam[i] = charset[i]; 
-  }
-  
-  /*
-  to swap out the Kernal (and BASIC, since BASIC depends on Kernal) do this:
-  1) write the address of an IRQ handler to $FFFE. Remember that writes always go to RAM, regardless of whether reads are going to RAM or ROM. If you don't set up the IRQ handler, then you will get a crash when the next IRQ fires after you have swapped out the Kernal
-  2) write #$35 to $01 - from this point, any read of $A000..$BFFFF (normally BASIC ROM) or $D000..$FFFF (normally Kernal ROM) goes to RAM instead.
-  to get back the Kernal & BASIC , write #$37 to $01
-  */
-}
-
-void InvertScreen()
-{
-  #if defined(__C64__)
-  byte *bg = (byte *)0xD020;
-  switch (PEEK(&bg[0]))
-  {
-    case 0:
-      bg[0] = 1;
-      break;
-    default:
-      bg[0] = 0;
-      break;
-  }
-  //InvertCharacterSet();
-  #endif
-
-  #if defined(__APPLE2__)
-  int i;
-  /*for (i = 0; i < 192; ++i)
-  {
-    byte y;
-    for (y = 0; y < COLS; ++y)
-      HGR[RowsHGR[i] + y] = ~(HGR[RowsHGR[i] + y]);
-  }*/
-  for (i = 0; i < 8096; ++i)
-  {
-    //byte y;
-    HGR[i] = ~(HGR[i]);
-  }
-  #endif
-}
-
 void raster_wait(byte line)
 {
   #if defined(__C64__)
@@ -258,7 +209,7 @@ void SetCharBuffer(byte index, byte x, byte y)
   #endif
 }
 
-//Scrolling
+/*//Scrolling
 void ScrollingMaskOn()
 {
   #if __C64__
@@ -589,7 +540,7 @@ void Scroll(direction dir)
     }
   }
   #endif
-}
+}*/
 
 //Buffer
 void CopyBuffer()
