@@ -47,8 +47,8 @@ void DrawTiles()
 
 void DrawMap()
 {
-  #define sizeX 9
-  #define sizeY 9
+  #define sizeX 7
+  #define sizeY 7
   byte MapData[sizeX * sizeY];
   byte MapTemp[sizeX * sizeY];
   byte charX, charY, charI;
@@ -67,8 +67,8 @@ void DrawMap()
   {
     memcpy(&MapTemp[0], &MapData[0], sizeX * sizeY);
     MapTemp[charY*sizeX + charX] = charI;
-    //charX++;
-    charY++;
+    charX++;
+    //charY++;
     if (charX > sizeX - 1)
       charX -= sizeX;
     if (charY > sizeY - 1)
