@@ -52,7 +52,7 @@ void DrawMap()
   byte MapData[sizeX * sizeY];
   byte MapTemp[sizeX * sizeY];
   byte charX, charY, charI;
-  byte x, y, z;
+  byte x, y, z, i = 0;
   DrawBorder("Map@", 0, 0, sizeX * 2 + 2, sizeY * 2 + 2, false);
   for (x = 0; x < (sizeX * sizeY); ++x)
     MapData[x] = 36;
@@ -67,8 +67,12 @@ void DrawMap()
   {
     memcpy(&MapTemp[0], &MapData[0], sizeX * sizeY);
     MapTemp[charY*sizeX + charX] = charI;
-    charX++;
-    //charY++;
+    if (i & 1)
+      charX++;
+    else
+      charY++;
+    ++i;
+    
     if (charX > sizeX - 1)
       charX -= sizeX;
     if (charY > sizeY - 1)
