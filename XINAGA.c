@@ -47,8 +47,8 @@ void DrawTiles()
 
 void DrawMap()
 {
-  #define sizeX 7
-  #define sizeY 7
+  #define sizeX 11
+  #define sizeY 11
   byte MapData[sizeX * sizeY];
   byte MapTemp[sizeX * sizeY];
   byte charX, charY, charI;
