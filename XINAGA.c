@@ -63,6 +63,7 @@ void DrawMap()
   
   charX = 2;
   charY = 0;
+  charI = 2;
   while(1)
   {
     memcpy(&MapTemp[0], &MapData[0], sizeX * sizeY);
