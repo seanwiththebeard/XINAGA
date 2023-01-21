@@ -3,8 +3,8 @@
 
 //#link "Graphics.c"
 //#link "Common.c"
-#if defined(__APPLE2__)
-//#define CFGFILE apple2-hgr2.cfg
+#if defined(__APPLE2__) 
+#define CFGFILE apple2-hgr2.cfg
 //#resource "apple2-hgr2.cfg"
 #endif
 
@@ -14,12 +14,6 @@ void DrawCharset()
   byte x, y;
   byte i = 0;
   DrawBorder("Character Set@", 0, 0, 18, 18, false);
-  #if defined(__APPLE2__)
-  DrawBorder("Hello Apple!@", 0, ROWS - 3, COLS, 2, false);
-  #endif
-  #if defined(__C64__)
-  DrawBorder("Hello C64!@", 0, ROWS - 3, COLS, 3, false);
-  #endif
   
   for (y= 0; y < 16; ++y)
     for (x = 0; x < 16; ++x)
@@ -47,8 +41,8 @@ void DrawTiles()
 
 void DrawMap()
 {
-  #define sizeX 11
-  #define sizeY 11
+  #define sizeX 9
+  #define sizeY 9
   byte MapData[sizeX * sizeY];
   byte MapTemp[sizeX * sizeY];
   byte charX, charY, charI;
@@ -116,10 +110,18 @@ void main()
   InitializeGraphics();
   ClearScreen();
   
+  #if defined(__APPLE2__)
+  DrawBorder("Hello Apple!@", 0, ROWS - 3, COLS, 2, false);
+  #endif
+  
+  #if defined(__C64__)
+  DrawBorder("Hello C64!@", 0, ROWS - 3, COLS, 3, false);
+  #endif
+  
   while(1)
   {
-    //DrawCharset();
-    //DrawTiles();
+    DrawCharset();
+    DrawTiles();
     //InvertScreen();
     //InvertCharacterSet();
     DrawMap();
