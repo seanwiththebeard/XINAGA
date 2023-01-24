@@ -39,8 +39,14 @@ void DrawTiles()
 
 void DrawMap()
 {
+  #if defined(__APPLE2__)
+  #define sizeX 7
+  #define sizeY 7
+  #endif
+  #if defined(__C64__)
   #define sizeX 9
   #define sizeY 9
+  #endif
   byte MapData[sizeX * sizeY];
   byte MapTemp[sizeX * sizeY];
   byte charX, charY, charI;
