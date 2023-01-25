@@ -85,6 +85,14 @@ void SelectCharPos(byte charpos)
 {
   charpos;
 }
+void SetMulticolors(byte color1, byte color2)
+{
+  byte *colorReg = (byte*)0xD022;
+  byte *vicReg = (byte*)0xD016;
+  colorReg[0] = color1;
+  colorReg[1] = color2;
+  vicReg[0] = vicReg[0] | 16;
+}
 #endif
 void InitializeGraphics()
 {
@@ -144,6 +152,7 @@ void InitializeGraphics()
   //Cursor Position
   POKE (0x0288, screenposition / 256);
   //ClearScreen();
+  SetMulticolors(11, 15);
   #endif
 }
 
