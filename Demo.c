@@ -40,8 +40,8 @@ void DrawTiles()
 void DrawMap()
 {
   #if defined(__APPLE2__)
-  #define sizeX 7
-  #define sizeY 7
+  #define sizeX 8
+  #define sizeY 8
   #endif
   #if defined(__C64__)
   #define sizeX 9
