@@ -5,7 +5,7 @@
 #include <stdint.h> //For byte and sbyte
 
 #if defined(__C64__)
-#include <conio.h>
+//#include <conio.h>
 #endif
 
 #define COLS 40

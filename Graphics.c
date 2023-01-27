@@ -49,10 +49,13 @@ void ClearScreen()
   memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
 }
 
+#if defined(__C64__)
+byte* RASTERCOUNT = (byte*)0xD012;
+#endif
 void raster_wait(byte line)
 {
   #if defined(__C64__)
-  while ((VIC.rasterline < line)){}
+  while ((RASTERCOUNT[0] < line)){}
   #endif
   #if defined(__APPLE2__)
   byte x;
@@ -113,15 +116,17 @@ void InitializeGraphics()
   byte charpos = 7;
   byte screenpos = 2;
   int screenposition;
-  int* regd018 = (int*)0xd018;
+  int* regd018 = (int*)0xD018;
+  byte *bgReg = (byte*)0xD020;
+  
   byte vicreg = 0x00;
   CharRam = 0;
 
   if (bufferselect)
     ++screenpos;
 
-  bgcolor(0);
-  bordercolor(0);
+  bgReg[0] = 0;
+  bgReg[1] = 0;
 
   screenposition = (bank * (16*1024) + (screenpos * 1024));
   ScreenChars = 0;
@@ -216,339 +221,6 @@ void SetCharBuffer(byte index, byte x, byte y)
   ScreenColorBuffer[x + COLS*y] = attributeset[index];
   #endif
 }
-
-/*//Scrolling
-void ScrollingMaskOn()
-{
-  #if __C64__
-  VIC.ctrl1 &= ~0x08; // 24 lines
-  VIC.ctrl2 &= ~0x08; // 38 columns  
-  //ClearBit(VIC.ctrl1, 3);
-  //ClearBit(VIC.ctrl2, 3);
-  #endif
-}
-
-void ScrollingMaskOff()
-{
-  #if __C64__
-  VIC.ctrl1 &= ~0x08; // 24 lines
-  VIC.ctrl2 &= ~0x08; // 38 columns  
-  //SetBit(VIC.ctrl1, 3);
-  //SetBit(VIC.ctrl2, 3);
-  #endif
-}
-
-sbyte scroll_fine_x = 0;
-sbyte scroll_fine_y = 0;
-
-#if __C64__
-void ScrollReset()
-{
-  VIC.ctrl1 = 0x1b;
-  VIC.ctrl2 = 0xc8;
-}
-
-// set scrolling registers
-#define SET_SCROLL_Y(_y) \
-  VIC.ctrl1 = (VIC.ctrl1 & 0xf8) | (_y);
-
-#define SET_SCROLL_X(_x) \
-  VIC.ctrl2 = (VIC.ctrl2 & 0xf8) | (_x);
-
-
-
-void scroll_update_regs() {
-  SET_SCROLL_X(scroll_fine_x);
-  SET_SCROLL_Y(scroll_fine_y);
-}
-#endif
-
-
-void scroll_up() {
-  int length = YColumnIndex[ROWS - 1];
-  #if __C64__
-  memset(&ScreenCharBuffer[length], ' ', COLS);
-  memset(&ScreenChars[0], ' ', COLS);
-
-  memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], length);
-  memcpy(&ScreenColorBuffer[0], &ScreenColors[COLS], length);
-
-  wait_vblank(1);
-  ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
-  SwapBuffer();
-  ScreenEnable();
-  #endif
-
-}
-
-void scroll_down() {
-  int length = YColumnIndex[ROWS - 1];
-  #if __C64__
-  memset(&ScreenCharBuffer[0], ' ', COLS);
-  memset(&ScreenChars[length], ' ', COLS);
-
-  memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], length);
-  memcpy(&ScreenColorBuffer[COLS], &ScreenColors[0], length);
-
-  wait_vblank(1);
-  ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
-  SwapBuffer();
-  ScreenEnable();
-  #endif
-}
-
-void scroll_right()
-{
-  #if __C64__
-  byte z;
-  int offset = 0;
-
-  for (z = 0; z < ROWS; z++)
-  {
-    SetChar(' ', 0, z);
-    SetChar(' ', COLS - 1, z);
-    memcpy(&ScreenCharBuffer[offset + 1], &ScreenChars[offset], COLS - 1);
-    memcpy(&ScreenColorBuffer[offset + 1], &ScreenColors[offset], COLS - 1);
-    offset += COLS;
-  }
-  wait_vblank(1);
-  ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
-  SwapBuffer();
-  ScreenEnable();
-  #endif
-}
-
-void scroll_left()
-{
-  #if __C64__
-  byte z;
-  int offset = 0;
-
-  for (z = 0; z < ROWS; z++)
-  {
-    SetChar(' ', 0, z);
-    SetChar(' ', COLS - 1, z);
-    memcpy(&ScreenCharBuffer[offset], &ScreenChars[offset + 1], COLS - 1);
-    memcpy(&ScreenColorBuffer[offset], &ScreenColors[offset + 1], COLS - 1);
-    offset += COLS;
-  }
-  wait_vblank(1);
-  ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
-  SwapBuffer();
-  ScreenEnable();
-  #endif
-}
-
-void scroll_vert(sbyte delta_y)
-{
-  #if defined(__APPLE2__)
-  byte rowcount;
-  
-  if (delta_y > 0)
-  {
-    for (rowcount = 192; rowcount > 0; --rowcount) 
-    {
-      memcpy(&HGR[RowsHGR[rowcount]], &HGR[RowsHGR[rowcount - 1]], COLS);
-    }
-      memset(&HGR[RowsHGR[0]], 0, COLS);
-  }
-  if (delta_y < 0)
-  {
-    for (rowcount = 1; rowcount < 192; ++rowcount)
-    {
-      memcpy(&HGR[RowsHGR[rowcount - 1]], &HGR[RowsHGR[rowcount]], COLS);
-    }
-      memset(&HGR[RowsHGR[rowcount - 1]], 0, COLS);
-  }
-  #endif
-  
-  scroll_fine_y += delta_y;
-
-  while (scroll_fine_y < 0) {
-    scroll_fine_y += 8;
-    scroll_up();
-  }
-  while (scroll_fine_y >= 8) {
-    scroll_fine_y -= 8;
-    scroll_down();    
-  }  
-}
-
-#if defined(__APPLE2__)
-void push_up()
-{
-  byte colcount, rowcount;
-  for (rowcount = 0; rowcount < 192; ++rowcount) 
-  {
-    if (rowcount > 183)
-      memset(&HGR[RowsHGR[rowcount]], 0, COLS);
-    else
-    for (colcount = 0; colcount < COLS; ++colcount)
-    {
-      HGR[RowsHGR[rowcount] + colcount] = HGR[RowsHGR[rowcount + 8] + colcount];
-    }
-    if (rowcount > 183)
-      memset(&HGR[RowsHGR[rowcount]], 0, COLS);
-  }
-}
-void push_down()
-{
-  byte colcount, rowcount;
-  for (rowcount = 191; rowcount != 255; --rowcount) 
-  {
-    for (colcount = 0; colcount < COLS; ++colcount)
-    {
-      HGR[RowsHGR[rowcount] + colcount] = HGR[RowsHGR[rowcount - 8] + colcount];
-    }
-    if (rowcount < 8)
-      memset(&HGR[RowsHGR[rowcount]], 0, COLS);
-  }
-}
-
-void push_left()
-{
-  byte colcount, rowcount;
-  int offset;
-  for (rowcount = 0; rowcount < 192; ++rowcount) 
-  {
-    for (colcount = 0; colcount < COLS - 1; ++colcount)
-    {
-      offset  = RowsHGR[rowcount] + colcount;
-      HGR[offset] = HGR[offset + 1];
-    }
-    HGR[offset + 1] = 0;
-  }
-}
-void push_right()
-{
-  byte colcount, rowcount;
-  int offset;
-  for (rowcount = 0; rowcount < 192; ++rowcount) 
-  {
-    for (colcount = COLS - 1; colcount > 0; --colcount)
-    {
-      offset  = RowsHGR[rowcount] + colcount;
-      HGR[offset] = HGR[offset - 1];
-    }
-    HGR[offset - 1] = 0;
-  }
-}
-#endif
-
-void scroll_horiz(sbyte delta_x) {
-  #if defined(__APPLE2__)
-  byte colcount, rowcount;
-  int offset;
-  if (delta_x > 0)
-  {
-    for (rowcount = 0; rowcount < 192; ++rowcount) 
-    {
-      for (colcount = 0; colcount < COLS; ++colcount)
-      {
-        offset  = RowsHGR[rowcount] + colcount;
-        HGR[offset] = HGR[offset] << 1;
-        if (colcount > 0)
-        {
-          if ((HGR[offset - 1] >> 7) & 1)
-            HGR[offset] += 1;
-        }
-      }
-    }
-  }
-  if (delta_x < 0)
-  {
-    for (rowcount = 0; rowcount < 192; ++rowcount) 
-    {
-      for (colcount = 0; colcount < COLS; ++colcount)
-      {
-        offset  = RowsHGR[rowcount] + colcount;
-        HGR[offset] = HGR[offset] >> 1;
-        if (colcount < COLS - 1)
-        {
-          if ((HGR[offset + 1]) & 2)
-            HGR[offset] += 128;
-        }
-      }
-    }
-  }
-  #endif
-  
-  scroll_fine_x += delta_x;
-  while (scroll_fine_x < 0) {
-    scroll_fine_x += 8;
-    scroll_left();
-  }
-  while (scroll_fine_x >= 8) {
-    scroll_fine_x -= 8;
-    scroll_right();
-  }
-}
-
-void Scroll(direction dir)
-{
-  #if __C64__
-  byte count;
-  //ScrollingMaskOn();
-  scroll_fine_y = 3;
-  scroll_fine_x = 0;
-
-  for (count = 0; count < 8; ++count)
-  {
-    wait_vblank(1);
-    switch (dir)
-    {
-      case up:
-        scroll_vert(-1);
-        break;
-      case down:
-        scroll_vert(1);
-        break;
-      case left:
-        scroll_horiz(-1);
-        break;
-      case right:
-        scroll_horiz(1);
-        break;
-      default:
-        break;
-    }
-    //wait_vblank(1);
-    scroll_update_regs();
-  }
-  //ScrollingMaskOff();
-  #endif
-
-  #if defined(__APPLE2__)
-  //for (count = 0; count < 8; ++count)
-  {
-    switch (dir)
-    {
-      case up:
-        push_up();
-        //scroll_vert(-1);
-        break;
-      case down:
-        push_down();
-        //scroll_vert(1);
-        break;
-      case left:
-        push_left();
-        //scroll_horiz(-1);
-        break;
-      case right:
-        push_right();
-        //scroll_horiz(1);
-        break;
-      default:
-        break;
-    }
-  }
-  #endif
-}*/
 
 //Buffer
 void CopyBuffer()
@@ -697,6 +369,40 @@ void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bo
     }
 }
 
+byte MapSet[] = {/*{w:8,h:8,brev:1,count:64, bpp:1, pal:"c64"}*/
+  0xFF,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0xE7,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x01,0x01,0x01,0x01,0x01,0x01,0x01
+    ,0x24,0x24,0x24,0x24,0x24,0x24,0x24,0x24,0x00,0x00,0xFF,0x00,0x00,0xFF,0x00,0x00
+    ,0x00,0x66,0x66,0x00,0x00,0x66,0x66,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x24,0x24,0x24,0x24,0x24,0x24,0x24,0x24
+    ,0x00,0x00,0xFF,0x00,0x00,0xFF,0x00,0x00,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01
+    ,0x00,0x00,0x3F,0x20,0x20,0x27,0x24,0x24,0x00,0x00,0xFF,0x00,0x00,0xE7,0x24,0x24
+    ,0x00,0x00,0xFC,0x04,0x04,0xE4,0x24,0x24,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x80,0x80,0x80,0x00,0x00,0x80,0x80,0x80,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF
+    ,0x00,0x66,0x42,0x00,0x00,0x42,0x66,0x00,0x01,0x01,0x01,0x00,0x00,0x01,0x01,0x01
+    ,0x24,0x24,0x27,0x20,0x20,0x27,0x24,0x24,0x24,0x24,0xE7,0x00,0x00,0xE7,0x24,0x24
+    ,0x24,0x24,0xE4,0x04,0x00,0xE4,0x24,0x24,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xE7,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0xFF
+    ,0x24,0x24,0x27,0x20,0x20,0x3F,0x00,0x00,0x24,0x24,0xE7,0x00,0x00,0xFF,0x00,0x00
+    ,0x24,0x24,0xE4,0x04,0x04,0xFC,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+
 #if defined(__C64__)
 byte attributeset[] = {/*{pal:"c64", layout:"c64"}*/
   0x01,0x01,0x01,0x01,0x0F,0x0F,0x01,0x01,0x01,0x01,0x0F,0x0F,0x01,0x01,0x03,0x03
@@ -710,7 +416,7 @@ byte attributeset[] = {/*{pal:"c64", layout:"c64"}*/
     ,0x03,0x03,0x04,0x06,0x0E,0x0E,0x08,0x08,0x0D,0x05,0x08,0x08,0x02,0x08,0x08,0x0F
     ,0x03,0x03,0x06,0x04,0x0E,0x0E,0x09,0x09,0x05,0x0D,0x09,0x09,0x08,0x02,0x09,0x09
     ,0x08,0x08,0x0F,0x0C,0x0C,0x0C,0x0C,0x0C,0x0D,0x0D,0x0F,0x0B,0x0B,0x0B,0x0F,0x0F
-    ,0x08,0x08,0x0A,0x0C,0x0B,0x0B,0x0B,0x0C,0x05,0x05,0x0C,0x0B,0x0B,0x0B,0x0C,0x0C
+    ,0x08,0x08,0x08,0x0C,0x0B,0x0B,0x0B,0x0C,0x05,0x05,0x0C,0x0B,0x0B,0x0B,0x0C,0x0C
     ,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01
     ,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x03,0x03,0x03,0x03,0x03
     ,0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x03,0x03
@@ -1063,3 +769,336 @@ byte charset[] = {/*{w:8,h:8,count:256, bpp:1}*/
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x36, 0x3E, 0x36, 0x3E, 0x36, 0x3E, 0x36, 0x3E};
 #endif
+
+/*//Scrolling
+void ScrollingMaskOn()
+{
+  #if __C64__
+  VIC.ctrl1 &= ~0x08; // 24 lines
+  VIC.ctrl2 &= ~0x08; // 38 columns  
+  //ClearBit(VIC.ctrl1, 3);
+  //ClearBit(VIC.ctrl2, 3);
+  #endif
+}
+
+void ScrollingMaskOff()
+{
+  #if __C64__
+  VIC.ctrl1 &= ~0x08; // 24 lines
+  VIC.ctrl2 &= ~0x08; // 38 columns  
+  //SetBit(VIC.ctrl1, 3);
+  //SetBit(VIC.ctrl2, 3);
+  #endif
+}
+
+sbyte scroll_fine_x = 0;
+sbyte scroll_fine_y = 0;
+
+#if __C64__
+void ScrollReset()
+{
+  VIC.ctrl1 = 0x1b;
+  VIC.ctrl2 = 0xc8;
+}
+
+// set scrolling registers
+#define SET_SCROLL_Y(_y) \
+  VIC.ctrl1 = (VIC.ctrl1 & 0xf8) | (_y);
+
+#define SET_SCROLL_X(_x) \
+  VIC.ctrl2 = (VIC.ctrl2 & 0xf8) | (_x);
+
+
+
+void scroll_update_regs() {
+  SET_SCROLL_X(scroll_fine_x);
+  SET_SCROLL_Y(scroll_fine_y);
+}
+#endif
+
+
+void scroll_up() {
+  int length = YColumnIndex[ROWS - 1];
+  #if __C64__
+  memset(&ScreenCharBuffer[length], ' ', COLS);
+  memset(&ScreenChars[0], ' ', COLS);
+
+  memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], length);
+  memcpy(&ScreenColorBuffer[0], &ScreenColors[COLS], length);
+
+  wait_vblank(1);
+  ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
+  SwapBuffer();
+  ScreenEnable();
+  #endif
+
+}
+
+void scroll_down() {
+  int length = YColumnIndex[ROWS - 1];
+  #if __C64__
+  memset(&ScreenCharBuffer[0], ' ', COLS);
+  memset(&ScreenChars[length], ' ', COLS);
+
+  memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], length);
+  memcpy(&ScreenColorBuffer[COLS], &ScreenColors[0], length);
+
+  wait_vblank(1);
+  ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
+  SwapBuffer();
+  ScreenEnable();
+  #endif
+}
+
+void scroll_right()
+{
+  #if __C64__
+  byte z;
+  int offset = 0;
+
+  for (z = 0; z < ROWS; z++)
+  {
+    SetChar(' ', 0, z);
+    SetChar(' ', COLS - 1, z);
+    memcpy(&ScreenCharBuffer[offset + 1], &ScreenChars[offset], COLS - 1);
+    memcpy(&ScreenColorBuffer[offset + 1], &ScreenColors[offset], COLS - 1);
+    offset += COLS;
+  }
+  wait_vblank(1);
+  ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  SwapBuffer();
+  ScreenEnable();
+  #endif
+}
+
+void scroll_left()
+{
+  #if __C64__
+  byte z;
+  int offset = 0;
+
+  for (z = 0; z < ROWS; z++)
+  {
+    SetChar(' ', 0, z);
+    SetChar(' ', COLS - 1, z);
+    memcpy(&ScreenCharBuffer[offset], &ScreenChars[offset + 1], COLS - 1);
+    memcpy(&ScreenColorBuffer[offset], &ScreenColors[offset + 1], COLS - 1);
+    offset += COLS;
+  }
+  wait_vblank(1);
+  ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  SwapBuffer();
+  ScreenEnable();
+  #endif
+}
+
+void scroll_vert(sbyte delta_y)
+{
+  #if defined(__APPLE2__)
+  byte rowcount;
+  
+  if (delta_y > 0)
+  {
+    for (rowcount = 192; rowcount > 0; --rowcount) 
+    {
+      memcpy(&HGR[RowsHGR[rowcount]], &HGR[RowsHGR[rowcount - 1]], COLS);
+    }
+      memset(&HGR[RowsHGR[0]], 0, COLS);
+  }
+  if (delta_y < 0)
+  {
+    for (rowcount = 1; rowcount < 192; ++rowcount)
+    {
+      memcpy(&HGR[RowsHGR[rowcount - 1]], &HGR[RowsHGR[rowcount]], COLS);
+    }
+      memset(&HGR[RowsHGR[rowcount - 1]], 0, COLS);
+  }
+  #endif
+  
+  scroll_fine_y += delta_y;
+
+  while (scroll_fine_y < 0) {
+    scroll_fine_y += 8;
+    scroll_up();
+  }
+  while (scroll_fine_y >= 8) {
+    scroll_fine_y -= 8;
+    scroll_down();    
+  }  
+}
+
+#if defined(__APPLE2__)
+void push_up()
+{
+  byte colcount, rowcount;
+  for (rowcount = 0; rowcount < 192; ++rowcount) 
+  {
+    if (rowcount > 183)
+      memset(&HGR[RowsHGR[rowcount]], 0, COLS);
+    else
+    for (colcount = 0; colcount < COLS; ++colcount)
+    {
+      HGR[RowsHGR[rowcount] + colcount] = HGR[RowsHGR[rowcount + 8] + colcount];
+    }
+    if (rowcount > 183)
+      memset(&HGR[RowsHGR[rowcount]], 0, COLS);
+  }
+}
+void push_down()
+{
+  byte colcount, rowcount;
+  for (rowcount = 191; rowcount != 255; --rowcount) 
+  {
+    for (colcount = 0; colcount < COLS; ++colcount)
+    {
+      HGR[RowsHGR[rowcount] + colcount] = HGR[RowsHGR[rowcount - 8] + colcount];
+    }
+    if (rowcount < 8)
+      memset(&HGR[RowsHGR[rowcount]], 0, COLS);
+  }
+}
+
+void push_left()
+{
+  byte colcount, rowcount;
+  int offset;
+  for (rowcount = 0; rowcount < 192; ++rowcount) 
+  {
+    for (colcount = 0; colcount < COLS - 1; ++colcount)
+    {
+      offset  = RowsHGR[rowcount] + colcount;
+      HGR[offset] = HGR[offset + 1];
+    }
+    HGR[offset + 1] = 0;
+  }
+}
+void push_right()
+{
+  byte colcount, rowcount;
+  int offset;
+  for (rowcount = 0; rowcount < 192; ++rowcount) 
+  {
+    for (colcount = COLS - 1; colcount > 0; --colcount)
+    {
+      offset  = RowsHGR[rowcount] + colcount;
+      HGR[offset] = HGR[offset - 1];
+    }
+    HGR[offset - 1] = 0;
+  }
+}
+#endif
+
+void scroll_horiz(sbyte delta_x) {
+  #if defined(__APPLE2__)
+  byte colcount, rowcount;
+  int offset;
+  if (delta_x > 0)
+  {
+    for (rowcount = 0; rowcount < 192; ++rowcount) 
+    {
+      for (colcount = 0; colcount < COLS; ++colcount)
+      {
+        offset  = RowsHGR[rowcount] + colcount;
+        HGR[offset] = HGR[offset] << 1;
+        if (colcount > 0)
+        {
+          if ((HGR[offset - 1] >> 7) & 1)
+            HGR[offset] += 1;
+        }
+      }
+    }
+  }
+  if (delta_x < 0)
+  {
+    for (rowcount = 0; rowcount < 192; ++rowcount) 
+    {
+      for (colcount = 0; colcount < COLS; ++colcount)
+      {
+        offset  = RowsHGR[rowcount] + colcount;
+        HGR[offset] = HGR[offset] >> 1;
+        if (colcount < COLS - 1)
+        {
+          if ((HGR[offset + 1]) & 2)
+            HGR[offset] += 128;
+        }
+      }
+    }
+  }
+  #endif
+  
+  scroll_fine_x += delta_x;
+  while (scroll_fine_x < 0) {
+    scroll_fine_x += 8;
+    scroll_left();
+  }
+  while (scroll_fine_x >= 8) {
+    scroll_fine_x -= 8;
+    scroll_right();
+  }
+}
+
+void Scroll(direction dir)
+{
+  #if __C64__
+  byte count;
+  //ScrollingMaskOn();
+  scroll_fine_y = 3;
+  scroll_fine_x = 0;
+
+  for (count = 0; count < 8; ++count)
+  {
+    wait_vblank(1);
+    switch (dir)
+    {
+      case up:
+        scroll_vert(-1);
+        break;
+      case down:
+        scroll_vert(1);
+        break;
+      case left:
+        scroll_horiz(-1);
+        break;
+      case right:
+        scroll_horiz(1);
+        break;
+      default:
+        break;
+    }
+    //wait_vblank(1);
+    scroll_update_regs();
+  }
+  //ScrollingMaskOff();
+  #endif
+
+  #if defined(__APPLE2__)
+  //for (count = 0; count < 8; ++count)
+  {
+    switch (dir)
+    {
+      case up:
+        push_up();
+        //scroll_vert(-1);
+        break;
+      case down:
+        push_down();
+        //scroll_vert(1);
+        break;
+      case left:
+        push_left();
+        //scroll_horiz(-1);
+        break;
+      case right:
+        push_right();
+        //scroll_horiz(1);
+        break;
+      default:
+        break;
+    }
+  }
+  #endif
+}*/
