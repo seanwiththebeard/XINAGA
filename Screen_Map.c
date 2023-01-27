@@ -63,7 +63,7 @@ byte DoubleBufferChars[viewportCharWidth*viewportCharHeight];
 byte DoubleBufferColors[viewportCharWidth*viewportCharHeight];
 
 
-int CharAddress, CharAddress2, ColorAddress, ColorAddress2;
+//int CharAddress, CharAddress2, ColorAddress, ColorAddress2;
 
 byte followIndex = 0;
 
@@ -684,10 +684,10 @@ void DrawEntireMap();
 void ScrollViewport(byte direction)
 {
   
-  CharAddress = (int) &DoubleBufferChars[0];
-  CharAddress2 = (int) &DoubleBufferChars[2];
-  ColorAddress = (int) &DoubleBufferColors[0];
-  ColorAddress2 = (int) &DoubleBufferColors[2];
+  //CharAddress = (int) &DoubleBufferChars[0];
+  //CharAddress2 = (int) &DoubleBufferChars[2];
+  //ColorAddress = (int) &DoubleBufferColors[0];
+  //ColorAddress2 = (int) &DoubleBufferColors[2];
   direction--;
   CameraFollow();
   DrawEntireMap();
