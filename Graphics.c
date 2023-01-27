@@ -24,11 +24,11 @@ byte *ScreenChars = (byte *)0x0400;
 byte *ScreenColors = (byte *)0xD800;
 bool bufferselect = false;
 byte attributeset[];
-byte *CharRam = 0;
 #define ScreenDisable() (POKE(0xD011, PEEK(0xD011)&239))
 #define ScreenEnable() (POKE(0xD011, PEEK(0xD011)|16))
 #include <peekpoke.h>
 #endif
+byte *CharRam = 0;
 
 void ClearScreen()
 {
@@ -331,10 +331,10 @@ void DrawTileFast(byte index, byte x, byte y)
   #endif
 
   #if defined(__APPLE2__)
-  SetChar(indexes[0], x + originX, y + originY);
-  SetChar(indexes[1], x + originX + 1, y + originY);
-  SetChar(indexes[2], x + originX, y + 1 + originY);
-  SetChar(indexes[3], x + originX + 1, y + 1 + originY);
+  SetChar(indexes[0], x + MapOriginX, y + MapOriginY);
+  SetChar(indexes[1], x + MapOriginX + 1, y + MapOriginY);
+  SetChar(indexes[2], x + MapOriginX, y + 1 + MapOriginY);
+  SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
   #endif
 }
 
