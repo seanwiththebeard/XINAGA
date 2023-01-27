@@ -21,7 +21,7 @@ void InitializeGraphics(void);
 void wait_vblank(byte frames);
 void raster_wait(byte line);
 extern int YColumnIndex[25];
-extern byte *CharRam;
+extern byte* MapSetInfo;
 
 //Drawing
 void ClearScreen(void);

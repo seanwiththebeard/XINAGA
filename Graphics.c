@@ -28,7 +28,9 @@ byte attributeset[];
 #define ScreenEnable() (POKE(0xD011, PEEK(0xD011)|16))
 #include <peekpoke.h>
 #endif
-byte *CharRam = &charset[0];
+byte  MapSet[];
+byte* CharRam = 0;
+byte* MapSetInfo = (byte*) &MapSet[0];
 
 void ClearScreen()
 {
@@ -299,6 +301,7 @@ void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
 
 int originOffset = 0;
 byte MapOriginX, MapOriginY = 0;
+
 void SetTileOrigin(byte x, byte y)
 {
   originOffset = YColumnIndex[y] + x;
@@ -307,7 +310,6 @@ void SetTileOrigin(byte x, byte y)
 }
 
 byte indexes[4];
-
 unsigned short offset1;
 void DrawTileFast(byte index, byte x, byte y)
 {

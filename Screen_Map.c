@@ -46,21 +46,21 @@ bool wrap = true;
 #define viewportPosY 2
 #define viewportWidth 9
 #define viewportHeight 9
-#define viewportCharWidth (viewportWidth * 2)
+//#define viewportCharWidth (viewportWidth * 2)
 #define viewportCharHeight (viewportHeight * 2)
-const byte doubleCharWidth = viewportCharWidth;
+//const byte doubleCharWidth = viewportCharWidth;
 const byte doubleCharHeight = viewportCharHeight;
 const byte viewportWidthQuad = (viewportWidth*4);
 const byte LastMapScanline = (8*viewportPosY + 16*viewportHeight);
 
 //Scrolling left and right line buffer
-const byte bufferLength = viewportCharWidth - 2;
-byte buffer[viewportCharWidth];
-const int BufferAddress = (int)&buffer[0];
-const int totalSize = viewportCharHeight * viewportCharWidth;
+//const byte bufferLength = viewportCharWidth - 2;
+//byte buffer[viewportCharWidth];
+//const int BufferAddress = (int)&buffer[0];
+//const int totalSize = viewportCharHeight * viewportCharWidth;
 byte viewportBuffer[viewportWidth][viewportHeight];
-byte DoubleBufferChars[viewportCharWidth*viewportCharHeight];
-byte DoubleBufferColors[viewportCharWidth*viewportCharHeight];
+//byte DoubleBufferChars[viewportCharWidth*viewportCharHeight];
+//byte DoubleBufferColors[viewportCharWidth*viewportCharHeight];
 
 
 //int CharAddress, CharAddress2, ColorAddress, ColorAddress2;
@@ -71,7 +71,7 @@ byte followIndex = 0;
 //int colorOrigin = &ScreenColorBuffer;
 
 //QuadScroll
-byte originX, originY;
+byte QuadOriginX, QuadOriginY;
 byte quadA; //Entering quad
 byte quadB; //Diagonal quad
 byte indexA, indexB;
@@ -297,20 +297,20 @@ void LoadQuadrant(byte quadIndex, byte quad)
     switch (quad)
     {
     case 0:
-      originX = 0;
-      originY = 0;
+      QuadOriginX = 0;
+      QuadOriginY = 0;
       break;
     case 1:
-      originX = quadWidthDouble;
-      originY = 0;
+      QuadOriginX = quadWidthDouble;
+      QuadOriginY = 0;
       break;
     case 2:
-      originX = 0;
-      originY = quadHeightDouble;
+      QuadOriginX = 0;
+      QuadOriginY = quadHeightDouble;
       break;
     case 3:
-      originX = quadWidthDouble;
-      originY = quadHeightDouble;
+      QuadOriginX = quadWidthDouble;
+      QuadOriginY = quadHeightDouble;
       break;
     default:
       break;
@@ -321,31 +321,31 @@ void LoadQuadrant(byte quadIndex, byte quad)
     case 0:
       break;
     case 1:
-      originX += quadWidth;
+      QuadOriginX += quadWidth;
       break;
     case 2:
-      originY += quadHeight;
+      QuadOriginY += quadHeight;
       break;
     case 3:
-      originX += quadWidth;
-      originY += quadHeight;
+      QuadOriginX += quadWidth;
+      QuadOriginY += quadHeight;
       break;
     default:
       break;
     }
 
-    chardata = (int)&CharRam[0] + 8*ScreenQuad[quadIndex].CharIndex[byte_z];
+    chardata = (int)&MapSetInfo[0] + 8*ScreenQuad[quadIndex].CharIndex[byte_z];
     for (byte_y = 0; byte_y < quadHeight; ++byte_y)
     {
       for (byte_x = 0; byte_x < quadWidth; ++byte_x)
       {
         if (ReadBit(PEEK(chardata + byte_y), 7 - byte_x) > 0)
         {
-          mapData[byte_x + originX][byte_y + originY] = ScreenQuad[quadIndex].Chars[1];
+          mapData[byte_x + QuadOriginX][byte_y + QuadOriginY] = ScreenQuad[quadIndex].Chars[1];
         }
         else
         {
-          mapData[byte_x + originX][byte_y + originY] = ScreenQuad[quadIndex].Chars[0];
+          mapData[byte_x + QuadOriginX][byte_y + QuadOriginY] = ScreenQuad[quadIndex].Chars[0];
         }
       }
     }
@@ -415,8 +415,8 @@ void QuadScroll(byte direction)
 {
   SetChar(0, 24, 'p'); //Indicate processing
   
-  originX = characters[followIndex].quadPosX;
-  originY = characters[followIndex].quadPosY;
+  QuadOriginX = characters[followIndex].quadPosX;
+  QuadOriginY = characters[followIndex].quadPosY;
   compareQuad = GetPlayerQuad();
   
   posX = characters[followIndex].posX % 16 < quadWidth;
@@ -579,7 +579,7 @@ void QuadScroll(byte direction)
        {
   	LoadQuadrant(indexB, quadB);
        }
-  SetChar(0, 24, ' '); //Indicate processing
+  //SetChar(0, COLS - 2, '!'); //Indicate processing
   
 }
 
@@ -679,7 +679,6 @@ void InitializeMapData()
   LoadMapQuads();
 }
 void DrawEntireMap();
-
 
 void ScrollViewport(byte direction)
 {
@@ -834,7 +833,7 @@ void DrawEntireMap()
 {
   //ReverseBufferArea(viewportPosX - 1, viewportPosY - 1, viewportCharWidth + 2, viewportCharHeight + 2);
   
-  DrawBorder("MAPSCREEN@", viewportPosX - 1, viewportPosY - 1, viewportCharWidth + 2, viewportCharHeight + 2, false);
+  DrawBorder("MAPSCREEN@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, false);
   StoreBuffer();
   
   CameraFollow();

@@ -116,13 +116,15 @@ void Demo()
   DrawBorder("Hello C64!@", 0, ROWS - 3, COLS, 3, false);
   #endif
   
+  //DrawCharset();
+  DrawTiles();
+  //DrawTiles();
   SetTileOrigin(1, 2);
   LoadMap();
+  MapUpdate();
+  
   while(1)
   {
-    //MapUpdate();
-    DrawCharset();
-    DrawTiles();
     //InvertScreen();
     //InvertCharacterSet();
     //DrawMap();
