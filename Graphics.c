@@ -1,5 +1,4 @@
 #include "xinaga.h"
-#include "Common.h"
 
 int YColumnIndex[25] = {
   0, 40, 80, 120, 160,

@@ -1,10 +1,4 @@
 #include "xinaga.h"
-#include "Common.h"
-
-//#link "Graphics.c"
-//#link "Common.c"
-//#define CFGFILE apple2-hgr2.cfg
-//#resource "apple2-hgr2.cfg"
 
 //Tests
 void DrawCharset()
