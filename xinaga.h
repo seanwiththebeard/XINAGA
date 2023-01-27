@@ -8,7 +8,9 @@
 #define COLS 40
 #define ROWS 24
 
+
 typedef uint8_t byte;
+typedef int8_t sbyte;	// 8-bit signed
 typedef enum { false, true } bool;
 typedef enum { up, down, left, right } direction;
 
@@ -17,10 +19,10 @@ void InitializeGraphics(void);
 void wait_vblank(byte frames);
 void raster_wait(byte line);
 
-//	Drawing
+//Drawing
 void ClearScreen(void);
 void SetChar(byte x, byte y, byte index);
-void SetCharBuffer(byte x, byte y, byte index);
+//void SetCharBuffer(byte x, byte y, byte index);
 void DrawLineH(char index, byte x, byte y, byte length);
 void DrawLineV(char index, byte x, byte y, byte length);
 void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bool fill);
