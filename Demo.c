@@ -120,9 +120,9 @@ void Demo()
   LoadMap();
   while(1)
   {
-    MapUpdate();
-    //DrawCharset();
-    //DrawTiles();
+    //MapUpdate();
+    DrawCharset();
+    DrawTiles();
     //InvertScreen();
     //InvertCharacterSet();
     //DrawMap();
