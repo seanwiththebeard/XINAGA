@@ -4,10 +4,6 @@
 #include <string.h> //For memcpy
 #include <stdint.h> //For byte and sbyte
 
-#if defined(__C64__)
-//#include <conio.h>
-#endif
-
 #define COLS 40
 #define ROWS 24
 
@@ -17,10 +13,15 @@ typedef int8_t sbyte;	// 8-bit signed
 typedef enum { false, true } bool;
 typedef enum { up, down, left, right } direction;
 
+void LoadMap();
+void MapUpdate();
+
 //Graphics
 void InitializeGraphics(void);
 void wait_vblank(byte frames);
 void raster_wait(byte line);
+extern int YColumnIndex[25];
+extern byte *CharRam;
 
 //Drawing
 void ClearScreen(void);

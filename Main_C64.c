@@ -2,6 +2,8 @@
 
 //#link "Demo.c"
 //#link "Graphics.c"
+//#link "Screen_Map.c"
+
 
 void Demo(void);
 

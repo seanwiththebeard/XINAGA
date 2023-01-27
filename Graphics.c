@@ -298,12 +298,12 @@ void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
 }
 
 int originOffset = 0;
-byte originX, originY = 0;
+byte MapOriginX, MapOriginY = 0;
 void SetTileOrigin(byte x, byte y)
 {
   originOffset = YColumnIndex[y] + x;
-  originX = x;
-  originY = y;
+  MapOriginX = x;
+  MapOriginY = y;
 }
 
 byte indexes[4];
