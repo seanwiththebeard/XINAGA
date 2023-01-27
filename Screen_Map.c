@@ -1002,7 +1002,7 @@ void MapUpdate()
         MoveCharacter(0, 0, true);
         //return 1;
       }
-      //if (InputDown()) 
+      if (InputDown()) 
       {
         MoveCharacter(0, 1, true); 
         //return 1;
@@ -1012,7 +1012,7 @@ void MapUpdate()
         MoveCharacter(0, 2, true);
         //return 1;
       }
-      if (InputRight())
+      //if (InputRight())
       {
         MoveCharacter(0, 3, true);
         //return 1;
