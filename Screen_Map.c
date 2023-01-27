@@ -857,6 +857,7 @@ void DrawEntireMap()
     int_a = offsetX;
     ++int_b;
   }
+  BufferCharacters();
   SwapBuffer();
 }
 
