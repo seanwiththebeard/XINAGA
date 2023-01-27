@@ -1,9 +1,12 @@
 #ifndef _XINAGA_H
 #define _XINAGA_H
 
-#include <string.h>
+#include <string.h> //For memcpy
+#include <stdint.h> //For byte and sbyte
+
+#if defined(__C64__)
 #include <conio.h>
-#include <stdint.h>
+#endif
 
 #define COLS 40
 #define ROWS 24
