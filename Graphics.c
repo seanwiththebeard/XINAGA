@@ -125,8 +125,8 @@ void InitializeGraphics()
   if (bufferselect)
     ++screenpos;
 
-  bgReg[0] = 0;
-  bgReg[1] = 0;
+  bgReg[0] = 12;
+  bgReg[1] = 12;
 
   screenposition = (bank * (16*1024) + (screenpos * 1024));
   ScreenChars = 0;
