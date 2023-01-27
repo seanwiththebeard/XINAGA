@@ -117,7 +117,7 @@ void Demo()
   #endif
   
   //DrawCharset();
-  DrawTiles();
+  //DrawTiles();
   //DrawTiles();
   SetTileOrigin(1, 2);
   LoadMap();

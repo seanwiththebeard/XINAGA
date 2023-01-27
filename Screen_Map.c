@@ -412,9 +412,7 @@ byte GetQuadInRelation(bool up, bool down, bool left, bool right)
 }
 
 void QuadScroll(byte direction)
-{
-  SetChar(0, 24, 'p'); //Indicate processing
-  
+{  
   QuadOriginX = characters[followIndex].quadPosX;
   QuadOriginY = characters[followIndex].quadPosY;
   compareQuad = GetPlayerQuad();
@@ -832,8 +830,6 @@ bool CheckCollision(byte charIndex, byte Direction)
 void DrawEntireMap()
 {
   //ReverseBufferArea(viewportPosX - 1, viewportPosY - 1, viewportCharWidth + 2, viewportCharHeight + 2);
-  
-  DrawBorder("MAPSCREEN@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, false);
   StoreBuffer();
   
   CameraFollow();
@@ -960,6 +956,7 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
 void LoadMap()
 {
   InitializeMapData();
+  DrawBorder("MAPSCREEN@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, false);
   DrawEntireMap();
 }
 

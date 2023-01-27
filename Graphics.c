@@ -30,7 +30,8 @@ byte attributeset[];
 #endif
 byte  MapSet[];
 byte* CharRam = 0;
-byte* MapSetInfo = (byte*) &MapSet[0];
+//byte* MapSetInfo = (byte*) &MapSet[0];
+byte* MapSetInfo = (byte*) &charset[0];
 
 void ClearScreen()
 {
