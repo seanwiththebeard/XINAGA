@@ -44,8 +44,8 @@ bool wrap = true;
 //Viewport
 byte viewportPosX = 1;
 byte viewportPosY = 2;
-#define viewportWidth 11
-#define viewportHeight 11
+#define viewportWidth 9
+#define viewportHeight 9
 //#define viewportCharWidth (viewportWidth * 2)
 #define viewportCharHeight (viewportHeight * 2)
 //const byte doubleCharWidth = viewportCharWidth;
