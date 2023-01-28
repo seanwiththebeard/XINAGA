@@ -832,27 +832,25 @@ bool CheckCollision(byte charIndex, byte Direction)
   return false;
 }
 
+const byte viewportsize = viewportHeight * viewportWidth;
 void DrawEntireMap()
 {
   //ReverseBufferArea(viewportPosX - 1, viewportPosY - 1, viewportCharWidth + 2, viewportCharHeight + 2);
   StoreBuffer();
   #if defined(__APPLE2__)
-  memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportHeight * viewportWidth); //It's acrtually faster to skip this on Commodore
+  memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportSize); //It's acrtually faster to skip this on Commodore
   #endif
-
+  
+  //Buffer the matrix of tiles for our viewport
   CameraFollow();
   int_a = offsetX;
   int_b = offsetY;
-  //Buffer the matrix of tiles for our viewport
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {
-    //Wrap the map data y reference
-    int_b = WrapMapPositionY(int_b);
-
+    int_b = WrapMapPositionY(int_b); //Wrap the map data y reference
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
-      //Wrap the map data X reference
-      int_a = WrapMapPositionX(int_a);
+      int_a = WrapMapPositionX(int_a); //Wrap the map data X reference
       viewportBuffer[byte_x][byte_y] = mapData[int_a][int_b];
       //DrawTileFast(viewportBuffer[byte_x][byte_y], byte_x, byte_y);
       int_a++;
@@ -865,7 +863,7 @@ void DrawEntireMap()
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {      
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
-    {
+    { //On Apple, only draw tiles that are different from the last draw
       #if defined(__APPLE2__)
       if(viewportBuffer[byte_x][byte_y] != viewportBufferLast[byte_x][byte_y]); //It's acrtually faster to skip this on Commodore
       #endif
