@@ -118,7 +118,7 @@ void Demo()
   
   DrawCharset();
   DrawTiles();
-  SetTileOrigin(7, 3);
+  SetTileOrigin(1, 1);
   LoadMap();
   MapUpdate();
   

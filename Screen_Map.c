@@ -44,8 +44,8 @@ bool wrap = true;
 //Viewport
 byte viewportPosX = 1;
 byte viewportPosY = 2;
-#define viewportWidth 9
-#define viewportHeight 9
+#define viewportWidth 11
+#define viewportHeight 11
 //#define viewportCharWidth (viewportWidth * 2)
 #define viewportCharHeight (viewportHeight * 2)
 //const byte doubleCharWidth = viewportCharWidth;
@@ -60,6 +60,8 @@ const byte viewportWidthQuad = (viewportWidth*4);
 //const int totalSize = viewportCharHeight * viewportCharWidth;
 
 byte viewportBuffer[viewportWidth][viewportHeight];
+byte viewportBufferLast[viewportWidth][viewportHeight];
+
 //byte DoubleBufferChars[viewportCharWidth*viewportCharHeight];
 //byte DoubleBufferColors[viewportCharWidth*viewportCharHeight];
 
@@ -835,6 +837,8 @@ void DrawEntireMap()
   //ReverseBufferArea(viewportPosX - 1, viewportPosY - 1, viewportCharWidth + 2, viewportCharHeight + 2);
   StoreBuffer();
   
+  memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportHeight * viewportWidth);
+  
   CameraFollow();
   int_a = offsetX;
   int_b = offsetY;
@@ -861,6 +865,7 @@ void DrawEntireMap()
   {      
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
       {
+      if(viewportBuffer[byte_x][byte_y] != viewportBufferLast[byte_x][byte_y]);
         DrawTileFast(viewportBuffer[byte_x][byte_y], byte_x, byte_y);
       }
   }
@@ -1011,7 +1016,7 @@ void MapUpdate()
         MoveCharacter(0, 0, true);
         //return 1;
       }
-      //if (InputDown()) 
+      if (InputDown()) 
       {
         MoveCharacter(0, 1, true); 
         //return 1;

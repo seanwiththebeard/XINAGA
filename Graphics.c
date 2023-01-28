@@ -37,6 +37,7 @@ void ClearScreen()
 {
 
   #if defined(__C64__)
+  memset(ScreenChars, ' ', 0x0400); // Clear Chars
   memset(ScreenCharBuffer, ' ', 0x0400); // Clear Buffer
   memset(ScreenColors, 1, 0x0400); // clear Colors
   memset(ScreenColorBuffer, 1, 0x0400); // clear Color Buffer
