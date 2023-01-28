@@ -838,7 +838,7 @@ void DrawEntireMap()
   //ReverseBufferArea(viewportPosX - 1, viewportPosY - 1, viewportCharWidth + 2, viewportCharHeight + 2);
   StoreBuffer();
   #if defined(__APPLE2__)
-  memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportSize); //It's acrtually faster to skip this on Commodore
+  memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportsize); //It's acrtually faster to skip this on Commodore
   #endif
   
   //Buffer the matrix of tiles for our viewport
