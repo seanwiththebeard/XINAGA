@@ -26,6 +26,7 @@ extern byte* MapSetInfo;
 //Drawing
 void ClearScreen(void);
 void SetChar(byte x, byte y, byte index);
+byte GetChar(byte x, byte y);
 //void SetCharBuffer(byte x, byte y, byte index);
 void DrawLineH(char index, byte x, byte y, byte length);
 void DrawLineV(char index, byte x, byte y, byte length);

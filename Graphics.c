@@ -225,6 +225,11 @@ void SetCharBuffer(byte index, byte x, byte y)
   #endif
 }
 
+byte GetChar(byte x, byte y)
+{
+  return ScreenChars[x + COLS*y];
+}
+
 //Buffer
 void CopyBuffer()
 {

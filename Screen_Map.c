@@ -58,6 +58,7 @@ const byte LastMapScanline = (8*viewportPosY + 16*viewportHeight);
 //byte buffer[viewportCharWidth];
 //const int BufferAddress = (int)&buffer[0];
 //const int totalSize = viewportCharHeight * viewportCharWidth;
+
 byte viewportBuffer[viewportWidth][viewportHeight];
 //byte DoubleBufferChars[viewportCharWidth*viewportCharHeight];
 //byte DoubleBufferColors[viewportCharWidth*viewportCharHeight];
@@ -413,7 +414,9 @@ byte GetQuadInRelation(bool up, bool down, bool left, bool right)
 }
 
 void QuadScroll(byte direction)
-{  
+{
+  byte p = GetChar(COLS - 1, ROWS - 1);
+  SetChar('Q', COLS - 1, ROWS - 1);
   QuadOriginX = characters[followIndex].quadPosX;
   QuadOriginY = characters[followIndex].quadPosY;
   compareQuad = GetPlayerQuad();
@@ -578,8 +581,7 @@ void QuadScroll(byte direction)
        {
   	LoadQuadrant(indexB, quadB);
        }
-  //SetChar(0, COLS - 2, '!'); //Indicate processing
-  
+  SetChar(p, COLS - 1, ROWS - 1);
 }
 
 void InitializeMapData()
