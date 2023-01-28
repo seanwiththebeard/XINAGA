@@ -207,7 +207,8 @@ void BufferCharacters()
       byte_y = GetWrappedY(characters[byte_i].posY);
       if (byte_y < viewportHeight)
         if(characters[byte_i].visible)
-          DrawTileFast(characters[byte_i].tile, byte_x, byte_y);
+          viewportBuffer[byte_x][byte_y] = characters[byte_i].tile;
+          //DrawTileFast(characters[byte_i].tile, byte_x, byte_y);
     }
   }
 }
@@ -846,13 +847,21 @@ void DrawEntireMap()
         //Wrap the map data X reference
         int_a = WrapMapPositionX(int_a);
         viewportBuffer[byte_x][byte_y] = mapData[int_a][int_b];
-        DrawTileFast(viewportBuffer[byte_x][byte_y], byte_x, byte_y);
+        //DrawTileFast(viewportBuffer[byte_x][byte_y], byte_x, byte_y);
       	int_a++;
       }
     int_a = offsetX;
     ++int_b;
   }
   BufferCharacters();
+  
+  for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
+  {      
+    for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
+      {
+        DrawTileFast(viewportBuffer[byte_x][byte_y], byte_x, byte_y);
+      }
+  }
   SwapBuffer();
 }
 
