@@ -109,17 +109,16 @@ void Demo()
   ClearScreen();
   
   #if defined(__APPLE2__)
-  DrawBorder("Hello Apple!@", 0, ROWS - 3, COLS, 2, false);
+  DrawBorder("Hello Apple!@", 0, ROWS - 2, COLS, 2, false);
   #endif
   
   #if defined(__C64__)
-  DrawBorder("Hello C64!@", 0, ROWS - 3, COLS, 3, false);
+  DrawBorder("Hello C64!@", 0, ROWS - 2, COLS, 3, false);
   #endif
   
-  //DrawCharset();
-  //DrawTiles();
+  DrawCharset();
   DrawTiles();
-  SetTileOrigin(1, 2);
+  SetTileOrigin(7, 3);
   LoadMap();
   MapUpdate();
   

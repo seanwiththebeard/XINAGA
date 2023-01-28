@@ -42,8 +42,8 @@ const byte yQuadHeight = 2*mapQuadHeight;
 bool wrap = true;
 
 //Viewport
-#define viewportPosX 1
-#define viewportPosY 2
+byte viewportPosX = 1;
+byte viewportPosY = 2;
 #define viewportWidth 9
 #define viewportHeight 9
 //#define viewportCharWidth (viewportWidth * 2)
@@ -51,7 +51,7 @@ bool wrap = true;
 //const byte doubleCharWidth = viewportCharWidth;
 const byte doubleCharHeight = viewportCharHeight;
 const byte viewportWidthQuad = (viewportWidth*4);
-const byte LastMapScanline = (8*viewportPosY + 16*viewportHeight);
+//const byte LastMapScanline = (8*viewportPosY + 16*viewportHeight);
 
 //Scrolling left and right line buffer
 //const byte bufferLength = viewportCharWidth - 2;
@@ -966,8 +966,10 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
 
 void LoadMap()
 {
+  viewportPosX = MapOriginX;
+  viewportPosY = MapOriginY;
   InitializeMapData();
-  DrawBorder("MAPSCREEN@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, false);
+  DrawBorder("Map Screen@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, false);
   DrawEntireMap();
 }
 
@@ -1009,7 +1011,7 @@ void MapUpdate()
         MoveCharacter(0, 0, true);
         //return 1;
       }
-      if (InputDown()) 
+      //if (InputDown()) 
       {
         MoveCharacter(0, 1, true); 
         //return 1;
