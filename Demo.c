@@ -31,7 +31,7 @@ void DrawTiles()
     SwapBuffer();
 }
 
-/*void DrawMap()
+void DrawMap()
 {
   #if defined(__APPLE2__)
   #define sizeX 8
@@ -89,7 +89,7 @@ void DrawTiles()
         ++z;
     }
   }
-}*/
+}
 
 /*void ScrollScreen()
 {
@@ -109,11 +109,11 @@ void Demo()
   ClearScreen();
   
   #if defined(__APPLE2__)
-  DrawBorder("Hello Apple!@", 0, ROWS - 2, COLS, 2, false);
+  DrawBorder("Hello Apple!@", 0, ROWS - 3, COLS, 3, false);
   #endif
   
   #if defined(__C64__)
-  DrawBorder("Hello C64!@", 0, ROWS - 2, COLS, 3, false);
+  DrawBorder("Hello C64!@", 0, ROWS - 3, COLS, 3, false);
   #endif
   
   DrawCharset();

@@ -5,7 +5,12 @@
 #include <stdint.h> //For byte and sbyte
 
 #define COLS 40
+#if defined(__APPLE2__)
 #define ROWS 24
+#endif
+#if defined(__C64__)
+#define ROWS 25
+#endif
 
 
 typedef uint8_t byte;

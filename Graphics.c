@@ -38,18 +38,18 @@ void ClearScreen()
 
   #if defined(__C64__)
   memset(ScreenCharBuffer, ' ', 0x0400); // Clear Buffer
-  memset(ScreenColors, 0, 0x0400); // clear Colors
-  memset(ScreenColorBuffer, 0, 0x0400); // clear Color Buffer
+  memset(ScreenColors, 1, 0x0400); // clear Colors
+  memset(ScreenColorBuffer, 1, 0x0400); // clear Color Buffer
   #endif
 
   #if defined(__APPLE2__)
   byte i;
   for (i = 0; i < 192; ++i)
     memset(&HGR[RowsHGR[i]], 0, 40); //Or just disable screen and clear it?
+  memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
   //memset(HGR, 0, 0x2000); // clear HGR page 1
   #endif
 
-  memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
 }
 
 #if defined(__C64__)
@@ -129,7 +129,7 @@ void InitializeGraphics()
     ++screenpos;
 
   bgReg[0] = 0;
-  bgReg[1] = 0;
+  bgReg[1] = 54;
 
   screenposition = (bank * (16*1024) + (screenpos * 1024));
   ScreenChars = 0;
@@ -181,7 +181,6 @@ void SwapBuffer()
     ScreenCharBuffer -= 0x400;    
   }
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
-  
   #endif
 }
 
@@ -234,14 +233,14 @@ byte GetChar(byte x, byte y)
 void CopyBuffer()
 {
   #if defined(__APPLE2__)
-  byte x, y;
+  /*byte x, y;
   int i = 0;
   for (y = 0; y < ROWS; ++y)
     for (x = 0; x < COLS; ++x)
     {
       DrawChar(ScreenChars[i],x, y);
       ++i;
-    }
+    }*/
   #endif
   #if defined(__C64__)
   memcpy(&ScreenChars[0], &ScreenCharBuffer[0], 0x400);
@@ -362,9 +361,9 @@ void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bo
 {
   byte x;
   DrawLineH(239, xPos + 1, yPos, width - 2);
-  DrawLineH(239, xPos + 1, yPos + height - 1, width - 1);
+  DrawLineH(239, xPos + 1, yPos + height - 1, width - 2);
   DrawLineV(255, xPos, yPos + 1, height - 1);
-  DrawLineV(255, xPos + width - 1, yPos + 1, height - 1);
+  DrawLineV(255, xPos + width - 1, yPos + 1, height - 2);
   SetChar(238, xPos, yPos);
   SetChar(238, xPos + width - 1, yPos);
   SetChar(238, xPos, yPos + height - 1);
