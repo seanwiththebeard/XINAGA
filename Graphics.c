@@ -130,7 +130,7 @@ void InitializeGraphics()
     ++screenpos;
 
   bgReg[0] = 0;
-  bgReg[1] = 54;
+  bgReg[1] = 0;
 
   screenposition = (bank * (16*1024) + (screenpos * 1024));
   ScreenChars = 0;
@@ -159,7 +159,7 @@ void InitializeGraphics()
   regd018[0] = vicreg;
   //Cursor Position
   POKE (0x0288, screenposition / 256);
-  //ClearScreen();
+  ClearScreen();
   //SetMulticolors(11, 15);
   #endif
 }
@@ -290,7 +290,7 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
 void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
 {
   byte count;
-  while (posy > ROWS)
+  while (posy > ROWS - 1)
     posy -= ROWS;
   for(count = 0; count < 20; ++count)
   {
@@ -369,6 +369,8 @@ void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bo
   SetChar(238, xPos + width - 1, yPos);
   SetChar(238, xPos, yPos + height - 1);
   SetChar(238, xPos + width - 1, yPos + height - 1);
+  
+  //--text;
   PrintString(text, xPos + 1, yPos, true, false);
   if (fill)
     for (x = 0; x < height - 2; ++x)
