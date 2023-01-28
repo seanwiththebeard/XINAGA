@@ -31,7 +31,7 @@ void DrawTiles()
     SwapBuffer();
 }
 
-void DrawMap()
+/*void DrawMap()
 {
   #if defined(__APPLE2__)
   #define sizeX 8
@@ -89,7 +89,7 @@ void DrawMap()
         ++z;
     }
   }
-}
+}*/
 
 /*void ScrollScreen()
 {
