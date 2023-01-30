@@ -861,12 +861,11 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
   }
 }
 
-byte playerX = 4;
-byte playerY = 4;
-void ApplyLOS()
+byte playerX;
+byte playerY;
+void ApplyLOS() //Probably speed it up by processing each quadrant separately
 {
   byte x, y;
-  
   for(y = 0; y < viewportHeight; ++y)
   {
     for(x = 0; x < viewportWidth; ++x)
