@@ -842,17 +842,17 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
   //if (xOrigin < 0 || yOrigin < 0 || xOrigin >= viewportWidth || yOrigin >= viewportHeight)
     //return;
   
-  while (xOrigin + xSize > viewportWidth)
-    --xSize;
+  //while (xOrigin + xSize > viewportWidth)
+    //--xSize;
   
-  while (yOrigin + ySize > viewportHeight)
-    --ySize;
+ // while (yOrigin + ySize > viewportHeight)
+    //--ySize;
   
-  while (xSize < 1)
-    ++xSize;
+  //while (xSize < 1)
+    //++xSize;
   
-  while (ySize < 1)
-    ++ySize;
+  //while (ySize < 1)
+    //++ySize;
   
   for(y = 0; y < ySize; ++y)
   {
