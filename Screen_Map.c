@@ -44,13 +44,13 @@ bool wrap = true;
 //Viewport
 byte viewportPosX = 1;
 byte viewportPosY = 2;
-#define viewportWidth 9
-#define viewportHeight 9
+#define viewportWidth 7
+#define viewportHeight 7
 //#define viewportCharWidth (viewportWidth * 2)
-#define viewportCharHeight (viewportHeight * 2)
+//#define viewportCharHeight (viewportHeight * 2)
 //const byte doubleCharWidth = viewportCharWidth;
-const byte doubleCharHeight = viewportCharHeight;
-const byte viewportWidthQuad = (viewportWidth*4);
+//const byte doubleCharHeight = viewportCharHeight;
+//const byte viewportWidthQuad = (viewportWidth*4);
 //const byte LastMapScanline = (8*viewportPosY + 16*viewportHeight);
 
 //Scrolling left and right line buffer
