@@ -96,6 +96,7 @@ struct Tile
   byte colors[4];
   byte blocked;
   byte trigger;
+  byte opaque;
 } tiles[64];
 
 struct
@@ -628,7 +629,7 @@ void InitializeMapData()
       ScreenQuad[byte_index].ScatterIndex = 0;
     }
   
-  tiles[44].blocked = true;
+  tiles[44].opaque = true;
 
   ScreenQuad[2].Chars[0] = 36; // Set the wizard to grass on 0
   ScreenQuad[2].Chars[1] = 44; // Set the wizard to trees on 1
@@ -871,23 +872,30 @@ void ApplyLOS()
     for(x = 0; x < viewportWidth; ++x)
     {
       if(viewportBuffer[x][y] != 7)
-        if (tiles[viewportBuffer[x][y]].blocked)
+        if (tiles[viewportBuffer[x][y]].opaque)
         {
-          if (x <= playerX) //Left Side
+          if (x < playerX) //Left Side
           {
             DrawSquare(0, y, x, 1);
-            if ( y <= playerY) //Top
+            if ( y < playerY) //Top
              DrawSquare(0, 0, x + 1, y);
-            else //Bottom
+            else if (y > playerY)//Bottom
               DrawSquare(0, y + 1, x + 1, viewportHeight - y);
           }
-          else //Right Side
+          else if (x > playerX) //Right Side
           {
             DrawSquare(x + 1, y, viewportWidth - x, 1);
-            if ( y <= playerY)
+            if ( y < playerY)
               DrawSquare(x, 0, viewportWidth - x, y);
-            else
+            else if (y > playerY)
               DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
+          }
+          else if (x == playerX)
+          {
+            if ( y < playerY)
+              DrawSquare(x, 0, 1, y);
+            else if (y > playerY)
+              DrawSquare(x, y + 1, 1, viewportHeight - y);
           }
         }
     }
@@ -1037,6 +1045,19 @@ void LoadMap()
 {
   viewportPosX = MapOriginX;
   viewportPosY = MapOriginY;
+  
+  while (viewportPosX + (2*viewportWidth) >= COLS)
+    --viewportPosX;
+  while (viewportPosY + (2*viewportHeight) >= ROWS)
+    --viewportPosY;
+  
+  while (viewportPosX < 1)
+    ++viewportPosX;
+  while (viewportPosY < 1)
+    ++viewportPosY;
+  
+  SetTileOrigin(viewportPosX, viewportPosY);
+  
   InitializeMapData();
   DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, false);
   DrawEntireMap();
@@ -1085,7 +1106,7 @@ void MapUpdate()
         MoveCharacter(0, 1, true); 
         //return 1;
       }
-      //if (InputLeft())
+      if (InputLeft())
       {
         MoveCharacter(0, 2, true);
         //return 1;
@@ -1105,6 +1126,29 @@ void MapUpdate()
         //WriteLineMessageWindow(str, 0);
         //return 1;
       }
+      
+        MoveCharacter(0, 2, true);
+        MoveCharacter(0, 2, true);
+        MoveCharacter(0, 2, true);
+        MoveCharacter(0, 2, true);
+      
+        MoveCharacter(0, 0, true);
+        MoveCharacter(0, 0, true);
+        MoveCharacter(0, 0, true);
+        MoveCharacter(0, 0, true);
+      
+        MoveCharacter(0, 3, true);
+        MoveCharacter(0, 3, true);
+        MoveCharacter(0, 3, true);
+        MoveCharacter(0, 3, true);
+        MoveCharacter(0, 3, true);
+      
+        MoveCharacter(0, 1, true);
+        MoveCharacter(0, 1, true);
+        MoveCharacter(0, 1, true);
+        MoveCharacter(0, 1, true);
+      
+        MoveCharacter(0, 2, true);
     }
   }
   //return nextScreen;
