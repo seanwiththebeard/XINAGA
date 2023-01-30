@@ -44,8 +44,8 @@ bool wrap = true;
 //Viewport
 byte viewportPosX = 1;
 byte viewportPosY = 2;
-#define viewportWidth 9
-#define viewportHeight 9
+#define viewportWidth 11
+#define viewportHeight 11
 //#define viewportCharWidth (viewportWidth * 2)
 #define viewportCharHeight (viewportHeight * 2)
 //const byte doubleCharWidth = viewportCharWidth;
@@ -848,10 +848,10 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
   while (yOrigin + ySize > viewportHeight)
     --ySize;
   
-  if (xSize < 1)
+  while (xSize < 1)
     ++xSize;
   
-  if (ySize < 1)
+  while (ySize < 1)
     ++ySize;
   
   for(y = 0; y < ySize; ++y)
@@ -864,8 +864,8 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
 void ApplyLOS()
 {
   byte x, y;
-  byte playerX = 4;
-  byte playerY = 4;;
+  byte playerX = 5;
+  byte playerY = 5;;
   
   for(y = 0; y < viewportHeight; ++y)
   {
@@ -893,9 +893,9 @@ void ApplyLOS()
           else if (x == playerX)
           {
             if ( y < playerY)
-              DrawSquare(x, 0, 1, y);
+              DrawSquare(0, 0, viewportWidth, y);
             else if (y > playerY)
-              DrawSquare(x, y + 1, 1, viewportHeight - y);
+              DrawSquare(0, y + 1, viewportWidth, viewportHeight - y);
           }
         }
     }
