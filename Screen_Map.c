@@ -627,6 +627,8 @@ void InitializeMapData()
       ScreenQuad[byte_index].NPCIndex = 0;
       ScreenQuad[byte_index].ScatterIndex = 0;
     }
+  
+  tiles[44].blocked = true;
 
   ScreenQuad[2].Chars[0] = 36; // Set the wizard to grass on 0
   ScreenQuad[2].Chars[1] = 44; // Set the wizard to trees on 1
@@ -832,6 +834,66 @@ bool CheckCollision(byte charIndex, byte Direction)
   return false;
 }
 
+void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
+{
+  byte x, y;
+  
+  //if (xOrigin < 0 || yOrigin < 0 || xOrigin >= viewportWidth || yOrigin >= viewportHeight)
+    //return;
+  
+  while (xOrigin + xSize > viewportWidth)
+    --xSize;
+  
+  while (yOrigin + ySize > viewportHeight)
+    --ySize;
+  
+  if (xSize < 1)
+    ++xSize;
+  
+  if (ySize < 1)
+    ++ySize;
+  
+  for(y = 0; y < ySize; ++y)
+  {
+    for(x = 0; x < xSize; ++x)
+      viewportBuffer[x + xOrigin][y + yOrigin] = 7;
+  }
+}
+
+void ApplyLOS()
+{
+  byte x, y;
+  byte playerX = 4;
+  byte playerY = 4;;
+  
+  for(y = 0; y < viewportHeight; ++y)
+  {
+    for(x = 0; x < viewportWidth; ++x)
+    {
+      if(viewportBuffer[x][y] != 7)
+        if (tiles[viewportBuffer[x][y]].blocked)
+        {
+          if (x <= playerX) //Left Side
+          {
+            DrawSquare(0, y, x, 1);
+            if ( y <= playerY) //Top
+             DrawSquare(0, 0, x + 1, y);
+            else //Bottom
+              DrawSquare(0, y + 1, x + 1, viewportHeight - y);
+          }
+          else //Right Side
+          {
+            DrawSquare(x + 1, y, viewportWidth - x, 1);
+            if ( y <= playerY)
+              DrawSquare(x, 0, viewportWidth - x, y);
+            else
+              DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
+          }
+        }
+    }
+  }
+}
+
 const byte viewportsize = viewportHeight * viewportWidth;
 void DrawEntireMap()
 {
@@ -859,6 +921,7 @@ void DrawEntireMap()
     ++int_b;
   }
   BufferCharacters();
+  ApplyLOS();
 
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {      
@@ -1022,12 +1085,12 @@ void MapUpdate()
         MoveCharacter(0, 1, true); 
         //return 1;
       }
-      if (InputLeft())
+      //if (InputLeft())
       {
         MoveCharacter(0, 2, true);
         //return 1;
       }
-      //if (InputRight())
+      if (InputRight())
       {
         MoveCharacter(0, 3, true);
         //return 1;
