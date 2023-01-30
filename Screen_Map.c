@@ -44,8 +44,8 @@ bool wrap = true;
 //Viewport
 byte viewportPosX = 1;
 byte viewportPosY = 2;
-#define viewportWidth 11
-#define viewportHeight 11
+#define viewportWidth 9
+#define viewportHeight 9
 //#define viewportCharWidth (viewportWidth * 2)
 #define viewportCharHeight (viewportHeight * 2)
 //const byte doubleCharWidth = viewportCharWidth;
@@ -839,20 +839,20 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
 {
   byte x, y;
   
-  //if (xOrigin < 0 || yOrigin < 0 || xOrigin >= viewportWidth || yOrigin >= viewportHeight)
-    //return;
+  if (xOrigin < 0 || yOrigin < 0 || xOrigin >= viewportWidth || yOrigin >= viewportHeight)
+    return;
   
-  //while (xOrigin + xSize > viewportWidth)
-    //--xSize;
+  while (xOrigin + xSize > viewportWidth)
+    --xSize;
   
- // while (yOrigin + ySize > viewportHeight)
-    //--ySize;
+  while (yOrigin + ySize > viewportHeight)
+    --ySize;
   
-  //while (xSize < 1)
-    //++xSize;
+  while (xSize < 1)
+    ++xSize;
   
-  //while (ySize < 1)
-    //++ySize;
+  while (ySize < 1)
+    ++ySize;
   
   for(y = 0; y < ySize; ++y)
   {
@@ -861,11 +861,11 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
   }
 }
 
+byte playerX = 4;
+byte playerY = 4;
 void ApplyLOS()
 {
   byte x, y;
-  byte playerX = 5;
-  byte playerY = 5;;
   
   for(y = 0; y < viewportHeight; ++y)
   {
@@ -890,12 +890,13 @@ void ApplyLOS()
             else if (y > playerY)
               DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
           }
+          
           else if (x == playerX)
           {
             if ( y < playerY)
               DrawSquare(0, 0, viewportWidth, y);
             else if (y > playerY)
-              DrawSquare(0, y + 1, viewportWidth, viewportHeight - y);
+              DrawSquare(0, y + 1, viewportWidth, viewportHeight - y - 1);
           }
         }
     }
@@ -1059,6 +1060,8 @@ void LoadMap()
   SetTileOrigin(viewportPosX, viewportPosY);
   
   InitializeMapData();
+  playerX = (viewportWidth - 1) / 2;
+  playerY = (viewportHeight - 1) / 2;
   DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, false);
   DrawEntireMap();
 }
