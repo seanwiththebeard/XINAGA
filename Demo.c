@@ -105,6 +105,7 @@ void DrawMap()
 
 void Demo()
 {
+  InitializeInput();
   InitializeGraphics();
   ClearScreen();
   

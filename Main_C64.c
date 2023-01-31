@@ -4,8 +4,9 @@
 //#define CFGFILE C64.cfg
 #endif
 
-//#link "Demo.c"
 //#link "Graphics.c"
+//#link "Input.c"
+//#link "Demo.c"
 //#link "Screen_Map.c"
 
 
