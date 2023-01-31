@@ -1146,7 +1146,7 @@ void MapUpdate()
   while (!exit)
   {
     UpdateInput();
-    if (InputChanged())
+    //if (InputChanged())
     {
       if (InputUp())
       {
