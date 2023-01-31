@@ -1145,8 +1145,8 @@ void MapUpdate()
 
   while (!exit)
   {
-    //UpdateInput();
-    //if (InputChanged())
+    UpdateInput();
+    if (InputChanged())
     {
       if (InputUp())
       {
@@ -1179,7 +1179,7 @@ void MapUpdate()
         //return 1;
       }
 
-      MoveCharacter(0, 2, true);
+      /*MoveCharacter(0, 2, true);
       MoveCharacter(0, 2, true);
       MoveCharacter(0, 2, true);
       MoveCharacter(0, 2, true);
@@ -1200,7 +1200,7 @@ void MapUpdate()
       MoveCharacter(0, 1, true);
       MoveCharacter(0, 1, true);
 
-      MoveCharacter(0, 2, true);
+      MoveCharacter(0, 2, true);*/
     }
   }
   //return nextScreen;
