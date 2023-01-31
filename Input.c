@@ -13,7 +13,7 @@ byte joyTemp;
 bool ChangedState = false;
 
 #if defined(__APPLE2__)
-#include <conio.h>
+#include <conio.h> //for cgetc()
 byte key = 0;
 byte lastKey = 1;
 #endif
