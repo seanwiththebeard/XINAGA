@@ -2,7 +2,6 @@
 
 //#include <stdlib.h>
 //#include <string.h>
-#include <conio.h>
 //#include <apple2.h>
 
 #if __C64__
@@ -14,6 +13,7 @@ byte joyTemp;
 bool ChangedState = false;
 
 #if defined(__APPLE2__)
+#include <conio.h>
 byte key = 0;
 byte lastKey = 1;
 #endif
