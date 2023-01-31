@@ -33,6 +33,19 @@ byte* CharRam = 0;
 //byte* MapSetInfo = (byte*) &MapSet[0];
 byte* MapSetInfo = (byte*) &charset[0];
 
+
+#if defined(__C64__)
+byte *bgReg = (byte*)0xD020;
+void SetBorder(byte color)
+{
+  bgReg[0] = color;
+}
+void SetBG(byte color)
+{
+  bgReg[1] = color;
+}
+#endif
+
 void ClearScreen()
 {
 
@@ -121,7 +134,6 @@ void InitializeGraphics()
   byte screenpos = 2;
   int screenposition;
   int* regd018 = (int*)0xD018;
-  byte *bgReg = (byte*)0xD020;
   
   byte vicreg = 0x00;
   CharRam = 0;
@@ -129,8 +141,8 @@ void InitializeGraphics()
   if (bufferselect)
     ++screenpos;
 
-  bgReg[0] = 0;
-  bgReg[1] = 0;
+  SetBG(0);
+  SetBorder(0);
 
   screenposition = (bank * (16*1024) + (screenpos * 1024));
   ScreenChars = 0;

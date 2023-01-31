@@ -23,8 +23,13 @@ void MapUpdate();
 
 //Graphics
 void InitializeGraphics(void);
+#if defined(__C64__)
 void wait_vblank(byte frames);
 void raster_wait(byte line);
+void SetBorder(byte color);
+void SetBG(byte color);
+#endif
+
 extern int YColumnIndex[25];
 extern byte* MapSetInfo;
 extern byte MapOriginX, MapOriginY;

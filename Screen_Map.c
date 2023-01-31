@@ -628,7 +628,7 @@ void InitializeMapData()
       ScreenQuad[byte_index].NPCIndex = 0;
       ScreenQuad[byte_index].ScatterIndex = 0;
     }
-  
+
   tiles[44].opaque = true;
 
   ScreenQuad[2].Chars[0] = 36; // Set the wizard to grass on 0
@@ -838,22 +838,22 @@ bool CheckCollision(byte charIndex, byte Direction)
 void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
 {
   byte x, y;
-  
+
   if (xOrigin < 0 || yOrigin < 0 || xOrigin >= viewportWidth || yOrigin >= viewportHeight)
     return;
-  
+
   while (xOrigin + xSize > viewportWidth)
     --xSize;
-  
+
   while (yOrigin + ySize > viewportHeight)
     --ySize;
-  
+
   while (xSize < 1)
     ++xSize;
-  
+
   while (ySize < 1)
     ++ySize;
-  
+
   for(y = 0; y < ySize; ++y)
   {
     for(x = 0; x < xSize; ++x)
@@ -866,92 +866,66 @@ byte playerY;
 void ApplyLOS() //Probably speed it up by processing each quadrant separately
 {
   byte x, y;
+  raster_wait(0);
   
   //Quad 0
   for(y = playerY - 1; y > 0; --y)
-  {
     for(x = playerX - 1; x > 0; --x)
-    {
       if (tiles[viewportBuffer[x][y]].opaque)
       {
         DrawSquare(0, y, x, 1);
         DrawSquare(0, 0, x + 1, y);
       }
-    }
-  }
+
 
   //Quad 1
   for(y = playerY - 1; y > 0; --y)
-  {
     for(x = playerX + 1; x < viewportWidth; ++x)
-    {
       if (tiles[viewportBuffer[x][y]].opaque)
       {
         DrawSquare(x + 1, y, viewportWidth - x, 1);
         DrawSquare(x, 0, viewportWidth - x, y);
       }
-    }
-  }
-  
+
   //Quad 2
   for(y = playerY + 1; y < viewportHeight; ++y)
-  {
     for(x = playerX + 1; x < viewportWidth; ++x)
-    {
       if (tiles[viewportBuffer[x][y]].opaque)
       {
         DrawSquare(x + 1, y, viewportWidth - x, 1);
         DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
       }
-    }
-  }
-  
+
   //Quad 3
   for(y = playerY + 1; y < viewportHeight; ++y)
-  {
     for(x = playerX - 1; x > 0; --x)
-    {
       if (tiles[viewportBuffer[x][y]].opaque)
       {
         DrawSquare(0, y, x, 1);
         DrawSquare(0, y + 1, x + 1, viewportHeight - y);
       }
-    }
-  }
-  
-  
+
   //Horizontal
   for(x = playerX - 1; x > 0; --x)
-  {
-    if (tiles[viewportBuffer[x][playerY]].opaque)
-    {
-      DrawSquare(0, playerY, x, 1);
-    }
-  }
+    for(y = playerY - 1; y <= playerY + 1; ++y)
+      if (tiles[viewportBuffer[x][y]].opaque)
+        DrawSquare(0, y, x, 1);
   for(x = playerX + 1; x < viewportWidth; ++x)
-  {
-    if (tiles[viewportBuffer[x][playerY]].opaque)
-    {
-      DrawSquare(x + 1, playerY, viewportWidth - x - 1, 1);
-    }
-  }
+    for(y = playerY - 1; y <= playerY + 1; ++y)
+      if (tiles[viewportBuffer[x][y]].opaque)
+        DrawSquare(x + 1, y, viewportWidth - x - 1, 1);
 
   //Vertical
   for(y = playerY - 1; y > 0; --y)
-  {
-    if (tiles[viewportBuffer[playerX][y]].opaque)
-    {
-      DrawSquare(playerX, 0, 1, y);
-    }
-  }
+    for(x = playerX -1 ; x <= playerX + 1; ++x)
+      if (tiles[viewportBuffer[x][y]].opaque)
+        DrawSquare(x, 0, 1, y);
   for(y = playerY + 1; y < viewportHeight; ++y)
-  {
-    if (tiles[viewportBuffer[playerX][y]].opaque)
-    {
-      DrawSquare(playerX, y + 1, 1, viewportHeight - y);
-    }
-  }
-  
+    for(x = playerX -1 ; x <= playerX + 1; ++x)
+
+      if (tiles[viewportBuffer[x][y]].opaque)
+        DrawSquare(x, y + 1, 1, viewportHeight - y);  
+
   /*
   for(y = 0; y < viewportHeight; ++y)
   {
@@ -976,7 +950,7 @@ void ApplyLOS() //Probably speed it up by processing each quadrant separately
             else if (y > playerY)
               DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
           }
-          
+
           else if (x == playerX)
           {
             if ( y < playerY)
@@ -997,7 +971,7 @@ void DrawEntireMap()
   #if defined(__APPLE2__)
   memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportsize); //It's acrtually faster to skip this on Commodore
   #endif
-  
+
   //Buffer the matrix of tiles for our viewport
   CameraFollow();
   int_a = offsetX;
@@ -1132,19 +1106,19 @@ void LoadMap()
 {
   viewportPosX = MapOriginX;
   viewportPosY = MapOriginY;
-  
+
   while (viewportPosX + (2*viewportWidth) >= COLS)
     --viewportPosX;
   while (viewportPosY + (2*viewportHeight) >= ROWS)
     --viewportPosY;
-  
+
   while (viewportPosX < 1)
     ++viewportPosX;
   while (viewportPosY < 1)
     ++viewportPosY;
-  
+
   SetTileOrigin(viewportPosX, viewportPosY);
-  
+
   InitializeMapData();
   playerX = (viewportWidth - 1) / 2;
   playerY = (viewportHeight - 1) / 2;
@@ -1215,29 +1189,29 @@ void MapUpdate()
         //WriteLineMessageWindow(str, 0);
         //return 1;
       }
-      
-        MoveCharacter(0, 2, true);
-        MoveCharacter(0, 2, true);
-        MoveCharacter(0, 2, true);
-        MoveCharacter(0, 2, true);
-      
-        MoveCharacter(0, 0, true);
-        MoveCharacter(0, 0, true);
-        MoveCharacter(0, 0, true);
-        MoveCharacter(0, 0, true);
-      
-        MoveCharacter(0, 3, true);
-        MoveCharacter(0, 3, true);
-        MoveCharacter(0, 3, true);
-        MoveCharacter(0, 3, true);
-        MoveCharacter(0, 3, true);
-      
-        MoveCharacter(0, 1, true);
-        MoveCharacter(0, 1, true);
-        MoveCharacter(0, 1, true);
-        MoveCharacter(0, 1, true);
-      
-        MoveCharacter(0, 2, true);
+
+      MoveCharacter(0, 2, true);
+      MoveCharacter(0, 2, true);
+      MoveCharacter(0, 2, true);
+      MoveCharacter(0, 2, true);
+
+      MoveCharacter(0, 0, true);
+      MoveCharacter(0, 0, true);
+      MoveCharacter(0, 0, true);
+      MoveCharacter(0, 0, true);
+
+      MoveCharacter(0, 3, true);
+      MoveCharacter(0, 3, true);
+      MoveCharacter(0, 3, true);
+      MoveCharacter(0, 3, true);
+      MoveCharacter(0, 3, true);
+
+      MoveCharacter(0, 1, true);
+      MoveCharacter(0, 1, true);
+      MoveCharacter(0, 1, true);
+      MoveCharacter(0, 1, true);
+
+      MoveCharacter(0, 2, true);
     }
   }
   //return nextScreen;
