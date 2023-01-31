@@ -863,11 +863,28 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
 
 byte playerX;
 byte playerY;
-void ApplyLOS() //Probably speed it up by processing each quadrant separately
+void ApplyLOS()
 {
-  byte x, y;
-  raster_wait(0);
+  //Quadrant Layout:
+  //        ^
+  //        |       ^
+  //  000  666  111 |
+  //  000  666  111  ->
+  //  000  666  111
+  //
+  //  444  XXX  555
+  //  444  XPX  555 ->
+  //  444  XXX  555
+  //
+  //  333  777  222
+  //  333  777  222
+  //  333  777  222
+  //
+  //Center adjacent X always visible
+  //Diagonal quadrants 0-3 block everything behind the tile
+  //Cardinal quadrants 4-7 block only the tiles directly behind them
   
+  byte x, y;
   //Quad 0
   for(y = playerY - 1; y > 0; --y)
     for(x = playerX - 1; x > 0; --x)
@@ -876,8 +893,6 @@ void ApplyLOS() //Probably speed it up by processing each quadrant separately
         DrawSquare(0, y, x, 1);
         DrawSquare(0, 0, x + 1, y);
       }
-
-
   //Quad 1
   for(y = playerY - 1; y > 0; --y)
     for(x = playerX + 1; x < viewportWidth; ++x)
@@ -886,7 +901,6 @@ void ApplyLOS() //Probably speed it up by processing each quadrant separately
         DrawSquare(x + 1, y, viewportWidth - x, 1);
         DrawSquare(x, 0, viewportWidth - x, y);
       }
-
   //Quad 2
   for(y = playerY + 1; y < viewportHeight; ++y)
     for(x = playerX + 1; x < viewportWidth; ++x)
@@ -895,7 +909,6 @@ void ApplyLOS() //Probably speed it up by processing each quadrant separately
         DrawSquare(x + 1, y, viewportWidth - x, 1);
         DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
       }
-
   //Quad 3
   for(y = playerY + 1; y < viewportHeight; ++y)
     for(x = playerX - 1; x > 0; --x)
@@ -904,7 +917,6 @@ void ApplyLOS() //Probably speed it up by processing each quadrant separately
         DrawSquare(0, y, x, 1);
         DrawSquare(0, y + 1, x + 1, viewportHeight - y);
       }
-
   //Horizontal
   for(x = playerX - 1; x > 0; --x)
     for(y = playerY - 1; y <= playerY + 1; ++y)
@@ -914,7 +926,6 @@ void ApplyLOS() //Probably speed it up by processing each quadrant separately
     for(y = playerY - 1; y <= playerY + 1; ++y)
       if (tiles[viewportBuffer[x][y]].opaque)
         DrawSquare(x + 1, y, viewportWidth - x - 1, 1);
-
   //Vertical
   for(y = playerY - 1; y > 0; --y)
     for(x = playerX -1 ; x <= playerX + 1; ++x)
@@ -926,7 +937,7 @@ void ApplyLOS() //Probably speed it up by processing each quadrant separately
       if (tiles[viewportBuffer[x][y]].opaque)
         DrawSquare(x, y + 1, 1, viewportHeight - y);  
 
-  /*
+  /* Process full viewport
   for(y = 0; y < viewportHeight; ++y)
   {
     for(x = 0; x < viewportWidth; ++x)
@@ -1122,7 +1133,7 @@ void LoadMap()
   InitializeMapData();
   playerX = (viewportWidth - 1) / 2;
   playerY = (viewportHeight - 1) / 2;
-  DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, false);
+  DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawEntireMap();
 }
 
