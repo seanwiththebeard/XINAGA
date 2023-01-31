@@ -866,6 +866,93 @@ byte playerY;
 void ApplyLOS() //Probably speed it up by processing each quadrant separately
 {
   byte x, y;
+  
+  //Quad 0
+  for(y = playerY - 1; y > 0; --y)
+  {
+    for(x = playerX - 1; x > 0; --x)
+    {
+      if (tiles[viewportBuffer[x][y]].opaque)
+      {
+        DrawSquare(0, y, x, 1);
+        DrawSquare(0, 0, x + 1, y);
+      }
+    }
+  }
+
+  //Quad 1
+  for(y = playerY - 1; y > 0; --y)
+  {
+    for(x = playerX + 1; x < viewportWidth; ++x)
+    {
+      if (tiles[viewportBuffer[x][y]].opaque)
+      {
+        DrawSquare(x + 1, y, viewportWidth - x, 1);
+        DrawSquare(x, 0, viewportWidth - x, y);
+      }
+    }
+  }
+  
+  //Quad 2
+  for(y = playerY + 1; y < viewportHeight; ++y)
+  {
+    for(x = playerX + 1; x < viewportWidth; ++x)
+    {
+      if (tiles[viewportBuffer[x][y]].opaque)
+      {
+        DrawSquare(x + 1, y, viewportWidth - x, 1);
+        DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
+      }
+    }
+  }
+  
+  //Quad 3
+  for(y = playerY + 1; y < viewportHeight; ++y)
+  {
+    for(x = playerX - 1; x > 0; --x)
+    {
+      if (tiles[viewportBuffer[x][y]].opaque)
+      {
+        DrawSquare(0, y, x, 1);
+        DrawSquare(0, y + 1, x + 1, viewportHeight - y);
+      }
+    }
+  }
+  
+  
+  //Horizontal
+  for(x = playerX - 1; x > 0; --x)
+  {
+    if (tiles[viewportBuffer[x][playerY]].opaque)
+    {
+      DrawSquare(0, playerY, x, 1);
+    }
+  }
+  for(x = playerX + 1; x < viewportWidth; ++x)
+  {
+    if (tiles[viewportBuffer[x][playerY]].opaque)
+    {
+      DrawSquare(x + 1, playerY, viewportWidth - x - 1, 1);
+    }
+  }
+
+  //Vertical
+  for(y = playerY - 1; y > 0; --y)
+  {
+    if (tiles[viewportBuffer[playerX][y]].opaque)
+    {
+      DrawSquare(playerX, 0, 1, y);
+    }
+  }
+  for(y = playerY + 1; y < viewportHeight; ++y)
+  {
+    if (tiles[viewportBuffer[playerX][y]].opaque)
+    {
+      DrawSquare(playerX, y + 1, 1, viewportHeight - y);
+    }
+  }
+  
+  /*
   for(y = 0; y < viewportHeight; ++y)
   {
     for(x = 0; x < viewportWidth; ++x)
@@ -899,7 +986,7 @@ void ApplyLOS() //Probably speed it up by processing each quadrant separately
           }
         }
     }
-  }
+  }*/
 }
 
 const byte viewportsize = viewportHeight * viewportWidth;
