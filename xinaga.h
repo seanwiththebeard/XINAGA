@@ -77,15 +77,15 @@ void DiskSave(char filename[], int source, int length);
 void DiskLoad(char filename[], int dest);
 
 //Input
-void InitializeInput();
-void UpdateInput();
-bool InputChanged();
-bool NoInput();
-bool InputUp();
-bool InputDown(); 
-bool InputLeft();
-bool InputRight();
-bool InputFire();
+void InitializeInput(void);
+void UpdateInput(void);
+bool InputChanged(void);
+bool NoInput(void);
+bool InputUp(void);
+bool InputDown(void); 
+bool InputLeft(void);
+bool InputRight(void);
+bool InputFire(void);
 
 //Common Functions
 byte ReadBit(byte byteToRead, char bit); //These are old

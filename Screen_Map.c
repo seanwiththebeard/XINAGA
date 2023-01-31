@@ -1137,28 +1137,6 @@ void LoadMap()
   DrawEntireMap();
 }
 
-void UpdateInput();
-bool InputUp()
-{
-  return false;
-}
-bool InputDown()
-{
-  return false;
-}
-bool InputLeft()
-{
-  return false;
-}
-bool InputRight()
-{
-  return false;
-}
-bool InputFire()
-{
-  return false;
-}
-
 void MapUpdate()
 {
   //screenName nextScreen;
