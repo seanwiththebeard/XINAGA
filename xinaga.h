@@ -7,6 +7,7 @@
 #define COLS 40
 #if defined(__APPLE2__)
 #define ROWS 24
+#define STROBE(addr) __asm__ ("sta %w", addr)
 #endif
 #if defined(__C64__)
 #define ROWS 25

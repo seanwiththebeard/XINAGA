@@ -1,34 +1,45 @@
 #include "xinaga.h"
-
-//#include <stdlib.h>
-//#include <string.h>
-//#include <apple2.h>
+//#include <conio.h> //for cgetc() and kbhit()
+sbyte key = 0;
+byte keyIgnore = 0;
 
 #if __C64__
-#include <joystick.h>
-byte joyState = 0;
-byte joyStateLast = 0;
-byte joyTemp;
+//#include <joystick.h>
+//byte joyState = 0;
+//byte joyStateLast = 0;
+//byte joyTemp;
 #endif
-bool ChangedState = false;
 
 #if defined(__APPLE2__)
-#include <conio.h> //for cgetc()
-byte key = 0;
-byte lastKey = 1;
+
 #endif
 
 void InitializeInput()
 {
   #if __C64__
-  joy_install(joy_static_stddrv);
+  //joy_install(joy_static_stddrv);
   #endif
 }
 
+byte* keycode = (byte*)0xC000;
+byte* keyflag = (byte*)0xC010;
+
+void waitforkey()
+{
+  //while(keyflag[0] & 128){}
+}
 void UpdateInput()
 {
+  key = keycode[0];
+    STROBE(0xc010);
+  while(keycode[0] == keyIgnore)
+  {
+    
+  }
+  keyIgnore = key;
+  SetChar(key, COLS - 1, 1);
   #if __C64__
-  joyTemp = joy_read(0);
+  /*joyTemp = joy_read(0);
 
   if (joyState == joyTemp)
   {
@@ -39,40 +50,15 @@ void UpdateInput()
     joyState = joyTemp;
     ChangedState = true;
     joyStateLast = joyState;
-  }
+  }*/
   #endif
 
   #if defined(__APPLE2__)
-  if (kbhit())
-  {
-    key = cgetc();
-    SetChar(key, COLS - 1, 0);
-  }
-  else
-    key = 0;
+
+
   #endif
 }
 
-bool NoInput()
-{
-  #if __C64__
-  if (joy_read(0) == 0)
-    return true;
-  #endif
-  #if defined(__APPLE2__)
-  if (!kbhit())
-    return true;
-  #endif
-  return false;
-}
-
-bool InputChanged()
-{
-  if (!NoInput())
-    return ChangedState;
-  else
-    return false;
-}
 bool InputUp()
 {
   #if __C64__
@@ -82,7 +68,9 @@ bool InputUp()
 
   #if defined(__APPLE2__)
   if (key == 'w')
+  {
     return true;
+  }
   #endif
   return false;
 }

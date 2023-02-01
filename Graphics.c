@@ -14,7 +14,6 @@ byte* ScreenChars = (byte*)(0x0400);
 byte* HGR = (byte*)0x2000;
 byte* HGRBuffer = (byte*)0x4000;
 int RowsHGR[192];
-#define STROBE(addr) __asm__ ("sta %w", addr)
 #endif
 
 #if defined(__C64__)
