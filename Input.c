@@ -30,13 +30,13 @@ void waitforkey()
 }
 void UpdateInput()
 {
-  key = keycode[0];
-    STROBE(0xc010);
-  while(keycode[0] == keyIgnore)
+  while (keycode[0] & 128)
   {
-    
+    SetChar('x', COLS - 1, 1);
   }
-  keyIgnore = key;
+  STROBE(0xc010);
+
+  key = keycode[0];
   SetChar(key, COLS - 1, 1);
   #if __C64__
   /*joyTemp = joy_read(0);
