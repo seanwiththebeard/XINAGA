@@ -44,7 +44,7 @@ bool wrap = true;
 //Viewport
 byte viewportPosX = 1;
 byte viewportPosY = 2;
-#define viewportWidth 7
+#define viewportWidth 11
 #define viewportHeight 7
 //#define viewportCharWidth (viewportWidth * 2)
 //#define viewportCharHeight (viewportHeight * 2)
@@ -1005,13 +1005,13 @@ void DrawEntireMap()
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     { //On Apple, only draw tiles that are different from the last draw
       #if defined(__APPLE2__)
-      if(viewportBuffer[byte_x][byte_y] != viewportBufferLast[byte_x][byte_y]); //It's acrtually faster to skip this on Commodore
+      //if(viewportBuffer[byte_x][byte_y] != viewportBufferLast[byte_x][byte_y]); //It's acrtually faster to skip this on Commodore
       #endif
       DrawTileFast(viewportBuffer[byte_x][byte_y], byte_x, byte_y);
     }
   }
   #if defined(__APPLE2__)
-  memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportsize); //It's acrtually faster to skip this on Commodore
+  //memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportsize); //It's acrtually faster to skip this on Commodore
   #endif
   SwapBuffer();
 }
