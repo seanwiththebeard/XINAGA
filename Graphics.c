@@ -27,7 +27,7 @@ byte attributeset[];
 #define ScreenEnable() (POKE(0xD011, PEEK(0xD011)|16))
 #include <peekpoke.h>
 #endif
-byte  MapSet[];
+//byte  MapSet[];
 byte* CharRam = 0;
 //byte* MapSetInfo = (byte*) &MapSet[0];
 byte* MapSetInfo = (byte*) &charset[0];

@@ -1,5 +1,5 @@
 #include "xinaga.h"
-//#include <conio.h> //for cgetc() and kbhit()
+#include <conio.h> //for cgetc() and kbhit()
 sbyte key = 0;
 byte keyIgnore = 0;
 
@@ -30,12 +30,8 @@ void waitforkey()
 }
 void UpdateInput()
 {
-  while (keycode[0] & 128)
-  {
-    SetChar('x', COLS - 1, 1);
-  }
-  STROBE(0xc010);
-
+  cgetc();
+  while(keycode[0] & 128){}
   key = keycode[0];
   SetChar(key, COLS - 1, 1);
   #if __C64__
