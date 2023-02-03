@@ -120,13 +120,16 @@ void Demo()
   //DrawCharset();
   //DrawTiles();
   //SetTileOrigin(3, 2);
+  
   LoadMap();
   MapUpdate();
   
   while(1)
   {
-    DrawCharset();
-    SwapBuffer();
-    ClearScreen();
+    //DiskSave("data1", 0x2001, 0x2000);
+    //DiskLoad("data1", 0x2000);
+    //DrawCharset();
+    //SwapBuffer();
+    //ClearScreen();
   }
 }

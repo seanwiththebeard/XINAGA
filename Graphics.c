@@ -201,7 +201,7 @@ void DrawChar(int index, byte xpos, byte ypos)
 {
   byte y;
   int offset, i;
-  i = index <<3;
+  i = index << 3;
   ypos = ypos << 3;
   offset= RowsHGR[ypos] + xpos;
   for (y = 0; y < 8; ++y)
@@ -327,7 +327,7 @@ void SetTileOrigin(byte x, byte y)
 }
 
 byte indexes[4];
-unsigned short offset1;
+//unsigned short offset1;
 void DrawTileFast(byte index, byte x, byte y)
 {
   index = (index << 1) + ((index >> 3) << 4);
