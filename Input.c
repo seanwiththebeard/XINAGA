@@ -2,40 +2,43 @@
 #include <conio.h> //for cgetc() and kbhit()
 sbyte key = 0;
 byte keyIgnore = 0;
+bool ChangedState = true;
 
 #if __C64__
-//#include <joystick.h>
-//byte joyState = 0;
-//byte joyStateLast = 0;
-//byte joyTemp;
-#endif
-
-#if defined(__APPLE2__)
-
+#include <joystick.h>
+byte joyState = 0;
+byte joyStateLast = 0;
+byte joyTemp;
 #endif
 
 void InitializeInput()
 {
   #if __C64__
-  //joy_install(joy_static_stddrv);
+  joy_install(joy_static_stddrv);
   #endif
 }
 
 byte* keycode = (byte*)0xC000;
 byte* keyflag = (byte*)0xC010;
 
-void waitforkey()
+bool InputChanged()
 {
-  //while(keyflag[0] & 128){}
+  #if defined(__APPLE2__)
+  if(keycode[0] & 128)
+  {
+    ChangedState = false;
+    STROBE (0xc010);
+  }
+  else
+    ChangedState = true;
+  #endif
+  return ChangedState;
 }
+
 void UpdateInput()
-{
-  cgetc();
-  while(keycode[0] & 128){}
-  key = keycode[0];
-  SetChar(key, COLS - 1, 1);
+{ 
   #if __C64__
-  /*joyTemp = joy_read(0);
+  joyTemp = joy_read(0);
 
   if (joyState == joyTemp)
   {
@@ -46,12 +49,14 @@ void UpdateInput()
     joyState = joyTemp;
     ChangedState = true;
     joyStateLast = joyState;
-  }*/
+  }
   #endif
 
   #if defined(__APPLE2__)
-
-
+  cgetc();
+  while(keycode[0] & 128){}
+  key = keycode[0];
+  SetChar(key, COLS - 1, 1);
   #endif
 }
 

@@ -327,7 +327,7 @@ void SetTileOrigin(byte x, byte y)
 }
 
 byte indexes[4];
-//unsigned short offset1;
+unsigned short offset1;
 void DrawTileFast(byte index, byte x, byte y)
 {
   index = (index << 1) + ((index >> 3) << 4);
