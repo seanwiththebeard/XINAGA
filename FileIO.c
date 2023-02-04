@@ -24,7 +24,7 @@ void DiskSave(char filename[], int source, int length)
   #endif
   
   #if defined(__APPLE2__)
-  FILE* filepointer = fopen(filename, "wb");
+  FILE* filepointer = fopen(filename, "wb"); //Write Binary
   fwrite((int*)source, length, 1, filepointer);
   fclose(filepointer);
   #endif
@@ -44,11 +44,11 @@ void DiskLoad(char filename[], int dest)
   #if defined(__APPLE2__)
   FILE* filepointer;
   int length;
-  filepointer = fopen(filename, "rb");
-  fseek(filepointer, 0, SEEK_END); // seek to end of file
-  length = ftell(filepointer); // get current file pointer
-  fseek(filepointer, 0, SEEK_SET);
-  fread((int*)dest, length, 1, filepointer);
+  filepointer = fopen(filename, "rb"); //Read Binary
+  fseek(filepointer, 0, SEEK_END); // Seek our pointer to end of file
+  length = ftell(filepointer); // Now the pointer is at the length of the file
+  fseek(filepointer, 0, SEEK_SET); //Move the pointer back to the beginning
+  fread((int*)dest, length, 1, filepointer); //Copy the entire length to our destination
   fclose(filepointer);
   #endif
 }
