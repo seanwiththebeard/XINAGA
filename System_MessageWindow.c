@@ -47,7 +47,7 @@ void ScrollMessageWindowUp()
   DrawMessageWindow();
 }
 
-void WriteLineMessageWindow(char message[16], bool delay)
+void WriteLineMessageWindow(char message[16], byte delay)
 {
   byte x;
   
@@ -66,10 +66,14 @@ void WriteLineMessageWindow(char message[16], bool delay)
     else
     {
       MessageLines[x][Height - 1] = message[x];
+      SetChar(MessageLines[x][Height - 1], PosX + x, PosY + Height - 1);  
     }
     if (delay > 0)
     {
-      DrawMessageWindow();
+      byte d, z;
+      for (z = 0; z < delay * 24; ++z)
+        for(d = 0; d < 255; ++d)
+        {}
     }
   }
   DrawMessageWindow();
