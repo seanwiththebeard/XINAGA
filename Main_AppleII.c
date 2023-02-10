@@ -7,11 +7,11 @@
 //#link "XINAGA_Graphics.c"
 //#link "XINAGA_Input.c"
 //#link "XINAGA_FileIO.c"
+//#link "XINAGA_Console.c"
 
 //#link "Game_Demo.c"
 //#link "Game_Screen_Map.c"
 
-//#link "XINAGA_Console.c"
 
 void Demo(void);
 void main()
