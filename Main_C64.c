@@ -7,6 +7,8 @@
 //#link "XINAGA_Graphics.c"
 //#link "XINAGA_Input.c"
 //#link "XINAGA_FileIO.c"
+//#link "XINAGA_Audio.c"
+
 
 //#link "Demo.c"
 //#link "Screen_Map.c"

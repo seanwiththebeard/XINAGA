@@ -125,22 +125,16 @@ void Demo()
   LoadMap();
   BlankMessageWindow();
   DrawMessageWindow();
-  while(1)
-  {    
   MapUpdate();
   while(1)
   {
     WriteLineMessageWindow("Hello@", 0);
     WriteLineMessageWindow("Hello@", 1);
-
+    
     //DiskSave("data1", 0x2001, 0x2000);
     //DiskLoad("data1", 0x2000);
     //DrawCharset();
     //SwapBuffer();
     //ClearScreen();
-    UpdateInput();
-    if (InputFire())
-      break;
-  }
   }
 }

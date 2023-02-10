@@ -68,9 +68,9 @@ void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
 void DrawCharacterSet(byte destX, byte destY);
 
 //Audio
-extern void PlaySong(void);
+extern void PlaySong(byte index);
 extern void StopSong(void);
-extern void PlaySound(void);
+extern void PlaySound(byte index);
 
 
 //File I/O
