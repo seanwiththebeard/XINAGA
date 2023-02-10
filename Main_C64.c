@@ -4,9 +4,9 @@
 #endif
 
 #include "xinaga.h"
-//#link "Graphics.c"
-//#link "Input.c"
-//#link "FileIO.c"
+//#link "XINAGA_Graphics.c"
+//#link "XINAGA_Input.c"
+//#link "XINAGA_FileIO.c"
 
 //#link "Demo.c"
 //#link "Screen_Map.c"
