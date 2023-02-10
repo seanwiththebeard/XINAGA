@@ -15,7 +15,6 @@
 #include "System_MessageWindow.h"
 
 void Demo(void);
-
 void main()
 {
   Demo();
