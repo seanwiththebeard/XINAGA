@@ -2,13 +2,38 @@
 #include <peekpoke.h>
 #include <string.h> //For memcpy
 
+//Prototypes
+//byte ReadBit(byte byteToRead, char bit);//These are old
+void CameraFollow();
+int GetWrappedX(int xPos); //For viewport character positions
+int GetWrappedY(int YPos);
+int WrapMapPositionX(int posX);
+int WrapMapPositionY(int posY);
+void BufferCharacters();
+void FillQuadBuffer();
+void LoadQuadrant(byte quadIndex, byte quad);
+void LoadMapQuads();
+byte GetPlayerQuad(); //Returns the viewport quadrant of the player character
+byte GetQuadInRelation(bool up, bool down, bool left, bool right);
+void QuadScroll(byte direction);
+void InitializeMapData();
+int wrapX(int posX); //Used in map positions
+int wrapY(int posY);
+bool CheckCollision(byte charIndex, byte Direction);
+void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
+void ApplyLOS();
+void DrawEntireMap();
+void MoveCharacter(byte index, byte direction, bool cameraUpdate);
+void LoadMap();
+void MapUpdate();
+
 //Globals
 int int_offset, tileAddress, colorAddress;
 byte byte_x, byte_y, byte_z, byte_a, byte_b, byte_temp, byte_i, checkCollision;
 int int_x, int_y, int_index, int_a, int_b, xPos, yPos, chardata;
 bool scrollQuads, changedQuad;
 byte byte_index, byte_offset;
-
+byte playerX, playerY; //Used in line-of-sight calculations
 
 //Map Data
 #define mapHeight 32
@@ -412,25 +437,6 @@ void QuadScroll(byte direction)
         indexB = GetQuadInRelation(true, false, true, false);
       else
         indexB = GetQuadInRelation(true, false, false, true);
-      /*switch (compareQuad)
-      {
-        case 0:
-          quadA = 2;
-          quadB = 3;
-          break;
-        case 1:
-          quadA = 3;
-          quadB = 2;
-          break;
-        case 2:
-          quadA = 0;
-          quadB = 1;
-          break;
-        case 3:
-          quadA = 1;
-          quadB = 0;
-          break;
-      }*/
       break;
     case 1:
       indexA = GetQuadInRelation(false, true, false, false);
@@ -696,8 +702,6 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
   }
 }
 
-byte playerX;
-byte playerY;
 void ApplyLOS()
 {
   //Quadrant Layout:

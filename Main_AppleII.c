@@ -6,6 +6,7 @@
 //#link "XINAGA_Input.c"
 //#link "XINAGA_FileIO.c"
 //#link "XINAGA_Console.c"
+//#link "XINAGA_Audio.c"
 
 #if defined(__APPLE2__)
 //#resource "apple2-xinaga.cfg"

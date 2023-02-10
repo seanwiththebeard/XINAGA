@@ -105,6 +105,7 @@ void DrawMap()
 
 void Demo()
 {
+  byte freq = 0;
   InitializeInput();
   InitializeGraphics();
   ClearScreen();
@@ -126,20 +127,22 @@ void Demo()
   DrawMessageWindow();
   while(1)
   {    
-  MapUpdate();
+  //MapUpdate();
   while(1)
   {
     WriteLineMessageWindow("Hello@", 0);
-    WriteLineMessageWindow("Hello@", 1);
+    PlaySound(250, freq);
+    --freq;
+    //WriteLineMessageWindow("Hello@", 1);
 
     //DiskSave("data1", 0x2001, 0x2000);
     //DiskLoad("data1", 0x2000);
     //DrawCharset();
     //SwapBuffer();
     //ClearScreen();
-    UpdateInput();
-    if (InputFire())
-      break;
+    //UpdateInput();
+    //if (InputFire())
+      //break;
   }
   }
 }

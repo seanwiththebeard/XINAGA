@@ -23,6 +23,7 @@ void LoadMap();
 void MapUpdate();
 
 //Graphics
+//	System
 void InitializeGraphics(void);
 #if defined(__C64__)
 void wait_vblank(byte frames);
@@ -35,7 +36,7 @@ extern int YColumnIndex[25];
 extern byte* MapSetInfo;
 extern byte MapOriginX, MapOriginY;
 
-//Drawing
+//	Drawing
 void ClearScreen(void);
 void SetChar(byte x, byte y, byte index);
 byte GetChar(byte x, byte y);
@@ -44,11 +45,11 @@ void DrawLineH(char index, byte x, byte y, byte length);
 void DrawLineV(char index, byte x, byte y, byte length);
 void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bool fill);
 
-/*//Scrolling
+/*//	Scrolling
 void ScrollReset();
 void Scroll(direction);*/
 
-//Tiles
+//	Tiles
 void SetTileOrigin(byte x, byte y);
 void DrawTileFast(byte index, byte x, byte y);
 
@@ -64,13 +65,13 @@ void StoreBuffer(void);
 void CopyBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
 void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
 
-//	Debug
+//Debug
 void DrawCharacterSet(byte destX, byte destY);
 
 //Audio
 extern void PlaySong(byte index);
 extern void StopSong(void);
-extern void PlaySound(byte index);
+extern void PlaySound(int length, int freq);
 
 
 //File I/O
@@ -96,12 +97,12 @@ extern char Messages[4][20];
 void DrawCharStats();
 
 //Common Functions
-byte ReadBit(byte byteToRead, char bit); //These are old
-void WriteBit(byte *byteToSet, char bit, bool value); //These are old
-bool CheckBit(byte source, byte position); //These are old
+//byte ReadBit(byte byteToRead, char bit); //These are old
+//void WriteBit(byte *byteToSet, char bit, bool value); //These are old
+//bool CheckBit(byte source, byte position); //These are old
 
-byte SetBit(byte byteToSet , byte k); //These work right
-byte ClearBit(byte byteToSet , byte k); //These work right
+//byte SetBit(byte byteToSet , byte k); //These work right
+//byte ClearBit(byte byteToSet , byte k); //These work right
 
 /*****************************************************************************/
 /*                                                                           */
