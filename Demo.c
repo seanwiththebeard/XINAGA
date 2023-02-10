@@ -125,7 +125,7 @@ void Demo()
   LoadMap();
   BlankMessageWindow();
   DrawMessageWindow();
-  //MapUpdate();
+  MapUpdate();
   while(1)
   {
     WriteLineMessageWindow("Hello@", 0);

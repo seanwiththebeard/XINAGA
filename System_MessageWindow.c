@@ -9,10 +9,11 @@ byte PosX = 24;
 byte PosY = 1;
 #define Height 10
 #define Width 15
-//char MessageWindow[Width*Height];
 char MessageLines[Width][Height];
 
-char Messages[64][4] = {
+#define MessageCount 4
+#define MessageLength 20
+char Messages[MessageCount][MessageLength] = {
   "Hello there!@",
   "This is a sign@",
   "Wizard's Forest@"};
@@ -26,12 +27,8 @@ void DrawMessageWindow()
 }
 void BlankMessageWindow()
 {
-  byte x, y;
-
   DrawBorder("Console@",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
-  for (y = 0; y < Height; ++y)
-    for (x = 0; x < Width; ++x)
-      MessageLines[x][y] = ' ';
+  memset(&MessageLines[0][0], ' ', Width * Height);
   DrawMessageWindow();
 }
 
@@ -71,7 +68,7 @@ void WriteLineMessageWindow(char message[16], byte delay)
     if (delay > 0)
     {
       byte d, z;
-      for (z = 0; z < delay * 24; ++z)
+      for (z = 0; z < delay * 16; ++z)
         for(d = 0; d < 255; ++d)
         {}
     }

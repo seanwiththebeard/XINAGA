@@ -1,7 +1,7 @@
 #include "xinaga.h"
 #include <peekpoke.h>
 #include <string.h> //For memcpy
-//#include "System_MessageWindow.h"
+#include "System_MessageWindow.h"
 
 //Globals
 int int_offset, tileAddress, colorAddress;
@@ -38,7 +38,6 @@ const byte quadWidthDouble = quadWidth * 2;
 const byte quadHeightDouble = quadHeight * 2;
 const byte yQuadHeight = 2*mapQuadHeight;
 
-
 bool wrap = true;
 
 //Viewport
@@ -46,32 +45,12 @@ byte viewportPosX = 1;
 byte viewportPosY = 2;
 #define viewportWidth 11
 #define viewportHeight 7
-//#define viewportCharWidth (viewportWidth * 2)
-//#define viewportCharHeight (viewportHeight * 2)
-//const byte doubleCharWidth = viewportCharWidth;
-//const byte doubleCharHeight = viewportCharHeight;
-//const byte viewportWidthQuad = (viewportWidth*4);
-//const byte LastMapScanline = (8*viewportPosY + 16*viewportHeight);
 
-//Scrolling left and right line buffer
-//const byte bufferLength = viewportCharWidth - 2;
-//byte buffer[viewportCharWidth];
-//const int BufferAddress = (int)&buffer[0];
-//const int totalSize = viewportCharHeight * viewportCharWidth;
 
 byte viewportBuffer[viewportWidth][viewportHeight];
 byte viewportBufferLast[viewportWidth][viewportHeight];
 
-//byte DoubleBufferChars[viewportCharWidth*viewportCharHeight];
-//byte DoubleBufferColors[viewportCharWidth*viewportCharHeight];
-
-
-//int CharAddress, CharAddress2, ColorAddress, ColorAddress2;
-
 byte followIndex = 0;
-
-//int viewportOrigin = &ScreenCharBuffer;
-//int colorOrigin = &ScreenColorBuffer;
 
 //QuadScroll
 byte QuadOriginX, QuadOriginY;
@@ -212,12 +191,11 @@ void BufferCharacters()
       if (byte_y < viewportHeight)
         if(characters[byte_i].visible)
           viewportBuffer[byte_x][byte_y] = characters[byte_i].tile;
-      //DrawTileFast(characters[byte_i].tile, byte_x, byte_y);
     }
   }
 }
 
-void DrawSingleRow(byte row)
+/*void DrawSingleRow(byte row)
 {
   CameraFollow();
 
@@ -267,7 +245,7 @@ void DrawSingleColumn(byte column)
     byte_a = offsetX;
     ++byte_b;
   }
-}
+}*/
 
 void FillQuadBuffer()
 {
@@ -461,25 +439,6 @@ void QuadScroll(byte direction)
         indexB = GetQuadInRelation(false, true, true, false);
       else
         indexB = GetQuadInRelation(false, true, false, true);
-      /*switch (compareQuad)
-      {
-        case 0:
-          quadA = 2;
-          quadB = 3;
-          break;
-        case 1:
-          quadA = 3;
-          quadB = 2;
-          break;
-        case 2:
-          quadA = 0;
-          quadB = 1;
-          break;
-        case 3:
-          quadA = 1;
-          quadB = 0;
-          break;
-      }*/
       break;
     case 2:
       indexA = GetQuadInRelation(false, false, true, false);
@@ -487,25 +446,6 @@ void QuadScroll(byte direction)
         indexB = GetQuadInRelation(true, false, true, false);
       else
         indexB = GetQuadInRelation(false, true, true, false);
-      /*switch (compareQuad)
-      {
-        case 0:
-          quadA = 1;
-          quadB = 3;
-          break;
-        case 1:
-          quadA = 0;
-          quadB = 2;
-          break;
-        case 2:
-          quadA = 3;
-          quadB = 1;
-          break;
-        case 3:
-          quadA = 2;
-          quadB = 0;
-          break;
-      }*/
       break;
     case 3:
       indexA = GetQuadInRelation(false, false, false, true);
@@ -513,25 +453,6 @@ void QuadScroll(byte direction)
         indexB = GetQuadInRelation(true, false, false, true);
       else
         indexB = GetQuadInRelation(false, true, false, true);
-      /*switch (compareQuad)
-      {
-        case 0:
-          quadA = 1;
-          quadB = 3;
-          break;
-        case 1:
-          quadA = 0;
-          quadB = 2;
-          break;
-        case 2:
-          quadA = 3;
-          quadB = 1;
-          break;
-        case 3:
-          quadA = 2;
-          quadB = 0;
-          break;
-      }*/
       break;
   }
 
@@ -593,9 +514,6 @@ void InitializeMapData()
   #define water 34
   #define signpost 35
 
-  //viewportOrigin = (int)&ScreenCharBuffer[0] +  (viewportPosX + COLS * viewportPosY);
-  //colorOrigin = (int)&ScreenColorBuffer[0] + (viewportPosX + COLS * viewportPosY);
-
   cameraOffsetX = viewportWidth / 2;
   cameraOffsetY = viewportHeight / 2;
 
@@ -610,11 +528,6 @@ void InitializeMapData()
       tiles[byte_index].chars[1] = byte_offset + 1;
       tiles[byte_index].chars[2] = byte_offset + 16;
       tiles[byte_index].chars[3] = byte_offset + 17;
-
-      //tiles[byte_index].colors[0] = AttributeSet[byte_offset];
-      //tiles[byte_index].colors[1] = AttributeSet[byte_offset + 1];
-      //tiles[byte_index].colors[2] = AttributeSet[byte_offset + 16];
-      //tiles[byte_index].colors[3] = AttributeSet[byte_offset + 17];
 
       tiles[byte_index].blocked = 0;
 
@@ -667,90 +580,13 @@ void InitializeMapData()
   characters[2].tile = signpost;
   characters[2].visible = true;
   characters[2].collide = true;
-  characters[2].message = 2;
+  characters[2].message = 1;
   characters[2].posX = 8;
   characters[2].posY = 6;
   characters[2].quadPosX  = 2;
   characters[2].quadPosY  = 0;
 
-
-  /*//Init map data
-  for(byte_y = 0; byte_y < mapHeight; ++byte_y)
-    {
-      for(byte_x = 0; byte_x < mapWidth; ++byte_x)
-      {
-        mapData[byte_x][byte_y] = water;
-      }
-    }  */
   LoadMapQuads();
-}
-void DrawEntireMap();
-
-void ScrollViewport(byte direction)
-{
-
-  //CharAddress = (int) &DoubleBufferChars[0];
-  //CharAddress2 = (int) &DoubleBufferChars[2];
-  //ColorAddress = (int) &DoubleBufferColors[0];
-  //ColorAddress2 = (int) &DoubleBufferColors[2];
-  direction--;
-  CameraFollow();
-  DrawEntireMap();
-  /*
-  switch (direction)
-  {
-    case 0:
-      {
-        for (int_x = totalSize - viewportWidth * 4; int_x > 0; int_x -= viewportWidth * 4)
-        {
-          memcpy(&DoubleBufferChars[int_x], &DoubleBufferChars[int_x - viewportWidth * 4], viewportWidthQuad);
-          memcpy(&DoubleBufferColors[int_x], &DoubleBufferColors[int_x - viewportWidth * 4], viewportWidthQuad);
-        }
-        DrawSingleRow(0);
-      }
-      break;
-    case 1:
-    {
-      memcpy(&DoubleBufferChars[0], &DoubleBufferChars[viewportWidth * 4], totalSize - viewportWidthQuad);
-      memcpy(&DoubleBufferColors[0], &DoubleBufferColors[viewportWidth * 4], totalSize - viewportWidthQuad);
-      DrawSingleRow(viewportHeight - 1);
-    }
-    break;
-    case 2:
-    {
-      for (byte_y = 0; byte_y < doubleCharHeight; ++byte_y)
-      {        
-        memcpy((int*)BufferAddress, (int*)CharAddress, bufferLength);
-        memcpy((int*)CharAddress2, (int*)BufferAddress, bufferLength);
-        memcpy((int*)BufferAddress, (int*)ColorAddress, bufferLength);
-        memcpy((int*)ColorAddress2, (int*)BufferAddress, bufferLength);
-
-        CharAddress += doubleCharWidth;
-        CharAddress2 += doubleCharWidth;
-        ColorAddress += doubleCharWidth;
-        ColorAddress2 += doubleCharWidth;
-      }
-      DrawSingleColumn(0);
-    }
-    break;
-    case 3:
-    { 
-      for (byte_y = 0; byte_y < doubleCharHeight; ++byte_y)
-      {
-        memcpy((int*)CharAddress, (int*)CharAddress2, bufferLength);
-        memcpy((int*)ColorAddress, (int*)ColorAddress2, bufferLength);
-        CharAddress += doubleCharWidth;
-        CharAddress2 += doubleCharWidth;
-        ColorAddress += doubleCharWidth;
-        ColorAddress2 += doubleCharWidth;
-      }
-      DrawSingleColumn(viewportWidth - 1);
-    }
-    break;
-    default:
-    break;
-  }
-  */
 }
 
 int wrapX(int posX) //Used in map positions
@@ -828,7 +664,7 @@ bool CheckCollision(byte charIndex, byte Direction)
       if (characters[byte_i].posX == xPos)
         if (characters[byte_i].posY == yPos)
         {
-          //WriteLineMessageWindow(Messages[characters[byte_i].message], 1);
+          WriteLineMessageWindow(Messages[characters[byte_i].message], 1);
           return true;
         }
 
@@ -883,7 +719,7 @@ void ApplyLOS()
   //Center adjacent X always visible
   //Diagonal quadrants 0-3 block everything behind the tile
   //Cardinal quadrants 4-7 block only the tiles directly behind them
-  
+
   byte x, y;
   //Quad 0
   for(y = playerY - 1; y > 0; --y)
@@ -935,43 +771,7 @@ void ApplyLOS()
     for(x = playerX -1 ; x <= playerX + 1; ++x)
 
       if (tiles[viewportBuffer[x][y]].opaque)
-        DrawSquare(x, y + 1, 1, viewportHeight - y);  
-
-  /* Process full viewport
-  for(y = 0; y < viewportHeight; ++y)
-  {
-    for(x = 0; x < viewportWidth; ++x)
-    {
-      if(viewportBuffer[x][y] != 7)
-        if (tiles[viewportBuffer[x][y]].opaque)
-        {
-          if (x < playerX) //Left Side
-          {
-            DrawSquare(0, y, x, 1);
-            if ( y < playerY) //Top
-             DrawSquare(0, 0, x + 1, y);
-            else if (y > playerY)//Bottom
-              DrawSquare(0, y + 1, x + 1, viewportHeight - y);
-          }
-          else if (x > playerX) //Right Side
-          {
-            DrawSquare(x + 1, y, viewportWidth - x, 1);
-            if ( y < playerY)
-              DrawSquare(x, 0, viewportWidth - x, y);
-            else if (y > playerY)
-              DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
-          }
-
-          else if (x == playerX)
-          {
-            if ( y < playerY)
-              DrawSquare(0, 0, viewportWidth, y);
-            else if (y > playerY)
-              DrawSquare(0, y + 1, viewportWidth, viewportHeight - y - 1);
-          }
-        }
-    }
-  }*/
+        DrawSquare(x, y + 1, 1, viewportHeight - y);
 }
 
 const byte viewportsize = viewportHeight * viewportWidth;
@@ -991,7 +791,6 @@ void DrawEntireMap()
     {
       int_a = WrapMapPositionX(int_a); //Wrap the map data X reference
       viewportBuffer[byte_x][byte_y] = mapData[int_a][int_b];
-      //DrawTileFast(viewportBuffer[byte_x][byte_y], byte_x, byte_y);
       int_a++;
     }
     int_a = offsetX;
@@ -1003,7 +802,7 @@ void DrawEntireMap()
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {      
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
-    { //On Apple, only draw tiles that are different from the last draw
+    { //On Apple, only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
       #if defined(__APPLE2__)
       //if(viewportBuffer[byte_x][byte_y] != viewportBufferLast[byte_x][byte_y]); //It's acrtually faster to skip this on Commodore
       #endif
@@ -1086,29 +885,13 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
           || (direction == 3 && characters[index].posX % 16 == 10))
         scrollQuads = true;
 
-
       if(cameraUpdate)
         CameraFollow();
-      ScrollViewport(direction);
+
+      DrawEntireMap();
 
       if (scrollQuads)
         QuadScroll(direction);
-
-      /*if (quadBuffer[GetPlayerQuad()] != mapQuads[characters[index].quadPosY][characters[index].quadPosX])
-        {
-          sprintf(str, "QuadPos X%d,Y%d@", characters[index].quadPosX, characters[index].quadPosY);
-          WriteLineMessageWindow(str, 0);
-          sprintf(str, "CharPos X%d,Y%d@", characters[index].posX, characters[index].posY);
-          WriteLineMessageWindow(str, 0);
-          sprintf(str, "Entering Quad %d@", GetPlayerQuad());
-          WriteLineMessageWindow(str, 0);
-          sprintf(str, "Quad Index %d@", quadBuffer[GetPlayerQuad()]);
-          WriteLineMessageWindow(str, 0);
-          sprintf(str, "Should be %d@",mapQuads[characters[index].quadPosY][characters[index].quadPosX]);
-          WriteLineMessageWindow(str, 0);
-          LoadQuadrant(mapQuads[characters[index].quadPosY][characters[index].quadPosX], GetPlayerQuad());
-          DrawEntireMap();
-        }*/
     }
   }
 }
@@ -1140,10 +923,9 @@ void LoadMap()
 void MapUpdate()
 {
   //screenName nextScreen;
-  bool exit = false;
   DrawEntireMap();
 
-  while (!exit)
+  while (1)
   {
     UpdateInput();
     if (InputChanged())
@@ -1176,31 +958,8 @@ void MapUpdate()
         //sprintf(str, "Pos = %d,%d@", characters[0].posX, characters[0].posY);
         //DrawEntireMap();
         //WriteLineMessageWindow(str, 0);
-        //return 1;
+        return;
       }
-
-      /*MoveCharacter(0, 2, true);
-      MoveCharacter(0, 2, true);
-      MoveCharacter(0, 2, true);
-      MoveCharacter(0, 2, true);
-
-      MoveCharacter(0, 0, true);
-      MoveCharacter(0, 0, true);
-      MoveCharacter(0, 0, true);
-      MoveCharacter(0, 0, true);
-
-      MoveCharacter(0, 3, true);
-      MoveCharacter(0, 3, true);
-      MoveCharacter(0, 3, true);
-      MoveCharacter(0, 3, true);
-      MoveCharacter(0, 3, true);
-
-      MoveCharacter(0, 1, true);
-      MoveCharacter(0, 1, true);
-      MoveCharacter(0, 1, true);
-      MoveCharacter(0, 1, true);
-
-      MoveCharacter(0, 2, true);*/
     }
   }
   //return nextScreen;
