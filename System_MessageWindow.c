@@ -68,7 +68,7 @@ void WriteLineMessageWindow(char message[16], byte delay)
     if (delay > 0)
     {
       byte d, z;
-      for (z = 0; z < delay * 16; ++z)
+      for (z = 0; z < delay * 8; ++z)
         for(d = 0; d < 255; ++d)
         {}
     }
