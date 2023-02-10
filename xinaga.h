@@ -88,6 +88,13 @@ bool InputLeft(void);
 bool InputRight(void);
 bool InputFire(void);
 
+//Console
+void DrawMessageWindow();
+void BlankMessageWindow();
+void WriteLineMessageWindow(char message[], byte delay);
+extern char Messages[4][20];
+void DrawCharStats();
+
 //Common Functions
 byte ReadBit(byte byteToRead, char bit); //These are old
 void WriteBit(byte *byteToSet, char bit, bool value); //These are old

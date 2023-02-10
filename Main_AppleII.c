@@ -8,11 +8,10 @@
 //#link "XINAGA_Input.c"
 //#link "XINAGA_FileIO.c"
 
-//#link "Demo.c"
-//#link "Screen_Map.c"
+//#link "Game_Demo.c"
+//#link "Game_Screen_Map.c"
 
-//#link "System_MessageWindow.c"
-#include "System_MessageWindow.h"
+//#link "XINAGA_Console.c"
 
 void Demo(void);
 void main()
