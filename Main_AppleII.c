@@ -1,4 +1,6 @@
 #include "xinaga.h"
+#include "game.h"
+
 //#link "Game_Demo.c"
 //#link "Game_Screen_Map.c"
 

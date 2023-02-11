@@ -484,17 +484,20 @@ void PlaySound(int length, int freq)
   
   length;
   freq;
-  for (count = 0; count < 5408; ++count)
+  for (count = 0x2000; count < 0x4000; ++count)
   {
-    byte temp = rawData[count];
+    byte temp = data[count];
     for (x = 0; x < 8; ++x)
     {
       if(temp & 1)
       {
-        for (y = 0; y < 8; ++y);
+          --reg[0];
+        for (y = 0; y < 2; ++y);
       }
       else
-        --reg[0];
+      {
+        for (y = 0; y < 2; ++y);
+      }
       temp = temp >> 1;
     }
   }
