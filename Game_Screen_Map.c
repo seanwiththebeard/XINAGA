@@ -1,4 +1,5 @@
 #include "xinaga.h"
+#include "game.h"
 #include <peekpoke.h>
 #include <string.h> //For memcpy
 
@@ -25,7 +26,6 @@ void ApplyLOS();
 void DrawEntireMap();
 void MoveCharacter(byte index, byte direction, bool cameraUpdate);
 void LoadMap();
-void MapUpdate();
 
 //Globals
 int int_offset, tileAddress, colorAddress;
@@ -923,7 +923,7 @@ void LoadMap()
   DrawEntireMap();
 }
 
-void MapUpdate()
+screenName MapUpdate()
 {
   //screenName nextScreen;
   DrawEntireMap();
@@ -961,7 +961,7 @@ void MapUpdate()
         //sprintf(str, "Pos = %d,%d@", characters[0].posX, characters[0].posY);
         //DrawEntireMap();
         //WriteLineMessageWindow(str, 0);
-        return;
+        return Title;
       }
     }
   }

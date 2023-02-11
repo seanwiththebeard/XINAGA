@@ -2,6 +2,7 @@
 #include "game.h"
 
 //#link "Game_Demo.c"
+//#link "Game.c"
 //#link "Game_Screen_Map.c"
 
 //#link "XINAGA_Graphics.c"

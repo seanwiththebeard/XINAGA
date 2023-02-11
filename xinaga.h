@@ -20,7 +20,6 @@ typedef enum { false, true } bool;
 typedef enum { up, down, left, right } direction;
 
 void LoadMap();
-void MapUpdate();
 
 //Graphics
 //	System
