@@ -53,14 +53,14 @@ void MakeSound()
 
 void PlaySound(int length, int freq)
 {
+  length;
+  freq;
+  
   #if defined (__APPLE2__)
   int count;
   int x, y, repeat;
   byte* reg = (byte*) 0xC030;
   byte* data = (byte*) 0x0;
-  
-  length;
-  freq;
   
   MakeSound();
   for (repeat = 0; repeat < length; ++repeat)
