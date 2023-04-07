@@ -52,10 +52,7 @@ void MakeSound()
 }
 
 void PlaySound(int length, int freq)
-{
-  length;
-  freq;
-  
+{  
   #if defined (__APPLE2__)
   int count;
   int x, y, repeat;
@@ -81,5 +78,10 @@ void PlaySound(int length, int freq)
       temp = temp >> 1;
     }
   }
+  #endif
+  
+  #if defined (__C64__)
+  length;
+  freq;
   #endif
 }
