@@ -1,4 +1,5 @@
 #include "xinaga.h"
+#include "game.h"
 
 //Tests
 void DrawCharset()
@@ -127,7 +128,7 @@ void Demo()
   DrawMessageWindow();
   while(1)
   {    
-  //MapUpdate();
+  MapUpdate();
   while(1)
   {
     //WriteLineMessageWindow("Hello@", 0);
