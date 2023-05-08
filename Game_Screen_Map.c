@@ -925,6 +925,7 @@ screenName MapUpdate()
 {
   //screenName nextScreen;
   DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+  DrawMessageWindow();
   DrawEntireMap();
 
   while (1)
@@ -960,7 +961,7 @@ screenName MapUpdate()
         //sprintf(str, "Pos = %d,%d@", characters[0].posX, characters[0].posY);
         //DrawEntireMap();
         //WriteLineMessageWindow(str, 0);
-        return Title;
+        return EditParty;
       }
     }
   }

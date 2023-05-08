@@ -8,11 +8,14 @@ void DrawCombatMap()
   byte x, y = 0;
   SetTileOrigin(1, 1);
   //wait_vblank(1);
+  
+  StoreBuffer();
   for (y = 0; y < 8; ++y)
     for (x = 0; x < 8; ++x)
     {
       DrawTileFast(index, x, y);
     }
+  SwapBuffer();
 }
 
 void DrawCharacters()
@@ -28,12 +31,9 @@ screenName Update_Combat()
   bool exit = false;
   
   ClearScreen();
-  PrintString("Combat!@", 0, 0, true, false);
-  DrawBorder(0, 0, 18, 18, false, true);
+  DrawBorder("Combat@",0, 0, 18, 18, false);
   DrawCombatMap();
   DrawCharacters();
-  //DrawCharacterSet(20, 2);
-  
   
   while (!exit)
   {
