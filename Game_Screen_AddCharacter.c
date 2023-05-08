@@ -200,11 +200,17 @@ void RollStats()
   CHR = RollDice(3, 6);
 
   WriteLineMessageWindow("Rolled Stats:@", 0);
-  sprintf(strTemp, "STR: %d CON: %d@", STR, CON);
+  sprintf(strTemp, "STR: %d@", STR);
   WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "DEX: %d WIS: %d@", DEX, WIS);
+  sprintf(strTemp, "CON: %d@", CON);  
   WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "INT: %d CHR: %d@", INT, CHR);
+  sprintf(strTemp, "DEX: %d@", DEX);
+  WriteLineMessageWindow(strTemp, 0);
+  sprintf(strTemp, "WIS: %d@", WIS);
+  WriteLineMessageWindow(strTemp, 0);
+  sprintf(strTemp, "INT: %d@", INT);
+  WriteLineMessageWindow(strTemp, 0);
+  sprintf(strTemp, "CHR: %d@", CHR);
   WriteLineMessageWindow(strTemp, 0);
   WriteLineMessageWindow("Right to reroll@", 0);
 
