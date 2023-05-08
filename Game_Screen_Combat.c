@@ -7,7 +7,7 @@ void DrawCombatMap()
 {
   byte x, y = 0;
   SetTileOrigin(1, 1);
-  wait_vblank(1);
+  //wait_vblank(1);
   for (y = 0; y < 8; ++y)
     for (x = 0; x < 8; ++x)
     {
