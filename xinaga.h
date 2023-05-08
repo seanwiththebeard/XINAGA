@@ -18,6 +18,7 @@ typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
 typedef enum { false, true } bool;
 typedef enum { up, down, left, right } direction;
+extern int randseed;
 
 void LoadMap();
 

@@ -12,7 +12,14 @@
 //#link "XINAGA_Console.c"
 
 //#link "Game_Demo.c"
+//#link "Game_System.c"
+
+
+//#link "Game_Screen_Title.c"
+//#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_Map.c"
+//#link "Game_Screen_Combat.c"
+//#link "Game_Screen_Credits.c"
 
 void Demo(void);
 void main()
