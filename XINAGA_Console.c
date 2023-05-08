@@ -2,11 +2,10 @@
 #include <stdio.h>
 //#include "Lists.h"
 
-
-byte PosX = 24;
-byte PosY = 1;
 #define Height 10
 #define Width 15
+byte PosX = COLS - (Width + 2);
+byte PosY = ROWS - (Height + 2);
 char MessageLines[Width][Height];
 
 #define MessageCount 4
@@ -19,6 +18,7 @@ char Messages[MessageCount][MessageLength] = {
 void DrawMessageWindow()
 {
   byte x, y;
+  DrawBorder("Console@",PosX - 1, PosY - 1, Width + 2, Height + 2, false);
   for (y = 0; y < Height; ++y)
     for (x = 0; x < Width; ++x)
       SetChar(MessageLines[x][y], PosX + x, PosY + y);  

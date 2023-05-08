@@ -3,6 +3,9 @@
 
 byte index = 36;
 
+void DrawCombatMap(void);
+void DrawCharacters(void);
+
 void DrawCombatMap()
 {
   byte x, y = 0;
@@ -15,6 +18,7 @@ void DrawCombatMap()
     {
       DrawTileFast(index, x, y);
     }
+  DrawCharacters();
   SwapBuffer();
 }
 
@@ -33,7 +37,7 @@ screenName Update_Combat()
   ClearScreen();
   DrawBorder("Combat@",0, 0, 18, 18, false);
   DrawCombatMap();
-  DrawCharacters();
+  //DrawCharacters();
   
   while (!exit)
   {

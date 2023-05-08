@@ -371,8 +371,25 @@ void DrawLineV(char index, byte x, byte y, byte length)
 }
 void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bool fill)
 {
-  byte x;
-  DrawLineH(239, xPos + 1, yPos, width - 2);
+  byte x, i;
+  byte offset = 0;
+  
+  //--text;
+  PrintString(text, xPos + 1, yPos, true, false);
+  for (i = 0; i < 20; ++i)
+  {
+    if (text[i] == '@')
+      break;
+    else
+      ++offset;
+    }
+  if (fill)
+    for (x = 0; x < height - 2; ++x)
+    {
+      DrawLineH(' ', xPos + 1, yPos + x + 1, width - 2);
+    }
+  
+  DrawLineH(239, xPos + 1 + offset, yPos, width - 2 - offset);
   DrawLineH(239, xPos + 1, yPos + height - 1, width - 2);
   DrawLineV(255, xPos, yPos + 1, height - 1);
   DrawLineV(255, xPos + width - 1, yPos + 1, height - 2);
@@ -381,13 +398,7 @@ void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bo
   SetChar(238, xPos, yPos + height - 1);
   SetChar(238, xPos + width - 1, yPos + height - 1);
   
-  //--text;
-  PrintString(text, xPos + 1, yPos, true, false);
-  if (fill)
-    for (x = 0; x < height - 2; ++x)
-    {
-      DrawLineH(' ', xPos + 1, yPos + x + 1, width - 2);
-    }
+  
 }
 
 byte MapSet[] = {/*{w:8,h:8,brev:1,count:64, bpp:1, pal:"c64"}*/
