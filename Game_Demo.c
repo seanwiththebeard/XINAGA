@@ -124,11 +124,12 @@ void Demo()
   //SetTileOrigin(3, 2);
   
   LoadMap();
-  BlankMessageWindow();
+  BlankMessageWindow(); //Why does this put characters at the very end of the screen?
   DrawMessageWindow();
   while(1)
   {    
   MapUpdate();
+  }
   while(1)
   {
     //WriteLineMessageWindow("Hello@", 0);
@@ -144,6 +145,5 @@ void Demo()
     //UpdateInput();
     //if (InputFire())
       //break;
-  }
   }
 }
