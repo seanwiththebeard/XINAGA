@@ -60,6 +60,7 @@ void UpdateScreen()
 }
 
 //Tests
+/*
 void DrawCharset()
 {
   byte x, y;
@@ -84,13 +85,13 @@ void DrawTiles()
   for (y = 0; y < 8; ++y)
     for (x = 0; x < 8; ++x)
     {
-      DrawTileFast(/*x*y - */z, x, y);
+      DrawTileFast(z, x, y);
       ++z;
     }
     SwapBuffer();
-}
+}*/
 
-void DrawMap()
+/*void DrawMap()
 {
   #if defined(__APPLE2__)
   #define sizeX 8
@@ -148,7 +149,7 @@ void DrawMap()
         ++z;
     }
   }
-}
+}*/
 
 /*void ScrollScreen()
 {
@@ -164,7 +165,7 @@ void DrawMap()
 
 void Demo()
 {
-  byte freq = 0;  
+  //byte freq = 0;  
   
   InitializeInput();
   InitializeGraphics();
@@ -183,7 +184,7 @@ void Demo()
   
   LoadMap();
   BlankMessageWindow(); //Why does this put characters at the very end of the screen?
-  //DrawMessageWindow();
+  DrawMessageWindow();
   
   SwitchScreen(Title);
   
@@ -194,8 +195,8 @@ void Demo()
   while(1)
   {
     //WriteLineMessageWindow("Hello@", 0);
-    PlaySound(2, freq);
-    ++freq;
+    //PlaySound(2, freq);
+    //++freq;
     //WriteLineMessageWindow("Hello@", 1);
 
     //DiskSave("data1", 0x2001, 0x2000);

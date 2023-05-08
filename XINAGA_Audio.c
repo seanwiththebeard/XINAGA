@@ -43,6 +43,7 @@ unsigned char rawData[16*8] = {
 */
 void MakeSound()
 {
+  /*
   int x;
   for (x = 0; x < 16*8; x++)
   {
@@ -51,10 +52,14 @@ void MakeSound()
     else
       rawData[x] = 0;
   }
+  */
 }
 
 void PlaySound(int length, int freq)
-{  
+{
+  length;
+  freq;
+  /*
   #if defined (__APPLE2__)
   int count;
   int x, y, repeat;
@@ -86,4 +91,5 @@ void PlaySound(int length, int freq)
   length;
   freq;
   #endif
+  */
 }
