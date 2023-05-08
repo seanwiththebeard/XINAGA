@@ -18,7 +18,7 @@ byte windowHeight = 12;
 byte rosterPos;
 
 char Selections[8][16];
-byte selection = 0;
+int selection = 0;
 byte countSelections = 5;
 bool exitWindow = false;
 bool nextWindow = false;
@@ -85,15 +85,9 @@ byte RollDice(byte count, byte diceSize)
   return result;
 }
 
-void DrawSelection() 
-{
-  SetChar(windowX + 2, windowY + selection + 1, '>');
-}
+#define DrawSelection() SetChar('>', windowX + 2, windowY + selection + 1)
 
-void DrawCurrentCharacter() 
-{
-  SetChar(windowX + 2, windowY + rosterPos + CurrentCharacter, '>');
-}
+#define DrawCurrentCharacter() SetChar('>', windowX + 2, windowY + rosterPos + CurrentCharacter)
 
 
 void SetString(char value[16], byte menuItem)
@@ -106,13 +100,18 @@ void SetString(char value[16], byte menuItem)
 
 void MoveSelection(bool direction)
 {
-  SetChar(windowX + 2, windowY + selection + 1, ' ');
+  SetChar(' ', windowX + 2, windowY + selection + 1);
 
   if (!direction && selection > 0)
     --selection;
 
   if (direction && selection < countSelections)
     ++selection;
+  
+  if (selection < 0)
+    selection = 0;
+  if (selection >= countSelections)
+    selection = countSelections;
 
   DrawSelection();
 }
@@ -138,6 +137,7 @@ void DrawSelections()
   {
     PrintString(Selections[x], windowX + 3, windowY + 1 + x, true, false);
   }
+  DrawSelection();
 }
 
 void DrawCharWindow(byte xPos, byte yPos, byte width, byte height, char title[16])
@@ -151,7 +151,7 @@ void DrawCharWindow(byte xPos, byte yPos, byte width, byte height, char title[16
     DrawLineH(' ', xPos, yPos + x, width);
   }
 
-  DrawBorder("", xPos, yPos, width, height, false);
+  DrawBorder("Edit Party@", xPos, yPos, width, height, false);
 
   PrintString(title, xPos + 1, yPos, true, false);
   DrawSelection();
@@ -373,6 +373,7 @@ void DrawRoster()
   struct playerChar *PlayerChar = getPlayerChar(0);
   struct playerChar *PartyChar = getPartyMember(0);
   
+  selection = 0;
   repeatRoster = true;
   
 
@@ -387,7 +388,7 @@ void DrawRoster()
   windowHeight = ROWS - 2;
   exitWindow = false;
   nextWindow = false;
-  CurrentCharacter = 0;
+  //CurrentCharacter = 0;
 
   SetString("Add selected@", 0);
   SetString("Remove last@", 1);
@@ -527,7 +528,6 @@ screenName DrawAddCharacterScreen()
 
   //GetRace();
   
-
   while (!exitWindow)
   {
     DrawRoster();

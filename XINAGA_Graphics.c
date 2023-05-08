@@ -49,10 +49,10 @@ void ClearScreen()
 {
 
   #if defined(__C64__)
-  memset(ScreenChars, ' ', 0x0400); // Clear Chars
-  memset(ScreenCharBuffer, ' ', 0x0400); // Clear Buffer
-  memset(ScreenColors, 1, 0x0400); // clear Colors
-  memset(ScreenColorBuffer, 1, 0x0400); // clear Color Buffer
+  memset(ScreenChars, ' ', ROWS * COLS); // Clear Chars
+  memset(ScreenCharBuffer, ' ', ROWS * COLS); // Clear Buffer
+  memset(ScreenColors, 1, ROWS * COLS); // clear Colors
+  memset(ScreenColorBuffer, 1, ROWS * COLS); // clear Color Buffer
   #endif
 
   #if defined(__APPLE2__)
@@ -220,8 +220,8 @@ void SetChar(byte index, byte x, byte y)
   DrawChar(index, x, y);
   #endif
   #if defined(__C64__)
-  ScreenChars[x + COLS*y] = index;
-  ScreenColors[x + COLS*y] = attributeset[index];
+  ScreenChars[x + YColumnIndex[y]] = index;
+  ScreenColors[x + YColumnIndex[y]] = attributeset[index];
   #endif
 }
 
