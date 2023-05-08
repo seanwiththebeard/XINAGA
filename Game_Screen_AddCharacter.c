@@ -85,8 +85,15 @@ byte RollDice(byte count, byte diceSize)
   return result;
 }
 
-#define DrawSelection() (SetChar(windowX + 2, windowY + selection + 1, '>'))
-#define DrawCurrentCharacter() (SetChar(windowX + 2, windowY + rosterPos + CurrentCharacter, '>'))
+void DrawSelection() 
+{
+  SetChar(windowX + 2, windowY + selection + 1, '>');
+}
+
+void DrawCurrentCharacter() 
+{
+  SetChar(windowX + 2, windowY + rosterPos + CurrentCharacter, '>');
+}
 
 
 void SetString(char value[16], byte menuItem)
@@ -531,4 +538,3 @@ screenName DrawAddCharacterScreen()
   return nextScreen;
   //CopyDoubleBufferArea(windowX, windowY, windowWidth, windowHeight);  
 }
-

@@ -11,7 +11,6 @@ screenName Update_Title()
   PrintString("Press Space@", 14, 22, true, false);
   
   //PlaySID();
-      
   
   while (!exit)
   {

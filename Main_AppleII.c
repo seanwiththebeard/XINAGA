@@ -9,7 +9,6 @@
 //#link "Game_Demo.c"
 //#link "Game_System.c"
 
-
 //#link "Game_Screen_Title.c"
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_Map.c"
@@ -21,7 +20,7 @@
 #define CFGFILE apple2-xinaga.cfg
 #endif
 
-void Demo(void);
+//void Demo(void);
 void main()
 {
   Demo();

@@ -4,6 +4,9 @@
 #define _GAME_H
 typedef enum { Title, Credits, EditParty, Map, Combat, Menu, SaveLoad } screenName;
 extern int randseed;
+
+void Demo(void);
+
 //Title
 screenName Update_Title();
 
