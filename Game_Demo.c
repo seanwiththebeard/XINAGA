@@ -8,7 +8,7 @@ void SwitchScreen(screenName screen)
   //ScreenDisable();
   ClearScreen();
   //Load specified screen
-  UpdateInput();
+  //UpdateInput();
   currentScreen = screen;
   //ScreenEnable();
   
@@ -171,11 +171,11 @@ void Demo()
   ClearScreen();    
   
   #if defined(__APPLE2__)
-  DrawBorder("Hello Apple!@", 0, ROWS - 3, COLS, 3, false);
+  //DrawBorder("Hello Apple!@", 0, ROWS - 3, COLS, 3, false);
   #endif
   
   #if defined(__C64__)
-  DrawBorder("Hello C64!@", 0, ROWS - 3, COLS, 3, false);
+  //DrawBorder("Hello C64!@", 0, ROWS - 3, COLS, 3, false);
   #endif
   //DrawCharset();
   //DrawTiles();
@@ -183,7 +183,7 @@ void Demo()
   
   LoadMap();
   BlankMessageWindow(); //Why does this put characters at the very end of the screen?
-  DrawMessageWindow();
+  //DrawMessageWindow();
   
   SwitchScreen(Title);
   

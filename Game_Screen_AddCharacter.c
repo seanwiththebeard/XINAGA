@@ -118,7 +118,7 @@ void MoveSelection(bool direction)
 
 void MoveCurrentCharacter(bool direction)
 {
-  SetChar(windowX + 2, windowY  + rosterPos + CurrentCharacter, ' ');
+  SetChar(' ', windowX + 2, windowY  + rosterPos + CurrentCharacter);
 
   if (!direction && CurrentCharacter > 0)
     --CurrentCharacter;

@@ -919,13 +919,12 @@ void LoadMap()
   InitializeMapData();
   playerX = (viewportWidth - 1) / 2;
   playerY = (viewportHeight - 1) / 2;
-  DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
-  DrawEntireMap();
 }
 
 screenName MapUpdate()
 {
   //screenName nextScreen;
+  DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawEntireMap();
 
   while (1)
