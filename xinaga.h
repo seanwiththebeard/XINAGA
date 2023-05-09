@@ -53,7 +53,7 @@ void SetTileOrigin(byte x, byte y);
 void DrawTileFast(byte index, byte x, byte y);
 
 //	Text
-void PrintString(char text[16], byte posx, byte posy, bool fast, bool buffer);
+void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer);
 
 //	Buffer
 void SetBuffer(bool value);
@@ -103,6 +103,7 @@ void DrawCharStats();
 //byte SetBit(byte byteToSet , byte k); //These work right
 //byte ClearBit(byte byteToSet , byte k); //These work right
 
+//#if defined(__C64__)
 /*****************************************************************************/
 /*                                                                           */
 /*                        cbm_petscii_charmap.h                              */
@@ -238,7 +239,7 @@ void DrawCharStats();
 #pragma charmap (0x61, 0x41)
 #pragma charmap (0x62, 0x42)
 #pragma charmap (0x63, 0x43)
-#pragma charmap (0x64, 0x44)
+//#pragma charmap (0x64, 0x44)
 #pragma charmap (0x65, 0x45)
 #pragma charmap (0x66, 0x46)
 #pragma charmap (0x67, 0x47)
@@ -400,4 +401,6 @@ void DrawCharStats();
 #pragma charmap (0xFF, 0xFF)
 
 #pragma warn (remap-zero, pop)
+//#endif
+
 #endif
