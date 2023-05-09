@@ -9,8 +9,6 @@ void DrawRoster(void);
 
 screenName nextScreen;
 
-char strTemp[16];
-
 byte windowX = 2;
 byte windowY;
 byte windowWidth = 16;
