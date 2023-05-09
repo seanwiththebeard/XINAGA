@@ -39,26 +39,6 @@ void SwitchScreen(screenName screen)
   SwitchScreen(currentScreen);
 }
 
-void UpdateScreen()
-{
-  switch (currentScreen)
-  {
-    case Title:
-      break;
-    case EditParty:
-      break;
-    case Map:
-      MapUpdate();
-      break;
-    case Combat:
-      break;
-    case Menu:
-      break;
-    default:
-      break;
-  }
-}
-
 //Tests
 /*
 void DrawCharset()

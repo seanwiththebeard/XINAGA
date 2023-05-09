@@ -40,7 +40,9 @@ void ScrollUp()
     ++delay;
   }
   {
-    //MoveScreenUp();
+    #if defined (__C64__)
+    Scroll(up);
+    #endif
     if (xcredit < linecount)
     {
       if (xoff %4 != 0)

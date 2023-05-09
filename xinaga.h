@@ -44,9 +44,9 @@ void DrawLineH(char index, byte x, byte y, byte length);
 void DrawLineV(char index, byte x, byte y, byte length);
 void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bool fill);
 
-/*//	Scrolling
+//	Scrolling
 void ScrollReset();
-void Scroll(direction);*/
+void Scroll(direction);
 
 //	Tiles
 void SetTileOrigin(byte x, byte y);
@@ -133,6 +133,7 @@ void DrawCharStats();
 /*****************************************************************************/
 
 /* No include guard here!  Multiple use in one file might be intentional. */
+//#if defined(__C64__)
 
 #pragma warn (remap-zero, push, off)
 
