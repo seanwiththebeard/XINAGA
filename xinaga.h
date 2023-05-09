@@ -103,7 +103,7 @@ void DrawCharStats();
 //byte SetBit(byte byteToSet , byte k); //These work right
 //byte ClearBit(byte byteToSet , byte k); //These work right
 
-//#if defined(__C64__)
+#if defined(__C64__)
 /*****************************************************************************/
 /*                                                                           */
 /*                        cbm_petscii_charmap.h                              */
@@ -240,9 +240,9 @@ void DrawCharStats();
 #pragma charmap (0x61, 0x41)
 #pragma charmap (0x62, 0x42)
 #pragma charmap (0x63, 0x43)
-#if defined(__C64__)
+//#if defined(__C64__)
 #pragma charmap (0x64, 0x44)
-#endif
+//#endif
 #pragma charmap (0x65, 0x45)
 #pragma charmap (0x66, 0x46)
 #pragma charmap (0x67, 0x47)
@@ -404,6 +404,6 @@ void DrawCharStats();
 #pragma charmap (0xFF, 0xFF)
 
 #pragma warn (remap-zero, pop)
-//#endif
+#endif
 
 #endif

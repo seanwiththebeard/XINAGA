@@ -68,7 +68,7 @@ bool InputUp()
   #endif
 
   #if defined(__APPLE2__)
-  if (key == 'w')
+  if (key == 'w' || key == 'W')
   {
     return true;
   }
@@ -83,7 +83,7 @@ bool InputDown()
     return true;
   #endif
   #if defined(__APPLE2__)
-  if (key == 's')
+  if (key == 's' || key == 'S')
     return true;
   #endif
   return false;
@@ -96,7 +96,7 @@ bool InputLeft()
     return true;
   #endif
   #if defined(__APPLE2__)
-  if (key == 'a')
+  if (key == 'a' || key == 'A')
     return true;
   #endif
   return false;
@@ -109,7 +109,7 @@ bool InputRight()
     return true;
   #endif
   #if defined(__APPLE2__)
-  if (key == 'd')
+  if (key == 'd' || key == 'D')
     return true;
   #endif
   return false;
