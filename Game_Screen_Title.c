@@ -14,7 +14,7 @@ screenName Update_Title()
   DrawBorder("@", 12, 19, 16, 5, true);
   PrintString("Press Space@", 14, 21, true, false);
   
-  sprintf(strTemp, "1234 %d@", 1234);
+  sprintf(strTemp, "1234 %d@", 1230);
   PrintString(strTemp, 0, 0, true, false);
   sprintf(strTemp, "5678 %d@", 5678);
   PrintString(strTemp, 0, 1, true, false);
