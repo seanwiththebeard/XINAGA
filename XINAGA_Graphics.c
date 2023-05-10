@@ -840,7 +840,7 @@ void ScrollingMaskOff()
 sbyte scroll_fine_x = 0;
 sbyte scroll_fine_y = 0;
 
-#if __C64__
+//#if __C64__
 void ScrollReset()
 {
   VIC.ctrl1 = 0x1b;
@@ -860,9 +860,7 @@ void scroll_update_regs() {
   SET_SCROLL_X(scroll_fine_x);
   SET_SCROLL_Y(scroll_fine_y);
 }
-#endif
 
-#if __C64__
 void scroll_up() {
   int length = YColumnIndex[ROWS - 1];
   #if __C64__
@@ -897,7 +895,6 @@ void scroll_down() {
   ScreenEnable();
   #endif
 }
-#endif
 
 void scroll_right()
 {
