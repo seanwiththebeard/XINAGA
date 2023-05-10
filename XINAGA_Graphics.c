@@ -247,14 +247,14 @@ byte GetChar(byte x, byte y)
 void CopyBuffer()
 {
   #if defined(__APPLE2__)
-  /*byte x, y;
+  byte x, y;
   int i = 0;
   for (y = 0; y < ROWS; ++y)
     for (x = 0; x < COLS; ++x)
     {
       DrawChar(ScreenChars[i],x, y);
       ++i;
-    }*/
+    }
   #endif
   #if defined(__C64__)
   memcpy(&ScreenChars[0], &ScreenCharBuffer[0], 0x400);
@@ -811,12 +811,13 @@ byte charset[] = {/*{w:8,h:8,count:256, bpp:1}*/
 #endif
 
 #if __C64__
-
-
-#if __C64__
 #include <c64.h>
 #endif
 //Scrolling
+sbyte scroll_fine_x = 0;
+sbyte scroll_fine_y = 0;
+
+#if __C64__
 void ScrollingMaskOn()
 {
   #if __C64__
@@ -837,10 +838,6 @@ void ScrollingMaskOff()
   #endif
 }
 
-sbyte scroll_fine_x = 0;
-sbyte scroll_fine_y = 0;
-
-//#if __C64__
 void ScrollReset()
 {
   VIC.ctrl1 = 0x1b;
@@ -855,11 +852,12 @@ void ScrollReset()
   VIC.ctrl2 = (VIC.ctrl2 & 0xf8) | (_x);
 
 
-
 void scroll_update_regs() {
   SET_SCROLL_X(scroll_fine_x);
   SET_SCROLL_Y(scroll_fine_y);
 }
+#endif
+
 
 void scroll_up() {
   int length = YColumnIndex[ROWS - 1];
@@ -876,7 +874,6 @@ void scroll_up() {
   SwapBuffer();
   ScreenEnable();
   #endif
-
 }
 
 void scroll_down() {
@@ -939,7 +936,6 @@ void scroll_left()
   ScreenEnable();
   #endif
 }
-#if __C64__
 
 void scroll_vert(sbyte delta_y)
 {
@@ -975,7 +971,6 @@ void scroll_vert(sbyte delta_y)
     scroll_down();    
   }  
 }
-#endif
 
 #if defined(__APPLE2__)
 void push_up()
@@ -1007,7 +1002,6 @@ void push_down()
       memset(&HGR[RowsHGR[rowcount]], 0, COLS);
   }
 }
-
 void push_left()
 {
   byte colcount, rowcount;
@@ -1145,8 +1139,7 @@ void Scroll(direction dir)
       default:
         break;
     }
+    CopyBuffer();
   }
   #endif
 }
-
-#endif

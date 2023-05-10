@@ -39,9 +39,9 @@ void ScrollUp()
     ++delay;
   }
   {
-    #if defined (__C64__)
+    //#if defined (__C64__)
     Scroll(up);
-    #endif
+    //#endif
     if (xcredit < linecount)
     {
       if (xoff %4 != 0)
@@ -73,7 +73,9 @@ screenName Update_Credits()
   
   while (!exit)
   {
+    #if defined (__C64__)
     UpdateInput();
+    #endif
     ScrollUp();
     
     if (InputChanged())
