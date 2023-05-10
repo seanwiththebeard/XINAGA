@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "game.h"
 #include "xinaga.h"
-
+/*
 byte yscroll;
 //byte sinevalue[32] = {12,14,17,19,20,22,23,24, 24,24,23,22,20,19,17,14, 12,10,7,5,4,2,1,0, 0,0,1,2,4,5,7,10};
 byte xcredit;
@@ -86,4 +86,7 @@ screenName Update_Credits()
   //StopSID();
   //VIC.ctrl1 = temp;
   return nextScreen;
-}
+}*/
+
+screenName Update_Credits()
+{return Title;}
