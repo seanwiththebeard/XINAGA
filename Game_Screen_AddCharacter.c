@@ -149,9 +149,9 @@ void DrawCharWindow(byte xPos, byte yPos, byte width, byte height, char title[16
     DrawLineH(' ', xPos, yPos + x, width);
   }
 
-  DrawBorder("Edit Party@", xPos, yPos, width, height, false);
+  DrawBorder(title, xPos, yPos, width, height, false);
 
-  PrintString(title, xPos + 1, yPos, true, false);
+  //PrintString(title, xPos + 1, yPos, true, false);
   DrawSelection();
   DrawSelections();
 }
