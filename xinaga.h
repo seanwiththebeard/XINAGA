@@ -103,4 +103,8 @@ void DrawCharStats();
 //byte SetBit(byte byteToSet , byte k); //These work right
 //byte ClearBit(byte byteToSet , byte k); //These work right
 
+#if defined(__C64__)
+#include <cbm_petscii_charmap.h>
+#endif
+
 #endif
