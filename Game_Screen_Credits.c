@@ -78,8 +78,7 @@ screenName Update_Credits()
     #endif
     ScrollUp();
     
-    if (InputChanged() || delay == 35)
-      if (InputFire())
+    if ((InputChanged() && InputFire()) || (delay > 35))
         exit = true;
   }
   //StopSID();

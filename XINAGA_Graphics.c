@@ -1067,7 +1067,6 @@ void Scroll(direction dir)
     {
       case up:
         scroll_vert(-1);
-        //AppleUp();
         break;
       case down:
         scroll_vert(1);
@@ -1081,7 +1080,7 @@ void Scroll(direction dir)
       default:
         break;
     }
-    //wait_vblank(1);
+    wait_vblank(1);
     scroll_update_regs();
   }
   //ScrollingMaskOff();
