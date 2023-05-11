@@ -1,7 +1,7 @@
 #include "xinaga.h"
 #include "game.h"
 
-screenName currentScreen = Title;
+screenName currentScreen = Credits;
 
 void SwitchScreen(screenName screen)
 {
@@ -166,7 +166,7 @@ void Demo()
   BlankMessageWindow(); //Why does this put characters at the very end of the screen?
   DrawMessageWindow();
   
-  SwitchScreen(Title);
+  SwitchScreen(Credits);
   
   while(1)
   {    

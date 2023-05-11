@@ -40,17 +40,17 @@ void ScrollUp()
   }
   {
     //#if defined (__C64__)
-    Scroll(up);
+    Scroll(down);
     //#endif
     if (xcredit < linecount)
     {
       if (xoff %4 != 0)
       {
-        PrintString(CreditsLines[xcredit], xcredit % 3, 24, true, false);
+        PrintString(CreditsLines[xcredit], xcredit % 3, 0, true, false);
         ++xcredit;   
       }
       else
-        PrintString("@", xcredit % 3, 24, true, false);
+        PrintString("@", xcredit % 3, 0, true, false);
     }
     ++xoff;
   }
@@ -78,11 +78,9 @@ screenName Update_Credits()
     #endif
     ScrollUp();
     
-    if (InputChanged())
+    if (InputChanged() || delay == 35)
       if (InputFire())
         exit = true;
-    if (delay == 35)
-      exit = true;
   }
   //StopSID();
   //VIC.ctrl1 = temp;
