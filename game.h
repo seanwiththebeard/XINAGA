@@ -2,7 +2,7 @@
 
 #ifndef _GAME_H
 #define _GAME_H
-typedef enum { Title, Credits, EditParty, Map, Combat, Menu, SaveLoad } screenName;
+typedef enum { Title, Credits, EditParty, Map, Combat, Menu, SaveLoad, MapGen } screenName;
 extern int randseed;
 extern byte strTemp[20];
 
@@ -23,7 +23,11 @@ screenName Update_Combat();
 //Credits
 screenName Update_Credits();
 
+//MapGen
+screenName Update_MapGen();
+
 //BFRPG
+byte RollDice(byte count, byte diceSize);
 typedef struct
 {
   int

@@ -30,7 +30,8 @@ void SwitchScreen(screenName screen)
     case Combat:
       currentScreen = Update_Combat();
       break;
-    case Menu:
+    case MapGen:
+      currentScreen = Update_MapGen();
       break;
     default:
       break;
@@ -163,15 +164,9 @@ void Demo()
   //SetTileOrigin(3, 2);
   
   LoadMap();
-  BlankMessageWindow(); //Why does this put characters at the very end of the screen?
-  DrawMessageWindow();
   
-  SwitchScreen(Title);
+  SwitchScreen(MapGen);
   
-  while(1)
-  {    
-  MapUpdate();
-  }
   while(1)
   {
     //WriteLineMessageWindow("Hello@", 0);

@@ -10,6 +10,15 @@ ClassDescriptionDef ClassDescription[4] = {{"Fighter@", 8},{"Magic-User@", 4}, {
 int AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 int randseed = 0;
 
+byte RollDice(byte count, byte diceSize)
+{
+  byte result = 0;
+  byte i;
+  for (i = 0; i < count; i++)
+    result += (rand() %diceSize + 1);
+  return result;
+}
+
 struct playerChar *startRoster=NULL;
 
 byte CountRoster()

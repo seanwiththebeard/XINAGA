@@ -74,15 +74,6 @@ void AddToRoster()
   //nextWindow = true;
 }
 
-byte RollDice(byte count, byte diceSize)
-{
-  byte result = 0;
-  byte i;
-  for (i = 0; i < count; i++)
-    result += (rand() %diceSize + 1);
-  return result;
-}
-
 #define DrawSelection() SetChar('>', windowX + 2, windowY + selection + 1)
 
 #define DrawCurrentCharacter() SetChar('>', windowX + 2, windowY + rosterPos + CurrentCharacter)
@@ -529,6 +520,9 @@ screenName DrawAddCharacterScreen()
 {
   exitWindow = false;
   CurrentCharacter = 0;
+  
+  BlankMessageWindow(); //Why does this put characters at the very end of the screen?
+  DrawMessageWindow();
 
   //GetRace();
   
