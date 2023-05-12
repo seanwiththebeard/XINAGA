@@ -40,17 +40,17 @@ void ScrollUp()
   }
   {
     //#if defined (__C64__)
-    Scroll(down);
+    Scroll(up);
     //#endif
     if (xcredit < linecount)
     {
       if (xoff %4 != 0)
       {
-        PrintString(CreditsLines[xcredit], xcredit % 3, 0, true, false);
+        PrintString(CreditsLines[xcredit], xcredit % 3, ROWS - 1, true, false);
         ++xcredit;   
       }
       else
-        PrintString("@", xcredit % 3, 0, true, false);
+        PrintString("@", xcredit % 3, 0, ROWS - 1, false);
     }
     ++xoff;
   }
