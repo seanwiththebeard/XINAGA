@@ -27,7 +27,13 @@ void GenerateMap()
   srand(randseed);
   for (x = 0; x < points; ++x)
   {
-    map[rand() % height][rand() % width] = grass;
+    byte h = rand() % height;
+    byte w = rand() % width;
+    
+    if (w % 2 == 0)
+      map[h][w] = grass;
+    else
+      map[h][w] = grass + 1;
   }
   
   for (y = 0; y < height; ++y)
