@@ -1,6 +1,6 @@
 #include "xinaga.h"
 #include <stdio.h>
-//#include "Lists.h"
+#include "game.h"
 
 #define Height 10
 #define Width 15
@@ -74,22 +74,22 @@ void WriteLineMessageWindow(char message[16], byte delay)
   DrawMessageWindow();
 }
 
-/*
+
 void DrawCharStatus(byte characterIndex)
 {
   byte statX = PosX;
   byte statY = 2 + characterIndex * 3;
   struct playerChar *PlayerChar = getPartyMember(characterIndex);
 
-  DrawBorder(statX - 1, statY - 1, COLS - statX + 1, 4, true);
-  sprintf(str, "%s@", RaceDescription[PlayerChar->RACE].NAME);
-  PrintString(str, statX, statY, true, false);
-  sprintf(str, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
-  PrintString(str, statX + 9, statY, true, false);
-  sprintf(str, "%s@", ClassDescription[PlayerChar->CLASS].NAME);
-  PrintString(str, statX, statY + 1, true, false);
-  ReverseBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
-  CopyDoubleBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
+  DrawBorder("@", statX - 1, statY - 1, COLS - statX + 1, 4, true);
+  sprintf(strTemp, "%s@", RaceDescription[PlayerChar->RACE].NAME);
+  PrintString(strTemp, statX, statY, true, false);
+  sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
+  PrintString(strTemp, statX + 9, statY, true, false);
+  sprintf(strTemp, "%s@", ClassDescription[PlayerChar->CLASS].NAME);
+  PrintString(strTemp, statX, statY + 1, true, false);
+  //ReverseBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
+  //CopyDoubleBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
 }
 
 void DrawCharStats()
@@ -97,4 +97,4 @@ void DrawCharStats()
   byte i;
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
-}*/
+}

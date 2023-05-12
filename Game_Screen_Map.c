@@ -927,6 +927,7 @@ screenName MapUpdate()
   DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawMessageWindow();
   DrawEntireMap();
+  DrawCharStats();
 
   while (1)
   {
