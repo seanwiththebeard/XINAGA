@@ -19,7 +19,10 @@ void GenerateMap()
   for (y = 0; y < height; ++y)
     for (x = 0; x < width; ++x)
     {
-      map[y][x] = water;
+      if (x % 2 == 0)
+        map[y][x] = water;
+      else
+        map[y][x] = water + 1;
     }
   srand(randseed);
   for (x = 0; x < points; ++x)
