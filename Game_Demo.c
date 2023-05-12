@@ -166,7 +166,7 @@ void Demo()
   BlankMessageWindow(); //Why does this put characters at the very end of the screen?
   DrawMessageWindow();
   
-  SwitchScreen(Credits);
+  SwitchScreen(Title);
   
   while(1)
   {    
