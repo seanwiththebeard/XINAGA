@@ -54,13 +54,17 @@ screenName Update_MapGen()
   {
     UpdateInput();
     if (InputChanged())
-      if (InputFire())
+      if (InputUp())
       {
         ++randseed;
         srand(randseed);
         GenerateMap();
         //exit = true;
       }
+    if (InputFire())
+    {
+      exit = true;
+    }
   }
   
   return nextScreen;
