@@ -157,8 +157,13 @@ void checkLandlocked()
     clampPoint(&east);
     clampPoint(&west);
     
-    if (checkPoints(north.x, north.y))
+    if (checkPoints(north.x, north.y) && checkPoints(south.x, south.y) && checkPoints(east.x, east.y) &&checkPoints(west.x, west.y))
+    {
       tmpt->landlocked = true;
+      sprintf(strTemp, "Landlocked (%d)@", i);
+      WriteLineMessageWindow(strTemp, 0);
+      while(1);
+    }
     else
       tmpt->landlocked = false;
   }
@@ -206,7 +211,8 @@ void GenerateMap(byte seed)
   
   sprintf(strTemp, "failures (%d)@", failures);
       WriteLineMessageWindow(strTemp, 0);
-
+  
+  checkLandlocked();
   /*for (x = 0; x < pointsCount; ++x)
   {
 
