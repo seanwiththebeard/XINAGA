@@ -49,7 +49,6 @@ screenName Update_MapGen()
   bool exit = false;
   DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
   GenerateMap();
-  
   while (!exit)
   {
     UpdateInput();
