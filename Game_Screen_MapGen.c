@@ -8,12 +8,13 @@
 #define width 16
 #define posX 1
 #define posY 1
-#define pointsCount 32
+#define pointsCount 64
 byte map[height][width];
 
 typedef struct vector2
 {
   char x, y;
+  bool landlocked;
   struct vector2 *next;
 };
 
@@ -114,7 +115,7 @@ bool checkPoints(byte w, byte h)
     if (getPoint(i)->x == w)
       if (getPoint(i)->y == h)
       {
-        sprintf(strTemp, "Failed %d (%d, %d)@", i, w, h);
+        sprintf(strTemp, "Failed%d(%d,%d)@", i, w, h);
         WriteLineMessageWindow(strTemp, 0);
         return true;
       }
@@ -126,6 +127,41 @@ void clearPoints()
 {
   while (CountPoints())
     deletePoint(0);
+}
+
+void clampPoint(struct vector2 *clmpt)
+{
+  if (clmpt->x >= width)
+    clmpt->x = 0;
+  if (clmpt->y >= height)
+    clmpt->y = 0;
+}
+void checkLandlocked()
+{
+  byte i;
+  for (i = 0; i < CountPoints(); ++i)
+  {
+    struct vector2 *tmpt = getPoint(i);
+    struct vector2 north, south, east, west;
+    north.x = tmpt->x;
+    north.y = tmpt->y - 1;
+    south.x = tmpt->x;
+    south.y = tmpt->y + 1;
+    east.x = tmpt->x + 1;
+    east.y = tmpt->y;
+    west.x = tmpt->x - 1;
+    west.y = tmpt->y;
+    
+    clampPoint(&north);
+    clampPoint(&south);
+    clampPoint(&east);
+    clampPoint(&west);
+    
+    if (checkPoints(north.x, north.y))
+      tmpt->landlocked = true;
+    else
+      tmpt->landlocked = false;
+  }
 }
 
 void GenerateMap(byte seed)
@@ -146,6 +182,8 @@ void GenerateMap(byte seed)
         map[y][x] = water;
       else
         map[y][x] = water + 1;
+      
+      SetChar(map[y][x], posX + x, posY + y);
     }
   srand(seed);
   for (x = 0; x < pointsCount; ++x)
@@ -160,14 +198,16 @@ void GenerateMap(byte seed)
       failures++;
     }
     createPoint(w, h);
-    sprintf(strTemp, "Count (%d)@", CountPoints());
+    SetChar(grass, posX + w, posY + h);
+    
+    sprintf(strTemp, "Count (%d)@", x);
       WriteLineMessageWindow(strTemp, 0);
   }
   
   sprintf(strTemp, "failures (%d)@", failures);
       WriteLineMessageWindow(strTemp, 0);
 
-  for (x = 0; x < pointsCount; ++x)
+  /*for (x = 0; x < pointsCount; ++x)
   {
 
     if (getPoint(x)->x % 2 == 0)
@@ -180,7 +220,7 @@ void GenerateMap(byte seed)
     for (x = 0; x < width; ++x)
     {
       SetChar(map[y][x], posX + x, posY + y);
-    }
+    }*/
 }
 
 screenName Update_MapGen()
@@ -189,7 +229,11 @@ screenName Update_MapGen()
   screenName nextScreen = Title;
   bool exit = false;
   DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
-  GenerateMap(seed);
+  while(1)
+  {
+    GenerateMap(seed);
+    ++seed;
+  }
   while (!exit)
   {
     UpdateInput();
