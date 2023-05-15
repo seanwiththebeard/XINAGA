@@ -8,24 +8,19 @@ void GetRace(void);
 void DrawRoster(void);
 
 screenName nextScreen;
-
 byte windowX = 2;
 byte windowY;
 byte windowWidth = 16;
 byte windowHeight = 12;
 byte rosterPos;
-
 char Selections[9][16];
 int selection = 0;
 byte countSelections = 5;
 bool exitWindow = false;
 bool nextWindow = false;
 bool repeatRoster = true;
-
 byte WindowLevel = 0;
-
 byte CurrentCharacter = 0;
-
 byte
     	HPMAX,
 HP,
