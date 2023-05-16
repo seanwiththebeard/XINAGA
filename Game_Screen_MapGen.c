@@ -194,7 +194,7 @@ void checkLandlocked()
   for (i = 0; i < CountPoints(); ++i)
   {
     struct vector2 *tmpt = getPoint(i);
-    
+
     if (countAdjacent(tmpt->x, tmpt->y) == 4)
     {
       tmpt->landlocked = true;
@@ -275,8 +275,6 @@ void attachRandomPoint(byte index)
   bool exit = false;
   byte failure = 0;
   
-  
-  
   while (1)
   {
     byte dir = rand() % 4;
@@ -287,7 +285,7 @@ void attachRandomPoint(byte index)
 
     x = getPoint(i)->x;
     y = getPoint(i)->y;
-    
+
     switch (dir)
     {
       case 0:
@@ -313,15 +311,15 @@ void attachRandomPoint(byte index)
       default:
         break;
     }
-    
+
     if (map[y][x] == water)
       exit = true;
-    
+
     if (exit)
       break;
-    
+
     ++failure;
-    if (failure == 64)
+    if (failure == 48)
     {
       sprintf(strTemp, "Removing point (%d)@", i);
       WriteLineMessageWindow(strTemp, 0);
@@ -336,14 +334,10 @@ void attachRandomPoint(byte index)
     }
     if (points == NULL)
     {
+      sprintf(strTemp, "Moving on@");
+      WriteLineMessageWindow(strTemp, 0);
       return;
     }
-  }
-  
-  if (failure)
-  {
-    sprintf(strTemp, "failures (%d)@", failure);
-      WriteLineMessageWindow(strTemp, 0);
   }
   createPoint(x, y);
   map[y][x] = index;
@@ -358,7 +352,7 @@ void createContinent(byte size)
   byte index = '0' + countContinents;
   byte landcount = size + 1;
   addRandomPoints(1, index);
-  while (landcount)
+  while (landcount && (points != NULL))
   {
     attachRandomPoint(index);
     checkLandlocked();
@@ -453,15 +447,15 @@ void GenerateMap(byte seed)
   {
     createContinent(8 +  32*(y / 2));
   }
-  
+
   sprintf(strTemp, "Done@");
   WriteLineMessageWindow(strTemp, 0);
-  
-  
+
+
   //clearPoints();
-  
+
   //createContinent(16);
-  
+
   //addRandomPoints(pointsCount);
   //clearPoints();
 
