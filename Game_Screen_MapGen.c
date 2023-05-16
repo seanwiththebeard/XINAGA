@@ -29,7 +29,7 @@ Before / After	//16
 
 typedef struct vector2
 {
-  char x, y;
+  int x, y;
   bool landlocked;
   struct vector2 *next;
 };
@@ -146,14 +146,14 @@ void clearPoints()
 
 void clampPoint(struct vector2 *clmpt)
 {
-  if (clmpt->x == 255)
+  if (clmpt->x < 0)
     clmpt->x = width - 1;
-  if (clmpt->y == 255)
+  if (clmpt->y < 0)
     clmpt->y = height - 1;
 
-  if (clmpt->x == width)
+  if (clmpt->x >= width)
     clmpt->x == 0;
-  if (clmpt->y == height)
+  if (clmpt->y >= height)
     clmpt->y = 0;
 }
 void checkLandlocked()
@@ -273,51 +273,51 @@ void DrawMap()
 
 void Rotate(direction dir)
 {
-  int x, y, h, w;
-  struct vector2 pos;
+  int h, w = 0;
+  byte tempRow[width];
+  byte tempCol[height];
   switch (dir)
   {
     case up:
-      x = 0;
-      y = -1;
+      for (w = 0; w < width; ++w)
+        tempRow[w] = map[0][w];
+      for (h = 0; h < height; ++h)  
+        for (w = 0; w < width; ++w)
+          map[h][w] = map[h + 1][w];
+      for (w = 0; w < width; ++w)
+        map[height - 1][w] = tempRow[w];
       break;
     case down:
-      x = 0;
-      y = 1;
+      for (w = 0; w < width; ++w)
+        tempRow[w] = map[height - 1][w];
+      for (h = height - 1; h > 0; --h)  
+        for (w = 0; w < width; ++w)
+          map[h][w] = map[h - 1][w];
+      for (w = 0; w < width; ++w)
+        map[0][w] = tempRow[w];
       break;
     case left:
-      x = -1;
-      y = 0;
+      for (h = 0; h < height; ++h)
+        tempCol[h] = map[h][0];
+      for (h = 0; h < height; ++h) 
+        for (w = 0; w < width; ++w)
+          map[h][w] = map[h][w + 1];
+      for (h = 0; h < height; ++h)
+        map[h][width - 1] = tempCol[h];
       break;
     case right:
-      x = 1;
-      y = 0;
+      for (h = 0; h < height; ++h)
+        tempCol[h] = map[h][width - 1];
+      for (h = 0; h < height; ++h) 
+        for (w = width - 1; w > 0; --w)
+          map[h][w] = map[h][w - 1];
+      for (h = 0; h < height; ++h)
+        map[h][0] = tempCol[h];
       break;
     default:
       break;
   }
-
-  if ( x < 0 || y < 0)
-    for (h = 0; h < height; ++h)
-      for (w = 0; w < width; ++w)
-      {
-        pos.x = w + x;
-        pos.y = h + y;
-        clampPoint(&pos);
-        map[pos.y][pos.x] = map[h][w];
-      }
-  else
-  {
-    for (h = height - 1; h >= 0; --h)
-      for (w = width - 1; w >= 0; --w)
-      {
-        pos.x = w - x;
-        pos.y = h - y;
-        clampPoint(&pos);
-        map[h][w] = map[pos.y][pos.x];
-      }
-  }
-  DrawMap();  
+  DrawMap();
 }
 
 void GenerateMap(byte seed)
@@ -336,7 +336,7 @@ void GenerateMap(byte seed)
       if (x % 2 == 0)
         map[y][x] = water;
       else
-        map[y][x] = water + 1;
+        map[y][x] = water;// + 1;
 
       SetChar(map[y][x], posX + x, posY + y);
     }
@@ -370,12 +370,18 @@ void GenerateMap(byte seed)
 
   while(1)
   {
-    Rotate(up);
-    Rotate(left);
-    Rotate(down);
-    Rotate(right);
-    
     UpdateInput();
+    if (InputUp())
+      Rotate(up);
+    if (InputDown())
+      Rotate(down);
+    if (InputLeft())
+      Rotate(left);
+    if (InputRight())
+      Rotate(right);    
+    //Rotate(down);
+    //Rotate(right);
+
     if (InputFire())
       break;
   }
