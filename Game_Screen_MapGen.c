@@ -269,53 +269,81 @@ void addRandomPoints(byte count, int index)
   }
 }
 
-void removeLandlocked()
-{
-  byte i;
-  checkLandlocked();
-  for (i = 0; i < CountPoints(); ++i)
-    if (getPoint(i)->landlocked == true)
-      deletePoint(i);
-}
-
 void attachRandomPoint(byte index)
 {
-  byte i = rand() % CountPoints();
+  int i, x, y = 0;
   bool exit = false;
-  byte x = getPoint(i)->x;
-  byte y = getPoint(i)->y;
+  byte failure = 0;
+  
+  
+  
   while (1)
   {
     byte dir = rand() % 4;
+    if (CountPoints() >= 1)
+      i = rand() % (CountPoints());
+    else
+      i = 0;
+
+    x = getPoint(i)->x;
+    y = getPoint(i)->y;
+    
     switch (dir)
     {
       case 0:
         --y;
-        if (y == 255)
+        if (y < 0)
           y = height - 1;
         break;
       case 1:
         ++y;
-        if (y == height)
+        if (y >= height)
           y = 0;
         break;
       case 2:
         --x;
-        if (x == 255)
+        if (x < 0)
           x = width - 1;
         break;
       case 3:
         ++x;
-        if (x == width)
+        if (x >= width)
           x = 0;
         break;
       default:
         break;
     }
+    
     if (map[y][x] == water)
       exit = true;
+    
     if (exit)
       break;
+    
+    ++failure;
+    if (failure == 64)
+    {
+      sprintf(strTemp, "Removing point (%d)@", i);
+      WriteLineMessageWindow(strTemp, 0);
+      deletePoint(i);
+      if (CountPoints() >= 1)
+        i = rand() % (CountPoints());
+      else
+        i = 0;
+      x = getPoint(i)->x;
+      y = getPoint(i)->y;
+      failure = 0;
+    }
+    if (points == NULL)
+    {
+      return;
+    }
+  }
+  
+  if (failure)
+  {
+    sprintf(strTemp, "failures (%d)@", failure);
+      WriteLineMessageWindow(strTemp, 0);
   }
   createPoint(x, y);
   map[y][x] = index;
@@ -423,8 +451,11 @@ void GenerateMap(byte seed)
   srand(seed);
   for ( y = 6; y > 0; --y)
   {
-    createContinent(1 +  8*(y));
+    createContinent(8 +  32*(y / 2));
   }
+  
+  sprintf(strTemp, "Done@");
+  WriteLineMessageWindow(strTemp, 0);
   
   
   //clearPoints();
