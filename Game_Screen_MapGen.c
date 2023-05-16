@@ -423,7 +423,7 @@ void GenerateMap(byte seed)
   srand(seed);
   for ( y = 6; y > 0; --y)
   {
-    createContinent(1 +  16*(y));
+    createContinent(1 +  8*(y));
   }
   
   
