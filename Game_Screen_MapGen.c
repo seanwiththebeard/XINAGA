@@ -311,10 +311,10 @@ void Rotate(direction dir)
     for (h = height - 1; h >= 0; --h)
       for (w = width - 1; w >= 0; --w)
       {
-        pos.x = w + x;
-        pos.y = h + y;
+        pos.x = w - x;
+        pos.y = h - y;
         clampPoint(&pos);
-        map[pos.y][pos.x] = map[h][w];
+        map[h][w] = map[pos.y][pos.x];
       }
   }
   DrawMap();  
