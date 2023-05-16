@@ -150,7 +150,7 @@ void clampPoint(struct vector2 *clmpt)
     clmpt->x = width - 1;
   if (clmpt->y == 255)
     clmpt->y = height - 1;
-  
+
   if (clmpt->x == width)
     clmpt->x == 0;
   if (clmpt->y == height)
@@ -219,7 +219,7 @@ byte countAdjacent(byte index, byte x, byte y)
   return i;
 }
 
-void FillAdjacent(byte passes)
+void FillAdjacent(byte passes, byte threshold)
 {
   byte x, y, i;
   for (i = 0; i < passes; ++i)
@@ -228,13 +228,13 @@ void FillAdjacent(byte passes)
       for (x = 0; x < width; ++x)
       {
         if (map[y][x] != grass)
-          if (countAdjacent(grass, x, y) > 1)
+          if (countAdjacent(grass, x, y) >= threshold)
           {
             createPoint(x, y);
             map[y][x] = grass;
             SetChar(grass, posX + x, posY + y);
-            sprintf(strTemp, "Filled (%d, %d)@", x, y);
-            WriteLineMessageWindow(strTemp, 0);
+            //sprintf(strTemp, "Filled (%d, %d)@", x, y);
+            //WriteLineMessageWindow(strTemp, 0);
           }
       }
     sprintf(strTemp, "Pass %d done@", i + 1);
@@ -261,61 +261,125 @@ void RemoveIslands()
   WriteLineMessageWindow(strTemp, 0);
 }
 
-  void GenerateMap(byte seed)
+void DrawMap()
+{
+  byte x, y;
+  for (y = 0; y < height; ++y)
+    for (x = 0; x < width; ++x)
+    {
+      SetChar(map[y][x], posX + x, posY + y);
+    }
+}
+
+void Rotate(direction dir)
+{
+  int x, y, h, w;
+  struct vector2 pos;
+  switch (dir)
   {
-    byte x, y, failures = 0;
+    case up:
+      x = 0;
+      y = -1;
+      break;
+    case down:
+      x = 0;
+      y = 1;
+      break;
+    case left:
+      x = -1;
+      y = 0;
+      break;
+    case right:
+      x = 1;
+      y = 0;
+      break;
+    default:
+      break;
+  }
 
-
-    clearPoints();
-
-    sprintf(strTemp, "Seed (%d)@", seed);
-    WriteLineMessageWindow(strTemp, 0);
-
-    for (y = 0; y < height; ++y)
-      for (x = 0; x < width; ++x)
+  if ( x < 0 || y < 0)
+    for (h = 0; h < height; ++h)
+      for (w = 0; w < width; ++w)
       {
-        if (x % 2 == 0)
-          map[y][x] = water;
-        else
-          map[y][x] = water + 1;
-
-        SetChar(map[y][x], posX + x, posY + y);
+        pos.x = w + x;
+        pos.y = h + y;
+        clampPoint(&pos);
+        map[pos.y][pos.x] = map[h][w];
       }
-    srand(seed);
-    for (x = 0; x < pointsCount; ++x)
-    {
-      byte h = rand() % height;
-      byte w = rand() % width;
-
-      while (checkPoints(grass, w, h))
+  else
+  {
+    for (h = height - 1; h >= 0; --h)
+      for (w = width - 1; w >= 0; --w)
       {
-        h = rand() % height;
-        w = rand() % width;
-        failures++;
+        pos.x = w + x;
+        pos.y = h + y;
+        clampPoint(&pos);
+        map[pos.y][pos.x] = map[h][w];
       }
-      createPoint(w, h);
-      map[h][w] = grass;
-      SetChar(grass, posX + w, posY + h);
+  }
+  DrawMap();  
+}
 
-      sprintf(strTemp, "Count (%d)@", x);
-      WriteLineMessageWindow(strTemp, 0);
-    }
+void GenerateMap(byte seed)
+{
+  byte x, y, failures = 0;
 
-    sprintf(strTemp, "failures (%d)@", failures);
-    WriteLineMessageWindow(strTemp, 0);
 
-    //checkLandlocked();
+  clearPoints();
 
-    FillAdjacent(5);
-    RemoveIslands();
+  sprintf(strTemp, "Seed (%d)@", seed);
+  WriteLineMessageWindow(strTemp, 0);
 
-    while(1)
+  for (y = 0; y < height; ++y)
+    for (x = 0; x < width; ++x)
     {
-      UpdateInput();
-      if (InputFire())
-        break;
+      if (x % 2 == 0)
+        map[y][x] = water;
+      else
+        map[y][x] = water + 1;
+
+      SetChar(map[y][x], posX + x, posY + y);
     }
-    /*for (x = 0; x < pointsCount; ++x)
+  srand(seed);
+  for (x = 0; x < pointsCount; ++x)
+  {
+    byte h = rand() % height;
+    byte w = rand() % width;
+
+    while (checkPoints(grass, w, h))
+    {
+      h = rand() % height;
+      w = rand() % width;
+      failures++;
+    }
+    createPoint(w, h);
+    map[h][w] = grass;
+    SetChar(grass, posX + w, posY + h);
+
+    //sprintf(strTemp, "Count (%d)@", x);
+    //WriteLineMessageWindow(strTemp, 0);
+  }
+
+  sprintf(strTemp, "failures (%d)@", failures);
+  WriteLineMessageWindow(strTemp, 0);
+
+  //checkLandlocked();
+
+  FillAdjacent(2, 2);
+  RemoveIslands();
+
+  while(1)
+  {
+    //Rotate(up);
+    //Rotate(down);
+    //Rotate(left);
+    Rotate(right);
+    
+    UpdateInput();
+    if (InputFire())
+      break;
+  }
+  /*for (x = 0; x < pointsCount; ++x)
   {
 
     if (getPoint(x)->x % 2 == 0)
@@ -329,36 +393,37 @@ void RemoveIslands()
     {
       SetChar(map[y][x], posX + x, posY + y);
     }*/
-  }
+}
 
-  screenName Update_MapGen()
+
+screenName Update_MapGen()
+{
+  byte seed  = 0;
+  screenName nextScreen = Title;
+  bool exit = false;
+  DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
+  while(1)
   {
-    byte seed  = 0;
-    screenName nextScreen = Title;
-    bool exit = false;
-    DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
-    while(1)
+    GenerateMap(seed);
+    ++seed;
+  }
+  while (!exit)
+  {
+    UpdateInput();
+    if (InputChanged())
     {
-      GenerateMap(seed);
-      ++seed;
-    }
-    while (!exit)
-    {
-      UpdateInput();
-      if (InputChanged())
+      if (InputUp())
       {
-        if (InputUp())
-        {
-          ++seed;
-          GenerateMap(seed);
-          //exit = true;
-        }
-        if (InputFire())
-        {
-          exit = true;
-        }
+        ++seed;
+        GenerateMap(seed);
+        //exit = true;
+      }
+      if (InputFire())
+      {
+        exit = true;
       }
     }
-
-    return nextScreen;
   }
+
+  return nextScreen;
+}
