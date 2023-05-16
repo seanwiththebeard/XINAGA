@@ -277,6 +277,7 @@ void addRandomPoints(byte count, int index)
     createPoint(w, h);
     map[h][w] = index;
     SetChar(index, posX + w, posY + h);
+    SetColor(index + 2, posX + w, posY + h);
   }
 }
 
@@ -332,6 +333,7 @@ void attachRandomPoint(byte index)
   createPoint(x, y);
   map[y][x] = index;
   SetChar(index, posX + x, posY + y);
+  SetColor(index + 2, posX + x, posY + y);  
 }
 
 byte countContinents = 0;
@@ -357,6 +359,8 @@ void DrawMap()
     for (x = 0; x < width; ++x)
     {
       SetChar(map[y][x], posX + x, posY + y);
+      if(map[y][x] != water)
+        SetColor(map[y][x] + 2, posX + x, posY + y);
     }
 }
 
@@ -369,21 +373,21 @@ void Rotate(direction dir)
   {
     case up:
       for (w = 0; w < width; ++w)
-        tempRow[w] = map[0][w];
-      for (h = 0; h < height; ++h)  
-        for (w = 0; w < width; ++w)
-          map[h][w] = map[h + 1][w];
-      for (w = 0; w < width; ++w)
-        map[height - 1][w] = tempRow[w];
-      break;
-    case down:
-      for (w = 0; w < width; ++w)
         tempRow[w] = map[height - 1][w];
       for (h = height - 1; h > 0; --h)  
         for (w = 0; w < width; ++w)
           map[h][w] = map[h - 1][w];
       for (w = 0; w < width; ++w)
         map[0][w] = tempRow[w];
+      break;
+    case down:
+      for (w = 0; w < width; ++w)
+        tempRow[w] = map[0][w];
+      for (h = 0; h < height; ++h)  
+        for (w = 0; w < width; ++w)
+          map[h][w] = map[h + 1][w];
+      for (w = 0; w < width; ++w)
+        map[height - 1][w] = tempRow[w];
       break;
     case left:
       for (h = 0; h < height; ++h)

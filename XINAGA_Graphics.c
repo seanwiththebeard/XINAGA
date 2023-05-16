@@ -227,6 +227,15 @@ void SetChar(byte index, byte x, byte y)
   #endif
 }
 
+void SetColor(byte index, byte x, byte y)
+{
+  #if defined(__APPLE2__)
+  #endif
+  #if defined(__C64__)
+  ScreenColors[x + YColumnIndex[y]] = index;
+  #endif
+}
+
 void SetCharBuffer(byte index, byte x, byte y)
 {
   #if defined(__APPLE2__)

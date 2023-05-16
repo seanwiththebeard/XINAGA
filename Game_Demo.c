@@ -165,7 +165,7 @@ void Demo()
   
   LoadMap();
   
-  SwitchScreen(Title);
+  SwitchScreen(MapGen);
   
   while(1)
   {
