@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define height 22
-#define width 22
+#define height 21
+#define width 21
 #define posX 1
 #define posY 1
 #define pointsCount 32
@@ -464,7 +464,7 @@ void GenerateMap(byte seed)
   //FillAdjacent(2, 2);
   //RemoveIslands();
 
-  while(1)
+  //while(1)
   {
     UpdateInput();
     if (InputUp())
@@ -479,7 +479,7 @@ void GenerateMap(byte seed)
     //Rotate(right);
 
     if (InputFire())
-      break;
+      return;
   }
   /*for (x = 0; x < pointsCount; ++x)
   {
@@ -503,6 +503,7 @@ screenName Update_MapGen()
   byte seed  = 0;
   screenName nextScreen = Title;
   bool exit = false;
+  BlankMessageWindow();
   DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
   while(1)
   {
