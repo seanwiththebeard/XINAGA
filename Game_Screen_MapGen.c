@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define height 18
-#define width 18
+#define height 22
+#define width 22
 #define posX 1
 #define posY 1
 #define pointsCount 32
@@ -365,6 +365,7 @@ void createContinent(byte size)
 void DrawMap()
 {
   byte x, y;
+  DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, false);
   for (y = 0; y < height; ++y)
     for (x = 0; x < width; ++x)
     {
@@ -445,7 +446,7 @@ void GenerateMap(byte seed)
   srand(seed);
   for ( y = 6; y > 0; --y)
   {
-    createContinent(8 +  32*(y / 2));
+    createContinent(16 +  16*(y / 3));
   }
 
   sprintf(strTemp, "Done@");
