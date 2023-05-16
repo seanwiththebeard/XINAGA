@@ -370,9 +370,9 @@ void GenerateMap(byte seed)
 
   while(1)
   {
-    //Rotate(up);
-    //Rotate(down);
-    //Rotate(left);
+    Rotate(up);
+    Rotate(left);
+    Rotate(down);
     Rotate(right);
     
     UpdateInput();
