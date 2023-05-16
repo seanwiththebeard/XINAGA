@@ -8,7 +8,9 @@
 #define width 16
 #define posX 1
 #define posY 1
-#define pointsCount 64
+#define pointsCount 32
+#define grass 0x88
+#define water 0x84
 byte map[height][width];
 
 typedef struct vector2
@@ -107,18 +109,17 @@ void deletePoint(byte pos)
   }
 }
 
-bool checkPoints(byte w, byte h)
+bool checkPoints(byte index, byte w, byte h)
 {
   byte i;
-  for (i = 0; i < CountPoints(); ++i)
+  //for (i = 0; i < CountPoints(); ++i)
   {
-    if (getPoint(i)->x == w)
-      if (getPoint(i)->y == h)
-      {
-        sprintf(strTemp, "Failed%d(%d,%d)@", i, w, h);
-        WriteLineMessageWindow(strTemp, 0);
-        return true;
-      }
+    if (map[h][w] == index)
+    {
+      sprintf(strTemp, "Failed%d(%d,%d)@", i, w, h);
+      WriteLineMessageWindow(strTemp, 0);
+      return true;
+    }
   }
   return false;
 }
@@ -151,35 +152,64 @@ void checkLandlocked()
     east.y = tmpt->y;
     west.x = tmpt->x - 1;
     west.y = tmpt->y;
-    
+
     clampPoint(&north);
     clampPoint(&south);
     clampPoint(&east);
     clampPoint(&west);
-    
-    if (checkPoints(north.x, north.y) && checkPoints(south.x, south.y) && checkPoints(east.x, east.y) &&checkPoints(west.x, west.y))
+
+    if (checkPoints(grass, north.x, north.y) && checkPoints(grass, south.x, south.y) && checkPoints(grass, east.x, east.y) &&checkPoints(grass, west.x, west.y))
     {
       tmpt->landlocked = true;
       sprintf(strTemp, "Landlocked (%d)@", i);
       WriteLineMessageWindow(strTemp, 0);
-      while(1);
     }
     else
       tmpt->landlocked = false;
   }
 }
 
+byte countAdjacent(byte index, byte x, byte y)
+{
+  byte i;
+  //for (i = 0; i < CountPoints(); ++i)
+  struct vector2 north, south, east, west;
+  
+  north.x = x;
+  north.y = y - 1;
+  south.x = x;
+  south.y = y + 1;
+  east.x = x + 1;
+  east.y = y;
+  west.x = x - 1;
+  west.y = y;
+
+  clampPoint(&north);
+  clampPoint(&south);
+  clampPoint(&east);
+  clampPoint(&west);
+
+  if (map[north.y][north.x] == index)
+    ++i;
+  if (map[south.y][south.x] == index)
+    ++i;
+  if (map[east.y][east.x] == index)
+    ++i;
+  if (map[west.y][west.x] == index)
+    ++i;
+  return i;
+}
+
 void GenerateMap(byte seed)
 {
   byte x, y, failures = 0;
-  #define grass 0x88
-  #define water 0x84
-  
+
+
   clearPoints();
-  
+
   sprintf(strTemp, "Seed (%d)@", seed);
-      WriteLineMessageWindow(strTemp, 0);
-  
+  WriteLineMessageWindow(strTemp, 0);
+
   for (y = 0; y < height; ++y)
     for (x = 0; x < width; ++x)
     {
@@ -187,7 +217,7 @@ void GenerateMap(byte seed)
         map[y][x] = water;
       else
         map[y][x] = water + 1;
-      
+
       SetChar(map[y][x], posX + x, posY + y);
     }
   srand(seed);
@@ -196,23 +226,34 @@ void GenerateMap(byte seed)
     byte h = rand() % height;
     byte w = rand() % width;
 
-    while (checkPoints(w, h))
+    while (checkPoints(grass, w, h))
     {
       h = rand() % height;
       w = rand() % width;
       failures++;
     }
     createPoint(w, h);
+    map[h][w] = grass;
     SetChar(grass, posX + w, posY + h);
-    
+
     sprintf(strTemp, "Count (%d)@", x);
-      WriteLineMessageWindow(strTemp, 0);
+    WriteLineMessageWindow(strTemp, 0);
   }
-  
+
   sprintf(strTemp, "failures (%d)@", failures);
-      WriteLineMessageWindow(strTemp, 0);
+  WriteLineMessageWindow(strTemp, 0);
+
+  //checkLandlocked();
   
-  checkLandlocked();
+  for (y = 0; y < height; ++y)
+    for (x = 0; x < width; ++x)
+    {
+      if (countAdjacent(grass, x, y) > 2)
+        map[y][x ] = grass;
+      sprintf(strTemp, "filled (%d, %d)@", x, y);
+      WriteLineMessageWindow(strTemp, 0);
+    }
+    
   /*for (x = 0; x < pointsCount; ++x)
   {
 
