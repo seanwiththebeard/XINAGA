@@ -249,9 +249,11 @@ void GenerateMap(byte seed)
     for (x = 0; x < width; ++x)
     {
       if (countAdjacent(grass, x, y) > 2)
+      {
         map[y][x ] = grass;
-      sprintf(strTemp, "filled (%d, %d)@", x, y);
-      WriteLineMessageWindow(strTemp, 0);
+        sprintf(strTemp, "filled (%d, %d)@", x, y);
+        WriteLineMessageWindow(strTemp, 0);
+      }
     }
     
   /*for (x = 0; x < pointsCount; ++x)
