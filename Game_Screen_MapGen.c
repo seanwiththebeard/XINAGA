@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define height 16
-#define width 16
+#define height 18
+#define width 18
 #define posX 1
 #define posY 1
 #define pointsCount 32
@@ -140,7 +140,7 @@ bool checkPoints(byte index, byte w, byte h)
 
 void clearPoints()
 {
-  while (CountPoints())
+  while (points != NULL)
     deletePoint(0);
 }
 
@@ -156,39 +156,8 @@ void clampPoint(struct vector2 *clmpt)
   if (clmpt->y >= height)
     clmpt->y = 0;
 }
-void checkLandlocked()
-{
-  byte i;
-  for (i = 0; i < CountPoints(); ++i)
-  {
-    struct vector2 *tmpt = getPoint(i);
-    struct vector2 north, south, east, west;
-    north.x = tmpt->x;
-    north.y = tmpt->y - 1;
-    south.x = tmpt->x;
-    south.y = tmpt->y + 1;
-    east.x = tmpt->x + 1;
-    east.y = tmpt->y;
-    west.x = tmpt->x - 1;
-    west.y = tmpt->y;
 
-    clampPoint(&north);
-    clampPoint(&south);
-    clampPoint(&east);
-    clampPoint(&west);
-
-    if (checkPoints(grass, north.x, north.y) && checkPoints(grass, south.x, south.y) && checkPoints(grass, east.x, east.y) &&checkPoints(grass, west.x, west.y))
-    {
-      tmpt->landlocked = true;
-      sprintf(strTemp, "Landlocked (%d)@", i);
-      WriteLineMessageWindow(strTemp, 0);
-    }
-    else
-      tmpt->landlocked = false;
-  }
-}
-
-byte countAdjacent(byte index, byte x, byte y)
+byte countAdjacent(byte x, byte y)
 {
   byte i = 0;
   //for (i = 0; i < CountPoints(); ++i)
@@ -208,16 +177,35 @@ byte countAdjacent(byte index, byte x, byte y)
   clampPoint(&east);
   clampPoint(&west);
 
-  if (map[north.y][north.x] == index)
+  if (map[north.y][north.x] != water)
     ++i;
-  if (map[south.y][south.x] == index)
+  if (map[south.y][south.x] != water)
     ++i;
-  if (map[east.y][east.x] == index)
+  if (map[east.y][east.x] != water)
     ++i;
-  if (map[west.y][west.x] == index)
+  if (map[west.y][west.x] != water)
     ++i;
   return i;
 }
+
+void checkLandlocked()
+{
+  byte i;
+  for (i = 0; i < CountPoints(); ++i)
+  {
+    struct vector2 *tmpt = getPoint(i);
+    
+    if (countAdjacent(tmpt->x, tmpt->y) == 4)
+    {
+      tmpt->landlocked = true;
+      deletePoint(i);
+    }
+    else
+      tmpt->landlocked = false;
+  }
+}
+
+
 
 void FillAdjacent(byte passes, byte threshold)
 {
@@ -228,7 +216,7 @@ void FillAdjacent(byte passes, byte threshold)
       for (x = 0; x < width; ++x)
       {
         if (map[y][x] != grass)
-          if (countAdjacent(grass, x, y) >= threshold)
+          if (countAdjacent(x, y) >= threshold)
           {
             createPoint(x, y);
             map[y][x] = grass;
@@ -249,7 +237,7 @@ void RemoveIslands()
     for (x = 0; x < width; ++x)
     {
       if (map[y][x] == grass)
-        if (countAdjacent(grass, x, y) == 0)
+        if (countAdjacent(x, y) == 0)
         {
           map[y][x] = water;
           SetChar(water, posX + x, posY + y);
@@ -277,13 +265,14 @@ void addRandomPoints(byte count, int index)
     createPoint(w, h);
     map[h][w] = index;
     SetChar(index, posX + w, posY + h);
-    SetColor(index + 2, posX + w, posY + h);
+    //SetColor(index + 2, posX + w, posY + h);
   }
 }
 
 void removeLandlocked()
 {
   byte i;
+  checkLandlocked();
   for (i = 0; i < CountPoints(); ++i)
     if (getPoint(i)->landlocked == true)
       deletePoint(i);
@@ -291,32 +280,31 @@ void removeLandlocked()
 
 void attachRandomPoint(byte index)
 {
-  byte count = CountPoints();
-  byte i = rand() % count;
+  byte i = rand() % CountPoints();
   bool exit = false;
   byte x = getPoint(i)->x;
   byte y = getPoint(i)->y;
   while (1)
   {
-    direction dir = rand() % 4;
+    byte dir = rand() % 4;
     switch (dir)
     {
-      case up:
+      case 0:
         --y;
         if (y == 255)
           y = height - 1;
         break;
-      case down:
+      case 1:
         ++y;
         if (y == height)
           y = 0;
         break;
-      case left:
+      case 2:
         --x;
         if (x == 255)
           x = width - 1;
         break;
-      case right:
+      case 3:
         ++x;
         if (x == width)
           x = 0;
@@ -324,7 +312,6 @@ void attachRandomPoint(byte index)
       default:
         break;
     }
-    
     if (map[y][x] == water)
       exit = true;
     if (exit)
@@ -340,16 +327,17 @@ byte countContinents = 0;
 
 void createContinent(byte size)
 {
+  byte index = '0' + countContinents;
   byte landcount = size + 1;
-  clearPoints();
-  addRandomPoints(1, '0' + countContinents);
+  addRandomPoints(1, index);
   while (landcount)
   {
-    removeLandlocked();
-    attachRandomPoint('0' + countContinents);
+    attachRandomPoint(index);
+    checkLandlocked();
     --landcount;
   }
   ++countContinents;
+  clearPoints();
 }
 
 void DrawMap()
@@ -391,21 +379,21 @@ void Rotate(direction dir)
       break;
     case left:
       for (h = 0; h < height; ++h)
-        tempCol[h] = map[h][0];
-      for (h = 0; h < height; ++h) 
-        for (w = 0; w < width; ++w)
-          map[h][w] = map[h][w + 1];
-      for (h = 0; h < height; ++h)
-        map[h][width - 1] = tempCol[h];
-      break;
-    case right:
-      for (h = 0; h < height; ++h)
         tempCol[h] = map[h][width - 1];
       for (h = 0; h < height; ++h) 
         for (w = width - 1; w > 0; --w)
           map[h][w] = map[h][w - 1];
       for (h = 0; h < height; ++h)
         map[h][0] = tempCol[h];
+      break;
+    case right:
+      for (h = 0; h < height; ++h)
+        tempCol[h] = map[h][0];
+      for (h = 0; h < height; ++h) 
+        for (w = 0; w < width; ++w)
+          map[h][w] = map[h][w + 1];
+      for (h = 0; h < height; ++h)
+        map[h][width - 1] = tempCol[h];
       break;
     default:
       break;
@@ -435,7 +423,7 @@ void GenerateMap(byte seed)
   srand(seed);
   for ( y = 6; y > 0; --y)
   {
-    createContinent(rand() % (y * (countContinents + 8)));
+    createContinent(128 -  16*(y));
   }
   
   
@@ -444,7 +432,7 @@ void GenerateMap(byte seed)
   //createContinent(16);
   
   //addRandomPoints(pointsCount);
-  clearPoints();
+  //clearPoints();
 
   //checkLandlocked();
   //FillAdjacent(2, 2);
