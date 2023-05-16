@@ -15,7 +15,7 @@ byte map[height][width];
 
 /* World Seed Parameters
 (Eight flags building a byte)
-Night / Day 	//128
+Light /Shadow	//128
 North / South	//64
 East / West	//32
 Before / After	//16
@@ -261,6 +261,95 @@ void RemoveIslands()
   WriteLineMessageWindow(strTemp, 0);
 }
 
+void addRandomPoints(byte count, int index)
+{
+  byte x;
+  for (x = 0; x < count; ++x)
+  {
+    byte h = rand() % height;
+    byte w = rand() % width;
+
+    while (map[h][w] != water)
+    {
+      h = rand() % height;
+      w = rand() % width;
+    }
+    createPoint(w, h);
+    map[h][w] = index;
+    SetChar(index, posX + w, posY + h);
+  }
+}
+
+void removeLandlocked()
+{
+  byte i;
+  for (i = 0; i < CountPoints(); ++i)
+    if (getPoint(i)->landlocked == true)
+      deletePoint(i);
+}
+
+void attachRandomPoint(byte index)
+{
+  byte count = CountPoints();
+  byte i = rand() % count;
+  bool exit = false;
+  byte x = getPoint(i)->x;
+  byte y = getPoint(i)->y;
+  while (1)
+  {
+    direction dir = rand() % 4;
+    switch (dir)
+    {
+      case up:
+        --y;
+        if (y == 255)
+          y = height - 1;
+        break;
+      case down:
+        ++y;
+        if (y == height)
+          y = 0;
+        break;
+      case left:
+        --x;
+        if (x == 255)
+          x = width - 1;
+        break;
+      case right:
+        ++x;
+        if (x == width)
+          x = 0;
+        break;
+      default:
+        break;
+    }
+    
+    if (map[y][x] == water)
+      exit = true;
+    if (exit)
+      break;
+  }
+  createPoint(x, y);
+  map[y][x] = index;
+  SetChar(index, posX + x, posY + y);
+}
+
+byte countContinents = 0;
+
+void createContinent(byte size)
+{
+  byte landcount = size + 1;
+  clearPoints();
+  addRandomPoints(1, '0' + countContinents);
+  while (landcount)
+  {
+    removeLandlocked();
+    attachRandomPoint('0' + countContinents);
+    --landcount;
+  }
+  ++countContinents;
+}
+
 void DrawMap()
 {
   byte x, y;
@@ -323,8 +412,7 @@ void Rotate(direction dir)
 void GenerateMap(byte seed)
 {
   byte x, y, failures = 0;
-
-
+  countContinents = 0;
   clearPoints();
 
   sprintf(strTemp, "Seed (%d)@", seed);
@@ -341,32 +429,22 @@ void GenerateMap(byte seed)
       SetChar(map[y][x], posX + x, posY + y);
     }
   srand(seed);
-  for (x = 0; x < pointsCount; ++x)
+  for ( y = 6; y > 0; --y)
   {
-    byte h = rand() % height;
-    byte w = rand() % width;
-
-    while (checkPoints(grass, w, h))
-    {
-      h = rand() % height;
-      w = rand() % width;
-      failures++;
-    }
-    createPoint(w, h);
-    map[h][w] = grass;
-    SetChar(grass, posX + w, posY + h);
-
-    //sprintf(strTemp, "Count (%d)@", x);
-    //WriteLineMessageWindow(strTemp, 0);
+    createContinent(rand() % (y * (countContinents + 8)));
   }
-
-  sprintf(strTemp, "failures (%d)@", failures);
-  WriteLineMessageWindow(strTemp, 0);
+  
+  
+  //clearPoints();
+  
+  //createContinent(16);
+  
+  //addRandomPoints(pointsCount);
+  clearPoints();
 
   //checkLandlocked();
-
-  FillAdjacent(2, 2);
-  RemoveIslands();
+  //FillAdjacent(2, 2);
+  //RemoveIslands();
 
   while(1)
   {

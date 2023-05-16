@@ -175,7 +175,6 @@ bool AreYouSure()
 
 void RollStats()
 {
-  srand(randseed);
   STR = RollDice(3, 6);
   CON = RollDice(3, 6);
   DEX = RollDice(3, 6);
@@ -521,6 +520,7 @@ screenName DrawAddCharacterScreen()
 {
   exitWindow = false;
   CurrentCharacter = 0;
+  srand(randseed);
   
   BlankMessageWindow(); //Why does this put characters at the very end of the screen?
   DrawMessageWindow();
