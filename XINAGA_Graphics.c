@@ -83,7 +83,6 @@ void raster_wait(byte line)
 
 void wait_vblank(byte frames) 
 {
-  frames;
   #if defined (__C64__)
   byte count = frames;
   for (count = frames; count; --count)
@@ -91,6 +90,7 @@ void wait_vblank(byte frames)
     raster_wait(255);    
   }
   #endif
+  frames;
 }
 
 #if defined(__C64__)
@@ -987,7 +987,7 @@ void scroll_vert(sbyte delta_y)
 }
 
 
-/*
+#if defined(__C64__)
 void scroll_horiz(sbyte delta_x)
 {
   #if defined(__APPLE2__)
@@ -1038,7 +1038,8 @@ void scroll_horiz(sbyte delta_x)
     scroll_right();
   }
   #endif
-}*/
+}
+#if defined(__C64__)
 
 void Push(direction dir)
 {
