@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define height 21
-#define width 21
+#define height 16
+#define width 16
 #define posX 1
 #define posY 1
 #define pointsCount 32
@@ -342,14 +342,14 @@ void attachRandomPoint(byte index)
   createPoint(x, y);
   map[y][x] = index;
   SetChar(index, posX + x, posY + y);
-  SetColor(index + 2, posX + x, posY + y);  
+  //SetColor(index + 2, posX + x, posY + y);  
 }
 
 byte countContinents = 0;
 
 void createContinent(byte size)
 {
-  byte index = '0' + countContinents;
+  byte index = grass;//'0' + countContinents;
   byte landcount = size + 1;
   addRandomPoints(1, index);
   while (landcount && (points != NULL))
@@ -446,7 +446,7 @@ void GenerateMap(byte seed)
   srand(seed);
   for ( y = 6; y > 0; --y)
   {
-    createContinent(16 +  16*(y / 3));
+    createContinent(16 +  8*(y / 4));
   }
 
   sprintf(strTemp, "Done@");
