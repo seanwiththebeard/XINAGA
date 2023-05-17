@@ -205,9 +205,7 @@ void checkLandlocked()
   }
 }
 
-
-
-void FillAdjacent(byte passes, byte threshold)
+/*void FillAdjacent(byte passes, byte threshold)
 {
   byte x, y, i;
   for (i = 0; i < passes; ++i)
@@ -228,7 +226,7 @@ void FillAdjacent(byte passes, byte threshold)
     sprintf(strTemp, "Pass %d done@", i + 1);
     WriteLineMessageWindow(strTemp, 0);
   }
-}
+}*/
 
 void RemoveIslands()
 {
@@ -345,6 +343,20 @@ void attachRandomPoint(byte index)
   //SetColor(index + 2, posX + x, posY + y);  
 }
 
+void DrawMap()
+{
+  byte x, y;
+  DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, false);
+  for (y = 0; y < height; ++y)
+    for (x = 0; x < width; ++x)
+    {
+      byte index = map[y][x];
+      if (x % 2 == 1)
+        ++index;
+      SetChar(index, posX + x, posY + y);
+    }
+}
+
 byte countContinents = 0;
 
 void createContinent(byte size)
@@ -360,21 +372,8 @@ void createContinent(byte size)
   }
   ++countContinents;
   clearPoints();
+  DrawMap();
 }
-
-void DrawMap()
-{
-  byte x, y;
-  DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, false);
-  for (y = 0; y < height; ++y)
-    for (x = 0; x < width; ++x)
-    {
-      SetChar(map[y][x], posX + x, posY + y);
-      if(map[y][x] != water)
-        SetColor(map[y][x] + 2, posX + x, posY + y);
-    }
-}
-
 void Rotate(direction dir)
 {
   int h, w = 0;
@@ -436,19 +435,16 @@ void GenerateMap(byte seed)
   for (y = 0; y < height; ++y)
     for (x = 0; x < width; ++x)
     {
-      if (x % 2 == 0)
-        map[y][x] = water;
-      else
-        map[y][x] = water;// + 1;
-
-      SetChar(map[y][x], posX + x, posY + y);
+      map[y][x] = water;
+      //SetChar(map[y][x], posX + x, posY + y);
     }
+  DrawMap();
   srand(seed);
   for ( y = 6; y > 0; --y)
   {
     createContinent(16 +  8*(y / 4));
   }
-
+  DrawMap();
   sprintf(strTemp, "Done@");
   WriteLineMessageWindow(strTemp, 0);
 
@@ -464,7 +460,7 @@ void GenerateMap(byte seed)
   //FillAdjacent(2, 2);
   //RemoveIslands();
 
-  //while(1)
+  while(1)
   {
     UpdateInput();
     if (InputUp())
@@ -519,6 +515,7 @@ screenName Update_MapGen()
       {
         ++seed;
         GenerateMap(seed);
+        break;
         //exit = true;
       }
       if (InputFire())
