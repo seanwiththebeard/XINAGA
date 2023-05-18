@@ -160,22 +160,31 @@ void CameraFollow()
 
 int GetWrappedX(int xPos) //For viewport character positions
 { 
-  byte_temp = xPos - offsetX;
+  if(xPos < offsetX)
+    return (xPos - offsetX + mapWidth);
+  else
+    return (xPos - offsetX);
+    
+  /*byte_temp = xPos - offsetX;
 
   if (xPos < offsetX)
     byte_temp += mapWidth;
 
-  return byte_temp;
+  return byte_temp;*/
 }
 
 int GetWrappedY(int YPos)
 {
-  byte_temp = YPos - offsetY;
+  if (YPos < offsetY)
+    return (YPos - offsetY + mapHeight);
+  else
+    return (YPos - offsetY);
+  /*byte_temp = YPos - offsetY;
 
   if (YPos < offsetY)
     byte_temp += mapHeight;
 
-  return byte_temp;
+  return byte_temp;*/
 }
 
 int WrapMapPositionX(int posX)
