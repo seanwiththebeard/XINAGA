@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define height 20
-#define width 20
+#define height 16
+#define width 16
 #define posX 1
 #define posY 1
 #define pointsCount 32
