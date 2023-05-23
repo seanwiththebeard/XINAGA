@@ -15,7 +15,6 @@ byte* HGR = (byte*)0x2000;
 byte* HGRBuffer = (byte*)0x4000;
 int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
-
 #endif
 
 #if defined(__C64__)
@@ -117,6 +116,7 @@ void SetMulticolors(byte color1, byte color2)
   vicReg[0] = vicReg[0] | 16;
 }
 #endif
+
 void InitializeGraphics()
 {
   #if defined(__APPLE2__)
@@ -823,17 +823,17 @@ byte charset[] = {/*{w:8,h:8,count:256, bpp:1}*/
 	0x36, 0x3E, 0x36, 0x3E, 0x36, 0x3E, 0x36, 0x3E};
 #endif
 
-#if __C64__
+#if defined(__C64__)
 #include <c64.h>
 #endif
 //Scrolling
 sbyte scroll_fine_x = 0;
 sbyte scroll_fine_y = 0;
 
-#if __C64__
+#if defined(__C64__)
 void ScrollingMaskOn()
 {
-  #if __C64__
+  #if defined(__C64__)
   VIC.ctrl1 &= ~0x08; // 24 lines
   VIC.ctrl2 &= ~0x08; // 38 columns  
   //ClearBit(VIC.ctrl1, 3);
@@ -843,7 +843,7 @@ void ScrollingMaskOn()
 
 void ScrollingMaskOff()
 {
-  #if __C64__
+  #if defined(__C64__)
   VIC.ctrl1 &= ~0x08; // 24 lines
   VIC.ctrl2 &= ~0x08; // 38 columns  
   //SetBit(VIC.ctrl1, 3);
@@ -874,7 +874,7 @@ void scroll_update_regs() {
 
 void scroll_up() {
   int length = YColumnIndex[ROWS - 1];
-  #if __C64__
+  #if defined(__C64__)
   memset(&ScreenCharBuffer[length], ' ', COLS);
   memset(&ScreenChars[0], ' ', COLS);
 
@@ -891,7 +891,7 @@ void scroll_up() {
 
 void scroll_down() {
   int length = YColumnIndex[ROWS - 1];
-  #if __C64__
+  #if defined(__C64__)
   memset(&ScreenCharBuffer[0], ' ', COLS);
   memset(&ScreenChars[length], ' ', COLS);
 
@@ -908,7 +908,7 @@ void scroll_down() {
 
 void scroll_right()
 {
-  #if __C64__
+  #if defined(__C64__)
   byte z;
   int offset = 0;
 
@@ -930,7 +930,7 @@ void scroll_right()
 
 void scroll_left()
 {
-  #if __C64__
+  #if defined(__C64__)
   byte z;
   int offset = 0;
 
@@ -1039,7 +1039,7 @@ void scroll_horiz(sbyte delta_x)
   }
   #endif
 }
-#if defined(__C64__)
+#endif
 
 void Push(direction dir)
 {
