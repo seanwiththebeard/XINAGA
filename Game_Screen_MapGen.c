@@ -351,8 +351,10 @@ void DrawMap()
     for (x = 0; x < width; ++x)
     {
       byte index = map[y][x];
+      #if(__APPLE2__)
       if (x % 2 == 1)
         ++index;
+      #endif
       SetChar(index, posX + x, posY + y);
     }
 }
