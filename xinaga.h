@@ -24,6 +24,9 @@ void LoadMap();
 
 //Graphics
 //	System
+#define ColorBG 11
+#define ColorBorder ColorBG
+#define ColorText 13
 void InitializeGraphics(void);
 #if defined(__C64__)
 void wait_vblank(byte frames);

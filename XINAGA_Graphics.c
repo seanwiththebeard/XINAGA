@@ -1,5 +1,7 @@
 #include "xinaga.h"
 
+
+
 int YColumnIndex[25] = {
   0, 40, 80, 120, 160,
   200, 240, 280, 320, 360,
@@ -145,8 +147,8 @@ void InitializeGraphics()
   if (bufferselect)
     ++screenpos;
 
-  SetBG(0);
-  SetBorder(0);
+  SetBG(ColorBG);
+  SetBorder(ColorBorder);
 
   screenposition = (bank * (16*1024) + (screenpos * 1024));
   ScreenChars = 0;
@@ -327,7 +329,8 @@ void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
     if (buffer)
       SetCharBuffer(text[count], posx + count, posy);
     else
-      SetChar(text[count], posx + count, posy);      
+      SetChar(text[count], posx + count, posy);
+    SetColor(ColorText, posx + count, posy);
   }
 }
 

@@ -21,7 +21,10 @@ void DrawMessageWindow()
   DrawBorder("Console@",PosX - 1, PosY - 1, Width + 2, Height + 2, false);
   for (y = 0; y < Height; ++y)
     for (x = 0; x < Width; ++x)
-      SetChar(MessageLines[x][y], PosX + x, PosY + y);  
+    {
+      SetChar(MessageLines[x][y], PosX + x, PosY + y);
+      SetColor(ColorText, PosX + x, PosY + y);
+    }
 }
 void BlankMessageWindow()
 {
