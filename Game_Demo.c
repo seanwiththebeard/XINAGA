@@ -1,7 +1,7 @@
 #include "xinaga.h"
 #include "game.h"
 
-screenName currentScreen = Credits;
+screenName currentScreen = Scenario;
 
 void SwitchScreen(screenName screen)
 {
@@ -33,6 +33,8 @@ void SwitchScreen(screenName screen)
     case MapGen:
       currentScreen = Update_MapGen();
       break;
+    case Scenario:
+      currentScreen = Update_Scenario();
     default:
       break;
   }
@@ -165,7 +167,7 @@ void Demo()
   
   LoadMap();
   
-  SwitchScreen(Title);
+  SwitchScreen(currentScreen);
   
   while(1)
   {

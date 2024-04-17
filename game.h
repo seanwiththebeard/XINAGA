@@ -2,7 +2,7 @@
 
 #ifndef _GAME_H
 #define _GAME_H
-typedef enum { Title, Credits, EditParty, Map, Combat, Menu, SaveLoad, MapGen } screenName;
+typedef enum { Title, Credits, EditParty, Map, Combat, Menu, SaveLoad, MapGen, Scenario } screenName;
 extern int randseed;
 extern byte strTemp[20];
 
@@ -25,6 +25,9 @@ screenName Update_Credits();
 
 //MapGen
 screenName Update_MapGen();
+
+//Scenario
+screenName Update_Scenario();
 
 //BFRPG
 byte RollDice(byte count, byte diceSize);

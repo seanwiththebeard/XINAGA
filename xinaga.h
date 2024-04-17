@@ -94,6 +94,7 @@ bool InputRight(void);
 bool InputFire(void);
 
 //Console
+void ResizeMessageWindow (byte x, byte y, byte w, byte h);
 void DrawMessageWindow();
 void BlankMessageWindow();
 void WriteLineMessageWindow(char message[], byte delay);

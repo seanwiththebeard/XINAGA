@@ -13,7 +13,7 @@ byte windowY;
 byte windowWidth = 16;
 byte windowHeight = 12;
 byte rosterPos;
-char Selections[9][16];
+char Selections[10][16];
 int selection = 0;
 byte countSelections = 5;
 bool exitWindow = false;
@@ -369,7 +369,7 @@ void DrawRoster()
   sprintf(strTemp, "Count: %d@", CountRoster());
   WriteLineMessageWindow(strTemp, 0);
 
-  countSelections = 8;
+  countSelections = 9;
   WindowLevel = 0;
   windowX = 0;
   windowY = 0;
@@ -388,6 +388,7 @@ void DrawRoster()
   SetString("Credits@", 6);
   SetString("Combat Test@", 7);
   SetString("Map Generator@", 8);
+  SetString("Scenario@", 9);
 
   DrawCharWindow(windowX, windowY, COLS - 2, ROWS - 2, "Edit Party@"); 
   //ListRoster
@@ -508,6 +509,11 @@ void DrawRoster()
             repeatRoster = false;
             exitWindow = true;
             nextScreen = MapGen;
+            break;
+          case 9:
+            repeatRoster = false;
+            exitWindow = true;
+            nextScreen = Scenario;
             break;
         }
       }

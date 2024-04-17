@@ -1,12 +1,13 @@
 #include "xinaga.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "game.h"
 
-#define Height 10
-#define Width 15
-byte PosX = COLS - (Width + 2);
-byte PosY = ROWS - (Height + 2);
-char MessageLines[Width][Height];
+byte Height = 10;
+byte Width = 15;
+byte PosX = 23;
+byte PosY = 12;
+char *MessageLines;
 
 #define MessageCount 4
 #define MessageLength 20
@@ -15,6 +16,16 @@ char Messages[MessageCount][MessageLength] = {
   "This is a sign@",
   "Wizard's Forest@"};
 
+void ResizeMessageWindow (byte x, byte y, byte w, byte h)
+{
+  PosX = x;
+  PosY = y;
+  Width = w;
+  Height = h;
+  free(MessageLines);
+  MessageLines = malloc(w*h);
+}
+
 void DrawMessageWindow()
 {
   byte x, y;
@@ -22,30 +33,31 @@ void DrawMessageWindow()
   for (y = 0; y < Height; ++y)
     for (x = 0; x < Width; ++x)
     {
-      SetChar(MessageLines[x][y], PosX + x, PosY + y);
+      SetChar(MessageLines[x + Width*y], PosX + x, PosY + y);
       SetColor(ColorText, PosX + x, PosY + y);
     }
 }
 void BlankMessageWindow()
 {
+  ResizeMessageWindow(PosX, PosY, Width, Height);
   DrawBorder("Console@",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
-  memset(&MessageLines[0][0], ' ', Width * Height);
+  memset(&MessageLines[0], ' ', Width * Height);
   DrawMessageWindow();
 }
 
 void ScrollMessageWindowUp()
 {
-  byte x, y;
+  byte x;
 
-  for (y = 0; y < Height - 1; ++y)  
-    for (x = 0; x < Width; ++x)
-      MessageLines[x][y] = MessageLines[x][y + 1];
-  for (x =0; x < Width; ++x)
-    MessageLines[x][Height - 1] = ' ';
+  //for (y = 0; y < Height - 1; ++y)  
+    for (x = 0; x < (Width * (Height - 1)); ++x)
+      MessageLines[x] = MessageLines[x + Width];
+  for (x = (Width *(Height - 1)); x < (Width * Height); ++x)
+    MessageLines[x] = ' ';
   DrawMessageWindow();
 }
 
-void WriteLineMessageWindow(char message[16], byte delay)
+void WriteLineMessageWindow(char message[38], byte delay)
 {
   byte x;
   
@@ -56,15 +68,15 @@ void WriteLineMessageWindow(char message[16], byte delay)
     {
       while (x < Width)
       {
-        MessageLines[x][Height - 1] = ' ';
+        MessageLines[x + (Width * (Height - 1))] = ' ';
         ++x;
       }
       break;
     }
     else
     {
-      MessageLines[x][Height - 1] = message[x];
-      SetChar(MessageLines[x][Height - 1], PosX + x, PosY + Height - 1);  
+      MessageLines[x + (Width * (Height - 1))] = message[x];
+      SetChar(MessageLines[x + (Width * (Height - 1))], PosX + x, PosY + Height - 1);  
     }
     if (delay > 0)
     {
