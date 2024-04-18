@@ -10,9 +10,9 @@
 #define posY 1
 
 #define consolePosX  1
-#define consolePosY 17
+#define consolePosY 12
 #define consoleWidth 38
-#define consoleHeight 7
+#define consoleHeight 12
 
 byte QuestOrigin, QuestType, QuestGiver, QuestTarget, QuestLocation;
 int randSeed = 0;
@@ -28,7 +28,7 @@ char *questType[] = { "kill", "retrieve", "explore and map out", "solve the puzz
 char *questTarget[][] = { //Point of Interest
   			/*Kill*/	{"Dragon", "Vampire", "Wizard", "Owlbear"},
 			/*Retrieve*/	{"Scroll", "Gauntlet", "Orb", "Artifact"},
-			/*Explore*/	{"Cavern", "Cellar", "Burial Site", "Swamp"},
+			/*Explore*/	{"Cavern", "Hidden Cellar", "Burial Site", "Treasure Room"},
 			/*PuzzleSolve*/	{"Burial Site", "Shipwreck", "Magic Device", "Steam Device"},
 			/*Visit*/	{"Burial Site", "Water's Edge", "Monument", "Wise Tree"},
 			/*PlayCards*/	{"Hooded Figure", "Lost Knight", "Talking Animal", "Wizard"}
@@ -61,7 +61,7 @@ void GenerateContinent(int seed)
   WriteLineMessageWindow(strTemp, 0);
   sprintf(strTemp, "%s the %s@", questType[QuestType], questTarget[QuestType][QuestTarget]);
   WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "in the %s@", questLocation[QuestType][QuestLocation]);
+  sprintf(strTemp, "near the %s@", questLocation[QuestType][QuestLocation]);
   WriteLineMessageWindow(strTemp, 0);
   WriteLineMessageWindow("@", 0);
   
@@ -86,12 +86,14 @@ screenName Update_Scenario()
   while (!exit)
   {
     randSeed = rand();
+    GenerateContinent(randSeed);
+    
     UpdateInput();
     if (InputChanged())
     {
       if (InputUp())
       {
-        ++randSeed;
+        //++randSeed;
         GenerateContinent(randSeed);
       }
       if (InputFire())
