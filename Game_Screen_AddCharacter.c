@@ -8,6 +8,10 @@ void GetRace(void);
 void DrawRoster(void);
 
 screenName nextScreen;
+#define consolePosX  1
+#define consolePosY 18
+#define consoleWidth 38
+#define consoleHeight 6
 byte windowX = 2;
 byte windowY;
 byte windowWidth = 16;
@@ -322,6 +326,7 @@ void GetRace()
   ClearScreen();
   
   DrawCharWindow(windowX, windowY, windowWidth, windowHeight, "Race?@");
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   while (!nextWindow)
   {
     UpdateInput();
@@ -361,6 +366,8 @@ void DrawRoster()
   byte partyPos;
   struct playerChar *PlayerChar = getPlayerChar(0);
   struct playerChar *PartyChar = getPartyMember(0);
+  
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   
   selection = 0;
   repeatRoster = true;
@@ -528,8 +535,9 @@ screenName DrawAddCharacterScreen()
   CurrentCharacter = 0;
   srand(randseed);
   
-  BlankMessageWindow(); //Why does this put characters at the very end of the screen?
-  DrawMessageWindow();
+  //BlankMessageWindow(); //Why does this put characters at the very end of the screen?
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  //DrawMessageWindow();
 
   //GetRace();
   

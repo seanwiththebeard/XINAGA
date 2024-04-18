@@ -501,7 +501,7 @@ screenName Update_MapGen()
   byte seed  = 0;
   screenName nextScreen = Title;
   bool exit = false;
-  BlankMessageWindow();
+  ResizeMessageWindow(23, 12, 15, 10);
   DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
   while(1)
   {

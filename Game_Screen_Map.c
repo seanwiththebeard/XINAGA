@@ -934,7 +934,8 @@ screenName MapUpdate()
 {
   //screenName nextScreen;
   DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
-  DrawMessageWindow();
+  ResizeMessageWindow(23, 12, 15, 10);
+  //DrawMessageWindow();
   DrawEntireMap();
   DrawCharStats();
 

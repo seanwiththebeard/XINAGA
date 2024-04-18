@@ -9,56 +9,65 @@
 #define posX 1
 #define posY 1
 
-byte QuestOrigin, QuestType, QuestGiver, QuestTarget, QuestLocation;
+#define consolePosX  1
+#define consolePosY 17
+#define consoleWidth 38
+#define consoleHeight 7
 
-char *questOrigin[] = { "the castle", "a tavern rumor", "a library book", "a dream at the inn"};
+byte QuestOrigin, QuestType, QuestGiver, QuestTarget, QuestLocation;
+int randSeed = 0;
+
+char *questOrigin[] = { "the castle,", "a tavern rumor,", "your library studies,", "a dream at the inn,"};
 char *questGiver[][] = {
   			/*Castle*/	{"King", "Blacksmith", "Guildmaster", "People"},
-  			/*Tavern*/	{"Tavern Owner", "Cloaked Figure", "Guildmaster", "People"},
+  			/*Town Tavern*/	{"Tavern Owner", "Cloaked Figure", "Guildmaster", "People"},
   			/*Library Book*/{"History Book", "Librarian", "Scholar", "Cloaked Figure"},
   			/*Dream*/	{"Statue", "Restless Spirit", "Talking Animal", "Wise Tree"}
 			};
-char *questType[] = { "kill", "retrieve", "explore and map out", "solve the puzzle at", "visit"};
-char *questTarget[][] = {
+char *questType[] = { "kill", "retrieve", "explore and map out", "solve the puzzle at", "visit", "play cards with"};
+char *questTarget[][] = { //Point of Interest
   			/*Kill*/	{"Dragon", "Vampire", "Wizard", "Owlbear"},
 			/*Retrieve*/	{"Scroll", "Gauntlet", "Orb", "Artifact"},
-			/*Explore*/	{"Cavern", "Cellar", "Crypt", "Swamp"},
-			/*PuzzleSolve*/	{"Graveyard", "Shipwreck", "Clocktower", "Steam Device"},
-			/*Visit*/	{"Tombstone", "Water's Edge", "Monument", "Wise Tree"}
+			/*Explore*/	{"Cavern", "Cellar", "Burial Site", "Swamp"},
+			/*PuzzleSolve*/	{"Burial Site", "Shipwreck", "Magic Device", "Steam Device"},
+			/*Visit*/	{"Burial Site", "Water's Edge", "Monument", "Wise Tree"},
+			/*PlayCards*/	{"Hooded Figure", "Lost Knight", "Talking Animal", "Wizard"}
 			};
-char *questLocation[][] = {
+char *questLocation[][] = { //Map Location
   			/*Kill*/	{"Forrest", "Dungeon", "Dwarven Tower", "Dimensional Rift"},
 			/*Retrieve*/	{"Ruined Archive", "Dungeon", "Castle Basement", "Dwarven Tower"},
 			/*Explore*/	{"Mobile Siege Engine", "Ruined Archive", "Dwarven Tower", "Dimensional Rift"},
 			/*PuzzleSolve*/	{"Clock Tower", "Library", "Mobile Siege Engine", "Windmill"},
 			/*Visit*/	{"Ruins", "Lake", "Open Plains", "Forrest"},
+			/*Play Cards*/	{"Castle", "Forrest Clearing", "Dimensional Rift", "Tavern"}
 			};
 
 
 
-void GenerateContinent()
+void GenerateContinent(int seed)
 {
+  srand(seed);
   QuestOrigin = rand() % 4;
-  QuestType = rand() % 5;
+  QuestType = rand() % 6;
   QuestGiver = rand() % 4;
   QuestTarget = rand() % 4;
   QuestLocation = rand() % 4;
   
-  sprintf(strTemp, "The quest is initiated in@");
+  sprintf(strTemp, "Continent Seed: %d@", seed);
   WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "%s@", questOrigin[QuestOrigin]);
+  sprintf(strTemp, "In %s@", questOrigin[QuestOrigin]);
   WriteLineMessageWindow(strTemp, 0);  
-  sprintf(strTemp, "The %s asks you to@", questGiver[QuestOrigin][QuestGiver]);
+  sprintf(strTemp, "the %s sends you to@", questGiver[QuestOrigin][QuestGiver]);
   WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "%s the @", questType[QuestType]);
+  sprintf(strTemp, "%s the %s@", questType[QuestType], questTarget[QuestType][QuestTarget]);
   WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "%s at the %s@", questTarget[QuestType][QuestTarget], questLocation[QuestType][QuestLocation]);
+  sprintf(strTemp, "in the %s@", questLocation[QuestType][QuestLocation]);
   WriteLineMessageWindow(strTemp, 0);
   WriteLineMessageWindow("@", 0);
   
   //Add Landmarks
   //Landmark 1 - Quest Origin
-  //Landmark 2 - Quest Destination
+  //Landmark 2 - Quest Destination (Is this the same as the origin?)
   //Landmark 3 - Do we have a town/castle yet? Else random non-town; Ensure we have a ferry station to reach next continent
   //Landmark 4 - Do we have a dungeon yet? Else small outpost/encampment; Ensure we have somewhere to grind for exp/resources
   //Landmark 5 - Do we have an interesting non-combat area?
@@ -69,19 +78,21 @@ screenName Update_Scenario()
 {
   screenName nextScreen = Title;
   bool exit = false;
-  ResizeMessageWindow(1, 16, 30, 8);
-  BlankMessageWindow();
   DrawBorder("Scenario@",posX - 1, posY - 1, width + 2, height + 2, true);
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  
+  GenerateContinent(randSeed);
+  
   while (!exit)
   {
-  GenerateContinent();
-    
+    randSeed = rand();
     UpdateInput();
     if (InputChanged())
     {
       if (InputUp())
       {
-        
+        ++randSeed;
+        GenerateContinent(randSeed);
       }
       if (InputFire())
       {
