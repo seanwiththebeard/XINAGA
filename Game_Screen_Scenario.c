@@ -61,7 +61,7 @@ void GenerateContinent(int seed)
   WriteLineMessageWindow(strTemp, 0);
   sprintf(strTemp, "%s the %s@", questType[QuestType], questTarget[QuestType][QuestTarget]);
   WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "near the %s@", questLocation[QuestType][QuestLocation]);
+  sprintf(strTemp, "of the %s@", questLocation[QuestType][QuestLocation]);
   WriteLineMessageWindow(strTemp, 0);
   WriteLineMessageWindow("@", 0);
   
