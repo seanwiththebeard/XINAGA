@@ -12,7 +12,12 @@
 byte QuestOrigin, QuestType, QuestGiver, QuestTarget, QuestLocation;
 
 char *questOrigin[] = { "the castle", "a tavern rumor", "a library book", "a dream at the inn"};
-char *questGiver[] = {"King", "Blacksmith", "Guildmaster", "People"};
+char *questGiver[][] = {
+  			/*Castle*/	{"King", "Blacksmith", "Guildmaster", "People"},
+  			/*Tavern*/	{"Tavern Owner", "Cloaked Figure", "Guildmaster", "People"},
+  			/*Library Book*/{"History Book", "Librarian", "Scholar", "Cloaked Figure"},
+  			/*Dream*/	{"Statue", "Restless Spirit", "Talking Animal", "Wise Tree"}
+			};
 char *questType[] = { "kill", "retrieve", "explore and map out", "solve the puzzle at", "visit"};
 char *questTarget[][] = {
   			/*Kill*/	{"Dragon", "Vampire", "Wizard", "Owlbear"},
@@ -22,10 +27,10 @@ char *questTarget[][] = {
 			/*Visit*/	{"Tombstone", "Water's Edge", "Monument", "Wise Tree"}
 			};
 char *questLocation[][] = {
-  			/*Kill*/	{"Forrest", "Dungeon", "Tower", "Dimensional Rift"},
-			/*Retrieve*/	{"Ruined Archive", "Dungeon", "Castle Basement", "Tower"},
-			/*Explore*/	{"Mobile Siege Engine", "Ruined Archive", "Tower", "Dimensional Rift"},
-			/*PuzzleSolve*/	{"pA", "pB", "pC", "pD"},
+  			/*Kill*/	{"Forrest", "Dungeon", "Dwarven Tower", "Dimensional Rift"},
+			/*Retrieve*/	{"Ruined Archive", "Dungeon", "Castle Basement", "Dwarven Tower"},
+			/*Explore*/	{"Mobile Siege Engine", "Ruined Archive", "Dwarven Tower", "Dimensional Rift"},
+			/*PuzzleSolve*/	{"Clock Tower", "Library", "Mobile Siege Engine", "Windmill"},
 			/*Visit*/	{"Ruins", "Lake", "Open Plains", "Forrest"},
 			};
 
@@ -33,7 +38,6 @@ char *questLocation[][] = {
 
 void GenerateContinent()
 {
-  //Which Quest Origin? Castle, Town, Library, Dream
   QuestOrigin = rand() % 4;
   QuestType = rand() % 5;
   QuestGiver = rand() % 4;
@@ -44,7 +48,7 @@ void GenerateContinent()
   WriteLineMessageWindow(strTemp, 0);
   sprintf(strTemp, "%s@", questOrigin[QuestOrigin]);
   WriteLineMessageWindow(strTemp, 0);  
-  sprintf(strTemp, "The %s asks you to@", questGiver[QuestGiver]);
+  sprintf(strTemp, "The %s asks you to@", questGiver[QuestOrigin][QuestGiver]);
   WriteLineMessageWindow(strTemp, 0);
   sprintf(strTemp, "%s the @", questType[QuestType]);
   WriteLineMessageWindow(strTemp, 0);
@@ -52,6 +56,13 @@ void GenerateContinent()
   WriteLineMessageWindow(strTemp, 0);
   WriteLineMessageWindow("@", 0);
   
+  //Add Landmarks
+  //Landmark 1 - Quest Origin
+  //Landmark 2 - Quest Destination
+  //Landmark 3 - Do we have a town/castle yet? Else random non-town; Ensure we have a ferry station to reach next continent
+  //Landmark 4 - Do we have a dungeon yet? Else small outpost/encampment; Ensure we have somewhere to grind for exp/resources
+  //Landmark 5 - Do we have an interesting non-combat area?
+  //Random number 0-3 for additional dungeons/non-combat locations
 }
 
 screenName Update_Scenario()
