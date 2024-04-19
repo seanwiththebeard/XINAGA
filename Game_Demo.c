@@ -1,7 +1,7 @@
 #include "xinaga.h"
 #include "game.h"
 
-screenName currentScreen = MapGen;
+screenName currentScreen = Scenario;
 
 void SwitchScreen(screenName screen)
 {
