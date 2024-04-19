@@ -86,7 +86,7 @@ screenName Update_Scenario()
   while (!exit)
   {
     randSeed = rand();
-    GenerateContinent(randSeed);
+    //GenerateContinent(randSeed);
     
     UpdateInput();
     if (InputChanged())

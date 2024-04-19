@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define height 16
-#define width 16
+#define height 20
+#define width 20
 #define posX 1
 #define posY 1
 #define pointsCount 32
@@ -24,7 +24,15 @@ Before / After	//16
                 //2
                 //1
 
-
+Eight more flags after all 256 boards clear
+Spring/Summer	//128
+Fall/Winter	//64
+East / West	//32
+Before / After	//16
+		//8
+                //4
+                //2
+                //1
 */
 
 typedef struct vector2
@@ -363,8 +371,11 @@ byte countContinents = 0;
 
 void createContinent(byte size)
 {
-  byte index = grass;//'0' + countContinents;
+  char index = '0' + countContinents;// grass;
   byte landcount = size + 1;
+  
+  //sprintf(&index, "%d", countContinents);
+  
   addRandomPoints(1, index);
   while (landcount && (points != NULL))
   {
@@ -422,7 +433,18 @@ void Rotate(direction dir)
     default:
       break;
   }
-  DrawMap();
+  //DrawMap();
+}
+
+void RotateAround()
+{
+  byte y;
+  for (y = 0; y < height; ++y)
+  {
+    Rotate(right);
+    Rotate(down);
+    DrawMap();
+  }
 }
 
 void GenerateMap(byte seed)
@@ -447,6 +469,7 @@ void GenerateMap(byte seed)
     createContinent(16 +  8*(y / 4));
   }
   DrawMap();
+  RotateAround();
   sprintf(strTemp, "Done@");
   WriteLineMessageWindow(strTemp, 0);
 
@@ -462,7 +485,7 @@ void GenerateMap(byte seed)
   //FillAdjacent(2, 2);
   //RemoveIslands();
 
-  while(1)
+  /*while(1)
   {
     UpdateInput();
     if (InputUp())
@@ -478,7 +501,7 @@ void GenerateMap(byte seed)
 
     if (InputFire())
       return;
-  }
+  }*/
   /*for (x = 0; x < pointsCount; ++x)
   {
 
