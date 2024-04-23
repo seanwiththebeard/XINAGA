@@ -14,6 +14,10 @@
 #define consoleWidth 38
 #define consoleHeight 12
 
+//Quests are like stars in Mario 64
+//Each world is like a level, each continent/quest is like a star
+//100 coin star?
+
 byte QuestOrigin, QuestType, QuestGiver, QuestTarget, QuestLocation;
 int randSeed = 0;
 
