@@ -22,6 +22,10 @@ byte QuestOrigin, QuestType, QuestGiver, QuestTarget, QuestLocation;
 int randSeed = 0;
 
 char *questOrigin[] = { "the castle,", "a tavern rumor,", "your library studies,", "a dream at the inn,"};
+//Map Location Types
+//Primary Settlement: Castle, City, 
+//Secondary Settlement: Village, Library, Outpost, Abandoned Cabin
+
 char *questGiver[][] = {
   			/*Castle*/	{"King", "Blacksmith", "Guildmaster", "People"},
   			/*Town Tavern*/	{"Tavern Owner", "Cloaked Figure", "Guildmaster", "People"},
