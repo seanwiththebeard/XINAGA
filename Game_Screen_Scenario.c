@@ -25,23 +25,23 @@ char *questOrigin[] = { "the castle,", "a tavern rumor,", "your library studies,
 //Map Location Types (rule of fours, four tileset variations of each of four options)
 
 //Primary Settlement: 	
-//			Castle
-//			City
-//			Seaport
-//			Outpost
+//			Castle		
+//			City		
+//			Seaport		
+//			Outpost		
 
 //Secondary Settlement:
-//			Village
-//			Library, 
-//			Inn
-//			Abandoned Cabin
+//			Village		
+//			Library		Scholar Library, Wizard's Collection, War Records, Ruined Archive
+//			Inn		
+//			Abandoned Cabin	
 
-//Dungeon:		Cavern
-//			Tower
-//			Ruins
-//			Portal
+//Dungeon:		Cavern		
+//			Tower		
+//			Ruins		
+//			Portal		Crystal Rift, Nightmare, Clouds, Lunar
 
-//Landmark:		Forrest		
+//Landmark:		Forrest		Open Fields, Dense Woods, Swamp, Giant Stump
 //			Seaside		Dock, Beach, Waterfall, Lake
 //			Shipwreck	Ship, Airship, Siege Engine, Leviathan Fossil
 //			Tomb		Pyramid, Crypt, Graveyard, Catacombs
