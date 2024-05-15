@@ -23,9 +23,23 @@ int randSeed = 0;
 
 char *questOrigin[] = { "the castle,", "a tavern rumor,", "your library studies,", "a dream at the inn,"};
 //Map Location Types (rule of fours, four tileset variations of each of four options)
-//Primary Settlement: 	Castle, City, Seaport, Outpost
-//Secondary Settlement: Village, Library, Inn, Abandoned Cabin
-//Dungeon:		Cavern, Tower, Ruins, Portal
+
+//Primary Settlement: 	
+//			Castle
+//			City
+//			Seaport
+//			Outpost
+
+//Secondary Settlement:
+//			Village
+//			Library, 
+//			Inn
+//			Abandoned Cabin
+
+//Dungeon:		Cavern
+//			Tower
+//			Ruins
+//			Portal
 
 //Landmark:		Forrest		
 //			Seaside		Dock, Beach, Waterfall, Lake
