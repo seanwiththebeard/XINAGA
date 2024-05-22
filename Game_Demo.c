@@ -1,7 +1,7 @@
 #include "xinaga.h"
 #include "game.h"
 
-screenName currentScreen = Scenario;
+screenName currentScreen = Combat;
 
 void SwitchScreen(screenName screen)
 {
