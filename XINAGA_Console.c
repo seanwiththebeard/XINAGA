@@ -89,19 +89,22 @@ void WriteLineMessageWindow(char message[38], byte delay)
   SetLineMessageWindow(message, delay);
 }
 
+//Move these to the game screens?
+#define CharStatPosX 18
+#define CharStatPosY 1
 void DrawCharStatus(byte characterIndex)
 {
-  byte statX = PosX;
-  byte statY = 2 + characterIndex * 3;
+  //byte statX = CharStatPosX;
+  byte statY = CharStatPosY + characterIndex * 3;
   struct playerChar *PlayerChar = getPartyMember(characterIndex);
 
-  DrawBorder("@", statX - 1, statY - 1, COLS - statX + 1, 4, true);
+  DrawBorder("@", CharStatPosX - 1, statY - 1, COLS - CharStatPosX + 1, 4, true);
   sprintf(strTemp, "%s@", RaceDescription[PlayerChar->RACE].NAME);
-  PrintString(strTemp, statX, statY, true, false);
+  PrintString(strTemp, CharStatPosX, statY, true, false);
   sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
-  PrintString(strTemp, statX + 9, statY, true, false);
+  PrintString(strTemp, CharStatPosX + 9, statY, true, false);
   sprintf(strTemp, "%s@", ClassDescription[PlayerChar->CLASS].NAME);
-  PrintString(strTemp, statX, statY + 1, true, false);
+  PrintString(strTemp, CharStatPosX, statY + 1, true, false);
   //ReverseBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
   //CopyDoubleBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
 }

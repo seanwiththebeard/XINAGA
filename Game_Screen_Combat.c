@@ -7,8 +7,8 @@
 byte fillTile = 36;
 bool CombatSuccess = false;
 bool exitCombat = false;
-sbyte SelectedCharacter = 9;
-sbyte MovementRemaining = 0;
+int SelectedCharacter = 9;
+int MovementRemaining = 0;
 #define MaxCombatParticipants 12
 #define CombatMapWidth 8
 #define CombatMapHeight 8
@@ -58,6 +58,7 @@ typedef struct CombatParticipant
   byte tileIndex;
   int posX;
   int posY;
+  byte targetIndex;
   byte initiative;
   int initiativeMod;
   byte movement;
@@ -95,6 +96,7 @@ void Initialize(void)
   GetMonsters();
 
   DrawBorder("Combat@",0, 0, 18, 18, false);
+  DrawCharStats();
   DrawCombatMap();
   
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
@@ -137,7 +139,7 @@ void GetMonsters(void)
     combatParticipant[i].active = true;
     combatParticipant[i].alive = true;
     combatParticipant[i].movement = 4;
-
+    combatParticipant[i].targetIndex = rand() % CountParty();    
   }
 }
 
@@ -255,13 +257,11 @@ bool CheckCombatMapCollision(byte direction)
           {
             case up:
               if(combatParticipant[SelectedCharacter].posY - 1 == combatParticipant[i].posY)
-
                 if (combatParticipant[SelectedCharacter].posX == combatParticipant[i].posX)
                   return true;
               break;
             case down:
               if(combatParticipant[SelectedCharacter].posY + 1 == combatParticipant[i].posY)
-
                 if (combatParticipant[SelectedCharacter].posX == combatParticipant[i].posX)
                   return true;
               break;
