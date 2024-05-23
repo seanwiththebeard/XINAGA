@@ -7,8 +7,8 @@
 byte fillTile = 36;
 bool CombatSuccess = false;
 bool exitCombat = false;
-byte SelectedCharacter = 9;
-byte MovementRemaining = 0;
+int SelectedCharacter = 9;
+int MovementRemaining = 0;
 #define MaxCombatParticipants 12
 #define CombatMapWidth 8
 #define CombatMapHeight 8
@@ -105,6 +105,7 @@ void GetCharacters(void)
     combatParticipant[i].initiativeMod = (getPartyMember(i)->DEX - 10) / 2;
     combatParticipant[i].active = true;
     combatParticipant[i].alive = true;
+    combatParticipant[i].movement = getPartyMember(i)->DEX / 2;
   }
 }
 
@@ -127,6 +128,8 @@ void GetMonsters(void)
     combatParticipant[i].initiativeMod = 0;
     combatParticipant[i].active = true;
     combatParticipant[i].alive = true;
+    combatParticipant[i].movement = 4;
+
   }
 }
 
@@ -139,23 +142,74 @@ void RollInitiative(void)
   }
 }
 
+void WriteRemainingMovement()
+{
+  if (MovementRemaining > 0)
+    sprintf(strTemp, "MovementLeft: %d@", MovementRemaining);
+  else
+    sprintf(strTemp, "MovementFinished@");
+
+  WriteLineMessageWindow(strTemp, 0);
+}
+
+void SelectionMoveCharacter(void)
+{
+  MovementRemaining = combatParticipant[SelectedCharacter].movement;
+  WriteRemainingMovement();
+  while(MovementRemaining > 0)
+  {
+    UpdateInput();
+    if (InputChanged())
+    {
+      if (InputUp())
+        MoveCombatCharacter(SelectedCharacter, up);
+      if (InputDown())
+        MoveCombatCharacter(SelectedCharacter, down);
+      if (InputLeft())
+        MoveCombatCharacter(SelectedCharacter, left);
+      if (InputRight())
+        MoveCombatCharacter(SelectedCharacter, right);
+      if (InputFire())
+        exitCombat = true;
+    }
+  }
+}
+
+bool SelectNextCharacter()
+{
+  bool found = false;
+  byte count = 0;
+  while (!found)
+  {
+    ++SelectedCharacter;
+    if (SelectedCharacter >= MaxCombatParticipants)
+      SelectedCharacter = 0;
+
+    if (combatParticipant[SelectedCharacter].isPlayerChar)   
+      if (combatParticipant[SelectedCharacter].active)
+        if (combatParticipant[SelectedCharacter].alive)
+          found = true;
+
+    ++count;
+    if (count > MaxCombatParticipants)
+    {
+      sprintf(strTemp, "No Players@");
+      WriteLineMessageWindow(strTemp, 0);
+      return false; 
+    }
+  }
+  return true;
+}
+
 void DoCombatRound()
 {
   RollInitiative();
 
-  UpdateInput();
-  if (InputChanged())
+  if (SelectNextCharacter())
+    SelectionMoveCharacter();
+  else
   {
-    if (InputUp())
-      MoveCombatCharacter(SelectedCharacter, up);
-    if (InputDown())
-      MoveCombatCharacter(SelectedCharacter, down);
-    if (InputLeft())
-      MoveCombatCharacter(SelectedCharacter, left);
-    if (InputRight())
-      MoveCombatCharacter(SelectedCharacter, right);
-    if (InputFire())
-      exitCombat = true;
+    exitCombat = true;
   }
 }
 
@@ -171,7 +225,7 @@ void SelectionUseItem(void);
 void SelectionMoveCharacter(void);
 
 
-bool CheckCombatMapCollection(byte direction)
+bool CheckCombatMapCollision(byte direction)
 {
   byte i;
   for (i = 0; i < MaxCombatParticipants; ++i)
@@ -207,11 +261,35 @@ bool CheckCombatMapCollection(byte direction)
               break;
           }
   }
+
+  switch(direction)
+  {
+    case up:
+      if(combatParticipant[SelectedCharacter].posY == 0)
+        combatParticipant[SelectedCharacter].active = false;
+      break;
+    case down:
+      if(combatParticipant[SelectedCharacter].posY == CombatMapHeight - 1)
+        combatParticipant[SelectedCharacter].active = false;
+      break;
+    case left:
+      if(combatParticipant[SelectedCharacter].posX == 0)
+        combatParticipant[SelectedCharacter].active = false;
+      break;
+    case right:
+      if(combatParticipant[SelectedCharacter].posX == CombatMapWidth - 1)
+        combatParticipant[SelectedCharacter].active = false;
+      break;
+    default:
+      break;
+  }
+  if (!combatParticipant[SelectedCharacter].active)
+    MovementRemaining = 0;
   return false;
 }
 void MoveCombatCharacter(byte index, byte direction)
 {
-  if (!CheckCombatMapCollection(direction))
+  if (!CheckCombatMapCollision(direction))
   {
     switch(direction)
     {
@@ -230,16 +308,9 @@ void MoveCombatCharacter(byte index, byte direction)
       default:
         break;
     }
-
-    while (combatParticipant[index].posY >= CombatMapHeight)
-      --combatParticipant[index].posY;
-    while (combatParticipant[index].posY < 0)
-      ++combatParticipant[index].posY;
-    while (combatParticipant[index].posX >= CombatMapWidth)
-      --combatParticipant[index].posX;
-    while (combatParticipant[index].posX < 0)
-      ++combatParticipant[index].posX;
     DrawCombatMap();
+    --MovementRemaining;
+     WriteRemainingMovement();
   }
 }
 void PhysicalAttack(void);
@@ -282,6 +353,15 @@ screenName Update_Combat(void)
   while (!exitCombat)
   {
     DoCombatRound();
+  }
+  
+  sprintf(strTemp, "Combat End@");
+  WriteLineMessageWindow(strTemp, 0);
+  sprintf(strTemp, "Press Space...@");
+  WriteLineMessageWindow(strTemp, 0);
+  while (!InputFire())
+  {
+      UpdateInput();
   }
 
   //Malloc free combat data
