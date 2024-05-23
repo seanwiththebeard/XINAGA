@@ -205,7 +205,7 @@ bool SelectNextCharacter()
     if (SelectedCharacter >= MaxCombatParticipants)
       SelectedCharacter = 0;
 
-    //if (combatParticipant[SelectedCharacter].isPlayerChar)   
+    if (combatParticipant[SelectedCharacter].isPlayerChar)   
       if (combatParticipant[SelectedCharacter].active)
         if (combatParticipant[SelectedCharacter].alive)
           found = true;
