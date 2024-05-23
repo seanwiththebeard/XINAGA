@@ -99,6 +99,7 @@ void ResizeMessageWindow (byte x, byte y, byte w, byte h);
 //void DrawMessageWindow();
 //void BlankMessageWindow();
 void WriteLineMessageWindow(char message[], byte delay);
+void SetLineMessageWindow(char message[], byte delay);
 extern char Messages[4][20];
 void DrawCharStats();
 

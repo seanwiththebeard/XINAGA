@@ -7,11 +7,17 @@
 byte fillTile = 36;
 bool CombatSuccess = false;
 bool exitCombat = false;
-int SelectedCharacter = 9;
-int MovementRemaining = 0;
+sbyte SelectedCharacter = 9;
+sbyte MovementRemaining = 0;
 #define MaxCombatParticipants 12
 #define CombatMapWidth 8
 #define CombatMapHeight 8
+
+#define consolePosX 1
+#define consolePosY 18
+#define consoleWidth 38
+#define consoleHeight 6
+#define consoleDelay 1
 
 //Functions
 void Initialize(void);
@@ -90,7 +96,8 @@ void Initialize(void)
 
   DrawBorder("Combat@",0, 0, 18, 18, false);
   DrawCombatMap();
-  //DrawCharacters();
+  
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
 }
 
 void GetCharacters(void)
@@ -148,15 +155,16 @@ void WriteRemainingMovement()
   if (MovementRemaining > 0)
     sprintf(strTemp, "MovementLeft: %d@", MovementRemaining);
   else
-    sprintf(strTemp, "MovementFinished@");
+    sprintf(strTemp, "@");
 
-  WriteLineMessageWindow(strTemp, 0);
+  SetLineMessageWindow(strTemp, 0);
 }
 
 void SelectionMoveCharacter(void)
 {
   byte flashTileIndex = combatParticipant[SelectedCharacter].tileIndex;
   MovementRemaining = combatParticipant[SelectedCharacter].movement;
+  //WriteLineMessageWindow("@", 0);
   WriteRemainingMovement();
   while(MovementRemaining > 0)
   {
@@ -204,7 +212,7 @@ bool SelectNextCharacter()
     if (count > MaxCombatParticipants)
     {
       sprintf(strTemp, "No Players@");
-      WriteLineMessageWindow(strTemp, 0);
+      WriteLineMessageWindow(strTemp, consoleDelay);
       return false; 
     }
   }
@@ -345,7 +353,8 @@ void DrawCombatMap(void)
 
 void DrawOneCharacter()
 {
-  DrawTileDirect(combatParticipant[SelectedCharacter].tileIndex, combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+  if (combatParticipant[SelectedCharacter].active)
+    DrawTileDirect(combatParticipant[SelectedCharacter].tileIndex, combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
 }
 
 void DrawCharacters(void)
@@ -371,9 +380,9 @@ screenName Update_Combat(void)
   }
   
   sprintf(strTemp, "Combat End@");
-  WriteLineMessageWindow(strTemp, 0);
+  WriteLineMessageWindow(strTemp, consoleDelay);
   sprintf(strTemp, "Press Space...@");
-  WriteLineMessageWindow(strTemp, 0);
+  WriteLineMessageWindow(strTemp, consoleDelay);
   while (!InputFire())
   {
       UpdateInput();

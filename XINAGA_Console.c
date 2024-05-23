@@ -53,10 +53,9 @@ void ScrollMessageWindowUp()
   //DrawMessageWindow();
 }
 
-void WriteLineMessageWindow(char message[38], byte delay)
+void SetLineMessageWindow(char message[38], byte delay)
 {
   byte x;
-  ScrollMessageWindowUp();
   for(x = 0; x < Width; ++x)
   {
     if (message[x] == '@')
@@ -84,6 +83,11 @@ void WriteLineMessageWindow(char message[38], byte delay)
   }
 }
 
+void WriteLineMessageWindow(char message[38], byte delay)
+{
+  ScrollMessageWindowUp();
+  SetLineMessageWindow(message, delay);
+}
 
 void DrawCharStatus(byte characterIndex)
 {
