@@ -24,7 +24,7 @@ void LoadMap();
 
 //Graphics
 //	System
-#define ColorBG 9
+#define ColorBG 0
 #define ColorBorder ColorBG
 #define ColorText 1
 void InitializeGraphics(void);
@@ -56,6 +56,7 @@ void Scroll(direction);
 //	Tiles
 void SetTileOrigin(byte x, byte y);
 void DrawTileFast(byte index, byte x, byte y);
+void DrawTileDirect(byte index, byte x, byte y);
 
 //	Text
 void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer);

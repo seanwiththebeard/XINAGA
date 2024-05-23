@@ -39,6 +39,7 @@ void SetCharacterDead(void);
 //Drawing
 void DrawCombatMap(void);
 void DrawCharacters(void);
+void DrawOneCharacter(void);
 void DrawSpellEffect(void);
 
 void ApplyCombatRewards();
@@ -154,12 +155,19 @@ void WriteRemainingMovement()
 
 void SelectionMoveCharacter(void)
 {
+  byte flashTileIndex = combatParticipant[SelectedCharacter].tileIndex;
   MovementRemaining = combatParticipant[SelectedCharacter].movement;
   WriteRemainingMovement();
   while(MovementRemaining > 0)
   {
+    if(combatParticipant[SelectedCharacter].tileIndex == flashTileIndex)
+      combatParticipant[SelectedCharacter].tileIndex = fillTile;
+    else
+      combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
+    DrawOneCharacter();
+    wait_vblank(5);
     UpdateInput();
-    if (InputChanged())
+    //if (InputChanged())
     {
       if (InputUp())
         MoveCombatCharacter(SelectedCharacter, up);
@@ -173,6 +181,8 @@ void SelectionMoveCharacter(void)
         exitCombat = true;
     }
   }
+  combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
+  DrawOneCharacter();
 }
 
 bool SelectNextCharacter()
@@ -185,7 +195,7 @@ bool SelectNextCharacter()
     if (SelectedCharacter >= MaxCombatParticipants)
       SelectedCharacter = 0;
 
-    if (combatParticipant[SelectedCharacter].isPlayerChar)   
+    //if (combatParticipant[SelectedCharacter].isPlayerChar)   
       if (combatParticipant[SelectedCharacter].active)
         if (combatParticipant[SelectedCharacter].alive)
           found = true;
@@ -331,6 +341,11 @@ void DrawCombatMap(void)
     }
   DrawCharacters();
   SwapBuffer();
+}
+
+void DrawOneCharacter()
+{
+  DrawTileDirect(combatParticipant[SelectedCharacter].tileIndex, combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
 }
 
 void DrawCharacters(void)

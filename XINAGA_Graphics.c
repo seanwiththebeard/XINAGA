@@ -88,6 +88,7 @@ void wait_vblank(byte frames)
   byte count = frames;
   for (count = frames; count; --count)
   {
+    UpdateInput();
     raster_wait(255);    
   }
   #endif
@@ -373,6 +374,23 @@ void DrawTileFast(byte index, byte x, byte y)
   SetChar(indexes[2], x + MapOriginX, y + 1 + MapOriginY);
   SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
   #endif
+}
+
+void DrawTileDirect(byte index, byte x, byte y)
+{
+  index = (index << 1) + ((index >> 3) << 4);
+  indexes[0] = index;
+  indexes[1] = index + 1;
+  indexes[2] = index + 16;
+  indexes[3] = index + 17;
+
+  x = x << 1;
+  y = y << 1;
+  
+  SetChar(indexes[0], x + MapOriginX, y + MapOriginY);
+  SetChar(indexes[1], x + MapOriginX + 1, y + MapOriginY);
+  SetChar(indexes[2], x + MapOriginX, y + 1 + MapOriginY);
+  SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
 }
 
 void DrawLineH(char index, byte x, byte y, byte length)
