@@ -9,9 +9,11 @@ bool CombatSuccess = false;
 bool exitCombat = false;
 int SelectedCharacter = 9;
 int MovementRemaining = 0;
-#define MaxCombatParticipants 16
 #define CombatMapWidth 8
 #define CombatMapHeight 8
+
+#define MaxCombatParticipants CombatMapWidth * CombatMapHeight
+
 
 #define consolePosX 1
 #define consolePosY 18
@@ -84,6 +86,7 @@ void ClearRoster(void)
     combatParticipant[i].alive = false;
     combatParticipant[i].movement = 0;  
   }
+  SelectedCharacter = 0;
 }
 
 void Initialize(void)
@@ -118,30 +121,36 @@ void GetCharacters(void)
     combatParticipant[i].active = true;
     combatParticipant[i].alive = true;
     combatParticipant[i].movement = getPartyMember(i)->DEX / 2;
+    ++SelectedCharacter;
   }
 }
 
 void GetMonsters(void)
 {
   byte i;
-  byte MonsterCount = 6;
-  byte c = CountParty();
-  byte offset;
-  while (MonsterCount > (MaxCombatParticipants - c))
-    --MonsterCount;
-  offset = MaxCombatParticipants - MonsterCount;
+  byte MonsterCount = 16;
+  byte LastMonster = SelectedCharacter + MonsterCount;
+  //byte c = CountParty();
+  //byte offset;
+  //while (MonsterCount > (MaxCombatParticipants - c))
+   // --MonsterCount;
+  //offset = MaxCombatParticipants - MonsterCount;
 
-  for (i = (MaxCombatParticipants - MonsterCount); i < MaxCombatParticipants; ++i)
+  for (i = SelectedCharacter; i < LastMonster; ++i)
+  //for (i = 0; i < MonsterCount; ++i)
   {    
     combatParticipant[i].isPlayerChar = false;
-    combatParticipant[i].tileIndex = 8 + i;
-    combatParticipant[i].posX = 2 + i - offset;
-    combatParticipant[i].posY = 2;
+    combatParticipant[i].tileIndex = 33 + i;
+    combatParticipant[i].posX = i;
+    while (combatParticipant[i].posX >= CombatMapWidth)
+      combatParticipant[i].posX -= CombatMapWidth;
+    combatParticipant[i].posY = (i / CombatMapWidth);
     combatParticipant[i].initiativeMod = 0;
     combatParticipant[i].active = true;
     combatParticipant[i].alive = true;
     combatParticipant[i].movement = 4;
-    combatParticipant[i].targetIndex = rand() % CountParty();    
+    combatParticipant[i].targetIndex = rand() % CountParty();
+    ++SelectedCharacter;
   }
 }
 
