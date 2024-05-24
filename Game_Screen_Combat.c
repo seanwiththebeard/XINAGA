@@ -30,7 +30,7 @@ void DoCombatRound(void);
 void GetActionSelection(void);
 
 //Actions
-void SelectionPlayerSelectAction(void);
+void SelectPlayerAction(void);
 void SelectionAttackTargetPhysical(void);
 void SelectionAttackTargetSpell();
 void SelectionUseItem(void);
@@ -226,7 +226,7 @@ void DoCombatRound()
   RollInitiative();
 
   if (SelectNextCharacter())
-    SelectionMoveCharacter();
+    GetActionSelection();
   else
   {
     exitCombat = true;
@@ -235,10 +235,33 @@ void DoCombatRound()
 
 void GetActionSelection(void)
 {
+  if(combatParticipant[SelectedCharacter].isPlayerChar)
+  {
+    //Get Selection
+    SelectPlayerAction();
+    //If Selection == Move
+    SelectionMoveCharacter();
+  }
+  else
+  {
+    //Enemy AI
+  }
 }
 
 //Actions
-void SelectionPlayerSelectAction(void);
+void SelectMonsterAction(void)
+{
+}
+void SelectPlayerAction(void)
+{
+  //Menu Reset, set five items
+  //Move
+  //Attack
+  //Magic
+  //Item
+  //Finish
+}
+
 void SelectionAttackTargetPhysical(void);
 void SelectionAttackTargetSpell();
 void SelectionUseItem(void);
