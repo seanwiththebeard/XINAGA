@@ -9,7 +9,7 @@ bool CombatSuccess = false;
 bool exitCombat = false;
 int SelectedCharacter = 9;
 int MovementRemaining = 0;
-#define MaxCombatParticipants 12
+#define MaxCombatParticipants 16
 #define CombatMapWidth 8
 #define CombatMapHeight 8
 
@@ -31,10 +31,12 @@ void GetActionSelection(void);
 
 //Actions
 void SelectPlayerAction(void);
+void SelectMonsterAction(void);
 void SelectionAttackTargetPhysical(void);
 void SelectionAttackTargetSpell();
 void SelectionUseItem(void);
 void SelectionMoveCharacter(void);
+byte failedWander = 0;
 
 void MoveCombatCharacter(byte index, byte direction);
 void PhysicalAttack(void);
@@ -122,7 +124,7 @@ void GetCharacters(void)
 void GetMonsters(void)
 {
   byte i;
-  byte MonsterCount = 4;
+  byte MonsterCount = 6;
   byte c = CountParty();
   byte offset;
   while (MonsterCount > (MaxCombatParticipants - c))
@@ -188,7 +190,7 @@ void SelectionMoveCharacter(void)
       if (InputRight())
         MoveCombatCharacter(SelectedCharacter, right);
       if (InputFire())
-        exitCombat = true;
+        MovementRemaining = 0;
     }
   }
   combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
@@ -205,7 +207,7 @@ bool SelectNextCharacter()
     if (SelectedCharacter >= MaxCombatParticipants)
       SelectedCharacter = 0;
 
-    if (combatParticipant[SelectedCharacter].isPlayerChar)   
+    //if (combatParticipant[SelectedCharacter].isPlayerChar)   
       if (combatParticipant[SelectedCharacter].active)
         if (combatParticipant[SelectedCharacter].alive)
           found = true;
@@ -213,7 +215,7 @@ bool SelectNextCharacter()
     ++count;
     if (count > MaxCombatParticipants)
     {
-      sprintf(strTemp, "No Players@");
+      sprintf(strTemp, "No Entities@");
       WriteLineMessageWindow(strTemp, consoleDelay);
       return false; 
     }
@@ -236,30 +238,64 @@ void DoCombatRound()
 void GetActionSelection(void)
 {
   if(combatParticipant[SelectedCharacter].isPlayerChar)
-  {
-    //Get Selection
     SelectPlayerAction();
-    //If Selection == Move
-    SelectionMoveCharacter();
-  }
   else
+    SelectMonsterAction();
+}
+
+void MonsterWander()
+{
+  byte remaining = MovementRemaining;
+  switch (rand() % 4)
   {
-    //Enemy AI
+    case 0:
+      MoveCombatCharacter(SelectedCharacter, up);
+      break;
+    case 1:
+      MoveCombatCharacter(SelectedCharacter, down);
+      break;
+    case 2:
+      MoveCombatCharacter(SelectedCharacter, left);
+      break;
+    case 3:
+      break;
+      MoveCombatCharacter(SelectedCharacter, right);
+      break;
+    default:
+      break;
+  }
+  if(remaining == MovementRemaining)
+    ++failedWander;
+  if (failedWander >= 4)
+  {
+    MovementRemaining = 0;
+    sprintf(strTemp, "Wander Failed@");
+      WriteLineMessageWindow(strTemp, consoleDelay);
   }
 }
 
 //Actions
 void SelectMonsterAction(void)
 {
+  //SelectPlayerAction();
+  MonsterWander();
 }
 void SelectPlayerAction(void)
 {
-  //Menu Reset, set five items
-  //Move
-  //Attack
-  //Magic
-  //Item
-  //Finish
+  ResetMenu("PLAYER@",19, 1, 8, 8, 5);
+    SetMenuItem(0, "Move@");
+    SetMenuItem(1, "Attack@");
+    SetMenuItem(2, "Magic@");
+    SetMenuItem(3, "Item@");
+    SetMenuItem(4, "End@");
+    
+    switch (GetMenuSelection())
+    {
+      case 0:
+        SelectionMoveCharacter();
+      default:
+        break;
+    }
 }
 
 void SelectionAttackTargetPhysical(void);

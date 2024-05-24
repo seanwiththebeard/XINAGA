@@ -103,6 +103,11 @@ void SetLineMessageWindow(char message[], byte delay);
 extern char Messages[4][20];
 void DrawCharStats();
 
+//Selection Menu
+void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
+void SetMenuItem(byte index, char *value);
+byte GetMenuSelection();
+
 //Common Functions
 //byte ReadBit(byte byteToRead, char bit); //These are old
 //void WriteBit(byte *byteToSet, char bit, bool value); //These are old

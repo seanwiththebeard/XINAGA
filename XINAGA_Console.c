@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "game.h"
 
+//Console
 byte Height = 10;
 byte Width = 15;
 byte PosX = 23;
@@ -16,6 +17,104 @@ char Messages[MessageCount][MessageLength] = {
   "This is a sign@",
   "Wizard's Forest@"};
 
+//Selection Menu
+byte MenuHeight = 5;
+byte MenuWidth = 5;
+byte MenuPosX = 5;
+byte MenuPosY = 5;
+byte MenuCount = 5;
+int MenuSelection = 0;
+#define menuItemsCount 16
+char *MenuItems[] = {};
+void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
+void SetMenuItem(byte index, char *value);
+byte GetMenuSelection();
+
+void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
+{
+  byte x, y;
+  MenuPosX = posX;
+  MenuPosY = posY;
+  MenuWidth = w;
+  MenuHeight = h;
+  MenuCount = c;
+  MenuSelection = 0;
+  
+  for (x = 0; x < menuItemsCount; ++x)
+    MenuItems[x] = "No Menu";
+  DrawBorder(title, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
+  for (y = 0; y < MenuHeight; ++y)
+    for (x = 0; x < MenuWidth; ++x)
+      SetChar(' ', MenuPosX + x, MenuPosY + y);
+}
+void SetMenuItem(byte index, char *value)
+{
+  MenuItems[index] = value;
+}
+
+void ClearLine()
+{
+  byte x;
+  for (x = 0; x < MenuWidth; ++x)
+  {
+    SetChar(' ', MenuPosX + x, MenuPosY + MenuSelection);    
+  }
+}
+
+void DrawMenu()
+{
+  byte x;
+  for (x = 0; x < MenuCount; ++x)
+  {
+    char menuLine[38];
+    char *selector;
+    if (MenuSelection == x)
+      selector = ">";
+    else
+      selector = "";
+    
+    sprintf(menuLine, "%s%s" , selector, MenuItems[x]);
+    PrintString(menuLine, MenuPosX, MenuPosY + x, true, false);
+  }
+}
+
+
+byte GetMenuSelection()
+{
+  bool exit = false;
+  DrawMenu();
+  
+  while (!exit)
+  {
+    UpdateInput();
+    if(InputChanged())
+    {
+      if(InputUp())
+      {
+        ClearLine();
+        --MenuSelection;
+        if (MenuSelection < 0)
+          MenuSelection = MenuCount - 1;
+      }
+      
+      if(InputDown())
+      {
+        ClearLine();
+        ++MenuSelection;
+        if (MenuSelection >= MenuCount)
+          MenuSelection = 0;
+      }
+      
+      if (InputFire())
+        exit = true;
+      
+      DrawMenu();
+    }
+  }
+  
+  return MenuSelection;
+}
+
 void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
 {
   byte x, y;
@@ -26,7 +125,7 @@ void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
   //free(MessageLines);
   //size = w * h;
   //MessageLines = malloc(w*h);
-  
+
   DrawBorder("Console@",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
   for (y = 0; y < Height; ++y)
     for (x = 0; x < Width; ++x)
@@ -36,18 +135,18 @@ void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
 void ScrollMessageWindowUp()
 {
   byte x, y;
-  
+
   for (y = 0; y < Height - 1; ++y)  
     for (x = 0; x < (Width); ++x)
     {
       //MessageLines[x] = MessageLines[x + Width];
       SetChar(GetChar(PosX + x, PosY + y + 1), PosX + x, PosY + y);  
-      
+
     }
   for (x = 0; x < (Width); ++x)
   {
-      SetChar(' ', PosX + x, PosY + Height - 1);  
-    
+    SetChar(' ', PosX + x, PosY + Height - 1);  
+
     //MessageLines[x] = ' ';
   }
   //DrawMessageWindow();
