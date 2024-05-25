@@ -155,6 +155,10 @@ void ScrollMessageWindowUp()
 void SetLineMessageWindow(char message[38], byte delay)
 {
   byte x;
+  for (x = 0; x < (Width); ++x)
+  {
+    SetChar(' ', PosX + x, PosY + Height - 1);
+  }
   for(x = 0; x < Width; ++x)
   {
     if (message[x] == '@')
@@ -171,13 +175,7 @@ void SetLineMessageWindow(char message[38], byte delay)
     {
       //MessageLines[x + (Width * (Height - 1))] = message[x];
       SetChar(message[x], PosX + x, PosY + Height - 1);  
-      if (delay > 0)
-      {
-        byte d, z;
-        for (z = 0; z < delay * 4; ++z)
-          for(d = 0; d < 255; ++d)
-          {}
-      }
+      wait_vblank(delay);
     }
   }
 }

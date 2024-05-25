@@ -57,6 +57,8 @@ void Scroll(direction);
 void SetTileOrigin(byte x, byte y);
 void DrawTileFast(byte index, byte x, byte y);
 void DrawTileDirect(byte index, byte x, byte y);
+void DrawArrow(byte x, byte y);
+void ClearArrow();
 
 //	Text
 void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer);

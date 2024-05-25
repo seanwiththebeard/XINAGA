@@ -393,6 +393,26 @@ void DrawTileDirect(byte index, byte x, byte y)
   SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
 }
 
+byte arrowA, arrowB, arrowX, arrowY;
+void DrawArrow(byte x, byte y)
+{
+  x = x << 1;
+  y = y << 1;
+  
+  arrowX = x + MapOriginX;
+  arrowY = y + MapOriginY + 2;
+  arrowA = GetChar(arrowX, arrowY);
+  arrowB = GetChar(arrowX + 1, arrowY);
+  
+  SetChar('^', arrowX, arrowY);
+  SetChar('^', arrowX + 1, arrowY);
+}
+void ClearArrow()
+{
+  SetChar(arrowA, arrowX, arrowY);
+  SetChar(arrowB, arrowX + 1, arrowY);
+}
+
 void DrawLineH(char index, byte x, byte y, byte length)
 {
   byte count = 0;

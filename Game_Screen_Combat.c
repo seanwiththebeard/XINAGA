@@ -103,7 +103,7 @@ void Initialize(void)
   DrawBorder("Combat@",0, 0, 18, 18, false);
   DrawCharStats();
   DrawCombatMap();
-  
+
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
 }
 
@@ -128,23 +128,23 @@ void GetCharacters(void)
 void GetMonsters(void)
 {
   byte i;
-  byte MonsterCount = 16;
+  byte MonsterCount = 8;
   byte LastMonster = SelectedCharacter + MonsterCount;
   //byte c = CountParty();
   //byte offset;
   //while (MonsterCount > (MaxCombatParticipants - c))
-   // --MonsterCount;
+  // --MonsterCount;
   //offset = MaxCombatParticipants - MonsterCount;
 
   for (i = SelectedCharacter; i < LastMonster; ++i)
-  //for (i = 0; i < MonsterCount; ++i)
+    //for (i = 0; i < MonsterCount; ++i)
   {    
     combatParticipant[i].isPlayerChar = false;
     combatParticipant[i].tileIndex = 33 + i;
     combatParticipant[i].posX = i;
     while (combatParticipant[i].posX >= CombatMapWidth)
       combatParticipant[i].posX -= CombatMapWidth;
-    combatParticipant[i].posY = (i / CombatMapWidth);
+    combatParticipant[i].posY = 2 + (i / CombatMapWidth);
     combatParticipant[i].initiativeMod = 0;
     combatParticipant[i].active = true;
     combatParticipant[i].alive = true;
@@ -166,30 +166,33 @@ void RollInitiative(void)
 void WriteRemainingMovement()
 {
   if (MovementRemaining > 0)
-    sprintf(strTemp, "MovementLeft: %d@", MovementRemaining);
+    sprintf(strTemp, "MovementLeft: %d of %d@", MovementRemaining, combatParticipant[SelectedCharacter].movement);
   else
-    sprintf(strTemp, "@");
-
+    sprintf(strTemp, "Moved@");
+  //WriteLineMessageWindow("@", 0);  
   SetLineMessageWindow(strTemp, 0);
 }
 
 void SelectionMoveCharacter(void)
 {
-  byte flashTileIndex = combatParticipant[SelectedCharacter].tileIndex;
+  //byte flashTileIndex = combatParticipant[SelectedCharacter].tileIndex;
   MovementRemaining = combatParticipant[SelectedCharacter].movement;
   //WriteLineMessageWindow("@", 0);
   WriteRemainingMovement();
+  DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   while(MovementRemaining > 0)
   {
-    if(combatParticipant[SelectedCharacter].tileIndex == flashTileIndex)
-      combatParticipant[SelectedCharacter].tileIndex = fillTile;
-    else
-      combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
-    DrawOneCharacter();
-    wait_vblank(5);
+    byte remaining = MovementRemaining;
+    //if(combatParticipant[SelectedCharacter].tileIndex == flashTileIndex)
+      //combatParticipant[SelectedCharacter].tileIndex = fillTile;
+    //else
+      //combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
+    //DrawOneCharacter();
+    //wait_vblank(10);
     UpdateInput();
-    //if (InputChanged())
+    if (InputChanged())
     {
+      ClearArrow();
       if (InputUp())
         MoveCombatCharacter(SelectedCharacter, up);
       if (InputDown())
@@ -200,10 +203,14 @@ void SelectionMoveCharacter(void)
         MoveCombatCharacter(SelectedCharacter, right);
       if (InputFire())
         MovementRemaining = 0;
+      DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
     }
+    if (remaining  != MovementRemaining)
+      WriteRemainingMovement();
   }
-  combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
+  //combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
   DrawOneCharacter();
+  ClearArrow();
 }
 
 bool SelectNextCharacter()
@@ -217,9 +224,9 @@ bool SelectNextCharacter()
       SelectedCharacter = 0;
 
     //if (combatParticipant[SelectedCharacter].isPlayerChar)   
-      if (combatParticipant[SelectedCharacter].active)
-        if (combatParticipant[SelectedCharacter].alive)
-          found = true;
+    if (combatParticipant[SelectedCharacter].active)
+      if (combatParticipant[SelectedCharacter].alive)
+        found = true;
 
     ++count;
     if (count > MaxCombatParticipants)
@@ -254,57 +261,69 @@ void GetActionSelection(void)
 
 void MonsterWander()
 {
-  byte remaining = MovementRemaining;
-  switch (rand() % 4)
+  failedWander = 0;
+  MovementRemaining = combatParticipant[SelectedCharacter].movement;
+  DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+  while(MovementRemaining > 0)
   {
-    case 0:
-      MoveCombatCharacter(SelectedCharacter, up);
-      break;
-    case 1:
-      MoveCombatCharacter(SelectedCharacter, down);
-      break;
-    case 2:
-      MoveCombatCharacter(SelectedCharacter, left);
-      break;
-    case 3:
-      break;
-      MoveCombatCharacter(SelectedCharacter, right);
-      break;
-    default:
-      break;
+    byte remaining = MovementRemaining;
+    WriteRemainingMovement();
+    ClearArrow();
+    switch (rand() % 4)
+    {
+      case 0:
+        MoveCombatCharacter(SelectedCharacter, up);
+        break;
+      case 1:
+        MoveCombatCharacter(SelectedCharacter, down);
+        break;
+      case 2:
+        MoveCombatCharacter(SelectedCharacter, left);
+        break;
+      case 3:
+        MoveCombatCharacter(SelectedCharacter, right);
+        break;
+      default:
+        break;
+    }
+    DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+    if(remaining == MovementRemaining)
+      ++failedWander;
+    if (failedWander >= 3)
+    {
+      MovementRemaining = 0;
+      sprintf(strTemp, "Wander Failed M#%d@", SelectedCharacter);
+      WriteLineMessageWindow(strTemp, 0);
+    }
   }
-  if(remaining == MovementRemaining)
-    ++failedWander;
-  if (failedWander >= 4)
-  {
-    MovementRemaining = 0;
-    sprintf(strTemp, "Wander Failed@");
-      WriteLineMessageWindow(strTemp, consoleDelay);
-  }
+  ClearArrow();
+  WriteRemainingMovement();
 }
 
 //Actions
 void SelectMonsterAction(void)
 {
   //SelectPlayerAction();
+  sprintf(strTemp, "Monster Action %d@", SelectedCharacter);
+  WriteLineMessageWindow(strTemp, consoleDelay);
   MonsterWander();
 }
 void SelectPlayerAction(void)
 {
   ResetMenu("PLAYER@",19, 1, 8, 8, 5);
-    SetMenuItem(0, "Move@");
-    SetMenuItem(1, "Attack@");
-    SetMenuItem(2, "Magic@");
-    SetMenuItem(3, "Item@");
-    SetMenuItem(4, "End@");
-    
-    switch (GetMenuSelection())
-    {
-      case 0:
-        SelectionMoveCharacter();
-      default:
-        break;
-    }
+  SetMenuItem(0, "Move@");
+  SetMenuItem(1, "Attack@");
+  SetMenuItem(2, "Magic@");
+  SetMenuItem(3, "Item@");
+  SetMenuItem(4, "End@");
+
+  switch (GetMenuSelection())
+  {
+    case 0:
+      SelectionMoveCharacter();
+    default:
+      break;
+  }
 }
 
 void SelectionAttackTargetPhysical(void);
@@ -351,32 +370,40 @@ bool CheckCombatMapCollision(byte direction)
   switch(direction)
   {
     case up:
-      if(combatParticipant[SelectedCharacter].posY == 0)
+      if(combatParticipant[SelectedCharacter].posY <= 0)
         combatParticipant[SelectedCharacter].active = false;
       break;
     case down:
-      if(combatParticipant[SelectedCharacter].posY == CombatMapHeight - 1)
+      if(combatParticipant[SelectedCharacter].posY >= CombatMapHeight - 1)
         combatParticipant[SelectedCharacter].active = false;
       break;
     case left:
-      if(combatParticipant[SelectedCharacter].posX == 0)
+      if(combatParticipant[SelectedCharacter].posX <= 0)
         combatParticipant[SelectedCharacter].active = false;
       break;
     case right:
-      if(combatParticipant[SelectedCharacter].posX == CombatMapWidth - 1)
+      if(combatParticipant[SelectedCharacter].posX >= CombatMapWidth - 1)
         combatParticipant[SelectedCharacter].active = false;
       break;
     default:
       break;
   }
   if (!combatParticipant[SelectedCharacter].active)
+  {
     MovementRemaining = 0;
+    combatParticipant[SelectedCharacter].tileIndex = fillTile;
+    DrawOneCharacter();
+  }
   return false;
 }
 void MoveCombatCharacter(byte index, byte direction)
 {
+  byte tempTile = combatParticipant[index].tileIndex;
+  combatParticipant[index].tileIndex = fillTile;
+  DrawOneCharacter();
   if (!CheckCombatMapCollision(direction))
   {
+    --MovementRemaining;
     switch(direction)
     {
       case up:
@@ -393,11 +420,10 @@ void MoveCombatCharacter(byte index, byte direction)
         break;
       default:
         break;
-    }
-    DrawCombatMap();
-    --MovementRemaining;
-     WriteRemainingMovement();
+    }    
   }
+  combatParticipant[index].tileIndex = tempTile;
+  DrawOneCharacter();
 }
 void PhysicalAttack(void);
 void SpellAttack(void);
@@ -422,7 +448,10 @@ void DrawCombatMap(void)
 void DrawOneCharacter()
 {
   if (combatParticipant[SelectedCharacter].active)
+  {
+    wait_vblank(1); //Reduces flicker
     DrawTileDirect(combatParticipant[SelectedCharacter].tileIndex, combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+  }
 }
 
 void DrawCharacters(void)
@@ -441,19 +470,20 @@ screenName Update_Combat(void)
   screenName nextScreen = Map;
 
   Initialize();
+  srand(0);
 
   while (!exitCombat)
   {
     DoCombatRound();
   }
-  
+
   sprintf(strTemp, "Combat End@");
   WriteLineMessageWindow(strTemp, consoleDelay);
   sprintf(strTemp, "Press Space...@");
   WriteLineMessageWindow(strTemp, consoleDelay);
   while (!InputFire())
   {
-      UpdateInput();
+    UpdateInput();
   }
 
   //Malloc free combat data
