@@ -267,6 +267,9 @@ void GetTargetSelection(void)
   int x = combatParticipant[SelectedCharacter].posX;
   int y = combatParticipant[SelectedCharacter].posY;
   byte i;
+  
+  ClearArrow();
+  DrawArrow(x, y);
 
   UpdateInput();
   while (InputFire())
@@ -375,7 +378,11 @@ void SelectMonsterAction(void)
 }
 void SelectPlayerAction(void)
 {
-  //ClearArrow();
+  bool finished = false;
+  byte moveX = combatParticipant[SelectedCharacter].posX;
+  byte moveY = combatParticipant[SelectedCharacter].posY;
+  byte tempTile;
+  
   DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   ResetMenu("PLAYER@",31, 18, 8, 5, 5);
   SetMenuItem(0, "Move@");
@@ -383,16 +390,33 @@ void SelectPlayerAction(void)
   SetMenuItem(2, "Magic@");
   SetMenuItem(3, "Item@");
   SetMenuItem(4, "End@");
-
+  
+  while (!finished)
   switch (GetMenuSelection())
   {
     case 0:
+      tempTile = combatParticipant[SelectedCharacter].tileIndex;
+      combatParticipant[SelectedCharacter].tileIndex = fillTile;
+      DrawOneCharacter();
       ClearArrow();
+      combatParticipant[SelectedCharacter].posX = moveX;
+      combatParticipant[SelectedCharacter].posY = moveY;
+      combatParticipant[SelectedCharacter].tileIndex = tempTile;
+      DrawOneCharacter();
       SelectionMoveCharacter();
       break;
     case 1:
       GetTargetSelection();
+      finished = true;
       break;
+    case 2:
+      finished = true;
+      break;
+    case 3:
+      finished = true;
+      break;
+    case 4:
+      finished = true;
     default:
       break;
   }
