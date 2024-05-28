@@ -17,8 +17,8 @@ int MovementRemaining = 0;
 
 #define consolePosX 1
 #define consolePosY 18
-#define consoleWidth 38
-#define consoleHeight 6
+#define consoleWidth 29
+#define consoleHeight 5
 #define consoleDelay 1
 
 //Functions
@@ -253,6 +253,7 @@ void DoCombatRound()
 
 void GetActionSelection(void)
 {
+  ReadyArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   if(combatParticipant[SelectedCharacter].isPlayerChar)
     SelectPlayerAction();
   else
@@ -263,7 +264,7 @@ void MonsterWander()
 {
   failedWander = 0;
   MovementRemaining = combatParticipant[SelectedCharacter].movement;
-  DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+  //DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   while(MovementRemaining > 0)
   {
     byte remaining = MovementRemaining;
@@ -303,14 +304,16 @@ void MonsterWander()
 //Actions
 void SelectMonsterAction(void)
 {
-  //SelectPlayerAction();
+  SelectPlayerAction();
   sprintf(strTemp, "Monster Action %d@", SelectedCharacter);
   WriteLineMessageWindow(strTemp, consoleDelay);
   MonsterWander();
 }
 void SelectPlayerAction(void)
 {
-  ResetMenu("PLAYER@",19, 1, 8, 8, 5);
+  //ClearArrow();
+  DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+  ResetMenu("PLAYER@",31, 18, 8, 5, 5);
   SetMenuItem(0, "Move@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Magic@");
@@ -320,6 +323,7 @@ void SelectPlayerAction(void)
   switch (GetMenuSelection())
   {
     case 0:
+      ClearArrow();
       SelectionMoveCharacter();
     default:
       break;

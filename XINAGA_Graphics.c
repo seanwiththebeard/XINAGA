@@ -394,7 +394,7 @@ void DrawTileDirect(byte index, byte x, byte y)
 }
 
 byte arrowA, arrowB, arrowX, arrowY;
-void DrawArrow(byte x, byte y)
+void ReadyArrow(byte x, byte y)
 {
   x = x << 1;
   y = y << 1;
@@ -403,6 +403,10 @@ void DrawArrow(byte x, byte y)
   arrowY = y + MapOriginY + 2;
   arrowA = GetChar(arrowX, arrowY);
   arrowB = GetChar(arrowX + 1, arrowY);
+}
+void DrawArrow(byte x, byte y)
+{
+  ReadyArrow(x, y);
   
   SetChar('^', arrowX, arrowY);
   SetChar('^', arrowX + 1, arrowY);
