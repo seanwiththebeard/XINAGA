@@ -14,6 +14,7 @@ int MovementRemaining = 0;
 #define CombatMapHeight 8
 
 #define MaxCombatParticipants CombatMapWidth * CombatMapHeight
+#define MonsterCount 32
 
 
 #define consolePosX 1
@@ -130,7 +131,6 @@ void GetCharacters(void)
 void GetMonsters(void)
 {
   byte i;
-  byte MonsterCount = 8;
   byte LastMonster = SelectedCharacter + MonsterCount;
   //byte c = CountParty();
   //byte offset;
@@ -168,17 +168,17 @@ void RollInitiative(void)
 void WriteRemainingMovement()
 {
   if (MovementRemaining > 0)
+  {
     sprintf(strTemp, "Movement Left:%dof%d@", MovementRemaining, combatParticipant[SelectedCharacter].movement);
+    SetLineMessageWindow(strTemp, 0);
+  }
   else
   {
     if (combatParticipant[SelectedCharacter].isPlayerChar)
-    sprintf(strTemp, "Moved, press space@");
+      SetLineMessageWindow("Moved, press space@", 0);
     else
-    sprintf(strTemp, "Monster moved@");
-      
+      SetLineMessageWindow("Monster moved@", 0);
   }
-  //WriteLineMessageWindow("@", 0);  
-  SetLineMessageWindow(strTemp, 0);
 }
 
 void SelectionMoveCharacter(void)
@@ -238,8 +238,7 @@ bool SelectNextCharacter()
     ++count;
     if (count > MaxCombatParticipants)
     {
-      sprintf(strTemp, "No Entities@");
-      WriteLineMessageWindow(strTemp, consoleDelay);
+      WriteLineMessageWindow("No Entities@", consoleDelay);
       return false; 
     }
   }
@@ -367,7 +366,7 @@ void MonsterWander()
     {
       MovementRemaining = 0;
       sprintf(strTemp, "Wander Failed M#%d@", SelectedCharacter);
-      WriteLineMessageWindow(strTemp, 0);
+      SetLineMessageWindow(strTemp, 0);
     }
   }
   ClearArrow();
