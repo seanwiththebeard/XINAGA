@@ -7,7 +7,8 @@
 byte fillTile = 36;
 bool CombatSuccess = false;
 bool exitCombat = false;
-int SelectedCharacter = 9;
+int SelectedCharacter;
+int SelectedTarget;
 int MovementRemaining = 0;
 #define CombatMapWidth 8
 #define CombatMapHeight 8
@@ -30,6 +31,7 @@ void RollInitiative(void);
 
 void DoCombatRound(void);
 void GetActionSelection(void);
+void GetTargetSelection(void);
 
 //Actions
 void SelectPlayerAction(void);
@@ -184,9 +186,9 @@ void SelectionMoveCharacter(void)
   {
     byte remaining = MovementRemaining;
     //if(combatParticipant[SelectedCharacter].tileIndex == flashTileIndex)
-      //combatParticipant[SelectedCharacter].tileIndex = fillTile;
+    //combatParticipant[SelectedCharacter].tileIndex = fillTile;
     //else
-      //combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
+    //combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
     //DrawOneCharacter();
     //wait_vblank(10);
     UpdateInput();
@@ -260,6 +262,68 @@ void GetActionSelection(void)
     SelectMonsterAction();
 }
 
+void GetTargetSelection(void)
+{
+  int x = combatParticipant[SelectedCharacter].posX;
+  int y = combatParticipant[SelectedCharacter].posY;
+  byte i;
+
+  UpdateInput();
+  while (InputFire())
+  {
+    UpdateInput();
+  }
+  while (!InputFire())
+  {
+    UpdateInput();
+    if (InputChanged())
+    {
+      if (InputUp())
+        --y;
+      if (InputDown())
+        ++y;
+      if (InputLeft())
+        --x;
+      if (InputRight())
+        ++x;
+    
+
+    while (x < 0)
+      ++x;
+    while (x >= CombatMapWidth)
+      --x;
+    while (y < 0)
+      ++y;
+    while (y >= CombatMapHeight)
+      --y;
+
+    while (x < combatParticipant[SelectedCharacter].posX - 1)
+      ++x;
+    while (x > combatParticipant[SelectedCharacter].posX + 1)
+      --x;
+    while (y < combatParticipant[SelectedCharacter].posY - 1)
+      ++y;
+    while (y > combatParticipant[SelectedCharacter].posY + 1)
+      --y;
+      
+      ClearArrow();
+      DrawArrow(x, y);
+
+    SelectedTarget = -1;
+    for (i = 0; i < MaxCombatParticipants; ++i)
+    {
+      if (combatParticipant[i].posX == x)
+        if(combatParticipant[i].posY == y)
+        {
+          SelectedTarget = i;
+          i = MaxCombatParticipants;
+        }
+    }
+    }
+  }
+  ClearArrow();
+}
+
 void MonsterWander()
 {
   failedWander = 0;
@@ -305,9 +369,9 @@ void MonsterWander()
 void SelectMonsterAction(void)
 {
   SelectPlayerAction();
-  sprintf(strTemp, "Monster Action %d@", SelectedCharacter);
-  WriteLineMessageWindow(strTemp, consoleDelay);
-  MonsterWander();
+  //sprintf(strTemp, "Monster Action %d@", SelectedCharacter);
+  //WriteLineMessageWindow(strTemp, consoleDelay);
+  //MonsterWander();
 }
 void SelectPlayerAction(void)
 {
@@ -325,6 +389,10 @@ void SelectPlayerAction(void)
     case 0:
       ClearArrow();
       SelectionMoveCharacter();
+      break;
+    case 1:
+      GetTargetSelection();
+      break;
     default:
       break;
   }
