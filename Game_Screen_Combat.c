@@ -170,49 +170,45 @@ void WriteRemainingMovement()
   if (MovementRemaining > 0)
     sprintf(strTemp, "MovementLeft: %d of %d@", MovementRemaining, combatParticipant[SelectedCharacter].movement);
   else
-    sprintf(strTemp, "Moved@");
+    sprintf(strTemp, "Moved, press space@");
   //WriteLineMessageWindow("@", 0);  
   SetLineMessageWindow(strTemp, 0);
 }
 
 void SelectionMoveCharacter(void)
 {
-  //byte flashTileIndex = combatParticipant[SelectedCharacter].tileIndex;
   MovementRemaining = combatParticipant[SelectedCharacter].movement;
-  //WriteLineMessageWindow("@", 0);
   WriteRemainingMovement();
   DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
-  while(MovementRemaining > 0)
+  while(InputFire())
+    UpdateInput();
+  while(!InputFire())
   {
     byte remaining = MovementRemaining;
-    //if(combatParticipant[SelectedCharacter].tileIndex == flashTileIndex)
-    //combatParticipant[SelectedCharacter].tileIndex = fillTile;
-    //else
-    //combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
-    //DrawOneCharacter();
-    //wait_vblank(10);
     UpdateInput();
     if (InputChanged())
     {
       ClearArrow();
-      if (InputUp())
-        MoveCombatCharacter(SelectedCharacter, up);
-      if (InputDown())
-        MoveCombatCharacter(SelectedCharacter, down);
-      if (InputLeft())
-        MoveCombatCharacter(SelectedCharacter, left);
-      if (InputRight())
-        MoveCombatCharacter(SelectedCharacter, right);
-      if (InputFire())
-        MovementRemaining = 0;
+      if (MovementRemaining > 0)
+      {
+        if (InputUp())
+          MoveCombatCharacter(SelectedCharacter, up);
+        if (InputDown())
+          MoveCombatCharacter(SelectedCharacter, down);
+        if (InputLeft())
+          MoveCombatCharacter(SelectedCharacter, left);
+        if (InputRight())
+          MoveCombatCharacter(SelectedCharacter, right);
+      }
+
       DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+      if (remaining  != MovementRemaining)
+        WriteRemainingMovement();
     }
-    if (remaining  != MovementRemaining)
-      WriteRemainingMovement();
+
   }
-  //combatParticipant[SelectedCharacter].tileIndex = flashTileIndex;
   DrawOneCharacter();
-  ClearArrow();
+  SetLineMessageWindow("@",0);
 }
 
 bool SelectNextCharacter()
@@ -267,7 +263,8 @@ void GetTargetSelection(void)
   int x = combatParticipant[SelectedCharacter].posX;
   int y = combatParticipant[SelectedCharacter].posY;
   byte i;
-  
+  SetLineMessageWindow("Select Target@",0);
+
   ClearArrow();
   DrawArrow(x, y);
 
@@ -289,39 +286,39 @@ void GetTargetSelection(void)
         --x;
       if (InputRight())
         ++x;
-    
 
-    while (x < 0)
-      ++x;
-    while (x >= CombatMapWidth)
-      --x;
-    while (y < 0)
-      ++y;
-    while (y >= CombatMapHeight)
-      --y;
 
-    while (x < combatParticipant[SelectedCharacter].posX - 1)
-      ++x;
-    while (x > combatParticipant[SelectedCharacter].posX + 1)
-      --x;
-    while (y < combatParticipant[SelectedCharacter].posY - 1)
-      ++y;
-    while (y > combatParticipant[SelectedCharacter].posY + 1)
-      --y;
-      
+      while (x < 0)
+        ++x;
+      while (x >= CombatMapWidth)
+        --x;
+      while (y < 0)
+        ++y;
+      while (y >= CombatMapHeight)
+        --y;
+
+      while (x < combatParticipant[SelectedCharacter].posX - 1)
+        ++x;
+      while (x > combatParticipant[SelectedCharacter].posX + 1)
+        --x;
+      while (y < combatParticipant[SelectedCharacter].posY - 1)
+        ++y;
+      while (y > combatParticipant[SelectedCharacter].posY + 1)
+        --y;
+
       ClearArrow();
       DrawArrow(x, y);
 
-    SelectedTarget = -1;
-    for (i = 0; i < MaxCombatParticipants; ++i)
-    {
-      if (combatParticipant[i].posX == x)
-        if(combatParticipant[i].posY == y)
-        {
-          SelectedTarget = i;
-          i = MaxCombatParticipants;
-        }
-    }
+      SelectedTarget = -1;
+      for (i = 0; i < MaxCombatParticipants; ++i)
+      {
+        if (combatParticipant[i].posX == x)
+          if(combatParticipant[i].posY == y)
+          {
+            SelectedTarget = i;
+            i = MaxCombatParticipants;
+          }
+      }
     }
   }
   ClearArrow();
@@ -382,7 +379,7 @@ void SelectPlayerAction(void)
   byte moveX = combatParticipant[SelectedCharacter].posX;
   byte moveY = combatParticipant[SelectedCharacter].posY;
   byte tempTile;
-  
+
   DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   ResetMenu("PLAYER@",31, 18, 8, 5, 5);
   SetMenuItem(0, "Move@");
@@ -390,35 +387,39 @@ void SelectPlayerAction(void)
   SetMenuItem(2, "Magic@");
   SetMenuItem(3, "Item@");
   SetMenuItem(4, "End@");
-  
+
   while (!finished)
-  switch (GetMenuSelection())
   {
-    case 0:
-      tempTile = combatParticipant[SelectedCharacter].tileIndex;
-      combatParticipant[SelectedCharacter].tileIndex = fillTile;
-      DrawOneCharacter();
-      ClearArrow();
-      combatParticipant[SelectedCharacter].posX = moveX;
-      combatParticipant[SelectedCharacter].posY = moveY;
-      combatParticipant[SelectedCharacter].tileIndex = tempTile;
-      DrawOneCharacter();
-      SelectionMoveCharacter();
-      break;
-    case 1:
-      GetTargetSelection();
-      finished = true;
-      break;
-    case 2:
-      finished = true;
-      break;
-    case 3:
-      finished = true;
-      break;
-    case 4:
-      finished = true;
-    default:
-      break;
+    SetLineMessageWindow("Command?@",0);
+    switch (GetMenuSelection())
+    {
+      case 0:
+        tempTile = combatParticipant[SelectedCharacter].tileIndex;
+        combatParticipant[SelectedCharacter].tileIndex = fillTile;
+        DrawOneCharacter();
+        ClearArrow();
+        combatParticipant[SelectedCharacter].posX = moveX;
+        combatParticipant[SelectedCharacter].posY = moveY;
+        combatParticipant[SelectedCharacter].tileIndex = tempTile;
+        DrawOneCharacter();
+        MovementRemaining = combatParticipant[SelectedCharacter].movement;
+        SelectionMoveCharacter();
+        break;
+      case 1:
+        GetTargetSelection();
+        finished = true;
+        break;
+      case 2:
+        finished = true;
+        break;
+      case 3:
+        finished = true;
+        break;
+      case 4:
+        finished = true;
+      default:
+        break;
+    }
   }
 }
 

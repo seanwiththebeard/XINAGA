@@ -155,9 +155,10 @@ void ScrollMessageWindowUp()
 void SetLineMessageWindow(char message[38], byte delay)
 {
   byte x;
-  for (x = 0; x < (Width); ++x)
+  for (x = 0; x < Width; ++x)
   {
-    SetChar(' ', PosX + x, PosY + Height - 1);
+    if (GetChar(PosX + x, PosY + Height - 1) != message[x])
+      SetChar(' ', PosX + x, PosY + Height - 1);
   }
   for(x = 0; x < Width; ++x)
   {
@@ -174,8 +175,11 @@ void SetLineMessageWindow(char message[38], byte delay)
     else
     {
       //MessageLines[x + (Width * (Height - 1))] = message[x];
-      SetChar(message[x], PosX + x, PosY + Height - 1);  
-      wait_vblank(delay);
+      if (GetChar(PosX + x, PosY + Height - 1) != message[x])
+      {
+        SetChar(message[x], PosX + x, PosY + Height - 1);  
+        wait_vblank(delay);
+      }
     }
   }
 }
