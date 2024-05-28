@@ -168,9 +168,15 @@ void RollInitiative(void)
 void WriteRemainingMovement()
 {
   if (MovementRemaining > 0)
-    sprintf(strTemp, "MovementLeft: %d of %d@", MovementRemaining, combatParticipant[SelectedCharacter].movement);
+    sprintf(strTemp, "Movement Left:%dof%d@", MovementRemaining, combatParticipant[SelectedCharacter].movement);
   else
+  {
+    if (combatParticipant[SelectedCharacter].isPlayerChar)
     sprintf(strTemp, "Moved, press space@");
+    else
+    sprintf(strTemp, "Monster moved@");
+      
+  }
   //WriteLineMessageWindow("@", 0);  
   SetLineMessageWindow(strTemp, 0);
 }
@@ -179,6 +185,8 @@ void SelectionMoveCharacter(void)
 {
   MovementRemaining = combatParticipant[SelectedCharacter].movement;
   WriteRemainingMovement();
+  combatParticipant[SelectedCharacter].active = true;
+  DrawOneCharacter();
   DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   while(InputFire())
     UpdateInput();
@@ -201,7 +209,8 @@ void SelectionMoveCharacter(void)
           MoveCombatCharacter(SelectedCharacter, right);
       }
 
-      DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+      if(combatParticipant[SelectedCharacter].active)
+        DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
       if (remaining  != MovementRemaining)
         WriteRemainingMovement();
     }
@@ -368,10 +377,10 @@ void MonsterWander()
 //Actions
 void SelectMonsterAction(void)
 {
-  SelectPlayerAction();
+  //SelectPlayerAction();
   //sprintf(strTemp, "Monster Action %d@", SelectedCharacter);
   //WriteLineMessageWindow(strTemp, consoleDelay);
-  //MonsterWander();
+  MonsterWander();
 }
 void SelectPlayerAction(void)
 {
@@ -380,8 +389,7 @@ void SelectPlayerAction(void)
   byte moveY = combatParticipant[SelectedCharacter].posY;
   byte tempTile;
 
-  DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
-  ResetMenu("PLAYER@",31, 18, 8, 5, 5);
+  ResetMenu("Action@",31, 18, 8, 5, 5);
   SetMenuItem(0, "Move@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Magic@");
@@ -391,6 +399,8 @@ void SelectPlayerAction(void)
   while (!finished)
   {
     SetLineMessageWindow("Command?@",0);
+    if(combatParticipant[SelectedCharacter].active)
+      DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
     switch (GetMenuSelection())
     {
       case 0:
@@ -406,20 +416,30 @@ void SelectPlayerAction(void)
         SelectionMoveCharacter();
         break;
       case 1:
-        GetTargetSelection();
-        finished = true;
+        if (combatParticipant[SelectedCharacter].active)
+        {
+          GetTargetSelection();
+          finished = true;
+        }
         break;
       case 2:
-        finished = true;
+        if (combatParticipant[SelectedCharacter].active)
+        {
+          finished = true;
+        }
         break;
       case 3:
-        finished = true;
+        if (combatParticipant[SelectedCharacter].active)
+        {
+          finished = true;
+        }
         break;
       case 4:
         finished = true;
       default:
         break;
     }
+    ClearArrow();
   }
 }
 
@@ -573,11 +593,7 @@ screenName Update_Combat(void)
   {
     DoCombatRound();
   }
-
-  sprintf(strTemp, "Combat End@");
-  WriteLineMessageWindow(strTemp, consoleDelay);
-  sprintf(strTemp, "Press Space...@");
-  WriteLineMessageWindow(strTemp, consoleDelay);
+  WriteLineMessageWindow("Combat End, Press Space...@", consoleDelay);
   while (!InputFire())
   {
     UpdateInput();
