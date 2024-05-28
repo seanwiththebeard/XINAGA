@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-byte fillTile = 36;
+#define fillTile 36
 bool CombatSuccess = false;
 bool exitCombat = false;
 int SelectedCharacter;
@@ -14,7 +14,7 @@ int MovementRemaining = 0;
 #define CombatMapHeight 8
 
 #define MaxCombatParticipants CombatMapWidth * CombatMapHeight
-#define MonsterCount 4
+#define MonsterCount 8
 
 
 #define consolePosX 1
@@ -142,7 +142,7 @@ void GetMonsters(void)
     //for (i = 0; i < MonsterCount; ++i)
   {    
     combatParticipant[i].isPlayerChar = false;
-    combatParticipant[i].tileIndex = 33 + i;
+    combatParticipant[i].tileIndex = 5; //33+i;
     combatParticipant[i].posX = i;
     while (combatParticipant[i].posX >= CombatMapWidth)
       combatParticipant[i].posX -= CombatMapWidth;
