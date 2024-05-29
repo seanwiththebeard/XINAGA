@@ -1,7 +1,7 @@
-#include "xinaga.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "game.h"
+#include "Game.h"
+#include "Xinaga.h"
 
 //Console
 byte Height = 10;

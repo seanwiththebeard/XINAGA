@@ -1,8 +1,7 @@
-#include "game.h"
-#include "xinaga.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+#include "Game.h"
+#include "Xinaga.h"
 
 void GetRace(void);
 void DrawRoster(void);

@@ -1,5 +1,5 @@
-#include "game.h"
 #include <stdlib.h>
+#include "Game.h"
 
 byte strTemp[78];
 

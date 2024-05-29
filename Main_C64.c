@@ -3,8 +3,10 @@
 #define CFGFILE C64.cfg
 #endif
 
-#include "xinaga.h"
-#include "game.h"
+#include "Xinaga.h"
+#include "Game.h"
+#include "Game_RPGData.h"
+
 //#link "XINAGA_Graphics.c"
 //#link "XINAGA_Input.c"
 //#link "XINAGA_FileIO.c"
@@ -13,7 +15,6 @@
 
 //#link "Game_Demo.c"
 //#link "Game_System.c"
-
 
 //#link "Game_Screen_Title.c"
 //#link "Game_Screen_AddCharacter.c"

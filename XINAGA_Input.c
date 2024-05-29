@@ -1,4 +1,4 @@
-#include "xinaga.h"
+#include "Xinaga.h"
 #include <conio.h> //for cgetc() and kbhit()
 sbyte key = 0;
 byte keyIgnore = 0;

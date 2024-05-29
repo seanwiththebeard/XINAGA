@@ -1,5 +1,5 @@
-#include "game.h"
-#include "xinaga.h"
+#include "Game.h"
+#include "Xinaga.h"
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,5 +1,5 @@
-#include "xinaga.h"
-#include "game.h"
+#include "Xinaga.h"
+#include "Game.h"
 
 screenName currentScreen = Scenario;
 
