@@ -89,8 +89,7 @@ void GenerateContinent(int seed)
   QuestTarget = rand() % 4;
   QuestLocation = rand() % 4;
   
-  sprintf(strTemp, "Continent Seed: %d @", seed);
-  WriteLineMessageWindow(strTemp, 0);
+  
   sprintf(strTemp, "In %s, the %s asks you to %s the %s at the %s@", questOrigin[QuestOrigin], questGiver[QuestOrigin][QuestGiver], questType[QuestType], questTarget[QuestType][QuestTarget], questLocation[QuestType][QuestLocation]);
   WriteLineMessageWindow(strTemp, 0);
   WriteLineMessageWindow("@", 0);
@@ -106,7 +105,7 @@ void GenerateContinent(int seed)
 
 screenName Update_Scenario()
 {
-  int randSeed = 0;
+  int seed = 0;
   screenName nextScreen = Title;
   bool exit = false;
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
@@ -118,24 +117,26 @@ screenName Update_Scenario()
     SetMenuItem(3, "End@");
     while (!exit)
     {
-      sprintf(strTemp, "Seed: %i@", randSeed);
-      SetLineMessageWindow(strTemp,0);
+      sprintf(strTemp, "Continent Quest Seed: %d @", seed);
+      SetLineMessageWindow(strTemp, 0);
       
       switch (GetMenuSelection())
       {
         case 0:
-          ++randSeed;
-          if (randSeed < 0)
-            randSeed = 0;
+          ++seed;
+          if (seed < 0)
+            seed = 0;
           break;
         case 1:
-          --randSeed;
-          if (randSeed < 0)
-            randSeed = 32767;
+          --seed;
+          if (seed < 0)
+            seed = 32767;
           break;
         case 2:
-          GenerateContinent(randSeed);
-          ++randSeed;
+          GenerateContinent(seed);
+          ++seed;
+          if (seed < 0)
+            seed = 0;
           break;
         case 3:
           exit = true;
