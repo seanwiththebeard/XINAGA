@@ -1,8 +1,7 @@
-#include "Game.h"
-#include "Xinaga.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+#include "Xinaga.h"
+#include "GameData.h"
 
 #define fillTile 36
 bool CombatSuccess = false;

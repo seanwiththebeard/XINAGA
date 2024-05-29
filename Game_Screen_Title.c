@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Game.h"
 #include "Xinaga.h"
+#include "GameData.h"
 
 screenName Update_Title()
 {

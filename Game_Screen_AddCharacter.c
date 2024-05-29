@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Game.h"
 #include "Xinaga.h"
+#include "GameData.h"
 
 void GetRace(void);
 void DrawRoster(void);
@@ -67,7 +67,7 @@ void AddToRoster()
   PlayerChar->CLASS = CLASS;
   PlayerChar->inParty = false;
    
-  sprintf(PlayerChar->NAME, "Hello %d @", CountRoster() - 1);
+  sprintf(PlayerChar->NAME, "Hello %d@", CountRoster() - 1);
 
   //exitWindow = true;
   //nextWindow = true;
@@ -314,10 +314,10 @@ void GetRace()
   windowY = 5;
   windowHeight = 7;
   countSelections = 4;
-  SetString("Human@", 0);
-  SetString("Elf@", 1);
-  SetString("Dwarf@", 2);
-  SetString("Halfling@", 3);
+  SetString(RaceDescription[0].NAME, 0);
+  SetString(RaceDescription[1].NAME, 1);
+  SetString(RaceDescription[2].NAME, 2);
+  SetString(RaceDescription[3].NAME, 3);
   SetString("Exit@", 4);
 
   nextWindow = false;
@@ -398,18 +398,32 @@ void DrawRoster()
   SetString("Scenario@", 9);
 
   DrawCharWindow(windowX, windowY, COLS - 2, ROWS - 2, "Edit Party@"); 
+  
+  //ConsoleBufferReset();
+  //ConsoleBufferAdd("Hello1@");
+  //ConsoleBufferAdd(RaceDescription[0].NAME);
+  //ConsoleBufferAdd(ClassDescription[0].NAME);
+  //ConsoleBufferPrint(0, 0);
+  
   //ListRoster
   PrintString("*Roster*@", windowX + 3, windowY + countSelections + 2, true, false);
   if (CountRoster() > 0)
   {
-    char buffer[ROWS];
+    PlayerChar = getPlayerChar(0);
     rosterPos = countSelections + 4;
     for (temp = 0; temp < CountRoster(); ++temp)
     {
+      
+      ConsoleBufferReset();
+      ConsoleBufferAdd(PlayerChar->NAME);
+      ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
+      ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
+      ConsoleBufferPrint(windowX + 3, windowY + rosterPos + temp);
+      
       //sprintf(strTemp, " %s@", PlayerChar->NAME);
-      sprintf(buffer, " %s %s %s@", PartyChar->NAME, RaceDescription[PartyChar->RACE].NAME, ClassDescription[PartyChar->CLASS].NAME);
-      PrintString(buffer, windowX + 3, windowY + rosterPos + temp, true, false);
-      WriteLineMessageWindow(buffer, 0);
+      //sprintf(buffer, " %s %s %s@", RaceDescription[PlayerChar->RACE].NAME, ClassDescription[PlayerChar->CLASS].NAME, PlayerChar->NAME);
+      //PrintString(buffer, windowX + 3, windowY + rosterPos + temp, true, false);
+      //WriteLineMessageWindow(buffer, 0);
       //sprintf(strTemp, "%s@", RaceDescription[PlayerChar->RACE].NAME);
       //PrintString(strTemp, windowX + 12, windowY + rosterPos + temp, true, false);
       //sprintf(strTemp, "%s@", ClassDescription[PlayerChar->CLASS].NAME);
@@ -422,16 +436,21 @@ void DrawRoster()
   
   if (CountParty() > 0)
   {
-    char buffer[ROWS];
     partyPos = rosterPos + 1 + CountRoster();
     PrintString("*Party*@", windowX + 3, windowY + partyPos, true, false);
     ++partyPos;
     PartyChar = getPartyMember(0);
     for (temp = 0; temp < CountParty(); ++temp)
     {
-      sprintf(buffer, " %s %s %s@", PartyChar->NAME, RaceDescription[PartyChar->RACE].NAME, ClassDescription[PartyChar->CLASS].NAME);
-      PrintString(buffer, windowX + 3, windowY + partyPos + temp, true, false);
-      WriteLineMessageWindow(buffer, 0);
+      ConsoleBufferReset();
+      ConsoleBufferAdd(PartyChar->NAME);
+      ConsoleBufferAdd(RaceDescription[PartyChar->RACE].NAME);
+      ConsoleBufferAdd(ClassDescription[PartyChar->CLASS].NAME);
+      ConsoleBufferPrint(windowX + 3, windowY + partyPos + temp);
+      
+      //sprintf(buffer, " %s@", PartyChar->NAME);
+      //PrintString(buffer, windowX + 3, windowY + partyPos + temp, true, false);
+      //WriteLineMessageWindow(buffer, 0);
       //sprintf(strTemp, "%s@", RaceDescription[PartyChar->RACE].NAME);
       //PrintString(strTemp, windowX + 12, windowY + partyPos + temp, true, false);
       //sprintf(strTemp, "%s@", ClassDescription[PartyChar->CLASS].NAME);

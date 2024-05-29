@@ -4,7 +4,7 @@
 #endif
 
 #include "Xinaga.h"
-#include "Game.h"
+#include "GameData.h"
 
 //#link "XINAGA_Graphics.c"
 //#link "XINAGA_Input.c"

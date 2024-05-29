@@ -15,11 +15,14 @@
 #endif
 
 
+
 typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
 
 typedef enum { false, true } bool;
 typedef enum { up, down, left, right } direction;
+
+
 
 void LoadMap();
 
@@ -63,7 +66,7 @@ void DrawArrow(byte x, byte y);
 void ClearArrow();
 
 //	Text
-void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer);
+void PrintString(char text[ROWS], byte posx, byte posy, bool fast, bool buffer);
 
 //	Buffer
 void SetBuffer(bool value);
@@ -106,6 +109,12 @@ void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
 extern char Messages[4][20];
 void DrawCharStats();
+#define ConsoleBufferLength 78
+extern byte strTemp[ConsoleBufferLength];
+void ConsoleBufferReset();
+void ConsoleBufferAdd(char *message);
+void ConsoleBufferPrint(byte x, byte y);
+
 
 //Selection Menu
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);

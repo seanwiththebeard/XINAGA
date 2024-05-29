@@ -1,8 +1,7 @@
-#include "Game.h"
-#include "Xinaga.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+#include "Xinaga.h"
+#include "GameData.h"
 
 #define height 20
 #define width 20

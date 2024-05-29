@@ -1,7 +1,25 @@
 #include "Xinaga.h"
-#include "Game.h"
+#include "GameData.h"
 
-screenName currentScreen = Scenario;
+screenName currentScreen = EditParty;
+
+RaceDescriptionDef RaceDescription[4] = 
+{
+  {"Human@", 255},
+  {"Elf@", 6}, 
+  {"Dwarf@", 255}, 
+  {"Halfling@", 6}
+};
+
+
+ClassDescriptionDef ClassDescription[4]= 
+{
+  {"Fighter@", 8},
+  {"Magic-User@", 4}, 
+  {"Cleric@", 6}, 
+  {"Thief@", 4},
+};
+
 
 void SwitchScreen(screenName screen)
 {

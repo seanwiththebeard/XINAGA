@@ -1,5 +1,6 @@
-#include "Xinaga.h"
 #include <conio.h> //for cgetc() and kbhit()
+#include "Xinaga.h"
+
 sbyte key = 0;
 byte keyIgnore = 0;
 bool ChangedState = true;

@@ -1,8 +1,7 @@
-#include "Xinaga.h"
-#include "Game.h"
 #include <peekpoke.h>
 #include <string.h> //For memcpy
-
+#include "Xinaga.h"
+#include "GameData.h"
 //Prototypes
 //byte ReadBit(byte byteToRead, char bit);//These are old
 void CameraFollow();

@@ -1,7 +1,5 @@
 #include "Xinaga.h"
 
-
-
 int YColumnIndex[25] = {
   0, 40, 80, 120, 160,
   200, 240, 280, 320, 360,
@@ -318,20 +316,20 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
 
 void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer)
 {
-  byte count;
+  byte i;
   while (posy > ROWS - 1)
     posy -= ROWS;
-  for(count = 0; count < ROWS; ++count)
+  for(i = 0; i < COLS; ++i)
   {
-    if (text[count] == '@')
+    if (text[i] == '@')
       break;
     if (!fast)
-      raster_wait(255);
+      wait_vblank(1);
     if (buffer)
-      SetCharBuffer(text[count], posx + count, posy);
+      SetCharBuffer(text[i], posx + i, posy);
     else
-      SetChar(text[count], posx + count, posy);
-    SetColor(ColorText, posx + count, posy);
+      SetChar(text[i], posx + i, posy);
+    SetColor(ColorText, posx + i, posy);
   }
 }
 

@@ -1,7 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Game.h"
 #include "Xinaga.h"
+#include "GameData.h"
+
+//StringBuilder
+byte StringLength = 0;
+void ConsoleBufferReset()
+{
+  byte i;
+  for (i = 0; i < ConsoleBufferLength; ++i)
+    strTemp[i] = ' ';
+  StringLength = 0;
+}
+
+void ConsoleBufferAdd(char *message)
+{
+  byte i;
+  if (StringLength > 0)
+  {
+    strTemp[StringLength] = ' ';
+    ++StringLength;
+  }
+  for (i = 0; message[i] != '@'; ++i)
+  {
+    strTemp[StringLength] = message[i];
+    ++StringLength;
+  }
+}
+void ConsoleBufferPrint(byte x, byte y)
+{
+  //--StringLength;
+  strTemp[StringLength] = '@';
+  PrintString(strTemp, x, y, true, false);
+}
 
 //Console
 byte Height = 10;
@@ -154,7 +185,7 @@ void SetLineMessageWindow(char *message, byte delay)
 {
   byte x;
   byte length = 0;
-  for (x = 0; x < 128; ++x)
+  for (x = 0; x < ConsoleBufferLength; ++x)
   {
     if (message[x] != '@')
       ++length;
@@ -236,8 +267,8 @@ void DrawCharStatus(byte characterIndex)
   PrintString(strTemp, CharStatPosX, statY, true, false);
   sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
   PrintString(strTemp, CharStatPosX + 9, statY, true, false);
-  sprintf(strTemp, "%s@", ClassDescription[PlayerChar->CLASS].NAME);
-  PrintString(strTemp, CharStatPosX, statY + 1, true, false);
+  //sprintf(strTemp, "%s@", ClassDescriptions[PlayerChar->CLASS].NAME);
+  //PrintString(strTemp, CharStatPosX, statY + 1, true, false);
   //ReverseBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
   //CopyDoubleBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
 }

@@ -1,11 +1,9 @@
 #include <stdlib.h>
-#include "Game.h"
+#include "GameData.h"
 
 byte strTemp[78];
 
 PartyDef Party = { 0, 0, 0};
-RaceDescriptionDef RaceDescription[4] = {{"Human@", 255},{"Elf@", 6}, {"Dwarf@", 255}, {"Halfling@", 6}};
-ClassDescriptionDef ClassDescription[4] = {{"Fighter@", 8},{"Magic-User@", 4}, {"Cleric@", 6}, {"Thief@", 4}};
 
 int AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 int randseed = 0;
