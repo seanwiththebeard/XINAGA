@@ -1,7 +1,7 @@
 #include "game.h"
 #include <stdlib.h>
 
-byte strTemp[20];
+byte strTemp[78];
 
 PartyDef Party = { 0, 0, 0};
 RaceDescriptionDef RaceDescription[] = {{"Human@", 255},{"Elf@", 6}, {"Dwarf@", 255}, {"Halfling@", 6}};

@@ -135,7 +135,6 @@ void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
 void ScrollMessageWindowUp()
 {
   byte x, y;
-
   for (y = 0; y < Height - 1; ++y)  
     for (x = 0; x < (Width); ++x)
     {
@@ -149,42 +148,75 @@ void ScrollMessageWindowUp()
 
     //MessageLines[x] = ' ';
   }
-  //DrawMessageWindow();
 }
 
-void SetLineMessageWindow(char message[38], byte delay)
+void SetLineMessageWindow(char *message, byte delay)
 {
   byte x;
+  byte length = 0;
+  for (x = 0; x < 128; ++x)
+  {
+    if (message[x] != '@')
+      ++length;
+  }
+  
   for (x = 0; x < Width; ++x)
   {
     if (GetChar(PosX + x, PosY + Height - 1) != message[x])
       SetChar(' ', PosX + x, PosY + Height - 1);
   }
-  for(x = 0; x < Width; ++x)
+  
+  for(x = 0; x < length; ++x)
   {
     if (message[x] == '@')
     {
       while (x < Width)
       {
         SetChar(' ', PosX + x, PosY + Height - 1);
-        //MessageLines[x + (Width * (Height - 1))] = ' ';
         ++x;
       }
+      x = length;
       break;
     }
     else
     {
-      //MessageLines[x + (Width * (Height - 1))] = message[x];
-      if (GetChar(PosX + x, PosY + Height - 1) != message[x])
+      if (message[x] != ' ')
       {
         SetChar(message[x], PosX + x, PosY + Height - 1);  
         wait_vblank(delay);
       }
     }
+    
+    if (length > Width)
+      if (message[x] == ' ')
+      {
+        byte wordLength = 0;
+        byte wordStart = x + 1;
+        char temp[128];
+        byte i = 0;
+        
+        while (message[wordStart + wordLength] != ' ' && message[wordStart + wordLength] != '@')
+        {
+          ++wordLength;
+        }
+        
+        if(x + wordLength > Width - 1)
+        {
+          ++x; //Skips the space
+          while (x < length)
+          {
+            temp[i] = message[x];
+            ++i;
+            ++x;
+          }
+          WriteLineMessageWindow(temp, delay);
+          //break;
+        }
+      }
   }
 }
 
-void WriteLineMessageWindow(char message[38], byte delay)
+void WriteLineMessageWindow(char *message, byte delay)
 {
   ScrollMessageWindowUp();
   SetLineMessageWindow(message, delay);
