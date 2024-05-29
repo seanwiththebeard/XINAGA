@@ -10,9 +10,9 @@
 #define posY 1
 
 #define consolePosX  1
-#define consolePosY 19
+#define consolePosY 18
 #define consoleWidth 28
-#define consoleHeight 5
+#define consoleHeight 6
 
 #define menuPosX  2 + ROWS - (ROWS - consoleWidth)
 #define menuPosY consolePosY
@@ -81,25 +81,13 @@ char *questLocation[][] = { //Map Location
 void GenerateContinent(int seed)
 {
   srand(seed);
-  srand (rand() % 65536);
+  srand (rand() % 32767);
   
   QuestOrigin = rand() % 4;
   QuestType = rand() % 6;
   QuestGiver = rand() % 4;
   QuestTarget = rand() % 4;
   QuestLocation = rand() % 4;
-
-  /*sprintf(strTemp, "Continent Seed: %d Test test test test test test test test test longwordwordword@", seed);
-  WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "In %s@", questOrigin[QuestOrigin]);
-  WriteLineMessageWindow(strTemp, 0);  
-  sprintf(strTemp, "the %s sends you to@", questGiver[QuestOrigin][QuestGiver]);
-  WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "%s the %s@", questType[QuestType], questTarget[QuestType][QuestTarget]);
-  WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "at the %s@", questLocation[QuestType][QuestLocation]);
-  WriteLineMessageWindow(strTemp, 0);
-  WriteLineMessageWindow("@", 0);*/
   
   sprintf(strTemp, "Continent Seed: %d @", seed);
   WriteLineMessageWindow(strTemp, 0);
@@ -118,44 +106,36 @@ void GenerateContinent(int seed)
 
 screenName Update_Scenario()
 {
-  byte randSeed = 0;
+  int randSeed = 0;
   screenName nextScreen = Title;
   bool exit = false;
-  DrawBorder("Scenario@",posX - 1, posY - 1, width + 2, height + 2, true);
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-
-  GenerateContinent(randSeed);
-
   {
     ResetMenu("Scenario@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
     SetMenuItem(0, "Next@");
     SetMenuItem(1, "Last@");
     SetMenuItem(2, "Go@");
     SetMenuItem(3, "End@");
-
-    SetLineMessageWindow("Command?@",0);
-    //while (!exit)
-    {
-      sprintf(strTemp, "Seed: %d@", randSeed);
-      SetLineMessageWindow(strTemp,0);
-      ++randSeed;
-      GenerateContinent(randSeed);
-    }
     while (!exit)
     {
-      sprintf(strTemp, "Seed: %d@", randSeed);
+      sprintf(strTemp, "Seed: %i@", randSeed);
       SetLineMessageWindow(strTemp,0);
       
       switch (GetMenuSelection())
       {
         case 0:
           ++randSeed;
+          if (randSeed < 0)
+            randSeed = 0;
           break;
         case 1:
           --randSeed;
+          if (randSeed < 0)
+            randSeed = 32767;
           break;
         case 2:
           GenerateContinent(randSeed);
+          ++randSeed;
           break;
         case 3:
           exit = true;
@@ -165,23 +145,6 @@ screenName Update_Scenario()
       }
 
     }
-    /*
-    randSeed = rand();
-    //GenerateContinent(randSeed);
-
-    UpdateInput();
-    if (InputChanged())
-    {
-      if (InputUp())
-      {
-        //++randSeed;
-        GenerateContinent(randSeed);
-      }
-      if (InputFire())
-      {
-        exit = true;
-      }
-    }*/
   }
   return nextScreen;
 }
