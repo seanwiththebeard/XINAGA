@@ -316,12 +316,12 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
   #endif
 }
 
-void PrintString(char text[20], byte posx, byte posy, bool fast, bool buffer)
+void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer)
 {
   byte count;
   while (posy > ROWS - 1)
     posy -= ROWS;
-  for(count = 0; count < 20; ++count)
+  for(count = 0; count < ROWS; ++count)
   {
     if (text[count] == '@')
       break;

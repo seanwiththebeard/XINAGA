@@ -66,6 +66,7 @@ void AddToRoster()
   PlayerChar->RACE = RACE;
   PlayerChar->CLASS = CLASS;
   PlayerChar->inParty = false;
+   
   sprintf(PlayerChar->NAME, "Hello %d @", CountRoster() - 1);
 
   //exitWindow = true;
@@ -401,15 +402,18 @@ void DrawRoster()
   PrintString("*Roster*@", windowX + 3, windowY + countSelections + 2, true, false);
   if (CountRoster() > 0)
   {
+    char buffer[ROWS];
     rosterPos = countSelections + 4;
     for (temp = 0; temp < CountRoster(); ++temp)
     {
-      sprintf(strTemp, " %s@", PlayerChar->NAME);
-      PrintString(strTemp, windowX + 3, windowY + rosterPos + temp, true, false);
-      sprintf(strTemp, "%s@", RaceDescription[PlayerChar->RACE].NAME);
-      PrintString(strTemp, windowX + 12, windowY + rosterPos + temp, true, false);
-      sprintf(strTemp, "%s@", ClassDescription[PlayerChar->CLASS].NAME);
-      PrintString(strTemp, windowX + 20, windowY + rosterPos + temp, true, false);
+      //sprintf(strTemp, " %s@", PlayerChar->NAME);
+      sprintf(buffer, " %s %s %s@", PartyChar->NAME, RaceDescription[PartyChar->RACE].NAME, ClassDescription[PartyChar->CLASS].NAME);
+      PrintString(buffer, windowX + 3, windowY + rosterPos + temp, true, false);
+      WriteLineMessageWindow(buffer, 0);
+      //sprintf(strTemp, "%s@", RaceDescription[PlayerChar->RACE].NAME);
+      //PrintString(strTemp, windowX + 12, windowY + rosterPos + temp, true, false);
+      //sprintf(strTemp, "%s@", ClassDescription[PlayerChar->CLASS].NAME);
+     // PrintString(strTemp, windowX + 20, windowY + rosterPos + temp, true, false);
       PlayerChar = PlayerChar->next;
     }
     DrawCurrentCharacter();
@@ -418,18 +422,20 @@ void DrawRoster()
   
   if (CountParty() > 0)
   {
+    char buffer[ROWS];
     partyPos = rosterPos + 1 + CountRoster();
     PrintString("*Party*@", windowX + 3, windowY + partyPos, true, false);
     ++partyPos;
     PartyChar = getPartyMember(0);
     for (temp = 0; temp < CountParty(); ++temp)
     {
-      sprintf(strTemp, " %s@", PartyChar->NAME);
-      PrintString(strTemp, windowX + 3, windowY + partyPos + temp, true, false);
-      sprintf(strTemp, "%s@", RaceDescription[PartyChar->RACE].NAME);
-      PrintString(strTemp, windowX + 12, windowY + partyPos + temp, true, false);
-      sprintf(strTemp, "%s@", ClassDescription[PartyChar->CLASS].NAME);
-      PrintString(strTemp, windowX + 20, windowY + partyPos + temp, true, false);
+      sprintf(buffer, " %s %s %s@", PartyChar->NAME, RaceDescription[PartyChar->RACE].NAME, ClassDescription[PartyChar->CLASS].NAME);
+      PrintString(buffer, windowX + 3, windowY + partyPos + temp, true, false);
+      WriteLineMessageWindow(buffer, 0);
+      //sprintf(strTemp, "%s@", RaceDescription[PartyChar->RACE].NAME);
+      //PrintString(strTemp, windowX + 12, windowY + partyPos + temp, true, false);
+      //sprintf(strTemp, "%s@", ClassDescription[PartyChar->CLASS].NAME);
+      //PrintString(strTemp, windowX + 20, windowY + partyPos + temp, true, false);
       PartyChar = PartyChar->next;
     }
   }

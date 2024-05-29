@@ -5,7 +5,6 @@
 
 #include "Xinaga.h"
 #include "Game.h"
-#include "Game_RPGData.h"
 
 //#link "XINAGA_Graphics.c"
 //#link "XINAGA_Input.c"
