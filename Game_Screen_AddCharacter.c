@@ -3,8 +3,8 @@
 #include "Xinaga.h"
 #include "GameData.h"
 
-void GetRace(void);
-void DrawRoster(void);
+//void GetRace(void);
+//void DrawRoster(void);
 
 screenName nextScreen;
 #define consolePosX  1
@@ -41,13 +41,13 @@ HITDICE;
 void AddToParty()
 {
   AddParty(CurrentCharacter);
-  DrawRoster();
+  //DrawRoster();
 }
 
 void RemoveFromParty()
 {
   RemoveParty();
-  DrawRoster();
+  //DrawRoster();
 }
 
 void AddToRoster()
@@ -220,7 +220,7 @@ void RollStats()
   //WriteLineMessageWindow(str, 0);  
 }
 
-void GetClass()
+/*void GetClass()
 {
   int temp = 0;
   CLASS = 0;
@@ -358,7 +358,7 @@ void GetRace()
     RACE = selection;
     GetClass();
   }
-}
+}*/
 
 void MenuGetClassPrimeStats()
 {
@@ -544,7 +544,7 @@ void MenuEditParty()
   }  
 }
 
-void DrawRoster()
+/*void DrawRoster()
 {
   byte temp = 0;
   byte partyPos;
@@ -735,7 +735,7 @@ void DrawRoster()
     }
   }
   //CopyDoubleBuffer();
-}
+}*/
 
 screenName DrawAddCharacterScreen()
 {

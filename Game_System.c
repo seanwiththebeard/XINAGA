@@ -195,7 +195,7 @@ void DeleteParty(byte pos)
   }
 }
 
-void RemoveParty()
+void RemoveParty() //Removes Last Party Member (?)
 {
   byte index = CountParty()-1;
   struct playerChar *temp,*ptr,*src;
