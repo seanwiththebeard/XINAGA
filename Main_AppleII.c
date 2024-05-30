@@ -1,5 +1,5 @@
-#include "xinaga.h"
-#include "game.h"
+#include "Xinaga.h"
+#include "GameData.h"
 //#link "XINAGA_Graphics.c"
 //#link "XINAGA_Input.c"
 //#link "XINAGA_FileIO.c"
