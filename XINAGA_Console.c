@@ -150,7 +150,6 @@ void DrawMenu()
   }
 }
 
-
 byte GetMenuSelection()
 {
   bool exit = false;

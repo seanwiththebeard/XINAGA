@@ -121,6 +121,7 @@ void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();
 void HighlightMenuItem(byte index);
 bool IsMenuItemHighlighted(byte index);
+void DrawMenu();
 
 //Common Functions
 //byte ReadBit(byte byteToRead, char bit); //These are old
