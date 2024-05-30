@@ -838,6 +838,8 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
   checkCollision = CheckCollision(index, direction);
   scrollQuads = false;
   changedQuad = false;
+  
+  TickMoonPhase();
 
   if(!checkCollision)
   {

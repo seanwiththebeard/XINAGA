@@ -223,6 +223,7 @@ bool SelectNextCharacter()
 {
   bool found = false;
   byte count = 0;
+  TickMoonPhase();
   while (!found)
   {
     ++SelectedCharacter;

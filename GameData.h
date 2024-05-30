@@ -29,6 +29,8 @@ screenName Update_MapGen();
 //Scenario
 screenName Update_Scenario();
 
+void TickMoonPhase();
+
 //BFRPG
 byte RollDice(byte count, byte diceSize);
 typedef struct
