@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Xinaga.h"
-#include "GameData.h"
 
 //StringBuilder
 byte StringLength = 0;
@@ -253,75 +252,3 @@ void WriteLineMessageWindow(char *message, byte delay)
   SetLineMessageWindow(message, delay);
 }
 
-//Move these to the game screens?
-#define CharStatPosX 24
-#define CharStatPosY 4
-#define CharStatRows 3
-void DrawCharStatus(byte characterIndex)
-{
-  //byte statX = CharStatPosX;
-  byte statY = CharStatPosY + characterIndex * (CharStatRows + 1);
-  struct playerChar *PlayerChar = getPartyMember(characterIndex);
-
-  DrawBorder(PlayerChar->NAME, CharStatPosX - 1, statY - 1, COLS - CharStatPosX + 1, 2 + CharStatRows, true);
-  ConsoleBufferReset();
-  ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
-  ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
-  ConsoleBufferPrint(CharStatPosX, statY);
-  sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
-  PrintString(strTemp, CharStatPosX + 9, statY + 1, true, false);
-  //sprintf(strTemp, "%s@", ClassDescriptions[PlayerChar->CLASS].NAME);
-  //PrintString(strTemp, CharStatPosX, statY + 1, true, false);
-  //ReverseBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
-  //CopyDoubleBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
-}
-
-byte moonA = 0;
-byte moonB = 0;
-char phaseChar[4] = " )O(";
-byte moonTick = 0;
-
-void DrawMoonPhase()
-{
-  
-  ConsoleBufferReset();
-  sprintf(strTemp, "< %c > < %c >@", phaseChar[moonA], phaseChar[moonB]);
-  PrintString(strTemp, CharStatPosX + 2, CharStatPosY -2, true, false);
-
-}
-void TickMoonPhase()
-{
-  bool draw = false;
-  ++moonTick;
-  if (moonTick % 4 == 0)
-  {
-    ++moonA;
-    draw = true;
-  }
-  if (moonTick % 2 == 0)
-  {
-    ++moonB;
-    draw = true;
-  }
-
-  if (draw)
-  {
-    if (moonA > 3)
-      moonA = 0;
-    if (moonB > 3)
-      moonB = 0;
-    DrawMoonPhase(); 
-  }
-}
-
-
-void DrawCharStats()
-{
-  byte i;
-  DrawBorder("Moon Phases@", CharStatPosX - 1, CharStatPosY - 4, COLS - CharStatPosX + 1, 4, true);
-  DrawMoonPhase();
-  
-  DrawBorder("Party@", CharStatPosX - 1, CharStatPosY - 1, COLS - CharStatPosX + 1, 1 + 4 * (CharStatRows + 1), true);
-  for (i = 0; i < CountParty(); ++i)
-    DrawCharStatus(i);
-}
