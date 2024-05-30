@@ -31,7 +31,16 @@ void ConsoleBufferPrint(byte x, byte y)
   //--StringLength;
   strTemp[StringLength] = '@';
   PrintString(strTemp, x, y, true, false);
+  ConsoleBufferReset();
 }
+
+void ConsoleBufferPrintConsole(byte delay)
+{
+  strTemp[StringLength] = '@';
+  WriteLineMessageWindow(strTemp, delay);
+  ConsoleBufferReset();
+}
+
 
 //Console
 byte Height = 10;
@@ -55,7 +64,7 @@ byte MenuPosY = 5;
 byte MenuCount = 5;
 int MenuSelection = 0;
 #define menuItemsCount 16
-char *MenuItems[] = {};
+char *MenuItems[menuItemsCount];
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
 void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();

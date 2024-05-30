@@ -360,6 +360,116 @@ void GetRace()
   }
 }
 
+void MenuGetClass()
+{
+}
+
+void MenuGetRace()
+{
+  ResetMenu("Race@",18, 1, 16, 9, 5);
+  SetMenuItem(0, RaceDescription[0].NAME);
+  SetMenuItem(1, RaceDescription[1].NAME);
+  SetMenuItem(2, RaceDescription[2].NAME);
+  SetMenuItem(3, RaceDescription[3].NAME);
+  SetMenuItem(4, "Exit@");
+  RACE = GetMenuSelection();
+  if (RACE != 4)
+  {
+    ConsoleBufferReset();
+    ConsoleBufferAdd("Race Confirmed:@");
+    ConsoleBufferAdd(RaceDescription[RACE].NAME);
+    ConsoleBufferPrintConsole(0);
+    //MenuGetClass();
+  }
+}
+
+void MenuEditParty()
+{  
+  ResetMenu("Edit Party@",1, 1, 16, 9, 9);
+  SetMenuItem(0, "Create@");
+  SetMenuItem(1, "Delete@");
+  SetMenuItem(2, "Add to Party@");
+  SetMenuItem(3, "Remove from Party@");
+  SetMenuItem(4, "Begin Adventure@");
+  SetMenuItem(5, "Debug Credits@");
+  SetMenuItem(6, "Debug Combat@");
+  SetMenuItem(7, "Debug Map Gen@");
+  SetMenuItem(8, "Debug Scenario Gen@");
+
+  switch(GetMenuSelection())
+  {
+    case 0: //Create
+      {
+        if (CountRoster() < 12)
+          MenuGetRace();
+        break;
+      }
+    case 1: //Delete
+      {
+        if (CountRoster() > 0)
+          if (AreYouSure())
+          {
+            delete_pos(CurrentCharacter);
+            return;
+          }
+        break;
+      }
+    case 2: //Add to party
+      {
+        if ((CountRoster() > 0) && (CountParty() < 4))
+        {
+          AddToParty();
+          CurrentCharacter = 0;
+          MoveCurrentCharacter(false);
+        }
+        break;
+      }
+    case 3: //Remove from party
+      {
+        if (CountParty() > 0 && CountRoster() < 12)
+        {
+          RemoveFromParty();
+          CurrentCharacter = 0;
+          MoveCurrentCharacter(false);
+          return;
+        }
+        break;
+      }
+    case 4:
+      {
+        if (CountParty() > 0)
+        {
+          repeatRoster = false;
+          exitWindow = true;
+          nextScreen = Map;
+        }
+        else
+          WriteLineMessageWindow("Party Empty!@", 0);
+        break;
+      }
+    case 5:
+      exitWindow = true;
+      nextScreen = Title;
+      break;
+    case 6:
+      exitWindow = true;
+      nextScreen = Credits;
+      break;
+    case 7:
+      exitWindow = true;
+      nextScreen = Combat;
+      break;
+    case 8:
+      exitWindow = true;
+      nextScreen = MapGen;
+      break;
+    case 9:
+      exitWindow = true;
+      nextScreen = Scenario;
+      break;
+  }  
+}
+
 void DrawRoster()
 {
   byte temp = 0;
@@ -567,11 +677,12 @@ screenName DrawAddCharacterScreen()
   
   while (!exitWindow)
   {
-    DrawRoster();
-    ClearScreen();
+    //DrawRoster();
+    MenuEditParty();
+    
     //CopyDoubleBuffer();
-    //++CurrentCharacter;
   }
+  ClearScreen();
   return nextScreen;
   //CopyDoubleBufferArea(windowX, windowY, windowWidth, windowHeight);  
 }
