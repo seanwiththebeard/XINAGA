@@ -254,19 +254,22 @@ void WriteLineMessageWindow(char *message, byte delay)
 }
 
 //Move these to the game screens?
-#define CharStatPosX 18
+#define CharStatPosX 24
 #define CharStatPosY 1
+#define CharStatRows 3
 void DrawCharStatus(byte characterIndex)
 {
   //byte statX = CharStatPosX;
-  byte statY = CharStatPosY + characterIndex * 3;
+  byte statY = CharStatPosY + characterIndex * (CharStatRows + 1);
   struct playerChar *PlayerChar = getPartyMember(characterIndex);
 
-  DrawBorder("@", CharStatPosX - 1, statY - 1, COLS - CharStatPosX + 1, 4, true);
-  sprintf(strTemp, "%s@", RaceDescription[PlayerChar->RACE].NAME);
-  PrintString(strTemp, CharStatPosX, statY, true, false);
+  DrawBorder(PlayerChar->NAME, CharStatPosX - 1, statY - 1, COLS - CharStatPosX + 1, 2 + CharStatRows, true);
+  ConsoleBufferReset();
+  ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
+  ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
+  ConsoleBufferPrint(CharStatPosX, statY);
   sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
-  PrintString(strTemp, CharStatPosX + 9, statY, true, false);
+  PrintString(strTemp, CharStatPosX + 9, statY + 1, true, false);
   //sprintf(strTemp, "%s@", ClassDescriptions[PlayerChar->CLASS].NAME);
   //PrintString(strTemp, CharStatPosX, statY + 1, true, false);
   //ReverseBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
@@ -276,6 +279,7 @@ void DrawCharStatus(byte characterIndex)
 void DrawCharStats()
 {
   byte i;
+  DrawBorder("Party@", CharStatPosX - 1, CharStatPosY - 1, COLS - CharStatPosX + 1, 4 + 4 * (CharStatRows + 1), true);
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
 }

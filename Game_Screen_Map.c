@@ -2,6 +2,13 @@
 #include <string.h> //For memcpy
 #include "Xinaga.h"
 #include "GameData.h"
+
+#define consolePosX 1
+#define consolePosY 20
+#define consoleWidth 29
+#define consoleHeight 4
+#define consoleDelay 1
+
 //Prototypes
 //byte ReadBit(byte byteToRead, char bit);//These are old
 void CameraFollow();
@@ -67,7 +74,7 @@ bool wrap = true;
 byte viewportPosX = 1;
 byte viewportPosY = 2;
 #define viewportWidth 11
-#define viewportHeight 7
+#define viewportHeight 9
 
 
 byte viewportBuffer[viewportWidth][viewportHeight];
@@ -931,17 +938,18 @@ void LoadMap()
 
 screenName MapUpdate()
 {
+  bool exit = false;
   //screenName nextScreen;
   DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
-  ResizeMessageWindow(23, 12, 15, 10);
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   //DrawMessageWindow();
   DrawEntireMap();
   DrawCharStats();
 
-  while (1)
+  while (!exit)
   {
     UpdateInput();
-    if (InputChanged())
+    //if (InputChanged())
     {
       if (InputUp())
       {
@@ -971,9 +979,10 @@ screenName MapUpdate()
         //sprintf(str, "Pos = %d,%d@", characters[0].posX, characters[0].posY);
         //DrawEntireMap();
         //WriteLineMessageWindow(str, 0);
-        return EditParty;
+        exit = true;
       }
     }
   }
+  return EditParty;
   //return nextScreen;
 }

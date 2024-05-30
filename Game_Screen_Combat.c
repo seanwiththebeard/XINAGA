@@ -9,17 +9,17 @@ bool exitCombat = false;
 int SelectedCharacter;
 int SelectedTarget;
 int MovementRemaining = 0;
-#define CombatMapWidth 8
-#define CombatMapHeight 8
+#define CombatMapWidth 11
+#define CombatMapHeight 9
 
 #define MaxCombatParticipants CombatMapWidth * CombatMapHeight
 #define MonsterCount 8
 
 
 #define consolePosX 1
-#define consolePosY 18
+#define consolePosY 20
 #define consoleWidth 29
-#define consoleHeight 5
+#define consoleHeight 4
 #define consoleDelay 1
 
 //Functions
@@ -102,7 +102,7 @@ void Initialize(void)
   GetCharacters();
   GetMonsters();
 
-  DrawBorder("Combat@",0, 0, 18, 18, false);
+  DrawBorder("Combat@",0, 0, 2 + 2*CombatMapWidth, 2 + 2*CombatMapHeight, false);
   DrawCharStats();
   DrawCombatMap();
 
@@ -551,8 +551,8 @@ void DrawCombatMap(void)
   //wait_vblank(1);
 
   StoreBuffer();
-  for (y = 0; y < 8; ++y)
-    for (x = 0; x < 8; ++x)
+  for (y = 0; y < CombatMapHeight; ++y)
+    for (x = 0; x < CombatMapWidth; ++x)
     {
       DrawTileFast(fillTile, x, y);
     }
