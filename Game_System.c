@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "GameData.h"
 
-byte strTemp[78];
+byte strTemp[ConsoleBufferLength];
 
 PartyDef Party = { 0, 0, 0};
 

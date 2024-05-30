@@ -22,8 +22,6 @@ typedef int8_t sbyte;	// 8-bit signed
 typedef enum { false, true } bool;
 typedef enum { up, down, left, right } direction;
 
-
-
 void LoadMap();
 
 //Graphics
@@ -109,7 +107,7 @@ void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
 extern char Messages[4][20];
 void DrawCharStats();
-#define ConsoleBufferLength 78
+#define ConsoleBufferLength 128
 extern byte strTemp[ConsoleBufferLength];
 void ConsoleBufferReset();
 void ConsoleBufferAdd(char *message);
@@ -121,6 +119,8 @@ void ConsoleBufferPrintConsole(byte delay);
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
 void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();
+void HighlightMenuItem(byte index);
+bool IsMenuItemHighlighted(byte index);
 
 //Common Functions
 //byte ReadBit(byte byteToRead, char bit); //These are old

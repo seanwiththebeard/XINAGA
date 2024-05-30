@@ -360,13 +360,90 @@ void GetRace()
   }
 }
 
+void MenuGetClassPrimeStats()
+{
+  byte x;
+  ResetMenu("Class@",26, 1, 11, 9, 6);
+  for (x = 0; x < 4; ++x)
+  {
+    SetMenuItem(x, ClassDescription[x].NAME);
+  }
+  
+  if (STR >= 9)
+    HighlightMenuItem(0);
+  if (INT >= 9)
+    HighlightMenuItem(1);
+  if (WIS >= 9)
+    HighlightMenuItem(2);
+  if (DEX >= 9)
+    HighlightMenuItem(3);
+  
+  SetMenuItem(4, "Reroll@");
+  SetMenuItem(5, "Exit@");
+}
+
 void MenuGetClass()
 {
+  byte hitdice;
+  RollStats();
+  MenuGetClassPrimeStats();
+  
+  
+  CLASS = GetMenuSelection();
+  while(!IsMenuItemHighlighted(CLASS))
+  {
+    if (CLASS < 4)
+    {
+      WriteLineMessageWindow("Prime stat low@", 0);
+      CLASS = GetMenuSelection();
+    }
+    else
+    {
+      if (CLASS == 4) //Reroll
+      {
+        RollStats();
+        MenuGetClassPrimeStats();
+        CLASS = GetMenuSelection();
+      }
+      if (CLASS == 5)
+      {
+        ClearScreen();
+        return;
+      }
+    }
+    
+  }
+    WriteLineMessageWindow("Class Confirmed:@", 0);
+    WriteLineMessageWindow(ClassDescription[CLASS].NAME, 0);
+
+    if (RaceDescription[RACE].HITDICEMAX < ClassDescription[CLASS].HITDICE)
+      HITDICE = RaceDescription[RACE].HITDICEMAX;
+    else
+      HITDICE = ClassDescription[CLASS].HITDICE;
+
+    hitdice = RollDice(1, HITDICE);
+    sprintf(strTemp, "Hit Dice: 1d%d@", HITDICE);
+    WriteLineMessageWindow(strTemp, 0);
+    sprintf(strTemp, "Roll: %d + MOD %d@", hitdice, AbilityModifier[CON]);
+    WriteLineMessageWindow(strTemp, 0);
+    if (hitdice + AbilityModifier[CON] < 1)
+    {
+      WriteLineMessageWindow("Died, no HP@", 0);
+      nextWindow = false;
+      //exitWindow = true;
+      //nextWindow = true;
+    }
+    else
+    {
+      HPMAX = hitdice + AbilityModifier[CON];
+      HP = HPMAX;
+      AddToRoster();
+    }
 }
 
 void MenuGetRace()
 {
-  ResetMenu("Race@",18, 1, 16, 9, 5);
+  ResetMenu("Race@",18, 1, 8, 9, 5);
   SetMenuItem(0, RaceDescription[0].NAME);
   SetMenuItem(1, RaceDescription[1].NAME);
   SetMenuItem(2, RaceDescription[2].NAME);
@@ -379,8 +456,9 @@ void MenuGetRace()
     ConsoleBufferAdd("Race Confirmed:@");
     ConsoleBufferAdd(RaceDescription[RACE].NAME);
     ConsoleBufferPrintConsole(0);
-    //MenuGetClass();
+    MenuGetClass();
   }
+  ClearScreen();
 }
 
 void MenuEditParty()
@@ -388,13 +466,13 @@ void MenuEditParty()
   ResetMenu("Edit Party@",1, 1, 16, 9, 9);
   SetMenuItem(0, "Create@");
   SetMenuItem(1, "Delete@");
-  SetMenuItem(2, "Add to Party@");
-  SetMenuItem(3, "Remove from Party@");
+  SetMenuItem(2, "Add@");
+  SetMenuItem(3, "Remove@");
   SetMenuItem(4, "Begin Adventure@");
-  SetMenuItem(5, "Debug Credits@");
-  SetMenuItem(6, "Debug Combat@");
-  SetMenuItem(7, "Debug Map Gen@");
-  SetMenuItem(8, "Debug Scenario Gen@");
+  SetMenuItem(5, "Credits@");
+  SetMenuItem(6, "Combat@");
+  SetMenuItem(7, "Map Gen@");
+  SetMenuItem(8, "Scenario Gen@");
 
   switch(GetMenuSelection())
   {
@@ -435,7 +513,7 @@ void MenuEditParty()
         }
         break;
       }
-    case 4:
+    case 4: //Begin Adventure
       {
         if (CountParty() > 0)
         {
@@ -447,23 +525,19 @@ void MenuEditParty()
           WriteLineMessageWindow("Party Empty!@", 0);
         break;
       }
-    case 5:
-      exitWindow = true;
-      nextScreen = Title;
-      break;
-    case 6:
+    case 5: //Debug Credits
       exitWindow = true;
       nextScreen = Credits;
       break;
-    case 7:
+    case 6:
       exitWindow = true;
       nextScreen = Combat;
       break;
-    case 8:
+    case 7:
       exitWindow = true;
       nextScreen = MapGen;
       break;
-    case 9:
+    case 8:
       exitWindow = true;
       nextScreen = Scenario;
       break;
@@ -670,16 +744,16 @@ screenName DrawAddCharacterScreen()
   srand(randseed);
   
   //BlankMessageWindow(); //Why does this put characters at the very end of the screen?
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   //DrawMessageWindow();
 
   //GetRace();
-  
+
   while (!exitWindow)
   {
+    ClearScreen();
+    ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
     //DrawRoster();
     MenuEditParty();
-    
     //CopyDoubleBuffer();
   }
   ClearScreen();
