@@ -41,7 +41,6 @@ void ConsoleBufferPrintConsole(byte delay)
   ConsoleBufferReset();
 }
 
-
 //Console
 byte Height = 10;
 byte Width = 15;
@@ -90,14 +89,36 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
     for (x = 0; x < MenuWidth; ++x){}
       //SetChar(' ', MenuPosX + x, MenuPosY + y);
 }
+
+
+void DrawItem(byte index)
+{
+  char menuLine[38];
+    char *selector, *highlight;
+    if (MenuSelection == index)
+      selector = ">";
+    else
+      selector = " ";
+    
+    if(MenuHighlight[index])
+      highlight = "+";
+    else
+      highlight = "";
+    sprintf(menuLine, "%s%s%s", selector, highlight, MenuItems[index]);
+    //ClearItem(x);
+    PrintString(menuLine, MenuPosX, MenuPosY + index, true, false);
+}
+
 void SetMenuItem(byte index, char *value)
 {
   MenuItems[index] = value;
   MenuHighlight[index] = false;
+  DrawItem(index);
 }
 void HighlightMenuItem(byte index)
 {
   MenuHighlight[index] = true;
+  DrawItem(index);
 }
 
 bool IsMenuItemHighlighted(byte index)
@@ -122,24 +143,6 @@ void ClearItem(byte index)
   }
 }
 
-void DrawItem(byte index)
-{
-  char menuLine[38];
-    char *selector, *highlight;
-    if (MenuSelection == index)
-      selector = ">";
-    else
-      selector = " ";
-    
-    if(MenuHighlight[index])
-      highlight = "+";
-    else
-      highlight = "";
-    sprintf(menuLine, "%s%s%s", selector, highlight, MenuItems[index]);
-    //ClearItem(x);
-    PrintString(menuLine, MenuPosX, MenuPosY + index, true, false);
-}
-
 void DrawMenu()
 {
   byte x;
@@ -153,8 +156,7 @@ void DrawMenu()
 byte GetMenuSelection()
 {
   bool exit = false;
-  DrawMenu();
-  
+  //DrawMenu();
   while (!exit)
   {
     UpdateInput();

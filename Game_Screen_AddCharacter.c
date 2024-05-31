@@ -3,9 +3,6 @@
 #include "Xinaga.h"
 #include "GameData.h"
 
-//void GetRace(void);
-//void DrawRoster(void);
-
 screenName nextScreen;
 #define consolePosX  1
 #define consolePosY 18
@@ -38,18 +35,6 @@ RACE,
 CLASS,
 HITDICE;
 
-void AddToParty()
-{
-  AddParty(CurrentCharacter);
-  //DrawRoster();
-}
-
-void RemoveFromParty()
-{
-  RemoveParty();
-  //DrawRoster();
-}
-
 void AddToRoster()
 {
   struct playerChar *PlayerChar;
@@ -73,7 +58,7 @@ void AddToRoster()
   //nextWindow = true;
 }
 
-#define DrawSelection() SetChar('>', windowX + 2, windowY + selection + 1)
+//#define DrawSelection() SetChar('>', windowX + 2, windowY + selection + 1)
 
 #define DrawCurrentCharacter() SetChar('>', windowX + 2, windowY + rosterPos + CurrentCharacter)
 
@@ -86,65 +71,6 @@ void SetString(char value[16], byte menuItem)
 
 }
 
-void MoveSelection(bool direction)
-{
-  SetChar(' ', windowX + 2, windowY + selection + 1);
-
-  if (!direction && selection > 0)
-    --selection;
-
-  if (direction && selection < countSelections)
-    ++selection;
-  
-  if (selection < 0)
-    selection = 0;
-  if (selection >= countSelections)
-    selection = countSelections;
-
-  DrawSelection();
-}
-
-void MoveCurrentCharacter(bool direction)
-{
-  SetChar(' ', windowX + 2, windowY  + rosterPos + CurrentCharacter);
-
-  if (!direction && CurrentCharacter > 0)
-    --CurrentCharacter;
-
-  if (direction && CurrentCharacter < CountRoster() - 1)
-    ++CurrentCharacter;
-
-  if (CountRoster() > 0)
-    DrawCurrentCharacter();
-}
-
-void DrawSelections()
-{
-  byte x;
-  for (x = 0; x < countSelections + 1; ++x)
-  {
-    PrintString(Selections[x], windowX + 3, windowY + 1 + x, true, false);
-  }
-  DrawSelection();
-}
-
-void DrawCharWindow(byte xPos, byte yPos, byte width, byte height, char title[16])
-{
-  byte x;
-  selection = 0;
-  for (x = 0; x < height; ++x)
-  {
-    //void DrawLineH(char index, byte x, byte y, byte length);
-    //DrawLineH(' ', 0, xPos, yPos + x, width);
-    DrawLineH(' ', xPos, yPos + x, width);
-  }
-
-  DrawBorder(title, xPos, yPos, width, height, false);
-
-  //PrintString(title, xPos + 1, yPos, true, false);
-  DrawSelection();
-  DrawSelections();
-}
 
 bool AreYouSure()
 {
@@ -291,7 +217,6 @@ void ListParty()
 
     for (x = 0; x < partyCount; ++x)
       SetMenuItem(x, PartyChar->NAME);
-
     DrawMenu();
   }
 }
@@ -308,7 +233,6 @@ void ListRoster()
 
     for (x = 0; x < rosterCount; ++x)
       SetMenuItem(x, PlayerChar->NAME);
-
     DrawMenu();
   }
 }
@@ -350,9 +274,8 @@ void MenuEditParty()
       {
         if ((CountRoster() > 0) && (CountParty() < 4))
         {
-          AddToParty();
+          AddParty(CurrentCharacter);
           CurrentCharacter = 0;
-          MoveCurrentCharacter(false);
         }
         break;
       }
@@ -360,9 +283,8 @@ void MenuEditParty()
       {
         if (CountParty() > 0 && CountRoster() < 12)
         {
-          RemoveFromParty();
+          RemoveParty();
           CurrentCharacter = 0;
-          MoveCurrentCharacter(false);
           return;
         }
         break;
@@ -398,221 +320,18 @@ void MenuEditParty()
   }  
 }
 
-
-
-/*void DrawRoster()
-{
-  byte temp = 0;
-  byte partyPos;
-  struct playerChar *PlayerChar = getPlayerChar(0);
-  struct playerChar *PartyChar = getPartyMember(0);
-  
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  
-  selection = 0;
-  repeatRoster = true;
-  
-
-  sprintf(strTemp, "Count: %d@", CountRoster());
-  WriteLineMessageWindow(strTemp, 0);
-
-  countSelections = 9;
-  WindowLevel = 0;
-  windowX = 0;
-  windowY = 0;
-  windowWidth = COLS - 2;
-  windowHeight = ROWS - 2;
-  exitWindow = false;
-  nextWindow = false;
-  //CurrentCharacter = 0;
-
-  SetString("Add selected@", 0);
-  SetString("Remove last@", 1);
-  SetString("Create@", 2);
-  SetString("Delete@", 3);
-  SetString("Start Adventure@", 4);
-  SetString("Back to Title@", 5);
-  SetString("Credits@", 6);
-  SetString("Combat Test@", 7);
-  SetString("Map Generator@", 8);
-  SetString("Scenario@", 9);
-
-  DrawCharWindow(windowX, windowY, COLS - 2, ROWS - 2, "Edit Party@"); 
-  
-  //ConsoleBufferReset();
-  //ConsoleBufferAdd("Hello1@");
-  //ConsoleBufferAdd(RaceDescription[0].NAME);
-  //ConsoleBufferAdd(ClassDescription[0].NAME);
-  //ConsoleBufferPrint(0, 0);
-  
-  //ListRoster
-  PrintString("*Roster*@", windowX + 3, windowY + countSelections + 2, true, false);
-  if (CountRoster() > 0)
-  {
-    PlayerChar = getPlayerChar(0);
-    rosterPos = countSelections + 4;
-    for (temp = 0; temp < CountRoster(); ++temp)
-    {
-      
-      ConsoleBufferReset();
-      ConsoleBufferAdd(PlayerChar->NAME);
-      ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
-      ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
-      ConsoleBufferPrint(windowX + 3, windowY + rosterPos + temp);
-      
-      //sprintf(strTemp, " %s@", PlayerChar->NAME);
-      //sprintf(buffer, " %s %s %s@", RaceDescription[PlayerChar->RACE].NAME, ClassDescription[PlayerChar->CLASS].NAME, PlayerChar->NAME);
-      //PrintString(buffer, windowX + 3, windowY + rosterPos + temp, true, false);
-      //WriteLineMessageWindow(buffer, 0);
-      //sprintf(strTemp, "%s@", RaceDescription[PlayerChar->RACE].NAME);
-      //PrintString(strTemp, windowX + 12, windowY + rosterPos + temp, true, false);
-      //sprintf(strTemp, "%s@", ClassDescription[PlayerChar->CLASS].NAME);
-     // PrintString(strTemp, windowX + 20, windowY + rosterPos + temp, true, false);
-      PlayerChar = PlayerChar->next;
-    }
-    DrawCurrentCharacter();
-  }
-  //ListParty
-  
-  if (CountParty() > 0)
-  {
-    partyPos = rosterPos + 1 + CountRoster();
-    PrintString("*Party*@", windowX + 3, windowY + partyPos, true, false);
-    ++partyPos;
-    PartyChar = getPartyMember(0);
-    for (temp = 0; temp < CountParty(); ++temp)
-    {
-      ConsoleBufferReset();
-      ConsoleBufferAdd(PartyChar->NAME);
-      ConsoleBufferAdd(RaceDescription[PartyChar->RACE].NAME);
-      ConsoleBufferAdd(ClassDescription[PartyChar->CLASS].NAME);
-      ConsoleBufferPrint(windowX + 3, windowY + partyPos + temp);
-      
-      //sprintf(buffer, " %s@", PartyChar->NAME);
-      //PrintString(buffer, windowX + 3, windowY + partyPos + temp, true, false);
-      //WriteLineMessageWindow(buffer, 0);
-      //sprintf(strTemp, "%s@", RaceDescription[PartyChar->RACE].NAME);
-      //PrintString(strTemp, windowX + 12, windowY + partyPos + temp, true, false);
-      //sprintf(strTemp, "%s@", ClassDescription[PartyChar->CLASS].NAME);
-      //PrintString(strTemp, windowX + 20, windowY + partyPos + temp, true, false);
-      PartyChar = PartyChar->next;
-    }
-  }
-  while(repeatRoster)
-  {
-    UpdateInput();
-    if (InputChanged())
-    {
-      if (InputUp())
-        MoveSelection(false);
-      if (InputDown()) 
-        MoveSelection(true);
-      if (CountRoster() > 0)
-      {
-        if (InputLeft())
-        MoveCurrentCharacter(false);
-      if (InputRight())
-        MoveCurrentCharacter(true);
-      }
-      if (InputFire())
-      {
-        switch(selection)
-        {
-          case 0: //Add to party
-            if ((CountRoster() > 0) && (CountParty() < 4))
-            {
-              AddToParty();
-              CurrentCharacter = 0;
-              MoveCurrentCharacter(false);
-              return;
-            }
-            break;
-          case 1: //Remove from party
-            if (CountParty() > 0 && CountRoster() < 12)
-            {
-              RemoveFromParty();
-              CurrentCharacter = 0;
-              MoveCurrentCharacter(false);
-            return;
-            }
-            break;
-          case 2: //Create
-            if (CountRoster() < 12)
-            {
-              GetRace();
-              repeatRoster = false;
-            }
-            break;
-          case 3: //Delete
-            if (CountRoster() > 0)
-              if (AreYouSure())
-              {
-                delete_pos(CurrentCharacter);
-                return;
-              }
-            break;
-          case 4:
-            if (CountParty() > 0)
-            {
-              repeatRoster = false;
-              exitWindow = true;
-              nextScreen = Map;
-            }
-            else
-              WriteLineMessageWindow("Party Empty!@", 0);
-            break;
-          case 5:
-            repeatRoster = false;
-            exitWindow = true;
-            nextScreen = Title;
-            break;
-          case 6:
-            repeatRoster = false;
-            exitWindow = true;
-            nextScreen = Credits;
-            break;
-          case 7:
-            repeatRoster = false;
-            exitWindow = true;
-            nextScreen = Combat;
-            break;
-          case 8:
-            repeatRoster = false;
-            exitWindow = true;
-            nextScreen = MapGen;
-            break;
-          case 9:
-            repeatRoster = false;
-            exitWindow = true;
-            nextScreen = Scenario;
-            break;
-        }
-      }
-    }
-  }
-  //CopyDoubleBuffer();
-}*/
-
 screenName DrawAddCharacterScreen()
 {
   exitWindow = false;
   CurrentCharacter = 0;
   srand(randseed);
-  
-  //BlankMessageWindow(); //Why does this put characters at the very end of the screen?
-  //DrawMessageWindow();
-
-  //GetRace();
 
   while (!exitWindow)
   {
     ClearScreen();
     ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-    //DrawRoster();
     MenuEditParty();
-    //CopyDoubleBuffer();
   }
   ClearScreen();
   return nextScreen;
-  //CopyDoubleBufferArea(windowX, windowY, windowWidth, windowHeight);  
 }

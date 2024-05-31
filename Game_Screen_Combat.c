@@ -17,10 +17,15 @@ int MovementRemaining = 0;
 
 
 #define consolePosX 1
-#define consolePosY 20
+#define consolePosY 19
 #define consoleWidth 29
-#define consoleHeight 4
+#define consoleHeight 5
 #define consoleDelay 1
+
+#define menuPosX consolePosX + consoleWidth + 1
+#define menuPosY consolePosY
+#define menuWidth 8
+#define menuHeight consoleHeight
 
 //Functions
 void Initialize(void);
@@ -388,7 +393,7 @@ void SelectPlayerAction(void)
   byte moveY = combatParticipant[SelectedCharacter].posY;
   byte tempTile;
 
-  ResetMenu("Action@",31, 18, 8, 5, 5);
+  ResetMenu("Action@", menuPosX, menuPosY, menuWidth, menuHeight, 5);
   SetMenuItem(0, "Move@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Magic@");
