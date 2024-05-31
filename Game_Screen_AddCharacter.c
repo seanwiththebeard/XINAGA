@@ -7,7 +7,7 @@ screenName nextScreen;
 #define consolePosX  1
 #define consolePosY 17
 #define consoleWidth 38
-#define consoleHeight 7
+#define consoleHeight 6
 
 bool exitWindow = false;
 byte CurrentCharacter = 0;

@@ -107,7 +107,7 @@ void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
 extern char *Messages[4];
 void DrawCharStats();
-#define ConsoleBufferLength 128
+#define ConsoleBufferLength 100
 extern byte strTemp[ConsoleBufferLength];
 void ConsoleBufferReset();
 void ConsoleBufferAdd(char *message);

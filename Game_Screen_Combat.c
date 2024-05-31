@@ -19,7 +19,7 @@ int MovementRemaining = 0;
 #define consolePosX 1
 #define consolePosY 19
 #define consoleWidth 29
-#define consoleHeight 5
+#define consoleHeight 4
 #define consoleDelay 1
 
 #define menuPosX consolePosX + consoleWidth + 1

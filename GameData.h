@@ -45,7 +45,7 @@ extern PartyDef Party;
 typedef struct 
 {
   char
-    	NAME[16];
+    	NAME[12];
   byte
     	HITDICEMAX;
 }RaceDescriptionDef;
@@ -53,7 +53,7 @@ extern RaceDescriptionDef RaceDescription[4];
 
 typedef struct
 {
-  char NAME[16]; 
+  char NAME[12]; 
   byte HITDICE;
 }ClassDescriptionDef;
 extern ClassDescriptionDef ClassDescription[4];
