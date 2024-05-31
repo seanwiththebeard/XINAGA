@@ -8,17 +8,8 @@ screenName nextScreen;
 #define consolePosY 18
 #define consoleWidth 38
 #define consoleHeight 6
-byte windowX = 2;
-byte windowY;
-byte windowWidth = 16;
-byte windowHeight = 12;
-byte rosterPos;
-char Selections[10][16];
-int selection = 0;
-byte countSelections = 5;
+
 bool exitWindow = false;
-bool nextWindow = false;
-bool repeatRoster = true;
 byte WindowLevel = 0;
 byte CurrentCharacter = 0;
 byte
@@ -61,16 +52,6 @@ void AddToRoster()
 //#define DrawSelection() SetChar('>', windowX + 2, windowY + selection + 1)
 
 #define DrawCurrentCharacter() SetChar('>', windowX + 2, windowY + rosterPos + CurrentCharacter)
-
-
-void SetString(char value[16], byte menuItem)
-{
-  byte x;
-  for (x = 0; x < 16; ++x)
-    Selections[menuItem][x] = value[x];
-
-}
-
 
 bool AreYouSure()
 {
@@ -173,7 +154,7 @@ void MenuGetClass()
     if (hitdice + AbilityModifier[CON] < 1)
     {
       WriteLineMessageWindow("Died, no HP@", 0);
-      nextWindow = false;
+      //nextWindow = false;
       //exitWindow = true;
       //nextWindow = true;
     }
@@ -293,7 +274,7 @@ void MenuEditParty()
       {
         if (CountParty() > 0)
         {
-          repeatRoster = false;
+          //repeatRoster = false;
           exitWindow = true;
           nextScreen = Map;
         }
@@ -303,7 +284,7 @@ void MenuEditParty()
       }
     case 5: //Debug Credits
       exitWindow = true;
-      nextScreen = Credits;
+      //nextScreen = Credits;
       break;
     case 6:
       exitWindow = true;

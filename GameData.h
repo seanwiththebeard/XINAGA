@@ -3,7 +3,7 @@
 #include "Xinaga.h"
 #include <stdint.h>
 #include <stdlib.h>
-typedef enum { Title, Credits, EditParty, Map, Combat, Menu, SaveLoad, MapGen, Scenario } screenName;
+typedef enum { Title, /*Credits, */EditParty, Map, Combat, Menu, SaveLoad, MapGen, Scenario } screenName;
 extern int randseed;
 
 void Demo(void);

@@ -50,7 +50,7 @@ byte PosY = 12;
 
 #define MessageCount 4
 #define MessageLength 20
-char Messages[MessageCount][MessageLength] = {
+char *Messages[MessageCount]= {
   "Hello there!@",
   "This is a sign@",
   "Wizard's Forest@"};
@@ -62,7 +62,7 @@ byte MenuPosX = 5;
 byte MenuPosY = 5;
 byte MenuCount = 5;
 int MenuSelection = 0;
-#define menuItemsCount 16
+#define menuItemsCount 8
 char *MenuItems[menuItemsCount];
 bool MenuHighlight[menuItemsCount];
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);

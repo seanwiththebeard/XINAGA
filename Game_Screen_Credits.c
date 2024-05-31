@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include "Xinaga.h"
 #include "GameData.h"
 #if defined(__C64__)
@@ -93,3 +93,4 @@ screenName Update_Credits()
   return Title;
 }
 #endif
+*/

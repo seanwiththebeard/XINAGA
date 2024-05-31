@@ -35,9 +35,9 @@ void SwitchScreen(screenName screen)
     case Title:
       currentScreen = Update_Title();
       break;
-    case Credits:
-      currentScreen = Update_Credits();
-      break;
+    //case Credits:
+      //currentScreen = Update_Credits();
+      //break;
     case EditParty:
       currentScreen = DrawAddCharacterScreen();
       break;
