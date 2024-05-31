@@ -31,17 +31,24 @@ void ConsoleBufferBackspace()
 {
   --StringLength;
 }
+
+void ConsoleBufferEndline()
+{
+  while (strTemp[StringLength] == ' ')
+    --StringLength;
+  strTemp[StringLength + 1] = '@';
+}
+  
 void ConsoleBufferPrint(byte x, byte y)
 {
-  //--StringLength;
-  strTemp[StringLength] = '@';
+  ConsoleBufferEndline();
   PrintString(strTemp, x, y, true, false);
   ConsoleBufferReset();
 }
 
 void ConsoleBufferPrintConsole(byte delay)
 {
-  strTemp[StringLength] = '@';
+  ConsoleBufferEndline();
   WriteLineMessageWindow(strTemp, delay);
   ConsoleBufferReset();
 }
