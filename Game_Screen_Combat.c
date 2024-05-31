@@ -10,22 +10,22 @@ int SelectedCharacter;
 int SelectedTarget;
 int MovementRemaining = 0;
 #define CombatMapWidth 11
-#define CombatMapHeight 9
+#define CombatMapHeight 8
 
 #define MaxCombatParticipants CombatMapWidth * CombatMapHeight
 #define MonsterCount 8
 
 
 #define consolePosX 1
-#define consolePosY 19
+#define consolePosY 18
 #define consoleWidth 29
-#define consoleHeight 4
+#define consoleHeight 5
 #define consoleDelay 1
 
 #define menuPosX consolePosX + consoleWidth + 1
 #define menuPosY consolePosY
 #define menuWidth 8
-#define menuHeight consoleHeight
+#define menuHeight 5
 
 //Functions
 void Initialize(void);

@@ -223,7 +223,7 @@ void RemoveParty() //Removes Last Party Member (?)
 }
 
 #define CharStatPosX 24
-#define CharStatPosY 4
+#define CharStatPosY 3
 #define CharStatRows 3
 void DrawCharStatus(byte characterIndex)
 {
@@ -253,10 +253,9 @@ byte moonTick = 0;
 
 void DrawMoonPhase()
 {
-  
   ConsoleBufferReset();
   sprintf(strTemp, "< %c > < %c >@", phaseChar[moonA], phaseChar[moonB]);
-  PrintString(strTemp, CharStatPosX + 2, CharStatPosY -2, true, false);
+  PrintString(strTemp, CharStatPosX + 2, CharStatPosY - 2, true, false);
   ConsoleBufferReset();
 }
 void TickMoonPhase()
@@ -287,7 +286,7 @@ void TickMoonPhase()
 void DrawCharStats()
 {
   byte i;
-  DrawBorder("Moon Phases@", CharStatPosX - 1, CharStatPosY - 4, COLS - CharStatPosX + 1, 4, true);
+  DrawBorder("Moon Phases@", CharStatPosX - 1, CharStatPosY - 3, COLS - CharStatPosX + 1, 3, true);
   DrawMoonPhase();
   
   DrawBorder("Party@", CharStatPosX - 1, CharStatPosY - 1, COLS - CharStatPosX + 1, 1 + 4 * (CharStatRows + 1), true);
