@@ -4,9 +4,9 @@
 #include "GameData.h"
 
 #define consolePosX 1
-#define consolePosY 20
+#define consolePosY 18
 #define consoleWidth 29
-#define consoleHeight 4
+#define consoleHeight 5
 #define consoleDelay 1
 
 //Prototypes
@@ -74,7 +74,7 @@ bool wrap = true;
 byte viewportPosX = 1;
 byte viewportPosY = 2;
 #define viewportWidth 11
-#define viewportHeight 9
+#define viewportHeight 8
 
 
 byte viewportBuffer[viewportWidth][viewportHeight];

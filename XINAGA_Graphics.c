@@ -18,11 +18,11 @@ int RowsHGR[192];
 #endif
 
 #if defined(__C64__)
-byte *ScreenCharBuffer = (byte *)0x0400;
-byte *ScreenColorBuffer = (byte *)0xF400;
-byte *ScreenChars = (byte *)0x0400;
-byte *ScreenColors = (byte *)0xD800;
-bool bufferselect = false;
+static byte *ScreenCharBuffer = (byte *)0x0400;
+static byte *ScreenColorBuffer = (byte *)0xF400;
+static byte *ScreenChars = (byte *)0x0400;
+static byte *ScreenColors = (byte *)0xD800;
+static bool bufferselect = false;
 byte attributeset[];
 #define ScreenDisable() (POKE(0xD011, PEEK(0xD011)&239))
 #define ScreenEnable() (POKE(0xD011, PEEK(0xD011)|16))

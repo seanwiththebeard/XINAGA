@@ -74,7 +74,7 @@ byte MenuPosX = 5;
 byte MenuPosY = 5;
 byte MenuCount = 5;
 int MenuSelection = 0;
-#define menuItemsCount 16
+#define menuItemsCount 10
 char *MenuItems[menuItemsCount];
 bool MenuHighlight[menuItemsCount];
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
@@ -119,7 +119,7 @@ void DrawItem(byte index)
     ConsoleBufferAdd(" ");
   ConsoleBufferBackspace();
   
-  if (MenuHighlight[index])
+  if (MenuHighlight[index] == true)
   {
     ConsoleBufferAdd("+@");
     ConsoleBufferBackspace();
@@ -146,16 +146,13 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
   for (x = 0; x < menuItemsCount; ++x)
   {
     MenuItems[x] = "";
-    MenuHighlight[x] = 0;    
+    MenuHighlight[x] = false;    
   }
 }
-
-
-
 void SetMenuItem(byte index, char *value)
 {
   MenuItems[index] = value;
-  MenuHighlight[index] = 0;
+  MenuHighlight[index] = false;
   ClearItem(index);
   DrawItem(index);
 }

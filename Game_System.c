@@ -224,7 +224,7 @@ void RemoveParty() //Removes Last Party Member (?)
 
 #define CharStatPosX 24
 #define CharStatPosY 3
-#define CharStatRows 3
+#define CharStatRows 2
 void DrawCharStatus(byte characterIndex)
 {
   //byte statX = CharStatPosX;
