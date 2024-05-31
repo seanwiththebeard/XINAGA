@@ -17,14 +17,19 @@ void ConsoleBufferAdd(char *message)
   byte i;
   if (StringLength > 0)
   {
-    strTemp[StringLength] = ' ';
-    ++StringLength;
+    //++StringLength;
   }
   for (i = 0; message[i] != '@' && message[i] != 0; ++i)
   {
     strTemp[StringLength] = message[i];
     ++StringLength;
   }
+  strTemp[StringLength] = ' ';
+  ++StringLength;
+}
+void ConsoleBufferBackspace()
+{
+  --StringLength;
 }
 void ConsoleBufferPrint(byte x, byte y)
 {
@@ -69,41 +74,6 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
 void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();
 
-void DrawItem(byte index)
-{
-  char menuLine[38];
-  char *selector, *highlight;
-  if (MenuSelection == index)
-    selector = ">";
-  else
-    selector = "";
-
-  if(MenuHighlight[index])
-    highlight = "+";
-  else
-    highlight = "";
-  sprintf(menuLine, "%s%s%s", selector, highlight, MenuItems[index]);
-  PrintString(menuLine, MenuPosX, MenuPosY + index, true, false);
-}
-
-void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
-{
-  byte x;
-  MenuPosX = posX;
-  MenuPosY = posY;
-  MenuWidth = w;
-  MenuHeight = h;
-  MenuCount = c;
-  MenuSelection = 0;
-  
-  DrawBorder(title, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
-  for (x = 0; x < menuItemsCount; ++x)
-  {
-    MenuItems[x] = "No Menu";
-    MenuHighlight[x] = 0;
-  }
-}
-
 void ClearLine()
 {
   byte x;
@@ -120,6 +90,60 @@ void ClearItem(byte index)
     SetChar(' ', MenuPosX + x, MenuPosY + index);    
   }
 }
+
+void DrawItem(byte index)
+{
+  //char menuLine[38];
+  //char *selector, *highlight;
+  //if (MenuSelection == index)
+    //selector = ">";
+  //else
+   // selector = "";
+
+  //if(MenuHighlight[index])
+   // highlight = "+";
+  //else
+    //highlight = "";
+  //ClearItem(index);
+  ConsoleBufferReset();
+  if(MenuSelection == index)
+    ConsoleBufferAdd(">");
+  else
+    ConsoleBufferAdd(" ");
+  ConsoleBufferBackspace();
+  
+  if (MenuHighlight[index])
+  {
+    ConsoleBufferAdd("+@");
+    ConsoleBufferBackspace();
+  }
+  
+  ConsoleBufferAdd(MenuItems[index]);
+  ConsoleBufferPrint(MenuPosX, MenuPosY + index);
+  
+  //sprintf(menuLine, "%s%s%s", selector, highlight, MenuItems[index]);
+  //PrintString(menuLine, MenuPosX, MenuPosY + index, true, false);
+}
+
+void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
+{
+  byte x;
+  MenuPosX = posX;
+  MenuPosY = posY;
+  MenuWidth = w;
+  MenuHeight = h;
+  MenuCount = c;
+  MenuSelection = 0;
+  
+  DrawBorder(title, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
+  for (x = 0; x < menuItemsCount; ++x)
+  {
+    MenuItems[x] = "";
+    MenuHighlight[x] = 0;    
+  }
+}
+
+
 
 void SetMenuItem(byte index, char *value)
 {

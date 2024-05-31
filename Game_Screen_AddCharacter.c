@@ -5,9 +5,9 @@
 
 screenName nextScreen;
 #define consolePosX  1
-#define consolePosY 18
+#define consolePosY 17
 #define consoleWidth 38
-#define consoleHeight 6
+#define consoleHeight 7
 
 bool exitWindow = false;
 byte CurrentCharacter = 0;
@@ -184,7 +184,7 @@ void MenuGetRace()
 void ListParty()
 {
   byte partyCount = CountParty();
-  ResetMenu("Party Members@",21, 12, 18, 4, partyCount);
+  ResetMenu("Party Members@",20, 12, 19, 4, partyCount);
 
   if (partyCount > 0)
   {
@@ -217,6 +217,8 @@ void MenuEditParty()
 {
   ListRoster();
   ListParty();
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  
   ResetMenu("Edit Party@",1, 1, 16, 9, 9);
   SetMenuItem(0, "Create@");
   SetMenuItem(1, "Delete@");
@@ -305,7 +307,6 @@ screenName DrawAddCharacterScreen()
   while (!exitWindow)
   {
     ClearScreen();
-    ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
     MenuEditParty();
   }
   ClearScreen();
