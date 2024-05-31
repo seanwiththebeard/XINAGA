@@ -10,7 +10,6 @@ screenName nextScreen;
 #define consoleHeight 6
 
 bool exitWindow = false;
-byte WindowLevel = 0;
 byte CurrentCharacter = 0;
 byte
     	HPMAX,
@@ -85,6 +84,7 @@ void RollStats()
   sprintf(strTemp, "CHR: %d@", CHR);
   WriteLineMessageWindow(strTemp, 0);
 }
+
 void MenuGetClassPrimeStats()
 {
   byte x;
@@ -111,9 +111,7 @@ void MenuGetClass()
 {
   byte hitdice;
   RollStats();
-  MenuGetClassPrimeStats();
-  
-  
+  MenuGetClassPrimeStats();  
   CLASS = GetMenuSelection();
   while(!IsMenuItemHighlighted(CLASS))
   {
@@ -154,9 +152,6 @@ void MenuGetClass()
     if (hitdice + AbilityModifier[CON] < 1)
     {
       WriteLineMessageWindow("Died, no HP@", 0);
-      //nextWindow = false;
-      //exitWindow = true;
-      //nextWindow = true;
     }
     else
     {
