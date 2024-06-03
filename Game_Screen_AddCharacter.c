@@ -26,6 +26,7 @@ byte HITDICE = 0;
 void AddToRoster()
 {
   struct playerChar *PlayerChar;
+  byte i = 0;
   create();
   PlayerChar = getPlayerChar(CountRoster() - 1);
   PlayerChar->HPMAX = HPMAX;
@@ -39,16 +40,21 @@ void AddToRoster()
   PlayerChar->RACE = RACE;
   PlayerChar->CLASS = CLASS;
   PlayerChar->inParty = false;
-   
-  sprintf(PlayerChar->NAME, "Hello %d@", CountRoster() - 1);
-
-  //exitWindow = true;
-  //nextWindow = true;
+  
+  
+  ConsoleBufferReset();
+  ConsoleBufferAdd("Hello @");
+  ConsoleBufferAddNumber(CountRoster());
+  for (i = 0; strTemp[i] != '@'; ++i)
+    PlayerChar->NAME[i] = strTemp[i];
+  PlayerChar->NAME[i] = '@';
+  
+  //sprintf(PlayerChar->NAME, strTemp);
 }
 
 //#define DrawSelection() SetChar('>', windowX + 2, windowY + selection + 1)
 
-#define DrawCurrentCharacter() SetChar('>', windowX + 2, windowY + rosterPos + CurrentCharacter)
+//#define DrawCurrentCharacter() SetChar('>', windowX + 2, windowY + rosterPos + CurrentCharacter)
 
 bool AreYouSure()
 {
@@ -187,10 +193,11 @@ void ListParty()
   if (partyCount > 0)
   {
     byte x;
-    struct playerChar *PartyChar = getPartyMember(0);
 
     for (x = 0; x < partyCount; ++x)
-      SetMenuItem(x, PartyChar->NAME);
+    {
+      SetMenuItem(x, getPartyMember(x)->NAME);
+    }
     DrawMenu();
   }
 }
@@ -203,10 +210,9 @@ void ListRoster()
   if (rosterCount > 0)
   {
     byte x;
-    struct playerChar *PlayerChar = getPlayerChar(0);
 
     for (x = 0; x < rosterCount; ++x)
-      SetMenuItem(x, PlayerChar->NAME);
+      SetMenuItem(x, getPlayerChar(x)->NAME);
     DrawMenu();
   }
 }

@@ -111,6 +111,7 @@ void DrawCharStats();
 extern byte strTemp[ConsoleBufferLength];
 void ConsoleBufferReset();
 void ConsoleBufferAdd(char *message);
+void ConsoleBufferAddNumber(int value);
 void ConsoleBufferPrint(byte x, byte y);
 void ConsoleBufferPrintConsole(byte delay);
 

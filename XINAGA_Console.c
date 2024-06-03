@@ -26,7 +26,15 @@ void ConsoleBufferAdd(char *message)
     ++StringLength;
   }
   strTemp[StringLength] = ' ';
+  strTemp[StringLength + 1] = '@';
   ++StringLength;
+}
+
+void ConsoleBufferAddNumber(int value)
+{
+  char string[8];
+  sprintf(string, "%d", value);
+  ConsoleBufferAdd(string);
 }
 void ConsoleBufferBackspace()
 {
