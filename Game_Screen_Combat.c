@@ -78,7 +78,6 @@ typedef struct CombatParticipant
 };
 
 struct CombatParticipant combatParticipant[MaxCombatParticipants] = {};
-
 void ClearRoster(void)
 {
   byte i;
