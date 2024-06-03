@@ -9,7 +9,7 @@ bool ChangedState = true;
 #include <joystick.h>
 byte joyState = 0;
 byte joyStateLast = 0;
-byte joyTemp;
+byte joyTemp = 0;
 #endif
 
 void InitializeInput()

@@ -8,8 +8,8 @@ void PlaySong(byte index)
 void StopSong(void)
 {
 }
-byte soundData[1];
-unsigned char rawData[1];
+byte soundData[1] = {};
+unsigned char rawData[1] = {};
 /*
 byte soundData[64] = {
   0, 1, 2, 3, 4, 5, 6, 7,

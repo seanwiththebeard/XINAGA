@@ -1,7 +1,7 @@
 #ifndef _XINAGA_H
 #define _XINAGA_H
 
-#include <string.h> //For memcpy
+//#include <string.h> //For memcpy
 #include <stdint.h> //For byte and sbyte
 
 #define COLS 40
@@ -120,7 +120,7 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
 void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();
 void HighlightMenuItem(byte index);
-bool IsMenuItemHighlighted(byte index);
+byte IsMenuItemHighlighted(byte index);
 void DrawMenu();
 
 //Common Functions

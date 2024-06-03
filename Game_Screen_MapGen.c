@@ -10,7 +10,7 @@
 #define pointsCount 32
 #define grass 0x88
 #define water 0x84
-byte map[height][width];
+byte map[height][width] = {};
 
 /* World Seed Parameters
 (Eight flags building a byte)

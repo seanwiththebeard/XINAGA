@@ -34,17 +34,36 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate);
 void LoadMap();
 
 //Globals
-int int_offset, tileAddress, colorAddress;
-byte byte_x, byte_y, byte_z, byte_a, byte_b, byte_temp, byte_i, checkCollision;
-int int_x, int_y, int_index, int_a, int_b, xPos, yPos, chardata;
-bool scrollQuads, changedQuad;
-byte byte_index, byte_offset;
-byte playerX, playerY; //Used in line-of-sight calculations
+int int_offset = 0;
+int tileAddress = 0;
+int colorAddress = 0;
+byte byte_x = 0;
+byte byte_y = 0;
+byte byte_z = 0;
+byte byte_a = 0;
+byte byte_b = 0;
+byte byte_temp = 0;
+byte byte_i = 0;
+byte checkCollision = 0;
+int int_x = 0;
+int int_y = 0;
+int int_index = 0;
+int int_a = 0;
+int int_b = 0;
+int xPos = 0;
+int yPos = 0;
+int chardata = 0;
+bool scrollQuads = false;
+bool changedQuad = false;
+byte byte_index = 0;
+byte byte_offset = 0;
+byte playerX = 0;
+byte playerY = 0; //Used in line-of-sight calculations
 
 //Map Data
 #define mapHeight 32
 #define mapWidth 32
-byte mapData[mapWidth][mapHeight];
+byte mapData[mapWidth][mapHeight] = {};
 #define mapQuadWidth 8
 #define mapQuadHeight 8
 #define mapMatrixWidth 8
@@ -59,7 +78,7 @@ byte mapQuads[mapMatrixHeight][mapMatrixWidth] = { //Map Data
   {48, 49, 50, 51, 52, 53, 54, 55},
   {56, 57, 58, 59, 60, 61, 62, 63}
 };
-byte quadBuffer[4];
+byte quadBuffer[4] = {};
 int quadX = 0;
 int quadY = 0;
 #define quadWidth 8
@@ -77,21 +96,25 @@ byte viewportPosY = 2;
 #define viewportHeight 8
 
 
-byte viewportBuffer[viewportWidth][viewportHeight];
-byte viewportBufferLast[viewportWidth][viewportHeight];
+byte viewportBuffer[viewportWidth][viewportHeight] = {};
+byte viewportBufferLast[viewportWidth][viewportHeight] = {};
 
 byte followIndex = 0;
 
 //QuadScroll
-byte QuadOriginX, QuadOriginY;
-byte quadA; //Entering quad
-byte quadB; //Diagonal quad
-byte indexA, indexB;
-byte compareQuad;
-bool posX, posY;
+byte QuadOriginX = 0;
+byte QuadOriginY = 0;
+byte quadA = 0; //Entering quad
+byte quadB = 0; //Diagonal quad
+byte indexA = 0;
+byte indexB = 0;
+byte compareQuad = 0;
+bool posX = false;
+bool posY = false;
 
 //Camera Position
-int offsetX, offsetY = 0;
+int offsetX = 0;
+int offsetY = 0;
 byte cameraOffsetX = 0;
 byte cameraOffsetY = 0;
 
@@ -106,7 +129,7 @@ struct Tile
   byte blocked;
   byte trigger;
   byte opaque;
-} tiles[64];
+} tiles[64] = {};
 
 struct
 {
@@ -115,7 +138,7 @@ struct
   byte ScatterIndex;
   byte NPCIndex;
   byte MusicIndex;
-}ScreenQuad[64];
+}ScreenQuad[64] = {};
 
 #define charactersCount 16
 struct Character
@@ -132,7 +155,7 @@ struct Character
   bool visible;
   bool collide;
   byte message;
-} characters[charactersCount];
+} characters[charactersCount] = {};
 
 byte ReadBit(byte byteToRead, char bit)//These are old
 {

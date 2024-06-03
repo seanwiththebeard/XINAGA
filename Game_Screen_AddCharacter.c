@@ -3,7 +3,7 @@
 #include "Xinaga.h"
 #include "GameData.h"
 
-screenName nextScreen;
+screenName nextScreen = EditParty;
 #define consolePosX  1
 #define consolePosY 17
 #define consoleWidth 38
@@ -11,19 +11,17 @@ screenName nextScreen;
 
 bool exitWindow = false;
 byte CurrentCharacter = 0;
-byte
-    	HPMAX,
-HP,
-STR,
-DEX,
-CON,
-INT,
-WIS,
-CHR,
-
-RACE,
-CLASS,
-HITDICE;
+byte HPMAX = 0;
+byte HP = 0;
+byte STR = 0;
+byte DEX = 0;
+byte CON = 0;
+byte INT = 0;
+byte WIS = 0;
+byte CHR = 0;
+byte RACE = 0;
+byte CLASS = 0;
+byte HITDICE = 0;
 
 void AddToRoster()
 {

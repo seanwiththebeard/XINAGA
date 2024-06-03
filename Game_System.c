@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "GameData.h"
 
-byte strTemp[ConsoleBufferLength];
+byte strTemp[ConsoleBufferLength] = {};
 
 PartyDef Party = { 0, 0, 0};
 

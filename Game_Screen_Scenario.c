@@ -23,7 +23,11 @@
 //Each world is like a level, each continent/quest is like a star
 //100 coin star?
 
-byte QuestOrigin, QuestType, QuestGiver, QuestTarget, QuestLocation;
+byte QuestOrigin = 0;
+byte QuestType = 0;
+byte QuestGiver = 0;
+byte QuestTarget = 0;
+byte QuestLocation = 0;
 //byte randSeed = 0;
 
 char *questOrigin[] = { "the castle", "a tavern rumor", "your library studies", "a dream at the inn"};

@@ -1,3 +1,4 @@
+#include <string.h>
 #include "Xinaga.h"
 
 int YColumnIndex[25] = {
@@ -7,7 +8,7 @@ int YColumnIndex[25] = {
   600, 640, 680, 720, 760,
   800, 840, 880, 920, 960};
 
-byte charset[];
+byte charset[4096];
 
 #if defined(__APPLE2__)
 byte* ScreenChars = (byte*)(0x0400);
@@ -343,8 +344,8 @@ void SetTileOrigin(byte x, byte y)
   MapOriginY = y;
 }
 
-byte indexes[4];
-unsigned short offset1;
+byte indexes[4] = {};
+unsigned short offset1 = 0;
 void DrawTileFast(byte index, byte x, byte y)
 {
   index = (index << 1) + ((index >> 3) << 4);
@@ -391,7 +392,10 @@ void DrawTileDirect(byte index, byte x, byte y)
   SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
 }
 
-byte arrowA, arrowB, arrowX, arrowY;
+byte arrowA = 0;
+byte arrowB = 0;
+byte arrowX = 0;
+byte arrowY = 0;
 void ReadyArrow(byte x, byte y)
 {
   x = x << 1;

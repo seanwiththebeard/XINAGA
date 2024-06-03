@@ -4,6 +4,7 @@
 
 //StringBuilder
 byte StringLength = 0;
+
 void ConsoleBufferReset()
 {
   byte i;
@@ -74,9 +75,10 @@ byte MenuPosX = 5;
 byte MenuPosY = 5;
 byte MenuCount = 5;
 int MenuSelection = 0;
-#define menuItemsCount 10
-char *MenuItems[menuItemsCount];
-bool MenuHighlight[menuItemsCount];
+#define menuItemsCount 16
+char *MenuItems[menuItemsCount] = {("")};
+bool MenuHighlight[menuItemsCount] = 
+{ 0 };
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
 void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();
@@ -164,12 +166,10 @@ void HighlightMenuItem(byte index)
   DrawItem(index);
 }
 
-bool IsMenuItemHighlighted(byte index)
+byte IsMenuItemHighlighted(byte index)
 {
   return MenuHighlight[index];
 }
-
-
 
 void DrawMenu()
 {

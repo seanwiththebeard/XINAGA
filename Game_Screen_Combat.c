@@ -6,8 +6,8 @@
 #define fillTile 36
 bool CombatSuccess = false;
 bool exitCombat = false;
-int SelectedCharacter;
-int SelectedTarget;
+int SelectedCharacter = 0;
+int SelectedTarget = 0;
 int MovementRemaining = 0;
 #define CombatMapWidth 11
 #define CombatMapHeight 8
@@ -77,7 +77,7 @@ typedef struct CombatParticipant
   bool alive;
 };
 
-struct CombatParticipant combatParticipant[MaxCombatParticipants];
+struct CombatParticipant combatParticipant[MaxCombatParticipants] = {};
 
 void ClearRoster(void)
 {
