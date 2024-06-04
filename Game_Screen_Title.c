@@ -1,3 +1,7 @@
+#if defined(__APPLE2__)
+#pragma code-name (push, "LOWCODE")
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "Xinaga.h"
@@ -22,3 +26,7 @@ screenName Update_Title()
   
   return nextScreen;
 }
+
+#if defined(__APPLE2__)
+#pragma code-name (pop)
+#endif

@@ -113,6 +113,7 @@ void Initialize(void)
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
 }
 
+
 void GetCharacters(void)
 {
   byte i;
@@ -516,6 +517,7 @@ bool CheckCombatMapCollision(byte direction)
   }
   return false;
 }
+
 void MoveCombatCharacter(byte index, byte direction)
 {
   byte tempTile = combatParticipant[index].tileIndex;

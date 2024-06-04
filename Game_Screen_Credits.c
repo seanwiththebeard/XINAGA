@@ -1,3 +1,7 @@
+#if defined(__APPLE2__)
+#pragma code-name (push, "LOWCODE")
+#endif
+
 /*#include <stdio.h>
 #include "Xinaga.h"
 #include "GameData.h"
@@ -94,3 +98,7 @@ screenName Update_Credits()
 }
 #endif
 */
+
+#if defined(__APPLE2__)
+#pragma code-name (pop)
+#endif

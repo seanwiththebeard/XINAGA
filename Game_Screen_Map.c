@@ -1,3 +1,5 @@
+
+
 #include <peekpoke.h>
 #include <string.h> //For memcpy
 #include "Xinaga.h"
@@ -162,6 +164,8 @@ byte ReadBit(byte byteToRead, char bit)//These are old
   bit = 1 << bit;
   return(bit & byteToRead);
 }
+
+
 
 void CameraFollow()
 {  
@@ -330,6 +334,8 @@ void FillQuadBuffer()
   quadBuffer[3] = mapQuads[byte_y][byte_x];
 }
 
+
+
 void LoadQuadrant(byte quadIndex, byte quad)
 {  
   //sprintf(str, "Tile%d to Quad%d@", index, quad);
@@ -396,6 +402,7 @@ void LoadQuadrant(byte quadIndex, byte quad)
     }
   }
 }
+
 
 void LoadMapQuads()
 {
@@ -938,6 +945,8 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
     }
   }
 }
+
+
 
 void LoadMap()
 {
