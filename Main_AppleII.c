@@ -9,12 +9,12 @@
 //#link "Game_Demo.c"
 //#link "Game_System.c"
 
-//#link "Game_Screen_Title.c"
+////#link "Game_Screen_Title.c"
 //#link "Game_Screen_AddCharacter.c"
-////#link "Game_Screen_Map.c"
-//#link "Game_Screen_Combat.c"
+//#link "Game_Screen_Map.c"
+////#link "Game_Screen_Combat.c"
 //#link "Game_Screen_Credits.c"
-//#link "Game_Screen_MapGen.c"
+////#link "Game_Screen_MapGen.c"
 //#link "Game_Screen_Scenario.c"
 
 #if defined(__APPLE2__)
@@ -22,11 +22,13 @@
 #define CFGFILE apple2-xinaga.cfg
 #endif
 
-//screenName Update_MapGen(){return 0;}
-//screenName Update_Title(){return 0;}
+screenName Update_MapGen(){return 0;}
+screenName Update_Title(){return 0;}
 //screenName Update_Scenario(){return 0;}
-void LoadMap(){}
-screenName MapUpdate(){return 0;}
+screenName Update_Combat(){return 0;}
+
+//void LoadMap(){}
+//screenName MapUpdate(){return 0;}
 
 //void Demo(void);
 void main()

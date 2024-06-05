@@ -1,5 +1,3 @@
-
-
 #include <peekpoke.h>
 #include <string.h> //For memcpy
 #include "Xinaga.h"
@@ -164,8 +162,6 @@ byte ReadBit(byte byteToRead, char bit)//These are old
   bit = 1 << bit;
   return(bit & byteToRead);
 }
-
-
 
 void CameraFollow()
 {  
