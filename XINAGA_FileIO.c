@@ -1,7 +1,3 @@
-#if defined(__APPLE2__)
-#pragma code-name (push, "LOWCODE")
-#endif
-
 #if defined(__C64__)
 #include <cbm.h>
 #include <stdio.h>

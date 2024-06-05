@@ -1,7 +1,3 @@
-#if defined(__APPLE2__)
-#pragma code-name (push, "LOWCODE")
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "Xinaga.h"
@@ -390,6 +386,7 @@ void createContinent(byte size)
   clearPoints();
   DrawMap();
 }
+
 void Rotate(direction dir)
 {
   int h, w = 0;

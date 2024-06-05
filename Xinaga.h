@@ -64,7 +64,7 @@ void DrawArrow(byte x, byte y);
 void ClearArrow();
 
 //	Text
-void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer);
+void PrintString(char text[ROWS], byte posx, byte posy, bool fast, bool buffer);
 
 //	Buffer
 void SetBuffer(bool value);

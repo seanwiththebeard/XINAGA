@@ -26,3 +26,7 @@ screenName Update_Title()
   
   return nextScreen;
 }
+
+#if defined(__APPLE2__)
+#pragma code-name (pop)
+#endif
