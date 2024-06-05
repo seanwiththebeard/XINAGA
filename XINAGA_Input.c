@@ -1,3 +1,6 @@
+#if defined(__APPLE2__)
+#pragma code-name (push, "LOWCODE")
+#endif
 #include <conio.h> //for cgetc() and kbhit()
 #include "Xinaga.h"
 
