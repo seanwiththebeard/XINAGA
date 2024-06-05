@@ -156,7 +156,3 @@ screenName Update_Scenario()
   }
   return nextScreen;
 }
-
-#if defined(__APPLE2__)
-#pragma code-name (pop)
-#endif
