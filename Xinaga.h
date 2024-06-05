@@ -6,6 +6,8 @@
 
 #define COLS 40
 #if defined(__APPLE2__)
+#pragma code-name (push, "LOWCODE")
+
 #define ROWS 24
 #define STROBE(addr) __asm__ ("sta %w", addr)
 
@@ -135,4 +137,9 @@ void DrawMenu();
 
 //byte SetBit(byte byteToSet , byte k); //These work right
 //byte ClearBit(byte byteToSet , byte k); //These work right
+
+
+#if defined(__APPLE2__)
+#pragma code-name (pop)
+#endif
 #endif

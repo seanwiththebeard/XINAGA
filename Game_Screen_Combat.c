@@ -1,6 +1,7 @@
 #if defined(__APPLE2__)
 #pragma code-name (push, "LC")
 #endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "Xinaga.h"
@@ -15,7 +16,7 @@ int MovementRemaining = 0;
 #define CombatMapWidth 11
 #define CombatMapHeight 8
 
-#define MaxCombatParticipants 12 //CombatMapWidth * CombatMapHeight
+#define MaxCombatParticipants 6 //CombatMapWidth * CombatMapHeight
 #define MonsterCount 8
 
 

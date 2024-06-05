@@ -1,5 +1,5 @@
 #if defined(__APPLE2__)
-#pragma code-name (push, "LC")
+#pragma code-name (push, "LOWCODE")
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,6 +63,7 @@ void ConsoleBufferPrintConsole(byte delay)
   ConsoleBufferEndline();
   WriteLineMessageWindow(strTemp, delay);
   ConsoleBufferReset();
+  WriteLineMessageWindow("@", delay);
 }
 
 //Console

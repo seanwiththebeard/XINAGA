@@ -1,7 +1,3 @@
-#if defined(__APPLE2__)
-#pragma code-name (push, "LC")
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "Xinaga.h"
@@ -474,67 +470,17 @@ void GenerateMap(byte seed)
   }
   DrawMap();
   RotateAround();
-  sprintf(strTemp, "Done@");
-  WriteLineMessageWindow(strTemp, 0);
-
-
-  //clearPoints();
-
-  //createContinent(16);
-
-  //addRandomPoints(pointsCount);
-  //clearPoints();
-
-  //checkLandlocked();
-  //FillAdjacent(2, 2);
-  //RemoveIslands();
-
-  /*while(1)
-  {
-    UpdateInput();
-    if (InputUp())
-      Rotate(up);
-    if (InputDown())
-      Rotate(down);
-    if (InputLeft())
-      Rotate(left);
-    if (InputRight())
-      Rotate(right);    
-    //Rotate(down);
-    //Rotate(right);
-
-    if (InputFire())
-      return;
-  }*/
-  /*for (x = 0; x < pointsCount; ++x)
-  {
-
-    if (getPoint(x)->x % 2 == 0)
-      map[getPoint(x)->y][getPoint(x)->x] = grass;
-    else
-      map[getPoint(x)->y][getPoint(x)->x] = grass + 1;
-  }
-
-  for (y = 0; y < height; ++y)
-    for (x = 0; x < width; ++x)
-    {
-      SetChar(map[y][x], posX + x, posY + y);
-    }*/
+  //sprintf(strTemp, "Done@");
+  //WriteLineMessageWindow(strTemp, 0);
 }
 
 
 screenName Update_MapGen()
 {
   byte seed  = 0;
-  screenName nextScreen = Title;
   bool exit = false;
   ResizeMessageWindow(23, 12, 15, 10);
   DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
-  while(1)
-  {
-    GenerateMap(seed);
-    ++seed;
-  }
   while (!exit)
   {
     UpdateInput();
@@ -545,7 +491,6 @@ screenName Update_MapGen()
         ++seed;
         GenerateMap(seed);
         break;
-        //exit = true;
       }
       if (InputFire())
       {
@@ -553,6 +498,6 @@ screenName Update_MapGen()
       }
     }
   }
-
-  return nextScreen;
+  clearPoints();
+  return EditParty;
 }

@@ -1,5 +1,8 @@
 #ifndef _GAMEDATA_H
 #define _GAMEDATA_H
+#if defined(__APPLE2__)
+#pragma code-name (push, "LOWCODE")
+#endif
 #include "Xinaga.h"
 #include <stdint.h>
 #include <stdlib.h>
@@ -100,4 +103,9 @@ void RemoveParty(void);
 byte CountParty(void);
 
 struct playerChar *getPartyMember(byte index);
+
+#if defined(__APPLE2__)
+#pragma code-name (pop)
+#endif
+
 #endif
