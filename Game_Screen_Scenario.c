@@ -13,7 +13,7 @@
 #define posY 1
 
 #define consolePosX  1
-#define consolePosY 18
+#define consolePosY 17
 #define consoleWidth 28
 #define consoleHeight 6
 
