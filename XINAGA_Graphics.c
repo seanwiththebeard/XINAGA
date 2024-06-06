@@ -379,20 +379,15 @@ void DrawTileFast(byte index, byte x, byte y)
   #endif
 
   #if defined(__APPLE2__)
-  int baseX = x + MapOriginX;
-  int baseY = y + MapOriginY;
-  SetChar(indexes[0], baseX, baseY);
-  SetChar(indexes[1], baseX + 1, baseY);
-  SetChar(indexes[2], baseX, baseY + 1);
-  SetChar(indexes[3], baseX + 1, baseY + 1);
+  SetChar(indexes[0], x + MapOriginX, y + MapOriginY);
+  SetChar(indexes[1], x + MapOriginX + 1, y + MapOriginY);
+  SetChar(indexes[2], x + MapOriginX, y + 1 + MapOriginY);
+  SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
   #endif
 }
 
 void DrawTileDirect(byte index, byte x, byte y)
 {
-  int baseX = x + MapOriginX;
-  int baseY = y + MapOriginY;
-  
   index = (index << 1) + ((index >> 3) << 4);
   indexes[0] = index;
   indexes[1] = index + 1;
@@ -402,10 +397,10 @@ void DrawTileDirect(byte index, byte x, byte y)
   x = x << 1;
   y = y << 1;
   
-  SetChar(indexes[0], baseX, baseY);
-  SetChar(indexes[1], baseX + 1, baseY);
-  SetChar(indexes[2], baseX, baseY + 1);
-  SetChar(indexes[3], baseX + 1, baseY + 1);
+  SetChar(indexes[0], x + MapOriginX, y + MapOriginY);
+  SetChar(indexes[1], x + MapOriginX + 1, y + MapOriginY);
+  SetChar(indexes[2], x + MapOriginX, y + 1 + MapOriginY);
+  SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
 }
 
 byte arrowA = 0;
