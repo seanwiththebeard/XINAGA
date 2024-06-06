@@ -32,6 +32,7 @@ byte attributeset[];
 #define ScreenDisable() (POKE(0xD011, PEEK(0xD011)&239))
 #define ScreenEnable() (POKE(0xD011, PEEK(0xD011)|16))
 #include <peekpoke.h>
+#include <conio.h>
 #endif
 //byte  MapSet[];
 byte* CharRam = 0;
@@ -224,13 +225,15 @@ void DrawChar(int index, byte xpos, byte ypos)
 }
 #endif
 
-void SetChar(byte index, byte x, byte y)
+void SetChar(char index, byte x, byte y)
 {
   #if defined(__APPLE2__)
   ScreenChars[x + COLS * y] = index;
   DrawChar(index, x, y);
   #endif
   #if defined(__C64__)
+  //textcolor(attributeset[index]);
+  //cputcxy(x, y, index);
   ScreenChars[x + YColumnIndex[y]] = index;
   ScreenColors[x + YColumnIndex[y]] = attributeset[index];
   #endif

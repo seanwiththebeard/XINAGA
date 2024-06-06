@@ -49,7 +49,7 @@ extern byte MapOriginX, MapOriginY;
 
 //	Drawing
 void ClearScreen(void);
-void SetChar(byte x, byte y, byte index);
+void SetChar(char index, byte x, byte y);
 void SetColor(byte x, byte y, byte index);
 byte GetChar(byte x, byte y);
 //void SetCharBuffer(byte x, byte y, byte index);
