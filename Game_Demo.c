@@ -5,7 +5,7 @@
 #include "Xinaga.h"
 #include "GameData.h"
 
-screenName currentScreen = EditParty;
+screenName currentScreen = Map;
 
 RaceDescriptionDef RaceDescription[4] = 
 {
