@@ -1,5 +1,6 @@
 #include <peekpoke.h>
 #include <string.h> //For memcpy
+#include <stdio.h>
 #include "Xinaga.h"
 #include "GameData.h"
 
@@ -14,8 +15,8 @@
 void CameraFollow();
 int GetWrappedX(int xPos); //For viewport character positions
 int GetWrappedY(int YPos);
-int WrapMapPositionX(int posX);
-int WrapMapPositionY(int posY);
+//int WrapMapPositionX(int posX);
+//int WrapMapPositionY(int posY);
 void BufferCharacters();
 void FillQuadBuffer();
 void LoadQuadrant(byte quadIndex, byte quad);
@@ -207,7 +208,7 @@ int GetWrappedY(int YPos)
   return byte_temp;*/
 }
 
-int WrapMapPositionX(int posX)
+/*int WrapMapPositionX(int posX)
 {  
   if (posX < 0)
   {
@@ -231,7 +232,7 @@ int WrapMapPositionY(int posY)
     return 0;
   }
   return posY;
-}
+}*/
 
 void BufferCharacters()
 {
@@ -628,21 +629,19 @@ void InitializeMapData()
 
 int wrapX(int posX) //Used in map positions
 {
-  if (posX >= mapWidth)
-    posX = 0;
   if (posX < 0)
-    posX = mapWidth - 1;  
-
+    return mapWidth - 1;
+  if (posX >= mapWidth)
+    return 0;
   return posX;
 }
 
 int wrapY(int posY)
 {
-  if (posY >= mapHeight)
-    posY = 0;
   if (posY < 0)
-    posY = mapHeight - 1;  
-
+    return mapHeight - 1;
+  if (posY >= mapHeight)
+    return 0;
   return posY;
 }
 
@@ -821,10 +820,10 @@ void DrawEntireMap()
   int_b = offsetY;
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {
-    int_b = WrapMapPositionY(int_b); //Wrap the map data y reference
+    int_b = wrapY(int_b); //Wrap the map data y reference
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
-      int_a = WrapMapPositionX(int_a); //Wrap the map data X reference
+      int_a = wrapX(int_a); //Wrap the map data X reference
       viewportBuffer[byte_x][byte_y] = mapData[int_a][int_b];
       int_a++;
     }
@@ -959,11 +958,12 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
 
       if (scrollQuads)
         QuadScroll(direction);
+      
+      sprintf(strTemp,"(%d,%d)@", characters[followIndex].posX, characters[followIndex].posY);
+      PrintString(strTemp, viewportPosX + 8, viewportPosY - 1, true, false);
     }
   }
 }
-
-
 
 void LoadMap()
 {
