@@ -812,9 +812,7 @@ void ApplyLOS()
 const byte viewportsize = viewportHeight * viewportWidth;
 void DrawEntireMap()
 {
-  //ReverseBufferArea(viewportPosX - 1, viewportPosY - 1, viewportCharWidth + 2, viewportCharHeight + 2);
-  StoreBuffer();
-
+  //StoreBuffer();
   //Buffer the matrix of tiles for our viewport
   CameraFollow();
   int_a = offsetX;
@@ -844,13 +842,13 @@ void DrawEntireMap()
       //if(viewportBuffer[byte_x][byte_y] != viewportBufferLast[byte_x][byte_y]); //It's acrtually faster to skip this on Commodore
       #endif
       if (lastIndex!=newIndex)
-        DrawTileFast(newIndex, byte_x, byte_y);
+        DrawTileDirect(newIndex, byte_x, byte_y);
     }
   }
   #if defined(__APPLE2__)
   //memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportsize); //It's acrtually faster to skip this on Commodore
   #endif
-  SwapBuffer();
+  //SwapBuffer();
   memcpy(&viewportBuffer[0][0], &viewportBufferLast[0][0], viewportSize);
 }
 
