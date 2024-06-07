@@ -2,7 +2,6 @@
 #pragma code-name (push, "LC")
 #endif
 
-#include <string.h>
 #include "Xinaga.h"
 
 int YColumnIndex[25] = {

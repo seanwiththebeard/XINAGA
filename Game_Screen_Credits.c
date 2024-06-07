@@ -1,10 +1,8 @@
+/*#include "Xinaga.h"
+#include "GameData.h"
 #if defined(__APPLE2__)
 #pragma code-name (push, "LOWCODE")
 #endif
-
-/*#include <stdio.h>
-#include "Xinaga.h"
-#include "GameData.h"
 #if defined(__C64__)
 byte yscroll;
 //byte sinevalue[32] = {12,14,17,19,20,22,23,24, 24,24,23,22,20,19,17,14, 12,10,7,5,4,2,1,0, 0,0,1,2,4,5,7,10};

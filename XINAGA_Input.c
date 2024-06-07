@@ -2,7 +2,6 @@
 #pragma code-name (push, "LC")
 #endif
 
-#include <conio.h> //for cgetc() and kbhit()
 #include "Xinaga.h"
 
 sbyte key = 0;

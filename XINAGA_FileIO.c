@@ -1,14 +1,12 @@
-#if defined(__APPLE2__)
-#pragma code-name (push, "LC")
-#endif
+#include "Xinaga.h"
+
 #if defined(__C64__)
 #include <cbm.h>
-#include <stdio.h>
 #endif
 
 #if defined(__APPLE2__)
 #include <apple2.h>
-#include <stdio.h>
+#pragma code-name (push, "LC")
 #endif
 
 void DiskSave(char filename[], int source, int length)

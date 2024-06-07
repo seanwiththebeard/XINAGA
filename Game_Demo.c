@@ -1,9 +1,9 @@
+#include "Xinaga.h"
+#include "GameData.h"
+
 #if defined(__APPLE2__)
 #pragma code-name (push, "LOWCODE")
 #endif
-
-#include "Xinaga.h"
-#include "GameData.h"
 
 screenName currentScreen = Map;
 

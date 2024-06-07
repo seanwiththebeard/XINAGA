@@ -1,8 +1,12 @@
 #ifndef _XINAGA_H
 #define _XINAGA_H
 
-//#include <string.h> //For memcpy
+#include <string.h> //For memcpy
 #include <stdint.h> //For byte and sbyte
+#include <conio.h> //for cgetc() and kbhit()
+#include <stdio.h>
+#include <stdlib.h>
+#include <peekpoke.h>
 
 #define COLS 40
 #if defined(__APPLE2__)

@@ -1,6 +1,3 @@
-#include <peekpoke.h>
-#include <string.h> //For memcpy
-#include <stdio.h>
 #include "Xinaga.h"
 #include "GameData.h"
 
@@ -32,10 +29,10 @@ void LoadMap();
 
 //Globals
 #define EmptyTile 7
-byte byte_x = 0;
-byte byte_y = 0;
-byte byte_z = 0;
-byte byte_i = 0;
+//byte byte_x = 0;
+//byte byte_y = 0;
+//byte byte_z = 0;
+//byte byte_i = 0;
 byte checkCollision = 0;
 int int_x = 0;
 int int_y = 0;
@@ -153,7 +150,8 @@ byte ReadBit(byte byteToRead, char bit)//These are old
 }
 
 void CameraFollow()
-{  
+{
+  byte byte_x, byte_y;
   offsetX = characters[followIndex].posX;
   offsetY = characters[followIndex].posY;
 
@@ -178,6 +176,7 @@ void CameraFollow()
 
 void BufferCharacters()
 {
+  byte byte_x, byte_y, byte_i;
   for(byte_i = 0; byte_i < charactersCount; ++byte_i)
   {
     if(characters[byte_i].visible)
@@ -202,60 +201,10 @@ void BufferCharacters()
   }
 }
 
-/*void DrawSingleRow(byte row)
-{
-  CameraFollow();
-
-  byte_a = offsetX;
-  byte_b = offsetY;
-
-  for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
-  {    
-    byte_b = WrapMapPositionY(byte_b);
-    if (byte_y == row)
-    {
-      for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
-      {
-        byte_a=WrapMapPositionX(byte_a);
-        viewportBuffer[byte_x][byte_y] = mapData[byte_a][byte_b];
-        DrawTileFast(viewportBuffer[byte_x][byte_y], byte_x, byte_y);
-        byte_a++;
-      }
-      break;
-    }
-    byte_a = offsetX;
-    ++byte_b;
-  }
-}
-
-void DrawSingleColumn(byte column)
-{
-  CameraFollow();
-
-  byte_a = offsetX;
-  byte_b = offsetY;
-
-  for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
-  {
-    byte_b = WrapMapPositionY(byte_b);
-    {
-      for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
-      {
-        byte_a = WrapMapPositionX(byte_a);
-        viewportBuffer[byte_x][byte_y] = mapData[byte_a][byte_b];
-
-        if (byte_x == column)
-          DrawTileFast(viewportBuffer[byte_x][byte_y], byte_x, byte_y);
-        ++byte_a;
-      }
-    }
-    byte_a = offsetX;
-    ++byte_b;
-  }
-}*/
-
 void FillQuadBuffer()
 {
+  byte byte_x, byte_y;
+  
   quadX = characters[followIndex].quadPosX;
   quadY = characters[followIndex].quadPosY;
 
@@ -278,7 +227,9 @@ void FillQuadBuffer()
 
 
 void LoadQuadrant(byte quadIndex, byte quad)
-{  
+{
+  byte byte_x, byte_y, byte_z;
+  
   //sprintf(str, "Tile%d to Quad%d@", index, quad);
   //WriteLineMessageWindow(str, 1);
 
@@ -502,6 +453,8 @@ void InitializeMapData()
   #define grass 36
   #define water 34
   #define signpost 35
+  byte byte_x, byte_y, byte_i;
+  
 
   cameraOffsetX = viewportWidth / 2;
   cameraOffsetY = viewportHeight / 2;
@@ -598,6 +551,8 @@ int wrapY(int posY)
 
 bool CheckCollision(byte charIndex, byte Direction)
 {
+  byte byte_i;
+  
   xPos = characters[charIndex].posX;
   yPos = characters[charIndex].posY;
 
@@ -762,6 +717,8 @@ void ApplyLOS()
 const byte viewportsize = viewportHeight * viewportWidth;
 void DrawEntireMap()
 {
+  byte byte_x, byte_y;
+  
   #if defined(__C64__)
   StoreBuffer();
   #endif
