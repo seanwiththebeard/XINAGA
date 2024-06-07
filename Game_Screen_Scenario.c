@@ -49,27 +49,27 @@ char *questOrigin[4] = { "the castle", "a tavern rumor", "your library studies",
 //			Tomb		Pyramid, Crypt, Graveyard, Catacombs
 
 char *questGiver[4][4] = {
-  /*Castle*/	{"King", "Blacksmith", "Guildmaster", "Town Council"},
-  /*Town Tavern*/	{"Tavern Owner", "Cloaked Figure", "Guildmaster", "People"},
-  /*Library Book*/{"History Book", "Librarian", "Scholar", "Cloaked Figure"},
-  /*Dream*/	{"Statue", "Restless Spirit", "Talking Animal", "Wise Tree"}
+  /*Castle*/		{"King", "Blacksmith", "Guildmaster", "Council"},
+  /*Town Tavern*/	{"Innkeeper", "Shadow", "Guildmaster", "People"},
+  /*Library Book*/	{"History Book", "Librarian", "Scholar", "Shadow"},
+  /*Dream*/		{"Statue", "Spirit", "Animal", "Wise Tree"}
 };
-char *questType[6] = { "kill", "retrieve", "explore and map out", "solve the puzzle in", "visit", "play cards with"};
+char *questType[6] = 	{ "kill", "retrieve", "map out", "solve a puzzle in", "visit", "play cards with"};
 char *questTarget[6][4] = { //Point of Interest
-  /*Kill*/	{"Dragon", "Vampire", "Wizard", "Owlbear"},
-  /*Retrieve*/	{"Scroll", "Gauntlet", "Orb", "Artifact"},
-  /*Explore*/	{"Cavern", "Hidden Cellar", "Burial Site", "Treasure Room"},
-  /*PuzzleSolve*/	{"Burial Site", "Shipwreck", "Magic Device", "Steam Device"},
-  /*Visit*/	{"Burial Site", "Water's Edge", "Monument", "Wise Tree"},
-  /*PlayCards*/	{"Hooded Figure", "Lost Knight", "Talking Animal", "Wizard"}
+  /*Kill*/		{"Dragon", "Vampire", "Wizard", "Owlbear"},
+  /*Retrieve*/		{"Scroll", "Gauntlet", "Orb", "Artifact"},
+  /*Explore*/		{"Cavern", "Hidden Cellar", "Burial Site", "Treasure Room"},
+  /*PuzzleSolve*/	{"Crypt", "Shipwreck", "Magic Device", "Steam Device"},
+  /*Visit*/		{"Crypt", "Water's Edge", "Monument", "Wise Tree"},
+  /*PlayCards*/		{"Shadow", "Lost Knight", "Animal", "Wizard"}
 };
 char *questLocation[6][4] = { //Map Location
-  /*Kill*/	{"Forrest", "Dungeon", "Dwarven Tower", "Dimensional Rift"},
-  /*Retrieve*/	{"Ruined Archive", "Dungeon", "Castle Basement", "Dwarven Tower"},
-  /*Explore*/	{"Siege Engine", "Ruined Archive", "Dwarven Tower", "Dimensional Rift"},
+  /*Kill*/		{"Forrest", "Dungeon", "Dwarven Tower", "Wormhole"},
+  /*Retrieve*/		{"Archive", "Dungeon", "Oubliette", "Dwarven Tower"},
+  /*Explore*/		{"Siege Engine", "Archive", "Dwarven Tower", "Wormhole"},
   /*PuzzleSolve*/	{"Clock Tower", "Library", "Siege Engine", "Windmill"},
-  /*Visit*/	{"Ruins", "Lake", "Open Plains", "Forrest"},
-  /*Play Cards*/	{"Castle", "Forrest Clearing", "Dimensional Rift", "Tavern"}
+  /*Visit*/		{"Ruins", "Lake", "Open Plains", "Forrest"},
+  /*Play Cards*/	{"Castle", "Forrest", "Wormhole", "Tavern"}
 };
 
 
@@ -112,7 +112,7 @@ screenName Update_Scenario()
     SetMenuItem(3, "End@");
     while (!exit)
     {
-      sprintf(strTemp, "Continent Seed: %d @", seed);
+      sprintf(strTemp, "Continent: %d @", seed);
       SetLineMessageWindow(strTemp, 0);
       
       switch (GetMenuSelection())
@@ -139,7 +139,6 @@ screenName Update_Scenario()
         default:
           break;
       }
-
     }
   }
   return nextScreen;

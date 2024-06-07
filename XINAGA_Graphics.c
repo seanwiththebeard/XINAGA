@@ -1,5 +1,5 @@
 #if defined(__APPLE2__)
-#pragma code-name (push, "LC")
+//#pragma code-name (push, "LC")
 #endif
 
 #include "Xinaga.h"
