@@ -34,20 +34,13 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate);
 void LoadMap();
 
 //Globals
-int int_offset = 0;
-int tileAddress = 0;
-int colorAddress = 0;
 byte byte_x = 0;
 byte byte_y = 0;
 byte byte_z = 0;
-byte byte_a = 0;
-byte byte_b = 0;
-byte byte_temp = 0;
 byte byte_i = 0;
 byte checkCollision = 0;
 int int_x = 0;
 int int_y = 0;
-int int_index = 0;
 int int_a = 0;
 int int_b = 0;
 int xPos = 0;
@@ -78,7 +71,7 @@ byte mapQuads[mapMatrixHeight][mapMatrixWidth] = { //Map Data
   {48, 49, 50, 51, 52, 53, 54, 55},
   {56, 57, 58, 59, 60, 61, 62, 63}
 };
-byte quadBuffer[4] = {};
+byte quadBuffer[4] = {0,0,0,0};
 int quadX = 0;
 int quadY = 0;
 #define quadWidth 8
@@ -87,14 +80,12 @@ const byte quadWidthDouble = quadWidth * 2;
 const byte quadHeightDouble = quadHeight * 2;
 const byte yQuadHeight = 2*mapQuadHeight;
 
-bool wrap = true;
-
 //Viewport
 byte viewportPosX = 1;
 byte viewportPosY = 2;
 #define viewportWidth 11
 #define viewportHeight 8
-
+byte viewportSize = viewportHeight * viewportWidth;
 
 byte viewportBuffer[viewportWidth][viewportHeight] = {};
 byte viewportBufferLast[viewportWidth][viewportHeight] = {};
@@ -847,16 +838,20 @@ void DrawEntireMap()
   {      
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     { //On Apple, only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
+      byte lastIndex = viewportBufferLast[byte_x][byte_y];
+      byte newIndex = viewportBuffer[byte_x][byte_y];
       #if defined(__APPLE2__)
       //if(viewportBuffer[byte_x][byte_y] != viewportBufferLast[byte_x][byte_y]); //It's acrtually faster to skip this on Commodore
       #endif
-      DrawTileFast(viewportBuffer[byte_x][byte_y], byte_x, byte_y);
+      if (lastIndex!=newIndex)
+        DrawTileFast(newIndex, byte_x, byte_y);
     }
   }
   #if defined(__APPLE2__)
   //memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportsize); //It's acrtually faster to skip this on Commodore
   #endif
   SwapBuffer();
+  memcpy(&viewportBuffer[0][0], &viewportBufferLast[0][0], viewportSize);
 }
 
 void MoveCharacter(byte index, byte direction, bool cameraUpdate)
@@ -964,6 +959,8 @@ void LoadMap()
   InitializeMapData();
   playerX = (viewportWidth - 1) / 2;
   playerY = (viewportHeight - 1) / 2;
+  
+  viewportSize = viewportHeight * viewportWidth;
 }
 
 screenName MapUpdate()
