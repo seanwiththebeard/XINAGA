@@ -15,7 +15,7 @@ void FillQuadBuffer();
 void LoadQuadrant(byte quadIndex, byte quad);
 void LoadMapQuads();
 byte GetPlayerQuad(); //Returns the viewport quadrant of the player character
-byte GetQuadInRelation(bool up, bool down, bool left, bool right);
+byte GetQuadInRelation(bool d_up, bool d_down, bool d_left, bool d_right);
 void QuadScroll(byte direction);
 void InitializeMapData();
 int wrapX(int posX); //Used in map positions
@@ -24,7 +24,7 @@ bool CheckCollision(byte charIndex, byte Direction);
 void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
 void ApplyLOS();
 void DrawEntireMap();
-void MoveCharacter(byte index, byte direction, bool cameraUpdate);
+void MoveCharacter(byte index, byte dir, bool cameraUpdate);
 void LoadMap();
 void DrawCharacterCoordinates(byte index);
 
@@ -91,8 +91,6 @@ int offsetX = 0;
 int offsetY = 0;
 byte cameraOffsetX = 0;
 byte cameraOffsetY = 0;
-
-//byte moved = 0;
 
 //Tile Data
 struct Tile
@@ -311,30 +309,30 @@ byte GetPlayerQuad() //Returns the viewport quadrant of the player character
   }
 }
 
-byte GetQuadInRelation(bool up, bool down, bool left, bool right)
+byte GetQuadInRelation(bool d_up, bool d_down, bool d_left, bool d_right)
 {
   int int_x, int_y;
   int_x = characters[followIndex].quadPosX;
   int_y = characters[followIndex].quadPosY;
-  if (up)
+  if (d_up)
   {
     --int_y;
     if (int_y < 0)
       int_y = mapMatrixHeight - 1;
   }
-  if (down)
+  if (d_down)
   {
     int_y++;
     if (int_y == mapMatrixHeight)
       int_y = 0;
   }
-  if (left)
+  if (d_left)
   {
     int_x--;
     if (int_x < 0)
       int_x = mapMatrixWidth - 1;
   }
-  if (right)
+  if (d_right)
   {
     ++int_x;
     if (int_x == mapMatrixWidth)
@@ -343,7 +341,7 @@ byte GetQuadInRelation(bool up, bool down, bool left, bool right)
   return (mapQuads[int_y][int_x]);  
 }
 
-void QuadScroll(byte direction)
+void QuadScroll(byte dir)
 {
   byte p = GetChar(COLS - 1, ROWS - 1);
   bool charPosX, charPosY;
@@ -355,7 +353,7 @@ void QuadScroll(byte direction)
   charPosX = characters[followIndex].posX % 16 < quadWidth;
   charPosY = characters[followIndex].posY % 16 < quadHeight;
 
-  switch(direction)
+  switch(dir)
   {
     case 0:
       indexA = GetQuadInRelation(true, false, false, false);
@@ -387,7 +385,7 @@ void QuadScroll(byte direction)
       break;
   }
 
-  if (direction < 2)
+  if (dir < 2)
     switch (compareQuad)
     {
       case 0:
@@ -754,9 +752,9 @@ void DrawEntireMap()
   DrawCharacterCoordinates(followIndex);
 }
 
-void MoveCharacter(byte index, byte direction, bool cameraUpdate)
+void MoveCharacter(byte index, byte dir, bool cameraUpdate)
 {
-  checkCollision = CheckCollision(index, direction);
+  checkCollision = CheckCollision(index, dir);
   scrollQuads = false;
   changedQuad = false;
   
@@ -764,7 +762,7 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
 
   if(!checkCollision)
   {
-    switch (direction)
+    switch (dir)
     {
       case 0:
         --characters[index].posY;
@@ -823,7 +821,7 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
       byte edgeCheckX = characters[index].posX % 16;
       byte edgeCheckY = characters[index].posY % 16;
       
-      switch (direction)
+      switch (dir)
       {
         case 0:
           if (edgeCheckY == 6)
@@ -855,7 +853,7 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
       DrawEntireMap();
 
       if (scrollQuads)
-        QuadScroll(direction);
+        QuadScroll(dir);
     }
   }
 }

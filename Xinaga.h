@@ -29,8 +29,16 @@
 typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
 
-typedef enum { false, true } bool;
-typedef enum { up, down, left, right } direction;
+//typedef enum { false, true } bool;
+#define bool byte
+#define false 0
+#define true 1
+//typedef enum { up, down, left, right } direction;
+#define direction byte
+#define up 0
+#define down 1
+#define left 2
+#define right 3
 
 void LoadMap();
 

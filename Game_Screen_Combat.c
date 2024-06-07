@@ -455,7 +455,7 @@ void SelectionUseItem(void);
 void SelectionMoveCharacter(void);
 
 
-bool CheckCombatMapCollision(byte direction)
+bool CheckCombatMapCollision(byte dir)
 {
   byte i;
   for (i = 0; i < MaxCombatParticipants; ++i)
@@ -463,7 +463,7 @@ bool CheckCombatMapCollision(byte direction)
     if (i != SelectedCharacter)
       if (combatParticipant[i].active)
         if (combatParticipant[i].alive)
-          switch(direction)
+          switch(dir)
           {
             case up:
               if(combatParticipant[SelectedCharacter].posY - 1 == combatParticipant[i].posY)
@@ -490,7 +490,7 @@ bool CheckCombatMapCollision(byte direction)
           }
   }
 
-  switch(direction) //Deactivate if off map
+  switch(dir) //Deactivate if off map
   {
     case up:
       if(combatParticipant[SelectedCharacter].posY <= 0)
@@ -520,15 +520,15 @@ bool CheckCombatMapCollision(byte direction)
   return false;
 }
 
-void MoveCombatCharacter(byte index, byte direction)
+void MoveCombatCharacter(byte index, byte dir)
 {
   byte tempTile = combatParticipant[index].tileIndex;
   combatParticipant[index].tileIndex = fillTile;
   DrawOneCharacter();
-  if (!CheckCombatMapCollision(direction))
+  if (!CheckCombatMapCollision(dir))
   {
     --MovementRemaining;
-    switch(direction)
+    switch(dir)
     {
       case up:
         --combatParticipant[index].posY;
