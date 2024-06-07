@@ -6,16 +6,18 @@
 #endif
 
 #define fillTile 36
-bool CombatSuccess = false;
-bool exitCombat = false;
+
 int SelectedCharacter = 0;
 int SelectedTarget = 0;
 int MovementRemaining = 0;
+bool CombatSuccess = false;
+bool exitCombat = false;
+
 #define CombatMapWidth 11
 #define CombatMapHeight 8
 
-#define MaxCombatParticipants 16 //CombatMapWidth * CombatMapHeight
-#define MonsterCount 8
+#define MaxCombatParticipants 6 //CombatMapWidth * CombatMapHeight
+#define MonsterCount 2
 
 
 #define consolePosX 1
@@ -47,7 +49,7 @@ void SelectionAttackTargetPhysical(void);
 void SelectionAttackTargetSpell();
 void SelectionUseItem(void);
 void SelectionMoveCharacter(void);
-byte failedWander = 0;
+//byte failedWander = 0;
 
 void MoveCombatCharacter(byte index, byte direction);
 void PhysicalAttack(void);
@@ -341,7 +343,7 @@ void GetTargetSelection(void)
 
 void MonsterWander()
 {
-  failedWander = 0;
+  byte failedWander;
   MovementRemaining = combatParticipant[SelectedCharacter].movement;
   //DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   while(MovementRemaining > 0)

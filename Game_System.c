@@ -6,7 +6,7 @@
 
 byte strTemp[ConsoleBufferLength] = {};
 
-PartyDef Party = { 0, 0, 0};
+PartyDef Party = {0};
 
 int AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 int randseed = 0;

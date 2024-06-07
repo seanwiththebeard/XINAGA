@@ -230,13 +230,18 @@ void DrawChar(int index, byte xpos, byte ypos)
 
 void SetChar(char index, byte x, byte y)
 {
+  int offset = x + YColumnIndex[y];
   #if defined(__APPLE2__)
-  ScreenChars[x + COLS * y] = index;
-  DrawChar(index, x, y);
+  bool draw = false;
+  if (ScreenChars[offset] != index)
+    draw = true;
+  ScreenChars[offset] = index;
+  if (draw)
+    DrawChar(index, x, y);
   #endif
   #if defined(__C64__)
-  ScreenChars[x + YColumnIndex[y]] = index;
-  ScreenColors[x + YColumnIndex[y]] = attributeset[index];
+  ScreenChars[offset] = index;
+  ScreenColors[offset] = attributeset[index];
   #endif
 }
 
@@ -253,11 +258,12 @@ void SetColor(byte index, byte x, byte y)
 void SetCharBuffer(byte index, byte x, byte y)
 {
   #if defined(__APPLE2__)
-  ScreenChars[x + COLS * y] = index;
+  ScreenChars[x + YColumnIndex[y]] = index;
   #endif
   #if defined(__C64__)
-  ScreenCharBuffer[x + COLS*y] = index;
-  ScreenColorBuffer[x + COLS*y] = attributeset[index];
+  int offset = x + YColumnIndex[y];
+  ScreenCharBuffer[offset] = index;
+  ScreenColorBuffer[offset] = attributeset[index];
   #endif
 }
 

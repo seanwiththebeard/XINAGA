@@ -39,6 +39,7 @@ byte playerX = 0; //Player Position in line-of-sight calculations
 byte playerY = 0; //Player Position in line-of-sight calculations
 
 //Map Data
+bool LOSEnabled = false;
 #define mapHeight 32
 #define mapWidth 32
 byte mapData[mapWidth][mapHeight] = {};
@@ -190,7 +191,7 @@ void BufferCharacters()
 void FillQuadBuffer()
 {
   byte byte_x, byte_y;
-  
+
   quadX = characters[followIndex].quadPosX;
   quadY = characters[followIndex].quadPosY;
 
@@ -216,7 +217,7 @@ void LoadQuadrant(byte quadIndex, byte quad)
 {
   byte byte_x, byte_y, byte_z;
   int chardata;
-  
+
   //sprintf(str, "Tile%d to Quad%d@", index, quad);
   //WriteLineMessageWindow(str, 1);
 
@@ -553,19 +554,19 @@ bool CheckCollision(byte charIndex, byte Direction)
 
   switch (Direction)
   {
-    case 0:
+    case up:
       yPos = wrapY(yPos - 1);
       Direction = 1;
       break;
-    case 1:
+    case down:
       yPos = wrapY(yPos + 1);
       Direction = 0;
       break;
-    case 2:
+    case left:
       xPos = wrapX(xPos - 1);
       Direction = 3;
       break;
-    case 3:
+    case right:
       xPos = wrapX(xPos + 1);
       Direction = 2;
       break;
@@ -584,7 +585,7 @@ bool CheckCollision(byte charIndex, byte Direction)
     WriteLineMessageWindow(str, 1);*/
     return true;
   }
-  
+
   //Call Messagebox from NPC
   for (byte_i = 0; byte_i < charactersCount; ++byte_i)
     if(characters[byte_i].collide)
@@ -626,77 +627,81 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
 
 void ApplyLOS()
 {
-  //Quadrant Layout:
-  //        ^
-  //        |       ^
-  //  000  666  111 |
-  //  000  666  111  ->
-  //  000  666  111
-  //
-  //  444  XXX  555
-  //  444  XPX  555 ->
-  //  444  XXX  555
-  //
-  //  333  777  222
-  //  333  777  222
-  //  333  777  222
-  //
-  //Center adjacent X always visible
-  //Diagonal quadrants 0-3 block everything behind the tile
-  //Cardinal quadrants 4-7 block only the tiles directly behind them
+  if (LOSEnabled)
+  {
+    //Quadrant Layout:
+    //        ^
+    //        |       ^
+    //  000  666  111 |
+    //  000  666  111  ->
+    //  000  666  111
+    //
+    //  444  XXX  555
+    //  444  XPX  555 ->
+    //  444  XXX  555
+    //
+    //  333  777  222
+    //  333  777  222
+    //  333  777  222
+    //
+    //Center adjacent X always visible
+    //Diagonal quadrants 0-3 block everything behind the tile
+    //Cardinal quadrants 4-7 block only the tiles directly behind them
 
-  byte x, y;
-  //Quad 0
-  for(y = playerY - 1; y > 0; --y)
+    byte x, y;
+    //Quad 0
+    for(y = playerY - 1; y > 0; --y)
+      for(x = playerX - 1; x > 0; --x)
+        if (tiles[viewportBuffer[x][y]].opaque)
+        {
+          DrawSquare(0, y, x, 1);
+          DrawSquare(0, 0, x + 1, y);
+        }
+    //Quad 1
+    for(y = playerY - 1; y > 0; --y)
+      for(x = playerX + 1; x < viewportWidth; ++x)
+        if (tiles[viewportBuffer[x][y]].opaque)
+        {
+          DrawSquare(x + 1, y, viewportWidth - x, 1);
+          DrawSquare(x, 0, viewportWidth - x, y);
+        }
+    //Quad 2
+    for(y = playerY + 1; y < viewportHeight; ++y)
+      for(x = playerX + 1; x < viewportWidth; ++x)
+        if (tiles[viewportBuffer[x][y]].opaque)
+        {
+          DrawSquare(x + 1, y, viewportWidth - x, 1);
+          DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
+        }
+    //Quad 3
+    for(y = playerY + 1; y < viewportHeight; ++y)
+      for(x = playerX - 1; x > 0; --x)
+        if (tiles[viewportBuffer[x][y]].opaque)
+        {
+          DrawSquare(0, y, x, 1);
+          DrawSquare(0, y + 1, x + 1, viewportHeight - y);
+        }
+    //Horizontal
     for(x = playerX - 1; x > 0; --x)
-      if (tiles[viewportBuffer[x][y]].opaque)
-      {
-        DrawSquare(0, y, x, 1);
-        DrawSquare(0, 0, x + 1, y);
-      }
-  //Quad 1
-  for(y = playerY - 1; y > 0; --y)
+      for(y = playerY - 1; y <= playerY + 1; ++y)
+        if (tiles[viewportBuffer[x][y]].opaque)
+          DrawSquare(0, y, x, 1);
     for(x = playerX + 1; x < viewportWidth; ++x)
-      if (tiles[viewportBuffer[x][y]].opaque)
-      {
-        DrawSquare(x + 1, y, viewportWidth - x, 1);
-        DrawSquare(x, 0, viewportWidth - x, y);
-      }
-  //Quad 2
-  for(y = playerY + 1; y < viewportHeight; ++y)
-    for(x = playerX + 1; x < viewportWidth; ++x)
-      if (tiles[viewportBuffer[x][y]].opaque)
-      {
-        DrawSquare(x + 1, y, viewportWidth - x, 1);
-        DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
-      }
-  //Quad 3
-  for(y = playerY + 1; y < viewportHeight; ++y)
-    for(x = playerX - 1; x > 0; --x)
-      if (tiles[viewportBuffer[x][y]].opaque)
-      {
-        DrawSquare(0, y, x, 1);
-        DrawSquare(0, y + 1, x + 1, viewportHeight - y);
-      }
-  //Horizontal
-  for(x = playerX - 1; x > 0; --x)
-    for(y = playerY - 1; y <= playerY + 1; ++y)
-      if (tiles[viewportBuffer[x][y]].opaque)
-        DrawSquare(0, y, x, 1);
-  for(x = playerX + 1; x < viewportWidth; ++x)
-    for(y = playerY - 1; y <= playerY + 1; ++y)
-      if (tiles[viewportBuffer[x][y]].opaque)
-        DrawSquare(x + 1, y, viewportWidth - x - 1, 1);
-  //Vertical
-  for(y = playerY - 1; y > 0; --y)
-    for(x = playerX -1 ; x <= playerX + 1; ++x)
-      if (tiles[viewportBuffer[x][y]].opaque)
-        DrawSquare(x, 0, 1, y);
-  for(y = playerY + 1; y < viewportHeight; ++y)
-    for(x = playerX -1 ; x <= playerX + 1; ++x)
+      for(y = playerY - 1; y <= playerY + 1; ++y)
+        if (tiles[viewportBuffer[x][y]].opaque)
+          DrawSquare(x + 1, y, viewportWidth - x - 1, 1);
+    //Vertical
+    for(y = playerY - 1; y > 0; --y)
+      for(x = playerX -1 ; x <= playerX + 1; ++x)
+        if (tiles[viewportBuffer[x][y]].opaque)
+          DrawSquare(x, 0, 1, y);
+    for(y = playerY + 1; y < viewportHeight; ++y)
+      for(x = playerX -1 ; x <= playerX + 1; ++x)
 
-      if (tiles[viewportBuffer[x][y]].opaque)
-        DrawSquare(x, y + 1, 1, viewportHeight - y);
+        if (tiles[viewportBuffer[x][y]].opaque)
+          DrawSquare(x, y + 1, 1, viewportHeight - y);
+
+  }
 }
 
 const byte viewportsize = viewportHeight * viewportWidth;
@@ -747,7 +752,7 @@ void DrawEntireMap()
   SwapBuffer();
   #endif
   memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportSize);
-  
+
   DrawCharacterCoordinates(followIndex);
 }
 
@@ -756,14 +761,14 @@ void MoveCharacter(byte index, byte dir, bool cameraUpdate)
   checkCollision = CheckCollision(index, dir);
   scrollQuads = false;
   changedQuad = false;
-  
+
   TickMoonPhase();
 
   if(!checkCollision)
   {
     switch (dir)
     {
-      case 0:
+      case up:
         --characters[index].posY;
         if (characters[index].posY < 0)
           characters[index].posY = mapHeight - 1;
@@ -775,7 +780,7 @@ void MoveCharacter(byte index, byte dir, bool cameraUpdate)
             characters[index].quadPosY = mapMatrixHeight - 1;
         }
         break;
-      case 1:
+      case down:
         ++characters[index].posY;
         if (characters[index].posY >= mapHeight)
           characters[index].posY = 0;
@@ -787,7 +792,7 @@ void MoveCharacter(byte index, byte dir, bool cameraUpdate)
             characters[index].quadPosY = 0; 
         }
         break;
-      case 2:
+      case left:
         --characters[index].posX;
         if (characters[index].posX < 0)
           characters[index].posX = mapWidth - 1;
@@ -799,7 +804,7 @@ void MoveCharacter(byte index, byte dir, bool cameraUpdate)
             characters[index].quadPosX = mapMatrixWidth - 1; 
         }
         break;
-      case 3:
+      case right:
         ++characters[index].posX;
         if (characters[index].posX >= mapWidth)
           characters[index].posX = 0;
@@ -819,7 +824,7 @@ void MoveCharacter(byte index, byte dir, bool cameraUpdate)
     {
       byte edgeCheckX = characters[index].posX % 16;
       byte edgeCheckY = characters[index].posY % 16;
-      
+
       switch (dir)
       {
         case 0:
@@ -883,13 +888,14 @@ void LoadMap()
   InitializeMapData();
   playerX = (viewportWidth - 1) / 2;
   playerY = (viewportHeight - 1) / 2;
-  
+
   viewportSize = viewportHeight * viewportWidth;
 }
 
 screenName MapUpdate()
 {
   bool exit = false;
+  ClearScreen();
   //screenName nextScreen;
   DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
@@ -904,22 +910,22 @@ screenName MapUpdate()
     {
       if (InputUp())
       {
-        MoveCharacter(0, 0, true);
+        MoveCharacter(followIndex, up, true);
         //return 1;
       }
       if (InputDown()) 
       {
-        MoveCharacter(0, 1, true); 
+        MoveCharacter(followIndex, down, true); 
         //return 1;
       }
       if (InputLeft())
       {
-        MoveCharacter(0, 2, true);
+        MoveCharacter(followIndex, left, true);
         //return 1;
       }
       if (InputRight())
       {
-        MoveCharacter(0, 3, true);
+        MoveCharacter(followIndex, right, true);
         //return 1;
       }
       if (InputFire())
@@ -932,7 +938,7 @@ screenName MapUpdate()
         //WriteLineMessageWindow(str, 0);
         exit = true;
       }
-      
+
     }
   }
   return EditParty;

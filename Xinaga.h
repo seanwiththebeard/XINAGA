@@ -10,8 +10,6 @@
 
 #define COLS 40
 #if defined(__APPLE2__)
-#pragma code-name (push, "LOWCODE")
-
 #define ROWS 24
 #define STROBE(addr) __asm__ ("sta %w", addr)
 
@@ -23,8 +21,6 @@
 #include <cbm_petscii_charmap.h>
 #define ROWS 25
 #endif
-
-
 
 typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
@@ -57,7 +53,6 @@ void SetBG(byte color);
 
 extern int YColumnIndex[25];
 extern byte* MapSetInfo;
-//extern byte MapOriginX, MapOriginY;
 
 //	Drawing
 void ClearScreen(void);
@@ -119,8 +114,7 @@ bool InputFire(void);
 
 //Console
 void ResizeMessageWindow (byte x, byte y, byte w, byte h);
-//void DrawMessageWindow();
-//void BlankMessageWindow();
+
 void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
 extern char *Messages[4];
@@ -133,7 +127,6 @@ void ConsoleBufferAddNumber(int value);
 void ConsoleBufferPrint(byte x, byte y);
 void ConsoleBufferPrintConsole(byte delay);
 
-
 //Selection Menu
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
 void SetMenuItem(byte index, char *value);
@@ -141,17 +134,4 @@ byte GetMenuSelection();
 void HighlightMenuItem(byte index);
 byte IsMenuItemHighlighted(byte index);
 void DrawMenu();
-
-//Common Functions
-//byte ReadBit(byte byteToRead, char bit); //These are old
-//void WriteBit(byte *byteToSet, char bit, bool value); //These are old
-//bool CheckBit(byte source, byte position); //These are old
-
-//byte SetBit(byte byteToSet , byte k); //These work right
-//byte ClearBit(byte byteToSet , byte k); //These work right
-
-
-#if defined(__APPLE2__)
-#pragma code-name (pop)
-#endif
 #endif

@@ -13,7 +13,6 @@
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_Map.c"
 //#link "Game_Screen_Combat.c"
-////#link "Game_Screen_Credits.c"
 ////#link "Game_Screen_MapGen.c"
 ////#link "Game_Screen_Scenario.c"
 
@@ -24,8 +23,8 @@
 #define CFGFILE apple2-xinaga.cfg
 #endif
 
-screenName Update_MapGen(){return 0;}
 screenName Update_Title(){return 0;}
+screenName Update_MapGen(){return 0;}
 screenName Update_Scenario(){return 0;}
 //screenName Update_Combat(){return 0;}
 

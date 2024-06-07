@@ -5,11 +5,6 @@
 #pragma code-name (push, "LC")
 #endif
 
-#define height 16
-#define width 16
-#define posX 1
-#define posY 1
-
 #define consolePosX  1
 #define consolePosY 17
 #define consoleWidth 28
@@ -25,11 +20,7 @@
 //Each world is like a level, each continent/quest is like a star
 //100 coin star?
 
-byte QuestOrigin = 0;
-byte QuestType = 0;
-byte QuestGiver = 0;
-byte QuestTarget = 0;
-byte QuestLocation = 0;
+
 //byte randSeed = 0;
 
 char *questOrigin[4] = { "the castle", "a tavern rumor", "your library studies", "a dream at the inn"};
@@ -75,8 +66,8 @@ char *questTarget[6][4] = { //Point of Interest
 char *questLocation[6][4] = { //Map Location
   /*Kill*/	{"Forrest", "Dungeon", "Dwarven Tower", "Dimensional Rift"},
   /*Retrieve*/	{"Ruined Archive", "Dungeon", "Castle Basement", "Dwarven Tower"},
-  /*Explore*/	{"Mobile Siege Engine", "Ruined Archive", "Dwarven Tower", "Dimensional Rift"},
-  /*PuzzleSolve*/	{"Clock Tower", "Library", "Mobile Siege Engine", "Windmill"},
+  /*Explore*/	{"Siege Engine", "Ruined Archive", "Dwarven Tower", "Dimensional Rift"},
+  /*PuzzleSolve*/	{"Clock Tower", "Library", "Siege Engine", "Windmill"},
   /*Visit*/	{"Ruins", "Lake", "Open Plains", "Forrest"},
   /*Play Cards*/	{"Castle", "Forrest Clearing", "Dimensional Rift", "Tavern"}
 };
@@ -85,15 +76,14 @@ char *questLocation[6][4] = { //Map Location
 
 void GenerateContinent(int seed)
 {
+  byte QuestOrigin = rand() % 4;
+  byte QuestType = rand() % 6;
+  byte QuestGiver = rand() % 4;
+  byte QuestTarget = rand() % 4;
+  byte QuestLocation = rand() % 4;
+  
   srand(seed);
   srand (rand() % 32767);
-  
-  QuestOrigin = rand() % 4;
-  QuestType = rand() % 6;
-  QuestGiver = rand() % 4;
-  QuestTarget = rand() % 4;
-  QuestLocation = rand() % 4;
-  
   
   sprintf(strTemp, "In %s, the %s asks you to %s the %s at the %s@", questOrigin[QuestOrigin], questGiver[QuestOrigin][QuestGiver], questType[QuestType], questTarget[QuestType][QuestTarget], questLocation[QuestType][QuestLocation]);
   WriteLineMessageWindow(strTemp, 0);
@@ -110,7 +100,7 @@ void GenerateContinent(int seed)
 
 screenName Update_Scenario()
 {
-  int seed = 0;
+  int seed;
   screenName nextScreen = Title;
   bool exit = false;
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
@@ -122,7 +112,7 @@ screenName Update_Scenario()
     SetMenuItem(3, "End@");
     while (!exit)
     {
-      sprintf(strTemp, "Continent Quest Seed: %d @", seed);
+      sprintf(strTemp, "Continent Seed: %d @", seed);
       SetLineMessageWindow(strTemp, 0);
       
       switch (GetMenuSelection())

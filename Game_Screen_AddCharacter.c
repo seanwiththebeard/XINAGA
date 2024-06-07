@@ -77,17 +77,9 @@ void RollStats()
   CHR = RollDice(3, 6);
 
   WriteLineMessageWindow("Rolled Stats:@", 0);
-  sprintf(strTemp, "STR: %d@", STR);
+  sprintf(strTemp, "(STR: %2d) (CON: %2d) (DEX %2d)@", STR, CON, DEX);
   WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "CON: %d@", CON);  
-  WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "DEX: %d@", DEX);
-  WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "WIS: %d@", WIS);
-  WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "INT: %d@", INT);
-  WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "CHR: %d@", CHR);
+  sprintf(strTemp, "(WIS: %2d) (INT: %2d) (CHR %2d)@", WIS, INT, CHR);
   WriteLineMessageWindow(strTemp, 0);
 }
 

@@ -4,8 +4,6 @@
 #pragma code-name (push, "LOWCODE")
 #endif
 #include "Xinaga.h"
-#include <stdint.h>
-#include <stdlib.h>
 typedef enum { Title, EditParty, Map, Combat, Menu, SaveLoad, MapGen, Scenario } screenName;
 extern int randseed;
 
