@@ -9,14 +9,15 @@
 #include <peekpoke.h>
 
 #define COLS 40
+
 #if defined(__APPLE2__)
 #define ROWS 24
 #define STROBE(addr) __asm__ ("sta %w", addr)
-
 #pragma warn (remap-zero, push, off)
 #pragma charmap ('^', 0x7E)
 #pragma warn (remap-zero, pop)
 #endif
+
 #if defined(__C64__)
 #include <cbm_petscii_charmap.h>
 #define ROWS 25
