@@ -19,11 +19,10 @@
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_Map.c"
 //#link "Game_Screen_Combat.c"
-//#link "Game_Screen_Credits.c"
 //#link "Game_Screen_MapGen.c"
 //#link "Game_Screen_Scenario.c"
 
-void Demo(void);
+//void Demo(void);
 void main()
 {
   Demo();

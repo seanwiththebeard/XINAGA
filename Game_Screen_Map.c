@@ -96,8 +96,8 @@ byte cameraOffsetY = 0;
 struct Tile
 {
   byte chars[4];
-  byte index;
-  byte colors[4];
+  //byte colors[4];
+  //byte index;
   byte blocked;
   byte trigger;
   byte opaque;
@@ -443,7 +443,6 @@ void InitializeMapData()
   #define water 34
   #define signpost 35
   byte byte_x, byte_y, byte_i, byte_index, byte_offset;
-  
 
   cameraOffsetX = viewportWidth / 2;
   cameraOffsetY = viewportHeight / 2;
@@ -454,7 +453,7 @@ void InitializeMapData()
       byte_index = byte_x + byte_y*8;
       byte_offset = byte_x * 2 + 32*byte_y;
 
-      tiles[byte_index].index = byte_index; // Init tileset data for 64 tiles
+      //tiles[byte_index].index = byte_index; // Init tileset data for 64 tiles
       tiles[byte_index].chars[0] = byte_offset;
       tiles[byte_index].chars[1] = byte_offset + 1;
       tiles[byte_index].chars[2] = byte_offset + 16;
@@ -901,6 +900,7 @@ screenName MapUpdate()
   while (!exit)
   {
     //if (InputChanged())
+    UpdateInput();
     {
       if (InputUp())
       {
@@ -933,7 +933,6 @@ screenName MapUpdate()
         exit = true;
       }
       
-      UpdateInput();
     }
   }
   return EditParty;

@@ -14,7 +14,7 @@ int MovementRemaining = 0;
 #define CombatMapWidth 11
 #define CombatMapHeight 8
 
-#define MaxCombatParticipants 6 //CombatMapWidth * CombatMapHeight
+#define MaxCombatParticipants 16 //CombatMapWidth * CombatMapHeight
 #define MonsterCount 8
 
 

@@ -5,7 +5,7 @@
 #pragma code-name (push, "LOWCODE")
 #endif
 
-screenName currentScreen = Map;
+screenName currentScreen = EditParty;
 
 RaceDescriptionDef RaceDescription[4] = 
 {
