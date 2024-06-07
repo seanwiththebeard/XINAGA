@@ -29,10 +29,6 @@ void LoadMap();
 
 //Globals
 #define EmptyTile 7
-//byte byte_x = 0;
-//byte byte_y = 0;
-//byte byte_z = 0;
-//byte byte_i = 0;
 byte checkCollision = 0;
 int int_x = 0;
 int int_y = 0;
