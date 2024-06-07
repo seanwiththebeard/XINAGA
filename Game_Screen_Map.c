@@ -923,11 +923,34 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
 
     if (index == followIndex)
     {
-      if ((direction == 0 && characters[index].posY % 16 == 6)
-          || (direction == 1  && characters[index].posY % 16 == 10)
-          || (direction == 2 && characters[index].posX % 16 == 6)
-          || (direction == 3 && characters[index].posX % 16 == 10))
-        scrollQuads = true;
+      byte edgeCheckX = characters[index].posX % 16;
+      byte edgeCheckY = characters[index].posY % 16;
+      
+      switch (direction)
+      {
+        case 0:
+          if (edgeCheckY == 6)
+            scrollQuads = true;
+          break;
+        case 1:
+          if (edgeCheckY == 10)
+            scrollQuads = true;
+          break;
+        case 2:
+          if (edgeCheckX == 6)
+            scrollQuads = true;
+          break;
+        case 3:
+          if (edgeCheckX == 10)
+            scrollQuads = true;
+          break;
+      }
+      /*
+      if ((direction == 0 && edgeCheck == 6)
+          || (direction == 1  && edgeCheck == 10)
+          || (direction == 2 && edgeCheck == 6)
+          || (direction == 3 && edgeCheck == 10))
+        scrollQuads = true;*/
 
       if(cameraUpdate)
         CameraFollow();
