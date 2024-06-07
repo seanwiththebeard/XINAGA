@@ -49,7 +49,7 @@ void SetBG(byte color);
 
 extern int YColumnIndex[25];
 extern byte* MapSetInfo;
-extern byte MapOriginX, MapOriginY;
+//extern byte MapOriginX, MapOriginY;
 
 //	Drawing
 void ClearScreen(void);

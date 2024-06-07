@@ -26,23 +26,17 @@ void ApplyLOS();
 void DrawEntireMap();
 void MoveCharacter(byte index, byte direction, bool cameraUpdate);
 void LoadMap();
+void DrawCharacterCoordinates(byte index);
 
 //Globals
 #define EmptyTile 7
 byte checkCollision = 0;
-int int_x = 0;
-int int_y = 0;
-int int_a = 0;
-int int_b = 0;
-int xPos = 0;
-int yPos = 0;
-int chardata = 0;
 bool scrollQuads = false;
 bool changedQuad = false;
-byte byte_index = 0;
-byte byte_offset = 0;
-byte playerX = 0;
-byte playerY = 0; //Used in line-of-sight calculations
+//byte byte_index = 0;
+//byte byte_offset = 0;
+byte playerX = 0; //Player Position in line-of-sight calculations
+byte playerY = 0; //Player Position in line-of-sight calculations
 
 //Map Data
 #define mapHeight 32
@@ -72,8 +66,8 @@ const byte quadHeightDouble = quadHeight * 2;
 const byte yQuadHeight = 2*mapQuadHeight;
 
 //Viewport
-byte viewportPosX = 1;
-byte viewportPosY = 2;
+#define viewportPosX 1
+#define viewportPosY 1
 #define viewportWidth 11
 #define viewportHeight 8
 byte viewportSize = viewportHeight * viewportWidth;
@@ -91,8 +85,6 @@ byte quadB = 0; //Diagonal quad
 byte indexA = 0;
 byte indexB = 0;
 byte compareQuad = 0;
-bool posX = false;
-bool posY = false;
 
 //Camera Position
 int offsetX = 0;
@@ -100,7 +92,7 @@ int offsetY = 0;
 byte cameraOffsetX = 0;
 byte cameraOffsetY = 0;
 
-byte moved = 0;
+//byte moved = 0;
 
 //Tile Data
 struct Tile
@@ -225,6 +217,7 @@ void FillQuadBuffer()
 void LoadQuadrant(byte quadIndex, byte quad)
 {
   byte byte_x, byte_y, byte_z;
+  int chardata;
   
   //sprintf(str, "Tile%d to Quad%d@", index, quad);
   //WriteLineMessageWindow(str, 1);
@@ -320,6 +313,7 @@ byte GetPlayerQuad() //Returns the viewport quadrant of the player character
 
 byte GetQuadInRelation(bool up, bool down, bool left, bool right)
 {
+  int int_x, int_y;
   int_x = characters[followIndex].quadPosX;
   int_y = characters[followIndex].quadPosY;
   if (up)
@@ -352,40 +346,41 @@ byte GetQuadInRelation(bool up, bool down, bool left, bool right)
 void QuadScroll(byte direction)
 {
   byte p = GetChar(COLS - 1, ROWS - 1);
+  bool charPosX, charPosY;
   SetChar('Q', COLS - 1, ROWS - 1);
   QuadOriginX = characters[followIndex].quadPosX;
   QuadOriginY = characters[followIndex].quadPosY;
   compareQuad = GetPlayerQuad();
 
-  posX = characters[followIndex].posX % 16 < quadWidth;
-  posY = characters[followIndex].posY % 16 < quadHeight;
+  charPosX = characters[followIndex].posX % 16 < quadWidth;
+  charPosY = characters[followIndex].posY % 16 < quadHeight;
 
   switch(direction)
   {
     case 0:
       indexA = GetQuadInRelation(true, false, false, false);
-      if (posX)
+      if (charPosX)
         indexB = GetQuadInRelation(true, false, true, false);
       else
         indexB = GetQuadInRelation(true, false, false, true);
       break;
     case 1:
       indexA = GetQuadInRelation(false, true, false, false);
-      if (posX)
+      if (charPosX)
         indexB = GetQuadInRelation(false, true, true, false);
       else
         indexB = GetQuadInRelation(false, true, false, true);
       break;
     case 2:
       indexA = GetQuadInRelation(false, false, true, false);
-      if (posY)
+      if (charPosY)
         indexB = GetQuadInRelation(true, false, true, false);
       else
         indexB = GetQuadInRelation(false, true, true, false);
       break;
     case 3:
       indexA = GetQuadInRelation(false, false, false, true);
-      if (posY)
+      if (charPosY)
         indexB = GetQuadInRelation(true, false, false, true);
       else
         indexB = GetQuadInRelation(false, true, false, true);
@@ -449,7 +444,7 @@ void InitializeMapData()
   #define grass 36
   #define water 34
   #define signpost 35
-  byte byte_x, byte_y, byte_i;
+  byte byte_x, byte_y, byte_i, byte_index, byte_offset;
   
 
   cameraOffsetX = viewportWidth / 2;
@@ -548,7 +543,7 @@ int wrapY(int posY)
 bool CheckCollision(byte charIndex, byte Direction)
 {
   byte byte_i;
-  
+  int xPos, yPos; //These need to be integers because they can wrap around the map
   xPos = characters[charIndex].posX;
   yPos = characters[charIndex].posY;
 
@@ -562,22 +557,18 @@ bool CheckCollision(byte charIndex, byte Direction)
   switch (Direction)
   {
     case 0:
-      //yPos -= 1;
       yPos = wrapY(yPos - 1);
       Direction = 1;
       break;
     case 1:
-      //yPos += 1;
       yPos = wrapY(yPos + 1);
       Direction = 0;
       break;
     case 2:
-      //xPos -= 1;
       xPos = wrapX(xPos - 1);
       Direction = 3;
       break;
     case 3:
-      //xPos += 1;
       xPos = wrapX(xPos + 1);
       Direction = 2;
       break;
@@ -596,7 +587,8 @@ bool CheckCollision(byte charIndex, byte Direction)
     WriteLineMessageWindow(str, 1);*/
     return true;
   }
-
+  
+  //Call Messagebox from NPC
   for (byte_i = 0; byte_i < charactersCount; ++byte_i)
     if(characters[byte_i].collide)
       if (characters[byte_i].posX == xPos)
@@ -714,7 +706,7 @@ const byte viewportsize = viewportHeight * viewportWidth;
 void DrawEntireMap()
 {
   byte byte_x, byte_y;
-  
+  int int_a, int_b;
   #if defined(__C64__)
   StoreBuffer();
   #endif
@@ -758,6 +750,8 @@ void DrawEntireMap()
   SwapBuffer();
   #endif
   memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportSize);
+  
+  DrawCharacterCoordinates(followIndex);
 }
 
 void MoveCharacter(byte index, byte direction, bool cameraUpdate)
@@ -862,16 +856,19 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate)
 
       if (scrollQuads)
         QuadScroll(direction);
-      
-      sprintf(strTemp,"(%d,%d)@", characters[followIndex].posX, characters[followIndex].posY);
-      PrintString(strTemp, viewportPosX + 8, viewportPosY - 1, true, false);
     }
   }
 }
 
+void DrawCharacterCoordinates(byte index)
+{
+  sprintf(strTemp,"(%2d,%2d)@", characters[index].posX, characters[index].posY);
+  PrintString(strTemp, viewportPosX + 6, viewportPosY - 1, true, false);
+}
+
 void LoadMap()
 {
-  viewportPosX = MapOriginX;
+  /*viewportPosX = MapOriginX;
   viewportPosY = MapOriginY;
 
   while (viewportPosX + (2*viewportWidth) >= COLS)
@@ -882,7 +879,7 @@ void LoadMap()
   while (viewportPosX < 1)
     ++viewportPosX;
   while (viewportPosY < 1)
-    ++viewportPosY;
+    ++viewportPosY;*/
 
   SetTileOrigin(viewportPosX, viewportPosY);
 
@@ -905,7 +902,6 @@ screenName MapUpdate()
 
   while (!exit)
   {
-    UpdateInput();
     //if (InputChanged())
     {
       if (InputUp())
@@ -938,6 +934,8 @@ screenName MapUpdate()
         //WriteLineMessageWindow(str, 0);
         exit = true;
       }
+      
+      UpdateInput();
     }
   }
   return EditParty;
