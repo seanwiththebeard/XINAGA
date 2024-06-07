@@ -32,7 +32,7 @@ byte QuestTarget = 0;
 byte QuestLocation = 0;
 //byte randSeed = 0;
 
-char *questOrigin[] = { "the castle", "a tavern rumor", "your library studies", "a dream at the inn"};
+char *questOrigin[4] = { "the castle", "a tavern rumor", "your library studies", "a dream at the inn"};
 //Map Location Types (rule of fours, four tileset variations of each of four options)
 
 //Primary Settlement: 	
@@ -57,14 +57,14 @@ char *questOrigin[] = { "the castle", "a tavern rumor", "your library studies", 
 //			Shipwreck	Ship, Airship, Siege Engine, Leviathan Fossil
 //			Tomb		Pyramid, Crypt, Graveyard, Catacombs
 
-char *questGiver[][] = {
+char *questGiver[4][4] = {
   /*Castle*/	{"King", "Blacksmith", "Guildmaster", "Town Council"},
   /*Town Tavern*/	{"Tavern Owner", "Cloaked Figure", "Guildmaster", "People"},
   /*Library Book*/{"History Book", "Librarian", "Scholar", "Cloaked Figure"},
   /*Dream*/	{"Statue", "Restless Spirit", "Talking Animal", "Wise Tree"}
 };
-char *questType[] = { "kill", "retrieve", "explore and map out", "solve the puzzle in", "visit", "play cards with"};
-char *questTarget[][] = { //Point of Interest
+char *questType[6] = { "kill", "retrieve", "explore and map out", "solve the puzzle in", "visit", "play cards with"};
+char *questTarget[6][4] = { //Point of Interest
   /*Kill*/	{"Dragon", "Vampire", "Wizard", "Owlbear"},
   /*Retrieve*/	{"Scroll", "Gauntlet", "Orb", "Artifact"},
   /*Explore*/	{"Cavern", "Hidden Cellar", "Burial Site", "Treasure Room"},
@@ -72,7 +72,7 @@ char *questTarget[][] = { //Point of Interest
   /*Visit*/	{"Burial Site", "Water's Edge", "Monument", "Wise Tree"},
   /*PlayCards*/	{"Hooded Figure", "Lost Knight", "Talking Animal", "Wizard"}
 };
-char *questLocation[][] = { //Map Location
+char *questLocation[6][4] = { //Map Location
   /*Kill*/	{"Forrest", "Dungeon", "Dwarven Tower", "Dimensional Rift"},
   /*Retrieve*/	{"Ruined Archive", "Dungeon", "Castle Basement", "Dwarven Tower"},
   /*Explore*/	{"Mobile Siege Engine", "Ruined Archive", "Dwarven Tower", "Dimensional Rift"},
