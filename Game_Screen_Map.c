@@ -843,13 +843,14 @@ void DrawEntireMap()
       #endif
       if (lastIndex!=newIndex)
         DrawTileDirect(newIndex, byte_x, byte_y);
+        //DrawTileFast(newIndex, byte_x, byte_y);
     }
   }
   #if defined(__APPLE2__)
   //memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportsize); //It's acrtually faster to skip this on Commodore
   #endif
   //SwapBuffer();
-  memcpy(&viewportBuffer[0][0], &viewportBufferLast[0][0], viewportSize);
+  memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportSize);
 }
 
 void MoveCharacter(byte index, byte direction, bool cameraUpdate)
