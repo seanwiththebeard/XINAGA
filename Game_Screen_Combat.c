@@ -492,7 +492,7 @@ bool CheckCombatMapCollision(byte direction)
           }
   }
 
-  switch(direction)
+  switch(direction) //Deactivate if off map
   {
     case up:
       if(combatParticipant[SelectedCharacter].posY <= 0)

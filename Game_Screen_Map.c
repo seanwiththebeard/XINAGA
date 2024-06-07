@@ -13,10 +13,6 @@
 //Prototypes
 //byte ReadBit(byte byteToRead, char bit);//These are old
 void CameraFollow();
-int GetWrappedX(int xPos); //For viewport character positions
-int GetWrappedY(int YPos);
-//int WrapMapPositionX(int posX);
-//int WrapMapPositionY(int posY);
 void BufferCharacters();
 void FillQuadBuffer();
 void LoadQuadrant(byte quadIndex, byte quad);
@@ -35,6 +31,7 @@ void MoveCharacter(byte index, byte direction, bool cameraUpdate);
 void LoadMap();
 
 //Globals
+#define EmptyTile 7
 byte byte_x = 0;
 byte byte_y = 0;
 byte byte_z = 0;
@@ -179,72 +176,28 @@ void CameraFollow()
   }
 }
 
-int GetWrappedX(int xPos) //For viewport character positions
-{ 
-  if(xPos < offsetX)
-    return (xPos - offsetX + mapWidth);
-  else
-    return (xPos - offsetX);
-    
-  /*byte_temp = xPos - offsetX;
-
-  if (xPos < offsetX)
-    byte_temp += mapWidth;
-
-  return byte_temp;*/
-}
-
-int GetWrappedY(int YPos)
-{
-  if (YPos < offsetY)
-    return (YPos - offsetY + mapHeight);
-  else
-    return (YPos - offsetY);
-  /*byte_temp = YPos - offsetY;
-
-  if (YPos < offsetY)
-    byte_temp += mapHeight;
-
-  return byte_temp;*/
-}
-
-/*int WrapMapPositionX(int posX)
-{  
-  if (posX < 0)
-  {
-    return (mapWidth - 1);
-  }
-  if (posX == mapWidth)
-  {
-    return 0;
-  }
-  return posX;
-}
-
-int WrapMapPositionY(int posY)
-{  
-  if (posY < 0)
-  {
-    return (mapHeight - 1);
-  }
-  if (posY == mapHeight)
-  {
-    return 0;
-  }
-  return posY;
-}*/
-
 void BufferCharacters()
 {
   for(byte_i = 0; byte_i < charactersCount; ++byte_i)
   {
-    byte_x = GetWrappedX(characters[byte_i].posX);
-    if (byte_x < viewportWidth)
+    if(characters[byte_i].visible)
     {
-      byte_y = GetWrappedY(characters[byte_i].posY);
-      if (byte_y < viewportHeight)
-        if(characters[byte_i].visible)
+      byte_x = characters[byte_i].posX;
+      if(byte_x < offsetX)
+        byte_x = (byte_x - offsetX + mapWidth);
+      else
+        byte_x = byte_x - offsetX;
+
+      if (byte_x < viewportWidth)
+      {
+        byte_y = characters[byte_i].posY;
+        if (byte_y < offsetY)
+          byte_y = byte_y - offsetY + mapHeight;
+        else
+          byte_y = byte_y - offsetY;
+        if (byte_y < viewportHeight)
           viewportBuffer[byte_x][byte_y] = characters[byte_i].tile;
+      }
     }
   }
 }
@@ -394,17 +347,15 @@ void LoadQuadrant(byte quadIndex, byte quad)
 
 void LoadMapQuads()
 {
+  byte x;
   FillQuadBuffer();
-
-  LoadQuadrant(quadBuffer[0], 0);
-  LoadQuadrant(quadBuffer[1], 1);
-  LoadQuadrant(quadBuffer[2], 2);
-  LoadQuadrant(quadBuffer[3], 3);
+  for (x = 0; x < 4; ++x)
+    LoadQuadrant(quadBuffer[x], x);
 }
 
 byte GetPlayerQuad() //Returns the viewport quadrant of the player character
 {
-  if (characters[followIndex].posX < 2 * mapQuadWidth)
+  if (characters[followIndex].posX < quadWidthDouble)
   {
     if (characters[followIndex].posY < yQuadHeight)
       return 0;
@@ -729,7 +680,7 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
   for(y = 0; y < ySize; ++y)
   {
     for(x = 0; x < xSize; ++x)
-      viewportBuffer[x + xOrigin][y + yOrigin] = 7;
+      viewportBuffer[x + xOrigin][y + yOrigin] = EmptyTile;
   }
 }
 
