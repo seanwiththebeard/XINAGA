@@ -32,7 +32,6 @@ byte attributeset[];
 #define ScreenDisable() (POKE(0xD011, PEEK(0xD011)&239))
 #define ScreenEnable() (POKE(0xD011, PEEK(0xD011)|16))
 #include <peekpoke.h>
-#include <conio.h>
 #endif
 //byte  MapSet[];
 byte* CharRam = 0;
@@ -232,18 +231,14 @@ void SetChar(char index, byte x, byte y)
   DrawChar(index, x, y);
   #endif
   #if defined(__C64__)
-  //textcolor(attributeset[index]);
-  //cputcxy(x, y, index);
-  int offset = x + YColumnIndex[y];
-  ScreenChars[offset] = index;
-  ScreenColors[offset] = attributeset[index];
+  ScreenChars[x + YColumnIndex[y]] = index;
+  ScreenColors[x + YColumnIndex[y]] = attributeset[index];
   #endif
 }
 
 void SetColor(byte index, byte x, byte y)
 {
   #if defined(__APPLE2__)
-  return;
   index;x;y;
   #endif
   #if defined(__C64__)
@@ -257,16 +252,14 @@ void SetCharBuffer(byte index, byte x, byte y)
   ScreenChars[x + COLS * y] = index;
   #endif
   #if defined(__C64__)
-  int offset = x + COLS*y;
-  ScreenCharBuffer[offset] = index;
-  ScreenColorBuffer[offset] = attributeset[index];
+  ScreenCharBuffer[x + COLS*y] = index;
+  ScreenColorBuffer[x + COLS*y] = attributeset[index];
   #endif
 }
 
 byte GetChar(byte x, byte y)
 {
-  return ScreenChars[x + YColumnIndex[y]];
-  //return ScreenChars[x + COLS*y];
+  return ScreenChars[x + COLS*y];
 }
 
 //Buffer
@@ -355,13 +348,10 @@ void SetTileOrigin(byte x, byte y)
   MapOriginY = y;
 }
 
-byte indexes[4] = {};
+byte indexes[4] = {0, 0, 0, 0};
 unsigned short offset1 = 0;
 void DrawTileFast(byte index, byte x, byte y)
 {
-  int baseX; 
-  int baseY;
-  
   index = (index << 1) + ((index >> 3) << 4);
   indexes[0] = index;
   indexes[1] = index + 1;
@@ -370,8 +360,6 @@ void DrawTileFast(byte index, byte x, byte y)
 
   x = x << 1;
   y = y << 1;
-  
-  
   #if defined(__C64__)
   offset1 = YColumnIndex[y] + x + originOffset;
   {
@@ -384,19 +372,15 @@ void DrawTileFast(byte index, byte x, byte y)
   #endif
 
   #if defined(__APPLE2__)
-  baseX = x + MapOriginX;
-  baseY = y + MapOriginY;
-  SetChar(indexes[0], baseX, baseY);
-  SetChar(indexes[1], baseX + 1, baseY);
-  SetChar(indexes[2], baseX, baseY + 1);
-  SetChar(indexes[3], baseX + 1, baseY + 1);
+  SetChar(indexes[0], x + MapOriginX, y + MapOriginY);
+  SetChar(indexes[1], x + MapOriginX + 1, y + MapOriginY);
+  SetChar(indexes[2], x + MapOriginX, y + 1 + MapOriginY);
+  SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
   #endif
 }
 
 void DrawTileDirect(byte index, byte x, byte y)
 {
-  int baseX = x + MapOriginX;
-  int baseY = y + MapOriginY;
   index = (index << 1) + ((index >> 3) << 4);
   indexes[0] = index;
   indexes[1] = index + 1;
@@ -406,10 +390,10 @@ void DrawTileDirect(byte index, byte x, byte y)
   x = x << 1;
   y = y << 1;
   
-  SetChar(indexes[0], baseX, baseY);
-  SetChar(indexes[1], baseX + 1, baseY);
-  SetChar(indexes[2], baseX, baseY + 1);
-  SetChar(indexes[3], baseX + 1, baseY + 1);
+  SetChar(indexes[0], x + MapOriginX, y + MapOriginY);
+  SetChar(indexes[1], x + MapOriginX + 1, y + MapOriginY);
+  SetChar(indexes[2], x + MapOriginX, y + 1 + MapOriginY);
+  SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
 }
 
 byte arrowA = 0;
@@ -479,11 +463,317 @@ void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bo
   SetChar(238, xPos + width - 1, yPos);
   SetChar(238, xPos, yPos + height - 1);
   SetChar(238, xPos + width - 1, yPos + height - 1);
-
-
 }
+
 #if defined(__C64__)
-byte MapSet[] = {/*{w:8,h:8,brev:1,count:64, bpp:1, pal:"c64"}*/
+#include <c64.h>
+#endif
+//Scrolling
+sbyte scroll_fine_x = 0;
+sbyte scroll_fine_y = 0;
+
+#if defined(__C64__)
+void ScrollingMaskOn()
+{
+  #if defined(__C64__)
+  VIC.ctrl1 &= ~0x08; // 24 lines
+  VIC.ctrl2 &= ~0x08; // 38 columns  
+  //ClearBit(VIC.ctrl1, 3);
+  //ClearBit(VIC.ctrl2, 3);
+  #endif
+}
+
+void ScrollingMaskOff()
+{
+  #if defined(__C64__)
+  VIC.ctrl1 &= ~0x08; // 24 lines
+  VIC.ctrl2 &= ~0x08; // 38 columns  
+  //SetBit(VIC.ctrl1, 3);
+  //SetBit(VIC.ctrl2, 3);
+  #endif
+}
+
+void ScrollReset()
+{
+  VIC.ctrl1 = 0x1b;
+  VIC.ctrl2 = 0xc8;
+}
+
+// set scrolling registers
+#define SET_SCROLL_Y(_y) \
+  VIC.ctrl1 = (VIC.ctrl1 & 0xf8) | (_y);
+
+#define SET_SCROLL_X(_x) \
+  VIC.ctrl2 = (VIC.ctrl2 & 0xf8) | (_x);
+
+
+void scroll_update_regs() {
+  SET_SCROLL_X(scroll_fine_x);
+  SET_SCROLL_Y(scroll_fine_y);
+}
+#endif
+
+
+void scroll_up() {
+  int length = YColumnIndex[ROWS - 1];
+  #if defined(__C64__)
+  memset(&ScreenCharBuffer[length], ' ', COLS);
+  memset(&ScreenChars[0], ' ', COLS);
+
+  memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], length);
+  memcpy(&ScreenColorBuffer[0], &ScreenColors[COLS], length);
+
+  wait_vblank(1);
+  ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
+  SwapBuffer();
+  ScreenEnable();
+  #endif
+}
+
+void scroll_down() {
+  int length = YColumnIndex[ROWS - 1];
+  #if defined(__C64__)
+  memset(&ScreenCharBuffer[0], ' ', COLS);
+  memset(&ScreenChars[length], ' ', COLS);
+
+  memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], length);
+  memcpy(&ScreenColorBuffer[COLS], &ScreenColors[0], length);
+
+  wait_vblank(1);
+  ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
+  SwapBuffer();
+  ScreenEnable();
+  #endif
+}
+
+void scroll_right()
+{
+  #if defined(__C64__)
+  byte z;
+  int offset = 0;
+
+  for (z = 0; z < ROWS; z++)
+  {
+    SetChar(' ', 0, z);
+    SetChar(' ', COLS - 1, z);
+    memcpy(&ScreenCharBuffer[offset + 1], &ScreenChars[offset], COLS - 1);
+    memcpy(&ScreenColorBuffer[offset + 1], &ScreenColors[offset], COLS - 1);
+    offset += COLS;
+  }
+  wait_vblank(1);
+  ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  SwapBuffer();
+  ScreenEnable();
+  #endif
+}
+
+void scroll_left()
+{
+  #if defined(__C64__)
+  byte z;
+  int offset = 0;
+
+  for (z = 0; z < ROWS; z++)
+  {
+    SetChar(' ', 0, z);
+    SetChar(' ', COLS - 1, z);
+    memcpy(&ScreenCharBuffer[offset], &ScreenChars[offset + 1], COLS - 1);
+    memcpy(&ScreenColorBuffer[offset], &ScreenColors[offset + 1], COLS - 1);
+    offset += COLS;
+  }
+  wait_vblank(1);
+  ScreenDisable();
+  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
+  SwapBuffer();
+  ScreenEnable();
+  #endif
+}
+
+void scroll_vert(sbyte delta_y)
+{
+  #if defined(__APPLE2__)
+  byte rowcount;
+
+  if (delta_y > 0)
+  {
+    for (rowcount = 191; rowcount > 0; --rowcount) 
+    {
+      memcpy(&HGR[RowsHGR[rowcount]], &HGR[RowsHGR[rowcount - 1]], COLS);
+    }
+    memset(&HGR[RowsHGR[0]], 0, COLS);
+  }
+  if (delta_y < 0)
+  {
+    for (rowcount = 1; rowcount < 192; ++rowcount)
+    {
+      memcpy(&HGR[RowsHGR[rowcount - 1]], &HGR[RowsHGR[rowcount]], COLS);
+    }
+    memset(&HGR[RowsHGR[rowcount - 1]], 0, COLS);
+  }
+  #endif
+  
+  #if defined(__C64__)
+  scroll_fine_y += delta_y;
+  while (scroll_fine_y < 0) {
+    scroll_fine_y += 8;
+    scroll_up();
+  }
+  while (scroll_fine_y >= 8) {
+    scroll_fine_y -= 8;
+    scroll_down();    
+  }
+  #endif
+}
+
+
+#if defined(__C64__)
+void scroll_horiz(sbyte delta_x)
+{
+  #if defined(__APPLE2__)
+  byte colcount, rowcount;
+  int offset;
+  if (delta_x > 0)
+  {
+    for (rowcount = 0; rowcount < 192; ++rowcount) 
+    {
+      for (colcount = 0; colcount < COLS; ++colcount)
+      {
+        offset  = RowsHGR[rowcount] + colcount;
+        HGR[offset] = HGR[offset] << 1;
+        if (colcount > 0)
+        {
+          if ((HGR[offset - 1] >> 7) & 1)
+            HGR[offset] += 1;
+        }
+      }
+    }
+  }
+  if (delta_x < 0)
+  {
+    for (rowcount = 0; rowcount < 192; ++rowcount) 
+    {
+      for (colcount = 0; colcount < COLS; ++colcount)
+      {
+        offset  = RowsHGR[rowcount] + colcount;
+        HGR[offset] = HGR[offset] >> 1;
+        if (colcount < COLS - 1)
+        {
+          if ((HGR[offset + 1]) & 2)
+            HGR[offset] += 128;
+        }
+      }
+    }
+  }
+  #endif
+  
+  #if defined(__C64__)
+  scroll_fine_x += delta_x;
+  while (scroll_fine_x < 0) {
+    scroll_fine_x += 8;
+    scroll_left();
+  }
+  while (scroll_fine_x >= 8) {
+    scroll_fine_x -= 8;
+    scroll_right();
+  }
+  #endif
+}
+#endif
+
+void Push(direction dir)
+{
+  byte x, y;
+  switch (dir)
+  {
+    case up:
+      for (y = 1; y < ROWS; ++y)
+        for (x = 0; x < COLS; ++x)
+        {
+          ScreenChars[x + YColumnIndex[y - 1]] = ScreenChars[x + YColumnIndex[y]];
+        }
+      break;
+    case down:
+      for (y = 1; y < ROWS; ++y)
+        for (x = 0; x < COLS; ++x)
+        {
+          ScreenChars[x + YColumnIndex[y]] = ScreenChars[x + YColumnIndex[y - 1]];
+        }
+      break;
+    case left:
+      break;
+    case right:
+      break;
+  }
+}
+
+void Scroll(direction dir)
+{
+  #if __C64__
+  byte count;
+  //ScrollingMaskOn();
+  scroll_fine_y = 3;
+  scroll_fine_x = 0;
+
+  for (count = 0; count < 8; ++count)
+  {
+    wait_vblank(1);
+    switch (dir)
+    {
+      case up:
+        scroll_vert(-1);
+        break;
+      case down:
+        scroll_vert(1);
+        break;
+      case left:
+        scroll_horiz(-1);
+        break;
+      case right:
+        scroll_horiz(1);
+        break;
+      default:
+        break;
+    }
+    wait_vblank(1);
+    scroll_update_regs();
+  }
+  //ScrollingMaskOff();
+  #endif
+
+  #if defined(__APPLE2__)
+  byte count;
+  {
+    for (count = 0; count < 8; ++count)
+    switch (dir)
+    {
+      case up:
+        scroll_vert(-1);
+        break;
+      case down:
+        scroll_vert(1);
+        break;
+      case left:
+        //push_left();
+        //scroll_horiz(-1);
+        break;
+      case right:
+        //push_right();
+        //scroll_horiz(1);
+        break;
+      default:
+        break;
+    }
+    Push(dir);
+  }
+  //CopyBuffer();
+  #endif
+}
+
+#if defined(__C64__)
+/*byte MapSet[] = {/*{w:8,h:8,brev:1,count:64, bpp:1, pal:"c64"}*/
   0xFF,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0xE7,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x01,0x01,0x01,0x01,0x01,0x01,0x01
     ,0x24,0x24,0x24,0x24,0x24,0x24,0x24,0x24,0x00,0x00,0xFF,0x00,0x00,0xFF,0x00,0x00
@@ -515,7 +805,7 @@ byte MapSet[] = {/*{w:8,h:8,brev:1,count:64, bpp:1, pal:"c64"}*/
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};*/
 #endif
 #if defined(__C64__)
 byte attributeset[] = {/*{pal:"c64", layout:"c64"}*/
@@ -889,310 +1179,3 @@ byte charset[] = {/*{w:8,h:8,count:256, bpp:1}*/
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x36, 0x3E, 0x36, 0x3E, 0x36, 0x3E, 0x36, 0x3E};
 #endif
-
-#if defined(__C64__)
-#include <c64.h>
-#endif
-//Scrolling
-sbyte scroll_fine_x = 0;
-sbyte scroll_fine_y = 0;
-
-#if defined(__C64__)
-void ScrollingMaskOn()
-{
-  #if defined(__C64__)
-  VIC.ctrl1 &= ~0x08; // 24 lines
-  VIC.ctrl2 &= ~0x08; // 38 columns  
-  //ClearBit(VIC.ctrl1, 3);
-  //ClearBit(VIC.ctrl2, 3);
-  #endif
-}
-
-void ScrollingMaskOff()
-{
-  #if defined(__C64__)
-  VIC.ctrl1 &= ~0x08; // 24 lines
-  VIC.ctrl2 &= ~0x08; // 38 columns  
-  //SetBit(VIC.ctrl1, 3);
-  //SetBit(VIC.ctrl2, 3);
-  #endif
-}
-
-void ScrollReset()
-{
-  VIC.ctrl1 = 0x1b;
-  VIC.ctrl2 = 0xc8;
-}
-
-// set scrolling registers
-#define SET_SCROLL_Y(_y) \
-  VIC.ctrl1 = (VIC.ctrl1 & 0xf8) | (_y);
-
-#define SET_SCROLL_X(_x) \
-  VIC.ctrl2 = (VIC.ctrl2 & 0xf8) | (_x);
-
-
-void scroll_update_regs() {
-  SET_SCROLL_X(scroll_fine_x);
-  SET_SCROLL_Y(scroll_fine_y);
-}
-#endif
-
-
-void scroll_up() {
-  int length = YColumnIndex[ROWS - 1];
-  #if defined(__C64__)
-  memset(&ScreenCharBuffer[length], ' ', COLS);
-  memset(&ScreenChars[0], ' ', COLS);
-
-  memcpy(&ScreenCharBuffer[0], &ScreenChars[COLS], length);
-  memcpy(&ScreenColorBuffer[0], &ScreenColors[COLS], length);
-
-  wait_vblank(1);
-  ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
-  SwapBuffer();
-  ScreenEnable();
-  #endif
-}
-
-void scroll_down() {
-  int length = YColumnIndex[ROWS - 1];
-  #if defined(__C64__)
-  memset(&ScreenCharBuffer[0], ' ', COLS);
-  memset(&ScreenChars[length], ' ', COLS);
-
-  memcpy(&ScreenCharBuffer[COLS], &ScreenChars[0], length);
-  memcpy(&ScreenColorBuffer[COLS], &ScreenColors[0], length);
-
-  wait_vblank(1);
-  ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], COLS * ROWS);
-  SwapBuffer();
-  ScreenEnable();
-  #endif
-}
-
-void scroll_right()
-{
-  #if defined(__C64__)
-  byte z;
-  int offset = 0;
-
-  for (z = 0; z < ROWS; z++)
-  {
-    SetChar(' ', 0, z);
-    SetChar(' ', COLS - 1, z);
-    memcpy(&ScreenCharBuffer[offset + 1], &ScreenChars[offset], COLS - 1);
-    memcpy(&ScreenColorBuffer[offset + 1], &ScreenColors[offset], COLS - 1);
-    offset += COLS;
-  }
-  wait_vblank(1);
-  ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
-  SwapBuffer();
-  ScreenEnable();
-  #endif
-}
-
-void scroll_left()
-{
-  #if defined(__C64__)
-  byte z;
-  int offset = 0;
-
-  for (z = 0; z < ROWS; z++)
-  {
-    SetChar(' ', 0, z);
-    SetChar(' ', COLS - 1, z);
-    memcpy(&ScreenCharBuffer[offset], &ScreenChars[offset + 1], COLS - 1);
-    memcpy(&ScreenColorBuffer[offset], &ScreenColors[offset + 1], COLS - 1);
-    offset += COLS;
-  }
-  wait_vblank(1);
-  ScreenDisable();
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
-  SwapBuffer();
-  ScreenEnable();
-  #endif
-}
-
-void scroll_vert(sbyte delta_y)
-{
-  #if defined(__APPLE2__)
-  byte rowcount;
-
-  if (delta_y > 0)
-  {
-    for (rowcount = 191; rowcount > 0; --rowcount) 
-    {
-      memcpy(&HGR[RowsHGR[rowcount]], &HGR[RowsHGR[rowcount - 1]], COLS);
-    }
-    memset(&HGR[RowsHGR[0]], 0, COLS);
-  }
-  if (delta_y < 0)
-  {
-    for (rowcount = 1; rowcount < 192; ++rowcount)
-    {
-      memcpy(&HGR[RowsHGR[rowcount - 1]], &HGR[RowsHGR[rowcount]], COLS);
-    }
-    memset(&HGR[RowsHGR[rowcount - 1]], 0, COLS);
-  }
-  #endif
-  
-  #if defined(__C64__)
-  scroll_fine_y += delta_y;
-  while (scroll_fine_y < 0) {
-    scroll_fine_y += 8;
-    scroll_up();
-  }
-  while (scroll_fine_y >= 8) {
-    scroll_fine_y -= 8;
-    scroll_down();    
-  }
-  #endif
-}
-
-
-#if defined(__C64__)
-void scroll_horiz(sbyte delta_x)
-{
-  #if defined(__APPLE2__)
-  byte colcount, rowcount;
-  int offset;
-  if (delta_x > 0)
-  {
-    for (rowcount = 0; rowcount < 192; ++rowcount) 
-    {
-      for (colcount = 0; colcount < COLS; ++colcount)
-      {
-        offset  = RowsHGR[rowcount] + colcount;
-        HGR[offset] = HGR[offset] << 1;
-        if (colcount > 0)
-        {
-          if ((HGR[offset - 1] >> 7) & 1)
-            HGR[offset] += 1;
-        }
-      }
-    }
-  }
-  if (delta_x < 0)
-  {
-    for (rowcount = 0; rowcount < 192; ++rowcount) 
-    {
-      for (colcount = 0; colcount < COLS; ++colcount)
-      {
-        offset  = RowsHGR[rowcount] + colcount;
-        HGR[offset] = HGR[offset] >> 1;
-        if (colcount < COLS - 1)
-        {
-          if ((HGR[offset + 1]) & 2)
-            HGR[offset] += 128;
-        }
-      }
-    }
-  }
-  #endif
-  
-  #if defined(__C64__)
-  scroll_fine_x += delta_x;
-  while (scroll_fine_x < 0) {
-    scroll_fine_x += 8;
-    scroll_left();
-  }
-  while (scroll_fine_x >= 8) {
-    scroll_fine_x -= 8;
-    scroll_right();
-  }
-  #endif
-}
-#endif
-
-void Push(direction dir)
-{
-  byte x, y;
-  switch (dir)
-  {
-    case up:
-      for (y = 1; y < ROWS; ++y)
-        for (x = 0; x < COLS; ++x)
-        {
-          ScreenChars[x + YColumnIndex[y - 1]] = ScreenChars[x + YColumnIndex[y]];
-        }
-      break;
-    case down:
-      for (y = 1; y < ROWS; ++y)
-        for (x = 0; x < COLS; ++x)
-        {
-          ScreenChars[x + YColumnIndex[y]] = ScreenChars[x + YColumnIndex[y - 1]];
-        }
-      break;
-    case left:
-      break;
-    case right:
-      break;
-  }
-}
-
-void Scroll(direction dir)
-{
-  #if __C64__
-  byte count;
-  //ScrollingMaskOn();
-  scroll_fine_y = 3;
-  scroll_fine_x = 0;
-
-  for (count = 0; count < 8; ++count)
-  {
-    wait_vblank(1);
-    switch (dir)
-    {
-      case up:
-        scroll_vert(-1);
-        break;
-      case down:
-        scroll_vert(1);
-        break;
-      case left:
-        scroll_horiz(-1);
-        break;
-      case right:
-        scroll_horiz(1);
-        break;
-      default:
-        break;
-    }
-    wait_vblank(1);
-    scroll_update_regs();
-  }
-  //ScrollingMaskOff();
-  #endif
-
-  #if defined(__APPLE2__)
-  byte count;
-  {
-    for (count = 0; count < 8; ++count)
-    switch (dir)
-    {
-      case up:
-        scroll_vert(-1);
-        break;
-      case down:
-        scroll_vert(1);
-        break;
-      case left:
-        //push_left();
-        //scroll_horiz(-1);
-        break;
-      case right:
-        //push_right();
-        //scroll_horiz(1);
-        break;
-      default:
-        break;
-    }
-    Push(dir);
-  }
-  //CopyBuffer();
-  #endif
-}
