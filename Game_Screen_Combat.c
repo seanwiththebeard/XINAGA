@@ -2,7 +2,7 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-//#pragma code-name (push, "LC")
+#pragma code-name (push, "LC")
 #endif
 
 #define fillTile 36
@@ -565,7 +565,10 @@ void DrawCombatMap(void)
   for (y = 0; y < CombatMapHeight; ++y)
     for (x = 0; x < CombatMapWidth; ++x)
     {
-      DrawTileFast(fillTile, x, y);
+      DrawTileIndex = fillTile;
+      DrawTileX = x;
+      DrawTileY = y;
+      DrawTileBuffer();
     }
   DrawCharacters();
   SwapBuffer();
@@ -576,7 +579,10 @@ void DrawOneCharacter()
   if (combatParticipant[SelectedCharacter].active)
   {
     wait_vblank(1); //Reduces flicker
-    DrawTileDirect(combatParticipant[SelectedCharacter].tileIndex, combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+    DrawTileIndex = combatParticipant[SelectedCharacter].tileIndex;
+    DrawTileX = combatParticipant[SelectedCharacter].posX;
+    DrawTileY = combatParticipant[SelectedCharacter].posY;
+    DrawTileDirect();
   }
 }
 
@@ -587,7 +593,12 @@ void DrawCharacters(void)
   for (i = 0; i < MaxCombatParticipants; ++i)
   {
     if (combatParticipant[i].active)
-      DrawTileFast(combatParticipant[i].tileIndex, combatParticipant[i].posX, combatParticipant[i].posY);
+    {
+      DrawTileIndex = combatParticipant[i].tileIndex;
+      DrawTileX = combatParticipant[i].posX;
+      DrawTileY = combatParticipant[i].posY;
+      DrawTileBuffer();
+    }
   }
 }
 

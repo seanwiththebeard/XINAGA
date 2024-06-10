@@ -358,20 +358,23 @@ void SetTileOrigin(byte x, byte y)
   MapOriginY = y;
 }
 
+byte DrawTileX = 0;
+byte DrawTileY = 0;
+byte DrawTileIndex = 0;
 byte indexes[4] = {0, 0, 0, 0};
 unsigned short offset1 = 0;
-void DrawTileFast(byte index, byte x, byte y)
+void DrawTileBuffer()
 {
-  index = (index << 1) + ((index >> 3) << 4);
-  indexes[0] = index;
-  indexes[1] = index + 1;
-  indexes[2] = index + 16;
-  indexes[3] = index + 17;
+  DrawTileIndex = (DrawTileIndex << 1) + ((DrawTileIndex >> 3) << 4);
+  indexes[0] = DrawTileIndex;
+  indexes[1] = DrawTileIndex + 1;
+  indexes[2] = DrawTileIndex + 16;
+  indexes[3] = DrawTileIndex + 17;
 
-  x = x << 1;
-  y = y << 1;
+  DrawTileX = DrawTileX << 1;
+  DrawTileY = DrawTileY << 1;
   #if defined(__C64__)
-  offset1 = YColumnIndex[y] + x + originOffset;
+  offset1 = YColumnIndex[DrawTileY] + DrawTileX + originOffset;
   {
     memcpy(&ScreenCharBuffer[offset1], &indexes[0], 2);
     memcpy(&ScreenColorBuffer[offset1], &attributeset[indexes[0]], 2);
@@ -382,28 +385,28 @@ void DrawTileFast(byte index, byte x, byte y)
   #endif
 
   #if defined(__APPLE2__)
-  SetChar(indexes[0], x + MapOriginX, y + MapOriginY);
-  SetChar(indexes[1], x + MapOriginX + 1, y + MapOriginY);
-  SetChar(indexes[2], x + MapOriginX, y + 1 + MapOriginY);
-  SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
+  SetChar(indexes[0], x + MapOriginX, DrawTileY + MapOriginY);
+  SetChar(indexes[1], x + MapOriginX + 1, DrawTileY + MapOriginY);
+  SetChar(indexes[2], x + MapOriginX, DrawTileY + 1 + MapOriginY);
+  SetChar(indexes[3], x + MapOriginX + 1, DrawTileY + 1 + MapOriginY);
   #endif
 }
 
-void DrawTileDirect(byte index, byte x, byte y)
+void DrawTileDirect()
 {
-  index = (index << 1) + ((index >> 3) << 4);
-  indexes[0] = index;
-  indexes[1] = index + 1;
-  indexes[2] = index + 16;
-  indexes[3] = index + 17;
+  DrawTileIndex = (DrawTileIndex << 1) + ((DrawTileIndex >> 3) << 4);
+  indexes[0] = DrawTileIndex;
+  indexes[1] = DrawTileIndex + 1;
+  indexes[2] = DrawTileIndex + 16;
+  indexes[3] = DrawTileIndex + 17;
 
-  x = x << 1;
-  y = y << 1;
+  DrawTileX = DrawTileX << 1;
+  DrawTileY = DrawTileY << 1;
   
-  SetChar(indexes[0], x + MapOriginX, y + MapOriginY);
-  SetChar(indexes[1], x + MapOriginX + 1, y + MapOriginY);
-  SetChar(indexes[2], x + MapOriginX, y + 1 + MapOriginY);
-  SetChar(indexes[3], x + MapOriginX + 1, y + 1 + MapOriginY);
+  SetChar(indexes[0], DrawTileX + MapOriginX, DrawTileY + MapOriginY);
+  SetChar(indexes[1], DrawTileX + MapOriginX + 1, DrawTileY + MapOriginY);
+  SetChar(indexes[2], DrawTileX + MapOriginX, DrawTileY + 1 + MapOriginY);
+  SetChar(indexes[3], DrawTileX + MapOriginX + 1, DrawTileY + 1 + MapOriginY);
 }
 
 byte arrowA = 0;

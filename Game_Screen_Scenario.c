@@ -1,10 +1,10 @@
 #include "Xinaga.h"
 #include "GameData.h"
-
 #if defined(__APPLE2__)
+#pragma data-name (push, "LC")
 #pragma code-name (push, "LC")
-#endif
 
+#endif
 #define consolePosX  1
 #define consolePosY 17
 #define consoleWidth 28

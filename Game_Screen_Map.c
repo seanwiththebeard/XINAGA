@@ -710,7 +710,7 @@ void DrawEntireMap()
   byte byte_x, byte_y;
   int int_a, int_b;
   #if defined(__C64__)
-  StoreBuffer();
+  //StoreBuffer();
   #endif
   //Buffer the matrix of tiles for our viewport
   CameraFollow();
@@ -742,14 +742,19 @@ void DrawEntireMap()
       #endif
       if (lastIndex!=newIndex)
         //DrawTileDirect(newIndex, byte_x, byte_y);
-        DrawTileFast(newIndex, byte_x, byte_y);
+      {
+        DrawTileIndex = newIndex;
+        DrawTileX = byte_x;
+        DrawTileY = byte_y;
+        DrawTileDirect();
+      }
     }
   }
   #if defined(__APPLE2__)
   //memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportsize); //It's acrtually faster to skip this on Commodore
   #endif
   #if defined(__C64__)
-  SwapBuffer();
+  //SwapBuffer();
   #endif
   memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportSize);
 

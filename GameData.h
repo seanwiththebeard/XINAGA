@@ -2,7 +2,17 @@
 #define _GAMEDATA_H
 
 #include "Xinaga.h"
-typedef enum { Title, EditParty, Map, Combat, Menu, SaveLoad, MapGen, Scenario } screenName;
+
+#define screenName byte
+#define Title 0
+#define EditParty 1
+#define Map 2
+#define Combat 3
+#define Menu 4
+#define SaveLoad 5
+#define MapGen 6
+#define Scenario 7
+
 extern int randseed;
 
 void Demo(void);

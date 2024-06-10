@@ -71,8 +71,11 @@ void Scroll(direction);
 
 //	Tiles
 void SetTileOrigin(byte x, byte y);
-void DrawTileFast(byte index, byte x, byte y);
-void DrawTileDirect(byte index, byte x, byte y);
+extern byte DrawTileX;
+extern byte DrawTileY;
+extern byte DrawTileIndex;
+void DrawTileBuffer();
+void DrawTileDirect();
 void ReadyArrow(byte x, byte y);
 void DrawArrow(byte x, byte y);
 void ClearArrow();
