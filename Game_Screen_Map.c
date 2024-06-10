@@ -39,7 +39,7 @@ byte playerX = 0; //Player Position in line-of-sight calculations
 byte playerY = 0; //Player Position in line-of-sight calculations
 
 //Map Data
-bool LOSEnabled = false;
+bool LOSEnabled = true;
 #define mapHeight 32
 #define mapWidth 32
 byte mapData[mapWidth][mapHeight] = {};

@@ -385,10 +385,10 @@ void DrawTileBuffer()
   #endif
 
   #if defined(__APPLE2__)
-  SetChar(indexes[0], x + MapOriginX, DrawTileY + MapOriginY);
-  SetChar(indexes[1], x + MapOriginX + 1, DrawTileY + MapOriginY);
-  SetChar(indexes[2], x + MapOriginX, DrawTileY + 1 + MapOriginY);
-  SetChar(indexes[3], x + MapOriginX + 1, DrawTileY + 1 + MapOriginY);
+  SetChar(indexes[0], DrawTileX + MapOriginX, DrawTileY + MapOriginY);
+  SetChar(indexes[1], DrawTileX + MapOriginX + 1, DrawTileY + MapOriginY);
+  SetChar(indexes[2], DrawTileX + MapOriginX, DrawTileY + 1 + MapOriginY);
+  SetChar(indexes[3], DrawTileX + MapOriginX + 1, DrawTileY + 1 + MapOriginY);
   #endif
 }
 
