@@ -57,7 +57,12 @@ extern byte* MapSetInfo;
 
 //	Drawing
 void ClearScreen(void);
-void SetChar(char index, byte x, byte y);
+//void SetChar();
+extern char SetCharIndex;
+extern byte SetCharX;
+extern byte SetCharY;
+void _SetChar();
+#define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void SetColor(byte x, byte y, byte index);
 byte GetChar(byte x, byte y);
 //void SetCharBuffer(byte x, byte y, byte index);

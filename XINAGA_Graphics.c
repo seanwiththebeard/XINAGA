@@ -228,22 +228,28 @@ void DrawChar(int index, byte xpos, byte ypos)
 }
 #endif
 
-void SetChar(char index, byte x, byte y)
+char SetCharIndex = 0;
+byte SetCharX = 0;
+byte SetCharY = 0;
+
+//#define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
+void _SetChar()
 {
-  int offset = x + YColumnIndex[y];
+  int offset = SetCharX + YColumnIndex[SetCharY];
   #if defined(__APPLE2__)
   bool draw = false;
-  if (ScreenChars[offset] != index)
+  if (ScreenChars[offset] != SetCharIndex)
     draw = true;
-  ScreenChars[offset] = index;
+  ScreenChars[offset] = SetCharIndex;
   if (draw)
-    DrawChar(index, x, y);
+    DrawChar(SetCharIndex, SetCharX, SetCharY);
   #endif
   #if defined(__C64__)
-  ScreenChars[offset] = index;
-  ScreenColors[offset] = attributeset[index];
+  ScreenChars[offset] = SetCharIndex;
+  ScreenColors[offset] = attributeset[SetCharIndex];
   #endif
 }
+
 
 void SetColor(byte index, byte x, byte y)
 {
@@ -336,7 +342,7 @@ void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer)
     posy -= ROWS;
   for(i = 0; i < COLS; ++i)
   {
-    if (text[i] == '@')
+    if (text[i] == '@' ||  text[i] == '\n')
       break;
     if (!fast)
       wait_vblank(1);

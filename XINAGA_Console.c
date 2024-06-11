@@ -47,7 +47,8 @@ void ConsoleBufferEndline()
 {
   while (strTemp[StringLength] == ' ')
     --StringLength;
-  strTemp[StringLength + 1] = '@';
+  strTemp[StringLength - 1] = '@';
+  //strTemp[StringLength + 1] = '@';
 }
   
 void ConsoleBufferPrint(byte x, byte y)

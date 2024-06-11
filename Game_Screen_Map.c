@@ -70,7 +70,7 @@ const byte yQuadHeight = 2*mapQuadHeight;
 #define viewportPosX 1
 #define viewportPosY 1
 #define viewportWidth 11
-#define viewportHeight 8
+#define viewportHeight 7
 byte viewportSize = viewportHeight * viewportWidth;
 
 byte viewportBuffer[viewportWidth][viewportHeight] = {};
