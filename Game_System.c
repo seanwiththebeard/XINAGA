@@ -2,6 +2,7 @@
 
 #if defined(__APPLE2__)
 #pragma code-name (push, "LOWCODE")
+
 #endif
 
 byte strTemp[ConsoleBufferLength] = {};

@@ -1,5 +1,6 @@
 #include "Xinaga.h"
 #include "GameData.h"
+#pragma data-name (push, "LC")
 
 #define consolePosX 1
 #define consolePosY 18

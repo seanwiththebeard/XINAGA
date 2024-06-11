@@ -413,14 +413,17 @@ void DrawTileBuffer()
 {
   DrawTileSetup();
   
+  #if defined(__C64__)
   destinationChar = &ScreenCharBuffer[offset1];
   destinationColor = &ScreenColorBuffer[offset1];
+  #endif
 
   DrawTile();
 }
 void DrawTileDirect()
 {
   DrawTileSetup();
+  
   #if defined(__C64__)
   destinationChar = &ScreenChars[offset1];
   destinationColor = &ScreenColors[offset1];

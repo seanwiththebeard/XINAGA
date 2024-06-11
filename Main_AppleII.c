@@ -14,7 +14,7 @@
 //#link "Game_Screen_Map.c"
 //#link "Game_Screen_Combat.c"
 ////#link "Game_Screen_MapGen.c"
-////#link "Game_Screen_Scenario.c"
+//#link "Game_Screen_Scenario.c"
 
 #if defined(__APPLE2__)
 //#resource "apple2-xinaga.cfg"
@@ -25,7 +25,7 @@
 
 screenName Update_Title(){return EditParty;}
 screenName Update_MapGen(){return EditParty;}
-screenName Update_Scenario(){return EditParty;}
+//screenName Update_Scenario(){return EditParty;}
 //screenName Update_Combat(){return 0;}
 
 //void LoadMap(){}
