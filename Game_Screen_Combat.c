@@ -561,17 +561,17 @@ void DrawCombatMap(void)
   SetTileOrigin(1, 1);
   //wait_vblank(1);
 
-  StoreBuffer();
+  //StoreBuffer();
   for (y = 0; y < CombatMapHeight; ++y)
     for (x = 0; x < CombatMapWidth; ++x)
     {
       DrawTileIndex = fillTile;
       DrawTileX = x;
       DrawTileY = y;
-      DrawTileBuffer();
+      DrawTileDirect();
     }
   DrawCharacters();
-  SwapBuffer();
+  //SwapBuffer();
 }
 
 void DrawOneCharacter()
@@ -597,7 +597,7 @@ void DrawCharacters(void)
       DrawTileIndex = combatParticipant[i].tileIndex;
       DrawTileX = combatParticipant[i].posX;
       DrawTileY = combatParticipant[i].posY;
-      DrawTileBuffer();
+      DrawTileDirect();
     }
   }
 }

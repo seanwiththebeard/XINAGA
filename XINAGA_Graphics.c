@@ -369,36 +369,12 @@ byte DrawTileY = 0;
 byte DrawTileIndex = 0;
 byte indexes[4] = {0, 0, 0, 0};
 unsigned short offset1 = 0;
-void DrawTileBuffer()
-{
-  DrawTileIndex = (DrawTileIndex << 1) + ((DrawTileIndex >> 3) << 4);
-  indexes[0] = DrawTileIndex;
-  indexes[1] = DrawTileIndex + 1;
-  indexes[2] = DrawTileIndex + 16;
-  indexes[3] = DrawTileIndex + 17;
+#if defined(__C64__)
+byte *destinationChar = 0;
+byte *destinationColor = 0;
+#endif
 
-  DrawTileX = DrawTileX << 1;
-  DrawTileY = DrawTileY << 1;
-  #if defined(__C64__)
-  offset1 = YColumnIndex[DrawTileY] + DrawTileX + originOffset;
-  {
-    memcpy(&ScreenCharBuffer[offset1], &indexes[0], 2);
-    memcpy(&ScreenColorBuffer[offset1], &attributeset[indexes[0]], 2);
-    offset1 += COLS;
-    memcpy(&ScreenCharBuffer[offset1], &indexes[2], 2);
-    memcpy(&ScreenColorBuffer[offset1], &attributeset[indexes[2]], 2);
-  }
-  #endif
-
-  #if defined(__APPLE2__)
-  SetChar(indexes[0], DrawTileX + MapOriginX, DrawTileY + MapOriginY);
-  SetChar(indexes[1], DrawTileX + MapOriginX + 1, DrawTileY + MapOriginY);
-  SetChar(indexes[2], DrawTileX + MapOriginX, DrawTileY + 1 + MapOriginY);
-  SetChar(indexes[3], DrawTileX + MapOriginX + 1, DrawTileY + 1 + MapOriginY);
-  #endif
-}
-
-void DrawTileDirect()
+void DrawTileSetup()
 {
   DrawTileIndex = (DrawTileIndex << 1) + ((DrawTileIndex >> 3) << 4);
   indexes[0] = DrawTileIndex;
@@ -409,10 +385,52 @@ void DrawTileDirect()
   DrawTileX = DrawTileX << 1;
   DrawTileY = DrawTileY << 1;
   
+  #if defined(__C64__)
+  offset1 = YColumnIndex[DrawTileY] + DrawTileX + originOffset;
+  #endif
+}
+void DrawTile()
+{
+  #if defined(__C64__)
+  
+  memcpy(destinationChar, &indexes[0], 2);
+    memcpy(destinationColor, &attributeset[indexes[0]], 2);
+    destinationChar += COLS;
+    destinationColor += COLS;
+    //offset1 += COLS;
+    memcpy(destinationChar, &indexes[2], 2);
+    memcpy(destinationColor, &attributeset[indexes[2]], 2);
+  #endif
+  
+  #if defined(__APPLE2__)
   SetChar(indexes[0], DrawTileX + MapOriginX, DrawTileY + MapOriginY);
   SetChar(indexes[1], DrawTileX + MapOriginX + 1, DrawTileY + MapOriginY);
   SetChar(indexes[2], DrawTileX + MapOriginX, DrawTileY + 1 + MapOriginY);
   SetChar(indexes[3], DrawTileX + MapOriginX + 1, DrawTileY + 1 + MapOriginY);
+  #endif
+}
+void DrawTileBuffer()
+{
+  DrawTileSetup();
+  
+  destinationChar = &ScreenCharBuffer[offset1];
+  destinationColor = &ScreenColorBuffer[offset1];
+
+  DrawTile();
+}
+void DrawTileDirect()
+{
+  DrawTileSetup();
+  #if defined(__C64__)
+  destinationChar = &ScreenChars[offset1];
+  destinationColor = &ScreenColors[offset1];
+  #endif
+  
+  DrawTile();
+  /*SetChar(indexes[0], DrawTileX + MapOriginX, DrawTileY + MapOriginY);
+  SetChar(indexes[1], DrawTileX + MapOriginX + 1, DrawTileY + MapOriginY);
+  SetChar(indexes[2], DrawTileX + MapOriginX, DrawTileY + 1 + MapOriginY);
+  SetChar(indexes[3], DrawTileX + MapOriginX + 1, DrawTileY + 1 + MapOriginY);*/
 }
 
 byte arrowA = 0;
