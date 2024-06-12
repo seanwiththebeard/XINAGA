@@ -2,11 +2,11 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-//#pragma code-name (push, "LC")
+#pragma code-name (push, "LC")
 #endif
 
-#define height 16
-#define width 16
+#define height 12
+#define width 12
 #define posX 1
 #define posY 1
 #define pointsCount 32
@@ -47,8 +47,8 @@ struct vector2 *points = NULL;
 
 byte CountPoints()
 {
-  struct vector2 *temp = points;
   byte i = 0;
+  struct vector2 *temp = points;
   while(temp != NULL)
   {
     ++i;
@@ -99,7 +99,7 @@ struct vector2 *getPoint(byte index)
 
 void deletePoint(int pos)
 {
-  byte i;
+  byte i = 0;
   struct vector2 *temp,*ptr;
 
   if(points==NULL)
@@ -134,7 +134,7 @@ void deletePoint(int pos)
 
 bool checkPoints(byte index, byte w, byte h)
 {
-  byte i;
+  byte i = 0;
   //for (i = 0; i < CountPoints(); ++i)
   {
     if (map[h][w] == index)
@@ -278,8 +278,8 @@ void addRandomPoints(byte count, int index)
 
 void attachRandomPoint(byte index)
 {
-  byte i = 0;
   sbyte x, y = 0;
+  byte i = 0;
   bool exit = false;
   byte failure = 0;
   
@@ -391,7 +391,8 @@ void createContinent(byte size)
 
 void Rotate(direction dir)
 {
-  byte h, w = 0;
+  byte h = 0;
+  byte w = 0;
   byte tempRow[width];
   byte tempCol[height];
   switch (dir)

@@ -93,7 +93,7 @@ void RollStats()
 
 void MenuGetClassPrimeStats()
 {
-  byte x;
+  byte x = 0;
   ResetMenu("Class@",26, 1, 11, 9, 6);
   for (x = 0; x < 4; ++x)
   {
@@ -115,7 +115,7 @@ void MenuGetClassPrimeStats()
 
 void MenuGetClass()
 {
-  byte hitdice;
+  byte hitdice = 0;
   RollStats();
   MenuGetClassPrimeStats();  
   CLASS = GetMenuSelection();
@@ -190,11 +190,10 @@ void MenuGetRace()
 void ListParty()
 {
   byte partyCount = CountParty();
+  byte x = 0;
   ResetMenu("Party Members@",20, 12, 19, 4, partyCount);
-
   if (partyCount > 0)
   {
-    byte x;
 
     for (x = 0; x < partyCount; ++x)
     {
@@ -207,11 +206,10 @@ void ListParty()
 void ListRoster()
 {
   byte rosterCount = CountRoster();
+  byte x = 0;
   ResetMenu("Roster Members@",1, 12, 18, 4, rosterCount);
-
   if (rosterCount > 0)
   {
-    byte x;
 
     for (x = 0; x < rosterCount; ++x)
       SetMenuItem(x, getPlayerChar(x)->NAME);

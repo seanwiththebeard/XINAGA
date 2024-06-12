@@ -2,7 +2,7 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "LC")
+//#pragma code-name (push, "LC")
 #endif
 
 #define consolePosX  1
@@ -100,9 +100,8 @@ void GenerateContinent(int seed)
 
 screenName Update_Scenario()
 {
-  int seed;
-  screenName nextScreen = Title;
   bool exit = false;
+  randseed = 0;
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   {
     ResetMenu("Scenario@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
@@ -112,26 +111,26 @@ screenName Update_Scenario()
     SetMenuItem(3, "End@");
     while (!exit)
     {
-      sprintf(strTemp, "Continent: %d @", seed);
+      sprintf(strTemp, "Continent: %d @", randseed);
       SetLineMessageWindow(strTemp, 0);
       
       switch (GetMenuSelection())
       {
         case 0:
-          ++seed;
-          if (seed < 0)
-            seed = 0;
+          ++randseed;
+          if (randseed < 0)
+            randseed = 0;
           break;
         case 1:
-          --seed;
-          if (seed < 0)
-            seed = 32767;
+          --randseed;
+          if (randseed < 0)
+            randseed = 32767;
           break;
         case 2:
-          GenerateContinent(seed);
-          ++seed;
-          if (seed < 0)
-            seed = 0;
+          GenerateContinent(randseed);
+          ++randseed;
+          if (randseed < 0)
+            randseed = 0;
           break;
         case 3:
           exit = true;
@@ -141,5 +140,5 @@ screenName Update_Scenario()
       }
     }
   }
-  return nextScreen;
+  return EditParty;
 }

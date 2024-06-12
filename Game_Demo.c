@@ -19,7 +19,7 @@ RaceDescriptionDef RaceDescription[4] =
 ClassDescriptionDef ClassDescription[4]= 
 {
   {"Fighter@", 8},
-  {"Magic-User@", 4}, 
+  {"Wizard@", 4}, 
   {"Cleric@", 6}, 
   {"Thief@", 4},
 };
