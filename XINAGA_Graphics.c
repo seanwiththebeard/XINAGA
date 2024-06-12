@@ -22,11 +22,11 @@ int RowsHGR[192];
 #endif
 
 #if defined(__C64__)
-static byte *ScreenCharBuffer = (byte *)0x0400;
-static byte *ScreenColorBuffer = (byte *)0xF400;
-static byte *ScreenChars = (byte *)0x0400;
-static byte *ScreenColors = (byte *)0xD800;
-static bool bufferselect = false;
+byte *ScreenCharBuffer = (byte *)0x0400;
+byte *ScreenColorBuffer = (byte *)0xF400;
+byte *ScreenChars = (byte *)0x0400;
+byte *ScreenColors = (byte *)0xD800;
+bool bufferselect = false;
 byte attributeset[];
 void ScreenDisable()
 {
