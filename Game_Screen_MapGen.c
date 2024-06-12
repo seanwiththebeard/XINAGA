@@ -38,7 +38,8 @@ Before / After	//16
 
 typedef struct vector2
 {
-  sbyte x, y;
+  sbyte x;
+  sbyte y;
   //bool landlocked;
   struct vector2 *next;
 };
@@ -99,7 +100,7 @@ struct vector2 *getPoint(byte index)
 
 void deletePoint(int pos)
 {
-  byte i = 0;
+  byte i;
   struct vector2 *temp,*ptr;
 
   if(points==NULL)
@@ -132,7 +133,7 @@ void deletePoint(int pos)
   }
 }
 
-bool checkPoints(byte index, byte w, byte h)
+/*bool checkPoints(byte index, byte w, byte h)
 {
   byte i = 0;
   //for (i = 0; i < CountPoints(); ++i)
@@ -145,7 +146,7 @@ bool checkPoints(byte index, byte w, byte h)
     }
   }
   return false;
-}
+}*/
 
 void clearPoints()
 {
@@ -169,31 +170,57 @@ void clampPoint(struct vector2 *clmpt)
 byte countAdjacent(byte x, byte y)
 {
   byte i = 0;
+  byte z = 0;
   //for (i = 0; i < CountPoints(); ++i)
-  struct vector2 north, south, east, west;
+  //struct vector2 pointN;
+  //struct vector2 pointS;
+  //struct vector2 pointE;
+  //struct vector2 pointW;
+  byte adjX[4];
+  byte adjY[4];
+  adjX[0] = x;
+  adjX[1] = x;
+  adjX[2] = x - 1;
+  adjX[3] = x + 1;
+  adjY[0] = y - 1;
+  adjY[1] = y + 1;
+  adjY[2] = y;
+  adjY[3] = y;
+  
+  /*pointN.x = x;
+  pointN.y = y - 1;
+  pointS.x = x;
+  pointS.y = y + 1;
+  pointE.x = x + 1;
+  pointE.y = y;
+  pointW.x = x - 1;
+  pointW.y = y;
 
-  north.x = x;
-  north.y = y - 1;
-  south.x = x;
-  south.y = y + 1;
-  east.x = x + 1;
-  east.y = y;
-  west.x = x - 1;
-  west.y = y;
+  clampPoint(&pointN);
+  clampPoint(&pointS);
+  clampPoint(&pointE);
+  clampPoint(&pointW);*/
+  
+  for (;z < 4; ++z)
+  {
+    struct vector2 pointAdj;
+    pointAdj.x = adjX[z];
+    pointAdj.y = adjY[z];
+    clampPoint(&pointAdj);
+    adjX[z] = pointAdj.x;
+    adjY[z] = pointAdj.y;
+    if (map[adjY[z]][adjX[z]] != water)
+      ++i;
+  }
 
-  clampPoint(&north);
-  clampPoint(&south);
-  clampPoint(&east);
-  clampPoint(&west);
-
-  if (map[north.y][north.x] != water)
+  /*if (map[adjY[0]][adjX[0]] != water)
     ++i;
-  if (map[south.y][south.x] != water)
+  if (map[adjY[1]][adjX[1]] != water)
     ++i;
-  if (map[east.y][east.x] != water)
+  if (map[adjY[2]][adjX[2]] != water)
     ++i;
-  if (map[west.y][west.x] != water)
-    ++i;
+  if (map[adjY[3]][adjX[3]] != water)
+    ++i;*/
   return i;
 }
 

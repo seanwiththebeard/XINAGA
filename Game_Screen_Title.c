@@ -2,7 +2,7 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "LOWCODE")
+//#pragma code-name (push, "LC")
 #endif
 
 screenName Update_Title()
@@ -20,7 +20,3 @@ screenName Update_Title()
         return EditParty;
   }  
 }
-
-#if defined(__APPLE2__)
-#pragma code-name (pop)
-#endif
