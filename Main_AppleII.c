@@ -9,7 +9,7 @@
 //#link "Game_Demo.c"
 //#link "Game_System.c"
 
-////#link "Game_Screen_Title.c"
+//#link "Game_Screen_Title.c"
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_Map.c"
 //#link "Game_Screen_Combat.c"
@@ -23,7 +23,7 @@
 #define CFGFILE apple2-xinaga.cfg
 #endif
 
-screenName Update_Title(){return EditParty;}
+//screenName Update_Title(){return EditParty;}
 //screenName Update_MapGen(){return EditParty;}
 //screenName Update_Scenario(){return EditParty;}
 //screenName Update_Combat(){return 0;}
