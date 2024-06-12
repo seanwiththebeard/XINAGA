@@ -15,7 +15,10 @@ byte charset[4096];
 
 #if defined(__APPLE2__)
 byte* ScreenChars = (byte*)(0x0400);
-byte* HGR = (byte*)0x2000;
+#pragma data-name (push, "HGR")
+char HGR[0x2000] = {};
+#pragma data-name (pop)
+//byte* HGR = (byte*)0x2000;
 byte* HGRBuffer = (byte*)0x4000;
 unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;

@@ -43,6 +43,4 @@ void main()
 #endif
 
 
-#pragma data-name (push, "HGR")
-//char hgr[0x2000] = {};
-#pragma data-name (pop)
+
