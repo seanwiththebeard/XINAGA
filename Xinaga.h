@@ -94,8 +94,8 @@ void SwapBuffer(void);
 void UpdateColors(void);
 void CopyBuffer(void);
 void StoreBuffer(void);
-void CopyBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
-void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
+//void CopyBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
+//void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
 
 //Debug
 void DrawCharacterSet(byte destX, byte destY);

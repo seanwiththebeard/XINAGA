@@ -133,7 +133,7 @@ void SetMulticolors(byte color1, byte color2)
 void InitializeGraphics(void)
 {
   #if defined(__APPLE2__)
-  byte y;
+  byte y = 0;
   ClearScreen();
   STROBE(0xc052); // turn off mixed-mode
   STROBE(0xc054); // page 1
@@ -217,8 +217,9 @@ void SwapBuffer(void)
 #if defined(__APPLE2__)
 void DrawChar(int index, byte xpos, byte ypos)
 {
-  byte y;
-  int offset, i;
+  int offset = 0;
+  int i = 0;
+  byte y = 0;
   i = index << 3;
   ypos = ypos << 3;
   offset= RowsHGR[ypos] + xpos;
@@ -235,7 +236,7 @@ char SetCharIndex = 0;
 byte SetCharX = 0;
 byte SetCharY = 0;
 
-//#define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
+//Set Char Macro is in XINAGA.h - #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void _SetChar(void)
 {
   int offset = SetCharX + YColumnIndex[SetCharY];
@@ -285,8 +286,9 @@ byte GetChar(byte x, byte y)
 void CopyBuffer(void)
 {
   #if defined(__APPLE2__)
-  byte x, y;
   int i = 0;
+  byte x = 0;
+  byte y = 0;
   for (y = 0; y < ROWS; ++y)
     for (x = 0; x < COLS; ++x)
     {
@@ -309,11 +311,12 @@ void StoreBuffer(void)
   memcpy(&ScreenColorBuffer[0], &ScreenColors[0], 0x400);
   #endif
 }
-
+/*
 void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
 {
   #if defined(__APPLE2__)
-  byte x, y;
+  byte x = 0;
+  byte y = 0;
   int i = x + y * COLS;
   for (y = origin_y; y < origin_y + height; ++y)
   {
@@ -336,7 +339,7 @@ void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
     offset += COLS;
   }
   #endif
-}
+}*/
 
 void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer)
 {

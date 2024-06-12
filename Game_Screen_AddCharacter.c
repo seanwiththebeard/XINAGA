@@ -10,7 +10,7 @@ screenName nextScreen = EditParty;
 #define consolePosY 17
 #define consoleWidth 38
 #define consoleHeight 6
-
+bool AreYouSure();
 bool exitWindow = false;
 byte CurrentCharacter = 0;
 byte HPMAX = 0;
@@ -45,12 +45,20 @@ void AddToRoster()
   
   
   ConsoleBufferReset();
-  ConsoleBufferAdd("Hello @");
-  ConsoleBufferAddNumber(CountRoster());
+  sprintf(strTemp, "Hello %X@", &PlayerChar[0]);
+  //ConsoleBufferAdd("Hello @");
+  ConsoleBufferAdd(strTemp);
+  //ConsoleBufferAddNumber(CountRoster());
   for (i = 0; strTemp[i] != '@'; ++i)
     PlayerChar->NAME[i] = strTemp[i];
   PlayerChar->NAME[i] = '@';
   
+  
+  //ConsoleBufferReset();
+  //sprintf(strTemp, "Address: %X@", &PlayerChar[0]);
+  //ConsoleBufferAdd(strTemp);
+  //ConsoleBufferPrintConsole(0);
+  //AreYouSure();
   //sprintf(PlayerChar->NAME, strTemp);
 }
 
