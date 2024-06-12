@@ -108,11 +108,11 @@ struct
   byte CharIndex[4];
   byte Chars[2];
   byte ScatterIndex;
-  byte NPCIndex;
+  //byte NPCIndex;
   //byte MusicIndex;
 }ScreenQuad[64] = {};
 
-#define charactersCount 16
+#define charactersCount 8
 struct Character
 {
   //byte chars[4];
@@ -502,7 +502,7 @@ void InitializeMapData()
       ScreenQuad[byte_index].Chars[0] = 32;
       ScreenQuad[byte_index].Chars[1] = byte_index;
       //ScreenQuad[byte_index].MusicIndex = 0;
-      ScreenQuad[byte_index].NPCIndex = 0;
+      //ScreenQuad[byte_index].NPCIndex = 0;
       ScreenQuad[byte_index].ScatterIndex = 0;
     }
 
