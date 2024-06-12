@@ -23,7 +23,7 @@
 //#link "Game_Screen_Scenario.c"
 
 //void Demo(void);
-void main()
+void main(void)
 {
   Demo();
 }

@@ -162,7 +162,9 @@ void CameraFollow()
 
 void BufferCharacters()
 {
-  byte byte_x, byte_y, byte_i;
+  byte byte_x = 0;
+  byte byte_y = 0;
+  byte byte_i = 0;
   for(byte_i = 0; byte_i < charactersCount; ++byte_i)
   {
     if(characters[byte_i].visible)
@@ -189,7 +191,8 @@ void BufferCharacters()
 
 void FillQuadBuffer()
 {
-  byte byte_x, byte_y;
+  byte byte_x = 0;
+  byte byte_y = 0;
 
   quadX = characters[followIndex].quadPosX;
   quadY = characters[followIndex].quadPosY;
@@ -214,9 +217,13 @@ void FillQuadBuffer()
 
 void LoadQuadrant(byte quadIndex, byte quad)
 {
-  byte byte_x, byte_y, byte_z, charIndex;
-  byte xPos, yPos;
-  int chardata;
+  byte byte_x = 0;
+  byte byte_y = 0;
+  byte byte_z = 0;
+  byte charIndex = 0;
+  byte xPos = 0;
+  byte yPos = 0;
+  int chardata = 0;
 
   //sprintf(str, "Tile%d to Quad%d@", index, quad);
   //WriteLineMessageWindow(str, 1);
@@ -291,7 +298,7 @@ void LoadQuadrant(byte quadIndex, byte quad)
 
 void LoadMapQuads()
 {
-  byte x;
+  byte x = 0;
   FillQuadBuffer();
   for (x = 0; x < 4; ++x)
     LoadQuadrant(quadBuffer[x], x);
@@ -317,7 +324,8 @@ byte GetPlayerQuad() //Returns the viewport quadrant of the player character
 
 byte GetQuadInRelation(bool d_up, bool d_down, bool d_left, bool d_right)
 {
-  int int_x, int_y;
+  int int_x = 0;
+  int int_y = 0;
   int_x = characters[followIndex].quadPosX;
   int_y = characters[followIndex].quadPosY;
   if (d_up)
@@ -476,7 +484,11 @@ void InitializeMapData()
   #define grass 36
   #define water 34
   #define signpost 35
-  byte byte_x, byte_y, byte_i, byte_index, byte_offset;
+  byte byte_x = 0;
+  byte byte_y = 0;
+  byte byte_i = 0;
+  byte byte_index = 0;
+  byte byte_offset = 0;;
 
   cameraOffsetX = viewportWidth / 2;
   cameraOffsetY = viewportHeight / 2;
@@ -573,7 +585,7 @@ int wrapY(int posY)
 
 bool CheckCollision(byte charIndex, byte Direction)
 {
-  byte byte_i;
+  byte byte_i = 0;
   int xPos = characters[charIndex].posX;
   int yPos = characters[charIndex].posY; //These need to be integers because they can wrap around the map
 
@@ -629,7 +641,8 @@ bool CheckCollision(byte charIndex, byte Direction)
 
 void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Blocking
 {
-  byte x, y;
+  byte x = 0;
+  byte y = 0;
   
    //Are we ever going to get parameters outside bounds??
   //if (xOrigin < 0 || yOrigin < 0 || xOrigin >= viewportWidth || yOrigin >= viewportHeight)
@@ -681,7 +694,8 @@ void ApplyLOS()
     //Diagonal quadrants 0-3 block everything behind the tile
     //Cardinal quadrants 4-7 block only the tiles directly behind them
 
-    byte x, y;
+    byte x = 0;
+    byte y = 0;
     //Quad 0
     for(y = playerY - 1; y > 0; --y)
       for(x = playerX - 1; x > 0; --x)
@@ -738,8 +752,10 @@ void ApplyLOS()
 const byte viewportsize = viewportHeight * viewportWidth;
 void DrawEntireMap()
 {
-  byte byte_x, byte_y;
-  int int_a, int_b;
+  int int_a = 0;
+  int int_b = 0;
+  byte byte_x = 0;
+  byte byte_y = 0;
   #if defined(__C64__)
   StoreBuffer();
   #endif

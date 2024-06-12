@@ -17,7 +17,7 @@ byte charset[4096];
 byte* ScreenChars = (byte*)(0x0400);
 byte* HGR = (byte*)0x2000;
 byte* HGRBuffer = (byte*)0x4000;
-int RowsHGR[192];
+unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
@@ -27,12 +27,12 @@ byte *ScreenColorBuffer = (byte *)0xF400;
 byte *ScreenChars = (byte *)0x0400;
 byte *ScreenColors = (byte *)0xD800;
 bool bufferselect = false;
-byte attributeset[];
+byte attributeset[256];
 void ScreenDisable()
 {
   POKE(0xD011, PEEK(0xD011)&239);
 }
-void ScreenEnable()
+void ScreenEnable(void)
 {
   POKE(0xD011, PEEK(0xD011)|16);
 }
@@ -55,7 +55,7 @@ void SetBG(byte color)
 }
 #endif
 
-void ClearScreen()
+void ClearScreen(void)
 {
 
   #if defined(__C64__)
@@ -127,7 +127,7 @@ void SetMulticolors(byte color1, byte color2)
 }
 #endif
 
-void InitializeGraphics()
+void InitializeGraphics(void)
 {
   #if defined(__APPLE2__)
   byte y;
@@ -190,7 +190,7 @@ void InitializeGraphics()
   #endif
 }
 
-void SwapBuffer()
+void SwapBuffer(void)
 {
   #if defined(__C64__)
   if (bufferselect)
@@ -233,7 +233,7 @@ byte SetCharX = 0;
 byte SetCharY = 0;
 
 //#define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
-void _SetChar()
+void _SetChar(void)
 {
   int offset = SetCharX + YColumnIndex[SetCharY];
   #if defined(__APPLE2__)
@@ -279,7 +279,7 @@ byte GetChar(byte x, byte y)
 }
 
 //Buffer
-void CopyBuffer()
+void CopyBuffer(void)
 {
   #if defined(__APPLE2__)
   byte x, y;
@@ -297,7 +297,7 @@ void CopyBuffer()
   #endif
 }
 
-void StoreBuffer()
+void StoreBuffer(void)
 {
   #if defined(__APPLE2__)
   #endif
@@ -374,7 +374,7 @@ byte *destinationChar = 0;
 byte *destinationColor = 0;
 #endif
 
-void DrawTileSetup()
+void DrawTileSetup(void)
 {
   DrawTileIndex = (DrawTileIndex << 1) + ((DrawTileIndex >> 3) << 4);
   indexes[0] = DrawTileIndex;
@@ -409,7 +409,7 @@ void DrawTile()
   SetChar(indexes[3], DrawTileX + MapOriginX + 1, DrawTileY + 1 + MapOriginY);
   #endif
 }
-void DrawTileBuffer()
+void DrawTileBuffer(void)
 {
   DrawTileSetup();
   
@@ -457,7 +457,7 @@ void DrawArrow(byte x, byte y)
   SetChar('^', arrowX, arrowY);
   SetChar('^', arrowX + 1, arrowY);
 }
-void ClearArrow()
+void ClearArrow(void)
 {
   SetChar(arrowA, arrowX, arrowY);
   SetChar(arrowB, arrowX + 1, arrowY);
@@ -543,7 +543,7 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};*/
 #endif
 #if defined(__C64__)
-byte attributeset[] = {/*{pal:"c64", layout:"c64"}*/
+byte attributeset[256] = {/*{pal:"c64", layout:"c64"}*/
   0x01, 0x01, 0x0A, 0x0A, 0x0C, 0x0C, 0x01, 0x01, 0x01, 0x01, 0x0C, 0x0C,
   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x0A, 0x0A, 0x0C, 0x0C, 0x01, 0x01,
   0x01, 0x01, 0x0B, 0x0B, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
@@ -566,7 +566,7 @@ byte attributeset[] = {/*{pal:"c64", layout:"c64"}*/
   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x0A, 0x08,
   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
   0x01, 0x01, 0x01, 0x08};
-byte charset[] = {/*{w:8,h:8,brev:1,count:256, bpp:1, pal:"c64"}*/
+byte charset[4096] = {/*{w:8,h:8,brev:1,count:256, bpp:1, pal:"c64"}*/
   0x00, 0x07, 0x0C, 0x0A, 0x0B, 0x0D, 0x1B, 0x10, 0x00, 0xE0, 0x30, 0x10,
 	0x10, 0xB0, 0xD8, 0x08, 0x00, 0x03, 0x07, 0x07, 0x05, 0x06, 0x09, 0x18,
 	0x00, 0xC0, 0xE0, 0xE0, 0xA0, 0x60, 0x90, 0x18, 0x00, 0x1F, 0x2F, 0x08,
@@ -741,7 +741,7 @@ byte charset[] = {/*{w:8,h:8,brev:1,count:256, bpp:1, pal:"c64"}*/
 #endif
 
 #if defined(__APPLE2__)
-byte charset[] = {/*{w:8,h:8,count:256, bpp:1}*/
+byte charset[4096] = {/*{w:8,h:8,count:256, bpp:1}*/
   0x80, 0x70, 0x98, 0x28, 0xE8, 0x58, 0xEC, 0x04, 0x80, 0x07, 0x8C, 0x08,
 	0x88, 0x0D, 0x9B, 0x10, 0x80, 0x60, 0xF0, 0x70, 0xD0, 0x30, 0xC8, 0x0C,
 	0x80, 0x03, 0x87, 0x07, 0x85, 0x06, 0x89, 0x18, 0x80, 0x7C, 0xFA, 0x08,

@@ -18,27 +18,27 @@ extern int randseed;
 void Demo(void);
 
 //Title
-screenName Update_Title();
+screenName Update_Title(void);
 
 //Add Character
-screenName DrawAddCharacterScreen();
+screenName DrawAddCharacterScreen(void);
 
 //Map
-screenName MapUpdate();
+screenName MapUpdate(void);
 
 //Combat
-screenName Update_Combat();
+screenName Update_Combat(void);
 
 //Credits
-screenName Update_Credits();
+screenName Update_Credits(void);
 
 //MapGen
-screenName Update_MapGen();
+screenName Update_MapGen(void);
 
 //Scenario
-screenName Update_Scenario();
+screenName Update_Scenario(void);
 
-void TickMoonPhase();
+void TickMoonPhase(void);
 
 //BFRPG
 byte RollDice(byte count, byte diceSize);
@@ -77,9 +77,12 @@ void delete_pos(byte pos);
 byte CountRoster(void);
 typedef struct playerChar
 {
-  bool inParty;
-  byte
-    	HP,
+  struct playerChar *next;
+  int	EXP;
+  bool 	inParty;
+  char 	NAME[16];
+  
+  byte	HP,
   	HPMAX,
   	STR,
   	DEX,
@@ -87,23 +90,15 @@ typedef struct playerChar
         INT,
   	WIS,
         CHR,
-  
   	RACE,
   	CLASS,
   	HITDICE,
   	LEVEL,
   	CARRYING_WEIGHT,
   	CARRYING_CAPACITY;
-  int
-    	EXP;
-  char
-    	NAME[16];
-  
-  struct playerChar *next;
 };
 
 struct playerChar *getPlayerChar(byte index);
-
 
 	//Party
 void AddParty(byte index);

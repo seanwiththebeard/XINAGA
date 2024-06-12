@@ -25,7 +25,7 @@ void InitializeInput()
 byte* keycode = (byte*)0xC000;
 byte* keyflag = (byte*)0xC010;
 
-bool InputChanged()
+bool InputChanged(void)
 {
   #if defined(__APPLE2__)
   if(keycode[0] & 128)
@@ -39,7 +39,7 @@ bool InputChanged()
   return ChangedState;
 }
 
-void UpdateInput()
+void UpdateInput(void)
 { 
   #if __C64__
   joyTemp = joy_read(0);
@@ -64,7 +64,7 @@ void UpdateInput()
   #endif
 }
 
-bool InputUp()
+bool InputUp(void)
 {
   #if __C64__
   if (JOY_UP(joyState))
@@ -80,7 +80,7 @@ bool InputUp()
   return false;
 }
 
-bool InputDown()
+bool InputDown(void)
 {
   #if __C64__
   if (JOY_DOWN(joyState))
@@ -93,7 +93,7 @@ bool InputDown()
   return false;
 }
 
-bool InputLeft()
+bool InputLeft(void)
 {
   #if __C64__
   if (JOY_LEFT(joyState))
@@ -106,7 +106,7 @@ bool InputLeft()
   return false;
 }
 
-bool InputRight()
+bool InputRight(void)
 {
   #if __C64__
   if (JOY_RIGHT(joyState))
@@ -119,7 +119,7 @@ bool InputRight()
   return false;
 }
 
-bool InputFire()
+bool InputFire(void)
 {
   #if __C64__
   if (JOY_FIRE(joyState))

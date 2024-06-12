@@ -61,7 +61,7 @@ void ClearScreen(void);
 extern char SetCharIndex;
 extern byte SetCharX;
 extern byte SetCharY;
-void _SetChar();
+void _SetChar(void);
 #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void SetColor(byte x, byte y, byte index);
 byte GetChar(byte x, byte y);
@@ -71,8 +71,8 @@ void DrawLineV(char index, byte x, byte y, byte length);
 void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bool fill);
 
 //	Scrolling
-void ScrollReset();
-void Scroll(direction);
+//void ScrollReset(void);
+//void Scroll(direction);
 
 //	Tiles
 void SetTileOrigin(byte x, byte y);
@@ -83,7 +83,7 @@ void DrawTileBuffer();
 void DrawTileDirect();
 void ReadyArrow(byte x, byte y);
 void DrawArrow(byte x, byte y);
-void ClearArrow();
+void ClearArrow(void);
 
 //	Text
 void PrintString(char text[ROWS], byte posx, byte posy, bool fast, bool buffer);
@@ -127,7 +127,7 @@ void ResizeMessageWindow (byte x, byte y, byte w, byte h);
 void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
 extern char *Messages[4];
-void DrawCharStats();
+void DrawCharStats(void);
 #define ConsoleBufferLength 128
 extern byte strTemp[ConsoleBufferLength];
 void ConsoleBufferReset();
@@ -139,8 +139,8 @@ void ConsoleBufferPrintConsole(byte delay);
 //Selection Menu
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
 void SetMenuItem(byte index, char *value);
-byte GetMenuSelection();
+byte GetMenuSelection(void);
 void HighlightMenuItem(byte index);
 byte IsMenuItemHighlighted(byte index);
-void DrawMenu();
+void DrawMenu(void);
 #endif
