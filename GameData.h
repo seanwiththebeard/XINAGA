@@ -13,8 +13,6 @@
 #define MapGen 6
 #define Scenario 7
 
-extern int randseed;
-
 void Demo(void);
 
 //Title

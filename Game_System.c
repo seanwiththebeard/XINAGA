@@ -1,3 +1,4 @@
+#include "Xinaga.h"
 #include "GameData.h"
 
 #if defined(__APPLE2__)

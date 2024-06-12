@@ -1,8 +1,8 @@
+#include "Xinaga.h"
+
 #if defined(__APPLE2__)
 #pragma code-name (push, "LOWCODE")
 #endif
-
-#include "Xinaga.h"
 
 sbyte key = 0;
 byte keyIgnore = 0;
@@ -41,6 +41,8 @@ bool InputChanged(void)
 
 void UpdateInput(void)
 { 
+  ++randseed;
+  srand(randseed);
   #if __C64__
   joyTemp = joy_read(0);
 

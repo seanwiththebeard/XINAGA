@@ -277,9 +277,9 @@ void GetActionSelection(void)
 
 void GetTargetSelection(void)
 {
+  byte i;
   sbyte x = combatParticipant[SelectedCharacter].posX;
   sbyte y = combatParticipant[SelectedCharacter].posY;
-  byte i;
   SetLineMessageWindow("Select Target@",0);
 
   ClearArrow();
@@ -303,7 +303,6 @@ void GetTargetSelection(void)
         --x;
       if (InputRight())
         ++x;
-
 
       while (x < 0)
         ++x;
@@ -392,10 +391,10 @@ void SelectMonsterAction(void)
 }
 void SelectPlayerAction(void)
 {
+  byte tempTile;
   bool finished = false;
   byte moveX = combatParticipant[SelectedCharacter].posX;
   byte moveY = combatParticipant[SelectedCharacter].posY;
-  byte tempTile;
 
   ResetMenu("Action@", menuPosX, menuPosY, menuWidth, menuHeight, 5);
   SetMenuItem(0, "Move@");
@@ -557,7 +556,8 @@ void ApplyCondition(void);
 
 void DrawCombatMap(void)
 {
-  byte x, y = 0;
+  byte x;
+  byte y;
   SetTileOrigin(1, 1);
   //wait_vblank(1);
 
@@ -604,10 +604,9 @@ void DrawCharacters(void)
 
 screenName Update_Combat(void)
 {
-  screenName nextScreen = Map;
-
   Initialize();
-  srand(0);
+  randseed = 0;
+  srand(randseed);
 
   while (!exitCombat)
   {
@@ -620,5 +619,5 @@ screenName Update_Combat(void)
   }
 
   //Malloc free combat data
-  return nextScreen;
+  return Map;
 }
