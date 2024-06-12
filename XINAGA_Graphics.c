@@ -1,8 +1,8 @@
-#if defined(__APPLE2__)
-//#pragma code-name (push, "LC")
-#endif
-
 #include "Xinaga.h"
+
+#if defined(__APPLE2__)
+#pragma code-name (push, "LC")
+#endif
 
 int YColumnIndex[25] = {
   0, 40, 80, 120, 160,
