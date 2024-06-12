@@ -7,9 +7,9 @@
 
 #define fillTile 36
 
-int SelectedCharacter = 0;
-int SelectedTarget = 0;
-int MovementRemaining = 0;
+sbyte SelectedCharacter = 0;
+sbyte SelectedTarget = 0;
+sbyte MovementRemaining = 0;
 bool CombatSuccess = false;
 bool exitCombat = false;
 
@@ -71,11 +71,11 @@ typedef struct CombatParticipant
 {
   bool isPlayerChar;
   byte tileIndex;
-  int posX;
-  int posY;
+  sbyte posX;
+  sbyte posY;
   byte targetIndex;
   byte initiative;
-  int initiativeMod;
+  sbyte initiativeMod;
   byte movement;
   bool active;
   bool alive;
@@ -277,8 +277,8 @@ void GetActionSelection(void)
 
 void GetTargetSelection(void)
 {
-  int x = combatParticipant[SelectedCharacter].posX;
-  int y = combatParticipant[SelectedCharacter].posY;
+  sbyte x = combatParticipant[SelectedCharacter].posX;
+  sbyte y = combatParticipant[SelectedCharacter].posY;
   byte i;
   SetLineMessageWindow("Select Target@",0);
 

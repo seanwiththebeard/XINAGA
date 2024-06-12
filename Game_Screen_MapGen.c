@@ -37,7 +37,7 @@ Before / After	//16
 
 typedef struct vector2
 {
-  int x, y;
+  sbyte x, y;
   bool landlocked;
   struct vector2 *next;
 };
@@ -96,7 +96,7 @@ struct vector2 *getPoint(byte index)
   }
 }
 
-void deletePoint(byte pos)
+void deletePoint(int pos)
 {
   int i;
   struct vector2 *temp,*ptr;
@@ -116,7 +116,7 @@ void deletePoint(byte pos)
       for(i=0;i<pos;i++)
       {
         temp=ptr; 
-        ptr=ptr->next ;
+        ptr=ptr->next;
         if(ptr==NULL)
         {
           WriteLineMessageWindow("Position not Found:@", 0);
@@ -277,7 +277,8 @@ void addRandomPoints(byte count, int index)
 
 void attachRandomPoint(byte index)
 {
-  int i, x, y = 0;
+  int i = 0;
+  sbyte x, y = 0;
   bool exit = false;
   byte failure = 0;
   
@@ -390,7 +391,7 @@ void createContinent(byte size)
 
 void Rotate(direction dir)
 {
-  int h, w = 0;
+  byte h, w = 0;
   byte tempRow[width];
   byte tempCol[height];
   switch (dir)
@@ -442,8 +443,8 @@ void RotateAround()
   byte y;
   for (y = 0; y < height; ++y)
   {
-    Rotate(right);
-    Rotate(down);
+    Rotate(left);
+    Rotate(up);
     DrawMap();
   }
 }

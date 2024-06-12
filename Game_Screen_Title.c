@@ -7,22 +7,18 @@
 
 screenName Update_Title()
 {
-  screenName nextScreen = EditParty;
-  bool exit = false;
   DrawBorder("@",12, 5, 16, 5, true);
   PrintString("Title Screen@", 14, 7, true, false);
   DrawBorder("@", 12, 19, 16, 5, true);
   PrintString("Press Space@", 14, 21, true, false);
   
-  while (!exit)
+  while (1)
   {
     UpdateInput();
     if (InputChanged())
       if (InputFire())
-        exit = true;
-  }
-  
-  return nextScreen;
+        return EditParty;
+  }  
 }
 
 #if defined(__APPLE2__)

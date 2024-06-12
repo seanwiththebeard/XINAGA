@@ -477,32 +477,33 @@ void DrawLineV(char index, byte x, byte y, byte length)
 }
 void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool fill)
 {
-  byte x, i;
-  byte offset = 0;
-
-  //--text;
-  PrintString(text, xPos + 1, yPos, true, false);
-  for (i = 0; i < 20; ++i)
-  {
-    if (text[i] == '@')
-      break;
-    else
-      ++offset;
-  }
+  byte x;
+  //byte offset = 0;
+  byte widthInside2 = width - 2;
+  byte widthInside1 = width - 1;
+  byte heightInside1 = height - 1;
+  byte heightInside2 = height - 2;
+  
+  byte yPos1 = yPos + 1;
+  byte xPos1 = xPos + 1;
+  
+  
+  //for (i = 0; text[i] != '@' && text[i] != '\n'; ++i)
+    //++offset;
+  
   if (fill)
-    for (x = 0; x < height - 2; ++x)
-    {
-      DrawLineH(' ', xPos + 1, yPos + x + 1, width - 2);
-    }
+    for (x = 0; x < heightInside2; ++x)
+      DrawLineH(' ', xPos1, yPos1 + x, widthInside2);
 
-  DrawLineH(239, xPos + 1 + offset, yPos, width - 2 - offset);
-  DrawLineH(239, xPos + 1, yPos + height - 1, width - 2);
-  DrawLineV(255, xPos, yPos + 1, height - 1);
-  DrawLineV(255, xPos + width - 1, yPos + 1, height - 2);
+  DrawLineH(239, xPos1, yPos, widthInside2);
+  DrawLineH(239, xPos1, yPos + heightInside1, widthInside2);
+  DrawLineV(255, xPos, yPos1, heightInside1);
+  DrawLineV(255, xPos + widthInside1, yPos1, heightInside2);
   SetChar(238, xPos, yPos);
-  SetChar(238, xPos + width - 1, yPos);
-  SetChar(238, xPos, yPos + height - 1);
-  SetChar(238, xPos + width - 1, yPos + height - 1);
+  SetChar(238, xPos + widthInside1, yPos);
+  SetChar(238, xPos, yPos + heightInside1);
+  SetChar(238, xPos + widthInside1, yPos + heightInside1);
+  PrintString(text, xPos1, yPos, true, false);
 }
 
 #if defined(__C64__)
