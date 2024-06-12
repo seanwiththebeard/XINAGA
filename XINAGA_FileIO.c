@@ -6,7 +6,7 @@
 
 #if defined(__APPLE2__)
 #include <apple2.h>
-#pragma code-name (push, "LC")
+//#pragma code-name (push, "LC")
 #endif
 
 void DiskSave(char filename[], int source, int length)

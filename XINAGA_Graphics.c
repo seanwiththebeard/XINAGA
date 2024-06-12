@@ -1,7 +1,7 @@
 #include "Xinaga.h"
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "LC")
+//#pragma code-name (push, "LC")
 #endif
 
 int YColumnIndex[25] = {
@@ -361,7 +361,8 @@ void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer)
 }
 
 int originOffset = 0;
-byte MapOriginX, MapOriginY = 0;
+byte MapOriginX = 0;
+byte MapOriginY = 0;
 
 void SetTileOrigin(byte x, byte y)
 {

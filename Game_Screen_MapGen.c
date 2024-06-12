@@ -5,8 +5,8 @@
 #pragma code-name (push, "LC")
 #endif
 
-#define height 12
-#define width 12
+#define height 16
+#define width 16
 #define posX 1
 #define posY 1
 #define pointsCount 32
