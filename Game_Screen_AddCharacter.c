@@ -28,7 +28,7 @@ byte HITDICE = 0;
 void AddToRoster()
 {
   struct playerChar *PlayerChar;
-  byte i = 0;
+  byte i;
   create();
   PlayerChar = getPlayerChar(CountRoster() - 1);
   PlayerChar->HPMAX = HPMAX;
@@ -93,7 +93,7 @@ void RollStats()
 
 void MenuGetClassPrimeStats()
 {
-  byte x = 0;
+  byte x;
   ResetMenu("Class@",26, 1, 11, 9, 6);
   for (x = 0; x < 4; ++x)
   {
@@ -115,7 +115,7 @@ void MenuGetClassPrimeStats()
 
 void MenuGetClass()
 {
-  byte hitdice = 0;
+  byte hitdice;
   RollStats();
   MenuGetClassPrimeStats();  
   CLASS = GetMenuSelection();
@@ -189,8 +189,8 @@ void MenuGetRace()
 
 void ListParty()
 {
+  byte x;
   byte partyCount = CountParty();
-  byte x = 0;
   ResetMenu("Party Members@",20, 12, 19, 4, partyCount);
   if (partyCount > 0)
   {
@@ -205,8 +205,8 @@ void ListParty()
 
 void ListRoster()
 {
+  byte x;
   byte rosterCount = CountRoster();
-  byte x = 0;
   ResetMenu("Roster Members@",1, 12, 18, 4, rosterCount);
   if (rosterCount > 0)
   {
