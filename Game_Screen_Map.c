@@ -653,7 +653,7 @@ void ApplyLOS()
       for(x = playerX - 1; x > 0; --x)
         if (tiles[viewportBuffer[x][y]].opaque)
         {
-          DrawSquare(0, y, x, 1);
+          //DrawSquare(0, y, x, 1);
           DrawSquare(0, 0, x, y);
         }
     //Quad 1
@@ -661,7 +661,7 @@ void ApplyLOS()
       for(x = playerX + 1; x < viewportWidth; ++x)
         if (tiles[viewportBuffer[x][y]].opaque)
         {
-          DrawSquare(x + 1, y, viewportWidth - x, 1);
+          //DrawSquare(x + 1, y, viewportWidth - x, 1);
           DrawSquare(x, 0, viewportWidth - x, y);
         }
     //Quad 2
@@ -669,15 +669,15 @@ void ApplyLOS()
       for(x = playerX + 1; x < viewportWidth; ++x)
         if (tiles[viewportBuffer[x][y]].opaque)
         {
-          DrawSquare(x + 1, y, viewportWidth - x, 1);
-          DrawSquare(x, y + 1, viewportWidth - x, viewportHeight - y);
+          //DrawSquare(x + 1, y, viewportWidth - x, 1);
+          DrawSquare(x + 1, y + 1, viewportWidth - x, viewportHeight - y);
         }
     //Quad 3
     for(y = playerY + 1; y < viewportHeight; ++y)
       for(x = playerX - 1; x > 0; --x)
         if (tiles[viewportBuffer[x][y]].opaque)
         {
-          DrawSquare(0, y, x, 1);
+          //DrawSquare(0, y, x, 1);
           DrawSquare(0, y + 1, x, viewportHeight - y);
         }
     //Horizontal
@@ -696,10 +696,8 @@ void ApplyLOS()
           DrawSquare(x, 0, 1, y);
     for(y = playerY + 1; y < viewportHeight; ++y)
       for(x = playerX -1 ; x <= playerX + 1; ++x)
-
         if (tiles[viewportBuffer[x][y]].opaque)
           DrawSquare(x, y + 1, 1, viewportHeight - y);
-
   }
 }
 
