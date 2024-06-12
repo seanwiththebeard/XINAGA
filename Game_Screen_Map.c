@@ -472,7 +472,7 @@ void InitializeMapData()
       ScreenQuad[byte_index].ScatterIndex = 0;
     }
 
-  tiles[44].opaque = true;
+  tiles[44].opaque = true; //Trees
 
   ScreenQuad[2].Chars[0] = 36; // Set the wizard to grass on 0
   ScreenQuad[2].Chars[1] = 44; // Set the wizard to trees on 1
@@ -540,9 +540,8 @@ int wrapY(int posY)
 bool CheckCollision(byte charIndex, byte Direction)
 {
   byte byte_i;
-  int xPos, yPos; //These need to be integers because they can wrap around the map
-  xPos = characters[charIndex].posX;
-  yPos = characters[charIndex].posY;
+  int xPos = characters[charIndex].posX;
+  int yPos = characters[charIndex].posY; //These need to be integers because they can wrap around the map
 
   //Check the tile we're already standing on
   if(ReadBit(tiles[mapData[xPos][yPos]].blocked, Direction))
@@ -555,19 +554,15 @@ bool CheckCollision(byte charIndex, byte Direction)
   {
     case up:
       yPos = wrapY(yPos - 1);
-      Direction = 1;
       break;
     case down:
       yPos = wrapY(yPos + 1);
-      Direction = 0;
       break;
     case left:
       xPos = wrapX(xPos - 1);
-      Direction = 3;
       break;
     case right:
       xPos = wrapX(xPos + 1);
-      Direction = 2;
       break;
     default:
       return false;
@@ -598,25 +593,30 @@ bool CheckCollision(byte charIndex, byte Direction)
   return false;
 }
 
-void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize)
+void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Blocking
 {
   byte x, y;
-
-  if (xOrigin < 0 || yOrigin < 0 || xOrigin >= viewportWidth || yOrigin >= viewportHeight)
-    return;
-
-  while (xOrigin + xSize > viewportWidth)
+  
+   //Are we ever going to get parameters outside bounds??
+  //if (xOrigin < 0 || yOrigin < 0 || xOrigin >= viewportWidth || yOrigin >= viewportHeight)
+    //return;
+  if (xOrigin < 0)
+    xOrigin = 0;
+  if (yOrigin < 0)
+    yOrigin = 0;
+  
+  if (xOrigin + xSize > viewportWidth)
     --xSize;
 
-  while (yOrigin + ySize > viewportHeight)
+  if (yOrigin + ySize > viewportHeight)
     --ySize;
+  
+  //Ever going to be less than one in size??
+  //if (xSize < 1)
+    //xSize = 1;
 
-  while (xSize < 1)
-    ++xSize;
-
-  while (ySize < 1)
-    ++ySize;
-
+  //if (ySize < 1)
+  
   for(y = 0; y < ySize; ++y)
   {
     for(x = 0; x < xSize; ++x)
@@ -654,7 +654,7 @@ void ApplyLOS()
         if (tiles[viewportBuffer[x][y]].opaque)
         {
           DrawSquare(0, y, x, 1);
-          DrawSquare(0, 0, x + 1, y);
+          DrawSquare(0, 0, x, y);
         }
     //Quad 1
     for(y = playerY - 1; y > 0; --y)
@@ -678,7 +678,7 @@ void ApplyLOS()
         if (tiles[viewportBuffer[x][y]].opaque)
         {
           DrawSquare(0, y, x, 1);
-          DrawSquare(0, y + 1, x + 1, viewportHeight - y);
+          DrawSquare(0, y + 1, x, viewportHeight - y);
         }
     //Horizontal
     for(x = playerX - 1; x > 0; --x)
