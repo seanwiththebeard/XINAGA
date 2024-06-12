@@ -9,7 +9,6 @@ byte strTemp[ConsoleBufferLength] = {};
 
 PartyDef Party = {0};
 
-int AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 int randseed = 0;
 
 byte RollDice(byte count, byte diceSize)
@@ -74,7 +73,7 @@ struct playerChar *getPlayerChar(byte index)
 
 void delete_pos(byte pos)
 {
-  int i;
+  byte i;
   struct playerChar *temp,*ptr;
 
   if(startRoster==NULL)
@@ -165,7 +164,7 @@ void AddParty(byte index)
 
 void DeleteParty(byte pos)
 {
-  int i;
+  byte i;
   struct playerChar *temp,*ptr;
 
   if(startParty==NULL)

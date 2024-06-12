@@ -85,7 +85,7 @@ byte MenuWidth = 5;
 byte MenuPosX = 5;
 byte MenuPosY = 5;
 byte MenuCount = 5;
-int MenuSelection = 0;
+sbyte MenuSelection = 0;
 #define menuItemsCount 16
 char *MenuItems[menuItemsCount] = {("")};
 bool MenuHighlight[menuItemsCount] = { 0 };

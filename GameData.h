@@ -45,9 +45,10 @@ byte RollDice(byte count, byte diceSize);
 typedef struct
 {
   int
-  	CARRYING_WEIGHT,
-  	CARRYING_CAPACITY,
   	GOLD;
+  byte
+  	CARRYING_WEIGHT,
+  	CARRYING_CAPACITY;  
 }PartyDef;
 extern PartyDef Party;
 
@@ -67,7 +68,7 @@ typedef struct
 }ClassDescriptionDef;
 extern ClassDescriptionDef ClassDescription[4];
 
-extern int AbilityModifier[];
+extern sbyte AbilityModifier[];
 
 //Lists
 	//Roster
@@ -90,14 +91,15 @@ typedef struct playerChar
   	RACE,
   	CLASS,
   	HITDICE,
-  	LEVEL;
-  int
-    	EXP,
+  	LEVEL,
   	CARRYING_WEIGHT,
   	CARRYING_CAPACITY;
+  int
+    	EXP;
   char
     	NAME[16];
-        struct playerChar *next;
+  
+  struct playerChar *next;
 };
 
 struct playerChar *getPlayerChar(byte index);
