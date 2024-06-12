@@ -912,37 +912,20 @@ screenName MapUpdate()
     //if (InputChanged())
     UpdateInput();
     {
+      direction Dir = 4;
       if (InputUp())
-      {
-        MoveCharacter(followIndex, up, true);
-        //return 1;
-      }
+      	Dir = up;
       if (InputDown()) 
-      {
-        MoveCharacter(followIndex, down, true); 
-        //return 1;
-      }
+        Dir = down;
       if (InputLeft())
-      {
-        MoveCharacter(followIndex, left, true);
-        //return 1;
-      }
+        Dir = left;
       if (InputRight())
-      {
-        MoveCharacter(followIndex, right, true);
-        //return 1;
-      }
+        Dir = right;
       if (InputFire())
-      {
-        //SwitchScreen(EditParty);
-        //LoadMap();
-        //PlaySong();
-        //sprintf(str, "Pos = %d,%d@", characters[0].posX, characters[0].posY);
-        //DrawEntireMap();
-        //WriteLineMessageWindow(str, 0);
         exit = true;
-      }
-
+      
+      if (Dir < 4)
+        MoveCharacter(followIndex, Dir, true);        
     }
   }
   return EditParty;
