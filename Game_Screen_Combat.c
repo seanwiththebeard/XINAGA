@@ -69,16 +69,16 @@ void ApplyCombatRewards();
 
 typedef struct CombatParticipant
 {
-  bool isPlayerChar;
   byte tileIndex;
-  sbyte posX;
-  sbyte posY;
   byte targetIndex;
   byte initiative;
-  sbyte initiativeMod;
   byte movement;
   bool active;
   bool alive;
+  bool isPlayerChar;
+  sbyte posX;
+  sbyte posY;
+  sbyte initiativeMod;
 };
 
 struct CombatParticipant combatParticipant[MaxCombatParticipants] = {};
