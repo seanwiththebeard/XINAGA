@@ -57,8 +57,8 @@ byte mapQuads[mapMatrixHeight][mapMatrixWidth] = { //Map Data
   {56, 57, 58, 59, 60, 61, 62, 63}
 };
 byte quadBuffer[4] = {0,0,0,0};
-int quadX = 0;
-int quadY = 0;
+byte quadX = 0;
+byte quadY = 0;
 #define quadWidth 8
 #define quadHeight 8
 const byte quadWidthDouble = quadWidth * 2;
@@ -87,8 +87,8 @@ byte indexB = 0;
 byte compareQuad = 0;
 
 //Camera Position
-int offsetX = 0;
-int offsetY = 0;
+sbyte offsetX = 0;
+sbyte offsetY = 0;
 byte cameraOffsetX = 0;
 byte cameraOffsetY = 0;
 
@@ -105,28 +105,28 @@ struct Tile
 
 struct
 {
-  int CharIndex[4];
+  byte CharIndex[4];
   byte Chars[2];
   byte ScatterIndex;
   byte NPCIndex;
-  byte MusicIndex;
+  //byte MusicIndex;
 }ScreenQuad[64] = {};
 
 #define charactersCount 16
 struct Character
 {
-  byte tile;
   byte chars[4];
   byte colors[4];
+  byte tile;
   byte trigger;
   byte combat;
-  int posX;
-  int posY;
-  int quadPosX;
-  int quadPosY;
+  byte message;
   bool visible;
   bool collide;
-  byte message;
+  sbyte posX;
+  sbyte posY;
+  sbyte quadPosX;
+  sbyte quadPosY;
 } characters[charactersCount] = {};
 
 byte ReadBit(byte byteToRead, char bit)//These are old
@@ -214,7 +214,8 @@ void FillQuadBuffer()
 
 void LoadQuadrant(byte quadIndex, byte quad)
 {
-  byte byte_x, byte_y, byte_z;
+  byte byte_x, byte_y, byte_z, charIndex;
+  byte xPos, yPos;
   int chardata;
 
   //sprintf(str, "Tile%d to Quad%d@", index, quad);
@@ -267,16 +268,21 @@ void LoadQuadrant(byte quadIndex, byte quad)
     chardata = (int)&MapSetInfo[0] + 8*ScreenQuad[quadIndex].CharIndex[byte_z];
     for (byte_y = 0; byte_y < quadHeight; ++byte_y)
     {
+      yPos = byte_y + QuadOriginY;
       for (byte_x = 0; byte_x < quadWidth; ++byte_x)
       {
+        xPos = byte_x + QuadOriginX;
         if (ReadBit(PEEK(chardata + byte_y), 7 - byte_x) > 0)
         {
-          mapData[byte_x + QuadOriginX][byte_y + QuadOriginY] = ScreenQuad[quadIndex].Chars[1];
+          charIndex = 1;
+          //mapData[xPos][yPos] = ScreenQuad[quadIndex].Chars[1];
         }
         else
+          charIndex = 0;
         {
-          mapData[byte_x + QuadOriginX][byte_y + QuadOriginY] = ScreenQuad[quadIndex].Chars[0];
+          //mapData[xPos][yPos] = ScreenQuad[quadIndex].Chars[0];
         }
+        mapData[xPos][yPos] = ScreenQuad[quadIndex].Chars[charIndex];
       }
     }
   }
@@ -345,6 +351,15 @@ void QuadScroll(byte dir)
 {
   byte p = GetChar(COLS - 1, ROWS - 1);
   bool charPosX, charPosY;
+  bool qAUp = false;
+  bool qADown = false;
+  bool qALeft = false;
+  bool qARight = false;
+  bool qBUp = false;
+  bool qBDown = false;
+  bool qBLeft = false;
+  bool qBRight = false;
+  
   SetChar('Q', COLS - 1, ROWS - 1);
   QuadOriginX = characters[followIndex].quadPosX;
   QuadOriginY = characters[followIndex].quadPosY;
@@ -356,35 +371,54 @@ void QuadScroll(byte dir)
   switch(dir)
   {
     case 0:
-      indexA = GetQuadInRelation(true, false, false, false);
+      qAUp = true;
+      //indexA = GetQuadInRelation(true, false, false, false);
+      qBUp = true;
       if (charPosX)
-        indexB = GetQuadInRelation(true, false, true, false);
+        qBLeft = true;
+        //indexB = GetQuadInRelation(true, false, true, false);
       else
-        indexB = GetQuadInRelation(true, false, false, true);
+        qBRight = true;
+        //indexB = GetQuadInRelation(true, false, false, true);
       break;
     case 1:
-      indexA = GetQuadInRelation(false, true, false, false);
+      qADown = true;
+      //indexA = GetQuadInRelation(false, true, false, false);
+      qBDown = true;
       if (charPosX)
-        indexB = GetQuadInRelation(false, true, true, false);
+        qBLeft = true;
+        //indexB = GetQuadInRelation(false, true, true, false);
       else
-        indexB = GetQuadInRelation(false, true, false, true);
+        qBRight = true;
+        //indexB = GetQuadInRelation(false, true, false, true);
       break;
     case 2:
-      indexA = GetQuadInRelation(false, false, true, false);
+      qALeft = true;
+      //indexA = GetQuadInRelation(false, false, true, false);
+      qBLeft = true;
       if (charPosY)
-        indexB = GetQuadInRelation(true, false, true, false);
+        qBUp = true;
+        //indexB = GetQuadInRelation(true, false, true, false);
       else
-        indexB = GetQuadInRelation(false, true, true, false);
+        qBDown = true;
+        //indexB = GetQuadInRelation(false, true, true, false);
       break;
     case 3:
-      indexA = GetQuadInRelation(false, false, false, true);
+      qARight = true;
+      //indexA = GetQuadInRelation(false, false, false, true);
+      qBRight = true;
       if (charPosY)
-        indexB = GetQuadInRelation(true, false, false, true);
+        qBUp = true;
+        //indexB = GetQuadInRelation(true, false, false, true);
       else
-        indexB = GetQuadInRelation(false, true, false, true);
+        qBDown = true;
+        //indexB = GetQuadInRelation(false, true, false, true);
       break;
   }
-
+  
+  indexA = GetQuadInRelation(qAUp, qADown, qALeft, qARight);
+  indexB = GetQuadInRelation(qBUp, qBDown, qBLeft, qBRight);
+  
   if (dir < 2)
     switch (compareQuad)
     {
@@ -467,7 +501,7 @@ void InitializeMapData()
       ScreenQuad[byte_index].CharIndex[3] = byte_offset + 17;
       ScreenQuad[byte_index].Chars[0] = 32;
       ScreenQuad[byte_index].Chars[1] = byte_index;
-      ScreenQuad[byte_index].MusicIndex = 0;
+      //ScreenQuad[byte_index].MusicIndex = 0;
       ScreenQuad[byte_index].NPCIndex = 0;
       ScreenQuad[byte_index].ScatterIndex = 0;
     }
