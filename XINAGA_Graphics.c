@@ -454,6 +454,8 @@ void ReadyArrow(byte x, byte y)
   
   arrowX = x + MapOriginX;
   arrowY = y + MapOriginY + 2;
+  while (arrowX >= COLS - 1)
+    --arrowX;
   arrowA = GetChar(arrowX, arrowY);
   arrowB = GetChar(arrowX + 1, arrowY);
 }

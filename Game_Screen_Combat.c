@@ -16,8 +16,8 @@ bool exitCombat = false;
 #define CombatMapWidth 11
 #define CombatMapHeight 8
 
-#define MaxCombatParticipants 6 //CombatMapWidth * CombatMapHeight
-#define MonsterCount 2
+#define MaxCombatParticipants 12 //CombatMapWidth * CombatMapHeight
+#define MonsterCount 8
 
 
 #define consolePosX 1
@@ -342,7 +342,7 @@ void GetTargetSelection(void)
 
 void MonsterWander()
 {
-  byte failedWander;
+  byte failedWander = 0;
   MovementRemaining = combatParticipant[SelectedCharacter].movement;
   //DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   while(MovementRemaining > 0)
@@ -350,6 +350,7 @@ void MonsterWander()
     byte remaining = MovementRemaining;
     WriteRemainingMovement();
     ClearArrow();
+    srand (rand() % 32767);
     switch (rand() % 4)
     {
       case 0:
@@ -605,8 +606,8 @@ void DrawCharacters(void)
 screenName Update_Combat(void)
 {
   Initialize();
-  randseed = 0;
-  srand(randseed);
+  //randseed = 0;
+  //srand(randseed);
 
   while (!exitCombat)
   {
