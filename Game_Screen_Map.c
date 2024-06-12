@@ -99,7 +99,7 @@ struct Tile
   //byte colors[4];
   //byte index;
   byte blocked;
-  byte trigger;
+  //byte trigger;
   byte opaque;
 } tiles[64] = {};
 
@@ -115,10 +115,10 @@ struct
 #define charactersCount 16
 struct Character
 {
-  byte chars[4];
-  byte colors[4];
+  //byte chars[4];
+  //byte colors[4];
   byte tile;
-  byte trigger;
+  //byte trigger;
   byte combat;
   byte message;
   bool visible;
@@ -515,14 +515,14 @@ void InitializeMapData()
   for (byte_i = 0; byte_i < charactersCount; ++byte_i)
   {
     characters[byte_i].tile = byte_i;
-    characters[byte_i].chars[0] = 8 + byte_i * 16;
-    characters[byte_i].chars[1] = 9 + byte_i * 16;
-    characters[byte_i].chars[2] = 10 + byte_i * 16;
-    characters[byte_i].chars[3] = 11 + byte_i * 16;
-    characters[byte_i].colors[0] = byte_i + 1;
-    characters[byte_i].colors[1] = byte_i + 1;
-    characters[byte_i].colors[2] = byte_i + 1;
-    characters[byte_i].colors[3] = byte_i + 1;
+    //characters[byte_i].chars[0] = 8 + byte_i * 16;
+    //characters[byte_i].chars[1] = 9 + byte_i * 16;
+    //characters[byte_i].chars[2] = 10 + byte_i * 16;
+    //characters[byte_i].chars[3] = 11 + byte_i * 16;
+    //characters[byte_i].colors[0] = byte_i + 1;
+    //characters[byte_i].colors[1] = byte_i + 1;
+    //characters[byte_i].colors[2] = byte_i + 1;
+    //characters[byte_i].colors[3] = byte_i + 1;
     characters[byte_i].posX = byte_i;
     characters[byte_i].posY = byte_i;
     characters[byte_i].quadPosX = byte_i;

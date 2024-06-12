@@ -1,6 +1,8 @@
 #include "Xinaga.h"
 #include "GameData.h"
-
+#if defined(__APPLE2__)
+//#pragma code-name (push, "LC")
+#endif
 #define height 16
 #define width 16
 #define posX 1
@@ -472,8 +474,6 @@ void GenerateMap(byte seed)
   //sprintf(strTemp, "Done@");
   //WriteLineMessageWindow(strTemp, 0);
 }
-
-
 
 screenName Update_MapGen()
 {
