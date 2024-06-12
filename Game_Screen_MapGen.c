@@ -37,7 +37,7 @@ Before / After	//16
 typedef struct vector2
 {
   sbyte x, y;
-  bool landlocked;
+  //bool landlocked;
   struct vector2 *next;
 };
 
@@ -97,7 +97,7 @@ struct vector2 *getPoint(byte index)
 
 void deletePoint(int pos)
 {
-  int i;
+  byte i;
   struct vector2 *temp,*ptr;
 
   if(points==NULL)
@@ -204,11 +204,11 @@ void checkLandlocked()
 
     if (countAdjacent(tmpt->x, tmpt->y) == 4)
     {
-      tmpt->landlocked = true;
+      //tmpt->landlocked = true;
       deletePoint(i);
     }
-    else
-      tmpt->landlocked = false;
+    //else
+      //tmpt->landlocked = false;
   }
 }
 
@@ -276,7 +276,7 @@ void addRandomPoints(byte count, int index)
 
 void attachRandomPoint(byte index)
 {
-  int i = 0;
+  byte i = 0;
   sbyte x, y = 0;
   bool exit = false;
   byte failure = 0;
@@ -354,7 +354,6 @@ void attachRandomPoint(byte index)
 void DrawMap()
 {
   byte x, y;
-  DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, false);
   for (y = 0; y < height; ++y)
     for (x = 0; x < width; ++x)
     {
