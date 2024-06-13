@@ -67,9 +67,9 @@ void _SetChar(void);
 void SetColor(byte x, byte y, byte index);
 byte GetChar(byte x, byte y);
 //void SetCharBuffer(byte x, byte y, byte index);
-void DrawLineH(char index, byte x, byte y, byte length);
-void DrawLineV(char index, byte x, byte y, byte length);
-void DrawBorder(char text[20], byte xPos, byte yPos, byte width, byte height, bool fill);
+void DrawLineH(byte index, byte x, byte y, byte length);
+void DrawLineV(byte index, byte x, byte y, byte length);
+void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool fill);
 
 //	Scrolling
 //void ScrollReset(void);
