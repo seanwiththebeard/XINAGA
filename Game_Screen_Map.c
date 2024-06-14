@@ -329,7 +329,7 @@ void QuadScroll(direction dir)
   
   byte p = GetChar(COLS - 1, ROWS - 1);
   SetChar('Q', COLS - 1, ROWS - 1);
-  switch(dir)
+  switch(dir) // REPLACE THIS WITH A MATRIX
   {
     case 0:
       vA = -1;
