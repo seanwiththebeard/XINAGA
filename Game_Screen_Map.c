@@ -37,7 +37,7 @@ void QuadScroll(byte direction);
 #define viewportHeight 7
 #define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
-const static byte viewportSize = viewportHeight * viewportWidth;
+#define viewportSize viewportHeight * viewportWidth
 byte viewportBuffer[viewportWidth][viewportHeight] = {};
 byte viewportBufferLast[viewportWidth][viewportHeight] = {};
 byte followIndex = 0;
@@ -77,13 +77,12 @@ struct
   byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
 }ScreenQuad = {};
 byte quadBuffer[4] = {0,0,0,0};
-byte quadX = 0;
-byte quadY = 0;
+
 #define quadWidth 8
 #define quadHeight 8
-const byte quadWidthDouble = quadWidth * 2;
-const byte quadHeightDouble = quadHeight * 2;
-const byte yQuadHeight = 2*mapQuadHeight;
+#define quadWidthDouble quadWidth << 1
+#define quadHeightDouble quadHeight << 1
+#define yQuadHeight mapQuadHeight << 1
 
 //Tile Data
 struct
@@ -118,20 +117,12 @@ void CameraFollow()
   {
     --offsetX;
     wrapX(&offsetX);
-    /*if(offsetX >= mapWidth)
-      offsetX = 0;
-    if (offsetX < 0)
-      offsetX = mapWidth - 1;*/
   }
 
   for(byte_y = 0; byte_y < playerY; ++byte_y)
   {
     --offsetY;
     wrapY(&offsetY);
-    /*if(offsetY >= mapHeight)
-      offsetY = 0;
-    if (offsetY < 0)
-      offsetY = mapHeight - 1;*/
   }
 }
 
@@ -168,9 +159,8 @@ void FillQuadBuffer()
 {
   byte byte_x;
   byte byte_y;
-
-  quadX = characters.quadPosX[followIndex];
-  quadY = characters.quadPosY[followIndex];
+  byte quadX = characters.quadPosX[followIndex];
+  byte quadY = characters.quadPosY[followIndex];
 
   if (quadX + 1 == mapQuadWidth)
     byte_x = 0;
@@ -190,13 +180,13 @@ void FillQuadBuffer()
 
 void LoadQuadrant(byte quadIndex, byte quad)
 {
+  int chardata;
   byte byte_x;
   byte byte_y;
   byte byte_z;
   byte charIndex;
   byte xPos;
   byte yPos;
-  int chardata;
   byte QuadOriginX;
   byte QuadOriginY;
 
@@ -246,7 +236,7 @@ void LoadQuadrant(byte quadIndex, byte quad)
       default:
         break;
     }
-
+    
     chardata = (int)&MapSetInfo[0] + 8*ScreenQuad.CharIndex[quadIndex][byte_z];
     for (byte_y = 0; byte_y < quadHeight; ++byte_y)
     {
@@ -255,15 +245,9 @@ void LoadQuadrant(byte quadIndex, byte quad)
       {
         xPos = byte_x + QuadOriginX;
         if (ReadBit(PEEK(chardata + byte_y), 7 - byte_x) > 0)
-        {
           charIndex = 1;
-          //mapData[xPos][yPos] = ScreenQuad[quadIndex].Chars[1];
-        }
         else
           charIndex = 0;
-        {
-          //mapData[xPos][yPos] = ScreenQuad[quadIndex].Chars[0];
-        }
         mapData[xPos][yPos] = ScreenQuad.Chars[quadIndex][charIndex];
       }
     }
@@ -335,12 +319,8 @@ void QuadScroll(byte dir)
   byte quadB; //Diagonal quad
   byte indexA;
   byte indexB;
-  byte compareQuad;
-  byte QuadOriginX;
-  byte QuadOriginY;
-
-  bool charPosX;
-  bool charPosY;
+  //byte QuadOriginX;
+  //byte QuadOriginY;
   bool qAUp = false;
   bool qADown = false;
   bool qALeft = false;
@@ -349,17 +329,15 @@ void QuadScroll(byte dir)
   bool qBDown = false;
   bool qBLeft = false;
   bool qBRight = false;
-
+  bool charPosX = characters.posX[followIndex] % 16 < quadWidth;
+  bool charPosY = characters.posY[followIndex] % 16 < quadHeight;
+  byte compareQuad = GetPlayerQuad();
   byte p = GetChar(COLS - 1, ROWS - 1);
+  
 
   SetChar('Q', COLS - 1, ROWS - 1);
-  QuadOriginX = characters.quadPosX[followIndex];
-  QuadOriginY = characters.quadPosY[followIndex];
-  compareQuad = GetPlayerQuad();
-
-  charPosX = characters.posX[followIndex] % 16 < quadWidth;
-  charPosY = characters.posY[followIndex] % 16 < quadHeight;
-
+  //QuadOriginX = characters.quadPosX[followIndex];
+  //QuadOriginY = characters.quadPosY[followIndex];
   switch(dir)
   {
     case 0:
@@ -473,49 +451,29 @@ void InitializeMapData()
   byte byte_i;
   byte byte_index;
   byte byte_offset;
-
+  
   for (byte_y = 0; byte_y < 8; ++byte_y)
     for (byte_x = 0; byte_x < 8; ++byte_x)
     {
       byte_index = byte_x + byte_y*8;
       byte_offset = byte_x * 2 + 32*byte_y;
 
-      //tiles[byte_index].index = byte_index; // Init tileset data for 64 tiles
-      //tiles[byte_index].chars[0] = byte_offset;
-      //tiles[byte_index].chars[1] = byte_offset + 1;
-      //tiles[byte_index].chars[2] = byte_offset + 16;
-      //tiles[byte_index].chars[3] = byte_offset + 17;
-
       tiles.blocked[byte_index] = 0;
-
       ScreenQuad.CharIndex[byte_index][0] = byte_offset; // Init screen quad prefabs for 8x8
       ScreenQuad.CharIndex[byte_index][1] = byte_offset + 1;
       ScreenQuad.CharIndex[byte_index][2] = byte_offset + 16;
       ScreenQuad.CharIndex[byte_index][3] = byte_offset + 17;
       ScreenQuad.Chars[byte_index][0] = 32;
       ScreenQuad.Chars[byte_index][1] = byte_index;
-      //ScreenQuad[byte_index].MusicIndex = 0;
-      //ScreenQuad[byte_index].NPCIndex = 0;
       ScreenQuad.ScatterIndex[byte_index] = 0;
     }
-
   tiles.opaque[44] = true; //Trees
-
   ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
   ScreenQuad.Chars[2][1] = 44; // Set the wizard to trees on 1
-
   //Init Characters
   for (byte_i = 0; byte_i < charactersCount; ++byte_i)
   {
     characters.tile[byte_i] = byte_i;
-    //characters[byte_i].chars[0] = 8 + byte_i * 16;
-    //characters[byte_i].chars[1] = 9 + byte_i * 16;
-    //characters[byte_i].chars[2] = 10 + byte_i * 16;
-    //characters[byte_i].chars[3] = 11 + byte_i * 16;
-    //characters[byte_i].colors[0] = byte_i + 1;
-    //characters[byte_i].colors[1] = byte_i + 1;
-    //characters[byte_i].colors[2] = byte_i + 1;
-    //characters[byte_i].colors[3] = byte_i + 1;
     characters.posX[byte_i] = byte_i;
     characters.posY[byte_i] = byte_i;
     characters.quadPosX[byte_i] = byte_i;
@@ -550,38 +508,32 @@ void wrapX(sbyte *posX) //Used in map positions
 {
   if (*posX < 0)
     *posX = mapWidth - 1;
-    //return mapWidth - 1;
   if (*posX >= mapWidth)
     *posX = 0;
-    //return 0;
-  //return posX;
 }
 
 void wrapY(sbyte *posY)
 {
   if (*posY < 0)
     *posY = mapHeight - 1;
-    //return mapHeight - 1;
   if (*posY >= mapHeight)
     *posY = 0;
-    //return 0;
-  //return posY;
 }
 
-bool CheckCollision(byte charIndex, byte Direction)
+bool CheckCollision(byte charIndex, direction dir)
 {
   byte byte_i;
   sbyte xPos = characters.posX[charIndex];
   sbyte yPos = characters.posY[charIndex]; //These need to be signed because they can wrap around the map
 
   //Check the tile we're already standing on
-  if(ReadBit(tiles.blocked[mapData[xPos][yPos]], Direction))
+  if(ReadBit(tiles.blocked[mapData[xPos][yPos]], dir))
   {
     //WriteLineMessageWindow("Standing on blocked@", 0);
     return true;
   }
 
-  switch (Direction)
+  switch (dir)
   {
     case up:
       --yPos;
@@ -603,7 +555,7 @@ bool CheckCollision(byte charIndex, byte Direction)
       return false;
   }
 
-  if(ReadBit(tiles.blocked[mapData[xPos][yPos]], Direction))
+  if(ReadBit(tiles.blocked[mapData[xPos][yPos]], dir))
   {
     /*WriteLineMessageWindow("Entry blocked@", 1);
     sprintf(str, "Index: %d@", tiles[mapData[xPos][yPos]].index);
@@ -632,27 +584,11 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Bl
 {
   byte x;
   byte y;
-
-  //Are we ever going to get parameters outside bounds??
-  //if (xOrigin < 0 || yOrigin < 0 || xOrigin >= viewportWidth || yOrigin >= viewportHeight)
-  //return;
-  if (xOrigin < 0)
-    xOrigin = 0;
-  if (yOrigin < 0)
-    yOrigin = 0;
-
+  
   if (xOrigin + xSize > viewportWidth)
     --xSize;
-
   if (yOrigin + ySize > viewportHeight)
     --ySize;
-
-  //Ever going to be less than one in size??
-  //if (xSize < 1)
-  //xSize = 1;
-
-  //if (ySize < 1)
-
   for(y = 0; y < ySize; ++y)
   {
     for(x = 0; x < xSize; ++x)
@@ -788,12 +724,10 @@ void DrawEntireMap()
 
 void MoveCharacter(byte index, byte dir)
 {
-  byte checkCollision = CheckCollision(index, dir);
   bool scrollQuads = false;
-  bool changedQuad = false;
+  byte checkCollision = CheckCollision(index, dir);
 
   TickMoonPhase();
-
   if(!checkCollision)
   {
     switch (dir)
@@ -804,7 +738,6 @@ void MoveCharacter(byte index, byte dir)
           characters.posY[index] = mapHeight - 1;
         if (characters.posY[index] == 15 || characters.posY[index] == 31)
         {
-          changedQuad = true;
           --characters.quadPosY[index];
           if(characters.quadPosY[index] < 0)
             characters.quadPosY[index] = mapMatrixHeight - 1;
@@ -816,7 +749,6 @@ void MoveCharacter(byte index, byte dir)
           characters.posY[index] = 0;
         if (characters.posY[index] == 0 || characters.posY[index] == 16)
         {
-          changedQuad = true;
           ++characters.quadPosY[index];
           if(characters.quadPosY[index] == mapMatrixHeight)
             characters.quadPosY[index] = 0; 
@@ -828,7 +760,6 @@ void MoveCharacter(byte index, byte dir)
           characters.posX[index] = mapWidth - 1;
         if (characters.posX[index] == 15 || characters.posX[index] == 31)
         {
-          changedQuad = true;
           --characters.quadPosX[index];
           if(characters.quadPosX[index] < 0)
             characters.quadPosX[index] = mapMatrixWidth - 1; 
@@ -840,7 +771,6 @@ void MoveCharacter(byte index, byte dir)
           characters.posX[index] = 0;
         if (characters.posX[index] == 0 || characters.posX[index] == 16)
         {
-          changedQuad = true;
           ++characters.quadPosX[index];
           if(characters.quadPosX[index] == mapMatrixWidth)
             characters.quadPosX[index] = 0; 
@@ -849,7 +779,7 @@ void MoveCharacter(byte index, byte dir)
       default:
         break;
     }
-
+    
     if (index == followIndex)
     {
       byte edgeCheckX = characters.posX[index] % 16;
@@ -874,15 +804,10 @@ void MoveCharacter(byte index, byte dir)
             scrollQuads = true;
           break;
       }
-      
-      if (index == followIndex)
-        CameraFollow();
-
-      DrawEntireMap();
-
       if (scrollQuads)
         QuadScroll(dir);
     }
+    DrawEntireMap();
   }
 }
 
@@ -894,7 +819,6 @@ void DrawCharacterCoordinates(byte index)
 
 void LoadMap()
 {
-  //SetTileOrigin(viewportPosX, viewportPosY);
   InitializeMapData();
 }
 
@@ -933,5 +857,4 @@ screenName MapUpdate()
     }
   }
   return EditParty;
-  //return nextScreen;
 }

@@ -17,7 +17,7 @@ bool exitCombat = false;
 #define CombatMapHeight 8
 
 #define MaxCombatParticipants 12 //CombatMapWidth * CombatMapHeight
-#define MonsterCount 1
+#define MonsterCount 8
 
 
 #define consolePosX 1
@@ -67,7 +67,7 @@ void ApplyCombatRewards();
 //Combat Session Data
 //Eventually create a structure containing this data and malloc an instance at combat runtime
 
-typedef struct CombatParticipant
+struct 
 {
   byte tileIndex;
   byte targetIndex;
@@ -79,9 +79,8 @@ typedef struct CombatParticipant
   sbyte posX;
   sbyte posY;
   sbyte initiativeMod;
-};
+}combatParticipant[MaxCombatParticipants] = {};
 
-struct CombatParticipant combatParticipant[MaxCombatParticipants] = {};
 void ClearRoster(void)
 {
   byte i;
