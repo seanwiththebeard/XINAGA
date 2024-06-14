@@ -305,8 +305,8 @@ void addRandomPoints(byte count, int index)
 
 void attachRandomPoint(byte index)
 {
-  sbyte x, y = 0;
-  byte i = 0;
+  sbyte x, y;
+  byte i;
   bool exit = false;
   byte failure = 0;
   
@@ -418,8 +418,8 @@ void createContinent(byte size)
 
 void Rotate(direction dir)
 {
-  byte h = 0;
-  byte w = 0;
+  byte h;
+  byte w;
   byte tempRow[width];
   byte tempCol[height];
   switch (dir)
@@ -479,7 +479,7 @@ void RotateAround()
 
 void GenerateMap(byte seed)
 {
-  byte x, y, failures = 0;
+  byte x, y;
   countContinents = 0;
   clearPoints();
 

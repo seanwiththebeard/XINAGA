@@ -69,31 +69,31 @@ void ApplyCombatRewards();
 
 struct 
 {
-  byte tileIndex;
-  byte targetIndex;
-  byte initiative;
-  byte movement;
-  bool active;
-  bool alive;
-  bool isPlayerChar;
-  sbyte posX;
-  sbyte posY;
-  sbyte initiativeMod;
-}combatParticipant[MaxCombatParticipants] = {};
+  byte tileIndex[MaxCombatParticipants];
+  byte targetIndex[MaxCombatParticipants];
+  byte initiative[MaxCombatParticipants];
+  byte movement[MaxCombatParticipants];
+  bool active[MaxCombatParticipants];
+  bool alive[MaxCombatParticipants];
+  bool isPlayerChar[MaxCombatParticipants];
+  sbyte posX[MaxCombatParticipants];
+  sbyte posY[MaxCombatParticipants];
+  sbyte initiativeMod[MaxCombatParticipants];
+}combatParticipant = {};
 
 void ClearRoster(void)
 {
   byte i;
   for (i = 0; i < MaxCombatParticipants; ++i)
   {
-    combatParticipant[i].isPlayerChar = false;
-    combatParticipant[i].tileIndex = 0;
-    combatParticipant[i].posX = i;
-    combatParticipant[i].posY = 7;
-    combatParticipant[i].initiative = 0;
-    combatParticipant[i].active = false;
-    combatParticipant[i].alive = false;
-    combatParticipant[i].movement = 0;  
+    combatParticipant.isPlayerChar[i] = false;
+    combatParticipant.tileIndex[i] = 0;
+    combatParticipant.posX[i] = i;
+    combatParticipant.posY[i] = 7;
+    combatParticipant.initiative[i] = 0;
+    combatParticipant.active[i] = false;
+    combatParticipant.alive[i] = false;
+    combatParticipant.movement[i] = 0;  
   }
   SelectedCharacter = 0;
 }
@@ -122,15 +122,15 @@ void GetCharacters(void)
   byte i;
   for (i = 0; i < CountParty(); ++i)
   {
-    combatParticipant[i].isPlayerChar = true;
-    combatParticipant[i].tileIndex = getPartyMember(i)->CLASS;
-    combatParticipant[i].posX = 2+i;
-    combatParticipant[i].posY = 6;
-    combatParticipant[i].initiative = 0;
-    combatParticipant[i].initiativeMod = (getPartyMember(i)->DEX - 10) / 2;
-    combatParticipant[i].active = true;
-    combatParticipant[i].alive = true;
-    combatParticipant[i].movement = getPartyMember(i)->DEX / 2;
+    combatParticipant.isPlayerChar[i] = true;
+    combatParticipant.tileIndex[i] = getPartyMember(i)->CLASS;
+    combatParticipant.posX[i] = 2+i;
+    combatParticipant.posY[i] = 6;
+    combatParticipant.initiative[i] = 0;
+    combatParticipant.initiativeMod[i] = (getPartyMember(i)->DEX - 10) / 2;
+    combatParticipant.active[i] = true;
+    combatParticipant.alive[i] = true;
+    combatParticipant.movement[i] = getPartyMember(i)->DEX / 2;
     ++SelectedCharacter;
   }
 }
@@ -148,17 +148,17 @@ void GetMonsters(void)
   for (i = SelectedCharacter; i < LastMonster; ++i)
     //for (i = 0; i < MonsterCount; ++i)
   {    
-    combatParticipant[i].isPlayerChar = false;
-    combatParticipant[i].tileIndex = 5; //33+i;
-    combatParticipant[i].posX = i;
-    while (combatParticipant[i].posX >= CombatMapWidth)
-      combatParticipant[i].posX -= CombatMapWidth;
-    combatParticipant[i].posY = 2 + (i / CombatMapWidth);
-    combatParticipant[i].initiativeMod = 0;
-    combatParticipant[i].active = true;
-    combatParticipant[i].alive = true;
-    combatParticipant[i].movement = 4;
-    combatParticipant[i].targetIndex = rand() % CountParty();
+    combatParticipant.isPlayerChar[i] = false;
+    combatParticipant.tileIndex[i] = 5; //33+i;
+    combatParticipant.posX[i] = i;
+    while (combatParticipant.posX[i] >= CombatMapWidth)
+      combatParticipant.posX[i] -= CombatMapWidth;
+    combatParticipant.posY[i] = 2 + (i / CombatMapWidth);
+    combatParticipant.initiativeMod[i] = 0;
+    combatParticipant.active[i] = true;
+    combatParticipant.alive[i] = true;
+    combatParticipant.movement[i] = 4;
+    combatParticipant.targetIndex[i] = rand() % CountParty();
     ++SelectedCharacter;
   }
 }
@@ -168,7 +168,7 @@ void RollInitiative(void)
   byte i;
   for (i = 0; i < MaxCombatParticipants; ++i)
   {
-    combatParticipant[i].initiative = rand() % 20 + combatParticipant[i].initiativeMod;
+    combatParticipant.initiative[i] = rand() % 20 + combatParticipant.initiativeMod[i];
   }
 }
 
@@ -176,12 +176,12 @@ void WriteRemainingMovement()
 {
   if (MovementRemaining > 0)
   {
-    sprintf(strTemp, "Movement Left:%dof%d@", MovementRemaining, combatParticipant[SelectedCharacter].movement);
+    sprintf(strTemp, "Movement Left:%dof%d@", MovementRemaining, combatParticipant.movement[SelectedCharacter]);
     SetLineMessageWindow(strTemp, 0);
   }
   else
   {
-    if (combatParticipant[SelectedCharacter].isPlayerChar)
+    if (combatParticipant.isPlayerChar[SelectedCharacter])
       SetLineMessageWindow("Moved, press space@", 0);
     else
       SetLineMessageWindow("Monster moved@", 0);
@@ -190,11 +190,11 @@ void WriteRemainingMovement()
 
 void SelectionMoveCharacter(void)
 {
-  MovementRemaining = combatParticipant[SelectedCharacter].movement;
+  MovementRemaining = combatParticipant.movement[SelectedCharacter];
   WriteRemainingMovement();
-  combatParticipant[SelectedCharacter].active = true;
+  combatParticipant.active[SelectedCharacter] = true;
   DrawOneCharacter();
-  DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+  DrawArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
   while(InputFire())
     UpdateInput();
   while(!InputFire())
@@ -216,8 +216,8 @@ void SelectionMoveCharacter(void)
           MoveCombatCharacter(SelectedCharacter, right);
       }
 
-      if(combatParticipant[SelectedCharacter].active)
-        DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+      if(combatParticipant.active[SelectedCharacter])
+        DrawArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
       if (remaining  != MovementRemaining)
         WriteRemainingMovement();
     }
@@ -239,8 +239,8 @@ bool SelectNextCharacter()
       SelectedCharacter = 0;
 
     //if (combatParticipant[SelectedCharacter].isPlayerChar)   
-    if (combatParticipant[SelectedCharacter].active)
-      if (combatParticipant[SelectedCharacter].alive)
+    if (combatParticipant.active[SelectedCharacter])
+      if (combatParticipant.alive[SelectedCharacter])
         found = true;
 
     ++count;
@@ -267,8 +267,8 @@ void DoCombatRound()
 
 void GetActionSelection(void)
 {
-  ReadyArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
-  if(combatParticipant[SelectedCharacter].isPlayerChar)
+  ReadyArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
+  if(combatParticipant.isPlayerChar[SelectedCharacter])
     SelectPlayerAction();
   else
     SelectMonsterAction();
@@ -277,8 +277,8 @@ void GetActionSelection(void)
 void GetTargetSelection(void)
 {
   byte i;
-  sbyte x = combatParticipant[SelectedCharacter].posX;
-  sbyte y = combatParticipant[SelectedCharacter].posY;
+  sbyte x = combatParticipant.posX[SelectedCharacter];
+  sbyte y = combatParticipant.posY[SelectedCharacter];
   SetLineMessageWindow("Select Target@",0);
 
   ClearArrow();
@@ -312,13 +312,13 @@ void GetTargetSelection(void)
       while (y >= CombatMapHeight)
         --y;
 
-      while (x < combatParticipant[SelectedCharacter].posX - 1)
+      while (x < combatParticipant.posX[SelectedCharacter] - 1)
         ++x;
-      while (x > combatParticipant[SelectedCharacter].posX + 1)
+      while (x > combatParticipant.posX[SelectedCharacter] + 1)
         --x;
-      while (y < combatParticipant[SelectedCharacter].posY - 1)
+      while (y < combatParticipant.posY[SelectedCharacter] - 1)
         ++y;
-      while (y > combatParticipant[SelectedCharacter].posY + 1)
+      while (y > combatParticipant.posY[SelectedCharacter] + 1)
         --y;
 
       ClearArrow();
@@ -327,8 +327,8 @@ void GetTargetSelection(void)
       SelectedTarget = -1;
       for (i = 0; i < MaxCombatParticipants; ++i)
       {
-        if (combatParticipant[i].posX == x)
-          if(combatParticipant[i].posY == y)
+        if (combatParticipant.posX[i] == x)
+          if(combatParticipant.posY[i] == y)
           {
             SelectedTarget = i;
             i = MaxCombatParticipants;
@@ -342,7 +342,7 @@ void GetTargetSelection(void)
 void MonsterWander()
 {
   byte failedWander = 0;
-  MovementRemaining = combatParticipant[SelectedCharacter].movement;
+  MovementRemaining = combatParticipant.movement[SelectedCharacter];
   //DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   while(MovementRemaining > 0)
   {
@@ -367,7 +367,7 @@ void MonsterWander()
       default:
         break;
     }
-    DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+    DrawArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
     if(remaining == MovementRemaining)
       ++failedWander;
     if (failedWander >= 3)
@@ -393,8 +393,8 @@ void SelectPlayerAction(void)
 {
   byte tempTile;
   bool finished = false;
-  byte moveX = combatParticipant[SelectedCharacter].posX;
-  byte moveY = combatParticipant[SelectedCharacter].posY;
+  byte moveX = combatParticipant.posX[SelectedCharacter];
+  byte moveY = combatParticipant.posY[SelectedCharacter];
 
   ResetMenu("Action@", menuPosX, menuPosY, menuWidth, menuHeight, 5);
   SetMenuItem(0, "Move@");
@@ -406,37 +406,37 @@ void SelectPlayerAction(void)
   while (!finished)
   {
     SetLineMessageWindow("Command?@",0);
-    if(combatParticipant[SelectedCharacter].active)
-      DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
+    if(combatParticipant.active[SelectedCharacter])
+      DrawArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
     switch (GetMenuSelection())
     {
       case 0:
-        tempTile = combatParticipant[SelectedCharacter].tileIndex;
-        combatParticipant[SelectedCharacter].tileIndex = fillTile;
+        tempTile = combatParticipant.tileIndex[SelectedCharacter];
+        combatParticipant.tileIndex[SelectedCharacter] = fillTile;
         DrawOneCharacter();
         ClearArrow();
-        combatParticipant[SelectedCharacter].posX = moveX;
-        combatParticipant[SelectedCharacter].posY = moveY;
-        combatParticipant[SelectedCharacter].tileIndex = tempTile;
+        combatParticipant.posX[SelectedCharacter] = moveX;
+        combatParticipant.posY[SelectedCharacter] = moveY;
+        combatParticipant.tileIndex[SelectedCharacter] = tempTile;
         DrawOneCharacter();
-        MovementRemaining = combatParticipant[SelectedCharacter].movement;
+        MovementRemaining = combatParticipant.movement[SelectedCharacter];
         SelectionMoveCharacter();
         break;
       case 1:
-        if (combatParticipant[SelectedCharacter].active)
+        if (combatParticipant.active[SelectedCharacter])
         {
           GetTargetSelection();
           finished = true;
         }
         break;
       case 2:
-        if (combatParticipant[SelectedCharacter].active)
+        if (combatParticipant.active[SelectedCharacter])
         {
           finished = true;
         }
         break;
       case 3:
-        if (combatParticipant[SelectedCharacter].active)
+        if (combatParticipant.active[SelectedCharacter])
         {
           finished = true;
         }
@@ -462,28 +462,28 @@ bool CheckCombatMapCollision(byte dir)
   for (i = 0; i < MaxCombatParticipants; ++i)
   {
     if (i != SelectedCharacter)
-      if (combatParticipant[i].active)
-        if (combatParticipant[i].alive)
+      if (combatParticipant.active[i])
+        if (combatParticipant.alive[i])
           switch(dir)
           {
             case up:
-              if(combatParticipant[SelectedCharacter].posY - 1 == combatParticipant[i].posY)
-                if (combatParticipant[SelectedCharacter].posX == combatParticipant[i].posX)
+              if(combatParticipant.posY[SelectedCharacter] - 1 == combatParticipant.posY[i])
+                if (combatParticipant.posX[SelectedCharacter] == combatParticipant.posX[i])
                   return true;
               break;
             case down:
-              if(combatParticipant[SelectedCharacter].posY + 1 == combatParticipant[i].posY)
-                if (combatParticipant[SelectedCharacter].posX == combatParticipant[i].posX)
+              if(combatParticipant.posY[SelectedCharacter] + 1 == combatParticipant.posY[i])
+                if (combatParticipant.posX[SelectedCharacter] == combatParticipant.posX[i])
                   return true;
               break;
             case left:
-              if (combatParticipant[SelectedCharacter].posX - 1 == combatParticipant[i].posX)
-                if(combatParticipant[SelectedCharacter].posY == combatParticipant[i].posY)
+              if (combatParticipant.posX[SelectedCharacter] - 1 == combatParticipant.posX[i])
+                if(combatParticipant.posY[SelectedCharacter] == combatParticipant.posY[i])
                   return true;
               break;
             case right:
-              if (combatParticipant[SelectedCharacter].posX + 1 == combatParticipant[i].posX)
-                if(combatParticipant[SelectedCharacter].posY == combatParticipant[i].posY)
+              if (combatParticipant.posX[SelectedCharacter] + 1 == combatParticipant.posX[i])
+                if(combatParticipant.posY[SelectedCharacter] == combatParticipant.posY[i])
                   return true;
               break;
             default:
@@ -494,28 +494,28 @@ bool CheckCombatMapCollision(byte dir)
   switch(dir) //Deactivate if off map
   {
     case up:
-      if(combatParticipant[SelectedCharacter].posY <= 0)
-        combatParticipant[SelectedCharacter].active = false;
+      if(combatParticipant.posY[SelectedCharacter] <= 0)
+        combatParticipant.active[SelectedCharacter] = false;
       break;
     case down:
-      if(combatParticipant[SelectedCharacter].posY >= CombatMapHeight - 1)
-        combatParticipant[SelectedCharacter].active = false;
+      if(combatParticipant.posY[SelectedCharacter] >= CombatMapHeight - 1)
+        combatParticipant.active[SelectedCharacter] = false;
       break;
     case left:
-      if(combatParticipant[SelectedCharacter].posX <= 0)
-        combatParticipant[SelectedCharacter].active = false;
+      if(combatParticipant.posX[SelectedCharacter] <= 0)
+        combatParticipant.active[SelectedCharacter] = false;
       break;
     case right:
-      if(combatParticipant[SelectedCharacter].posX >= CombatMapWidth - 1)
-        combatParticipant[SelectedCharacter].active = false;
+      if(combatParticipant.posX[SelectedCharacter] >= CombatMapWidth - 1)
+        combatParticipant.active[SelectedCharacter] = false;
       break;
     default:
       break;
   }
-  if (!combatParticipant[SelectedCharacter].active)
+  if (!combatParticipant.active[SelectedCharacter])
   {
     MovementRemaining = 0;
-    combatParticipant[SelectedCharacter].tileIndex = fillTile;
+    combatParticipant.tileIndex[SelectedCharacter] = fillTile;
     DrawOneCharacter();
   }
   return false;
@@ -523,8 +523,8 @@ bool CheckCombatMapCollision(byte dir)
 
 void MoveCombatCharacter(byte index, byte dir)
 {
-  byte tempTile = combatParticipant[index].tileIndex;
-  combatParticipant[index].tileIndex = fillTile;
+  byte tempTile = combatParticipant.tileIndex[index];
+  combatParticipant.tileIndex[index] = fillTile;
   DrawOneCharacter();
   if (!CheckCombatMapCollision(dir))
   {
@@ -532,22 +532,22 @@ void MoveCombatCharacter(byte index, byte dir)
     switch(dir)
     {
       case up:
-        --combatParticipant[index].posY;
+        --combatParticipant.posY[index];
         break;
       case down:
-        ++combatParticipant[index].posY;
+        ++combatParticipant.posY[index];
         break;
       case left:
-        --combatParticipant[index].posX;
+        --combatParticipant.posX[index];
         break;
       case right:
-        ++combatParticipant[index].posX;
+        ++combatParticipant.posX[index];
         break;
       default:
         break;
     }    
   }
-  combatParticipant[index].tileIndex = tempTile;
+  combatParticipant.tileIndex[index] = tempTile;
   DrawOneCharacter();
 }
 void PhysicalAttack(void);
@@ -576,12 +576,12 @@ void DrawCombatMap(void)
 
 void DrawOneCharacter()
 {
-  if (combatParticipant[SelectedCharacter].active)
+  if (combatParticipant.active[SelectedCharacter])
   {
     wait_vblank(1); //Reduces flicker
-    DrawTileIndex = combatParticipant[SelectedCharacter].tileIndex;
-    DrawTileX = combatParticipant[SelectedCharacter].posX;
-    DrawTileY = combatParticipant[SelectedCharacter].posY;
+    DrawTileIndex = combatParticipant.tileIndex[SelectedCharacter];
+    DrawTileX = combatParticipant.posX[SelectedCharacter];
+    DrawTileY = combatParticipant.posY[SelectedCharacter];
     DrawTileDirect();
   }
 }
@@ -592,11 +592,11 @@ void DrawCharacters(void)
 
   for (i = 0; i < MaxCombatParticipants; ++i)
   {
-    if (combatParticipant[i].active)
+    if (combatParticipant.active[i])
     {
-      DrawTileIndex = combatParticipant[i].tileIndex;
-      DrawTileX = combatParticipant[i].posX;
-      DrawTileY = combatParticipant[i].posY;
+      DrawTileIndex = combatParticipant.tileIndex[i];
+      DrawTileX = combatParticipant.posX[i];
+      DrawTileY = combatParticipant.posY[i];
       DrawTileDirect();
     }
   }
