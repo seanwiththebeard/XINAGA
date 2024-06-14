@@ -20,9 +20,6 @@
 //Each world is like a level, each continent/quest is like a star
 //100 coin star?
 
-
-//byte randSeed = 0;
-
 char *questOrigin[4] = { "the castle", "a tavern rumor", "your library studies", "a dream at the inn"};
 //Map Location Types (rule of fours, four tileset variations of each of four options)
 

@@ -192,7 +192,7 @@ void Demo()
   
   SwitchScreen(currentScreen);
   
-  while(1)
+  //while(1)
   {
     //WriteLineMessageWindow("Hello@", 0);
     //PlaySound(2, freq);
