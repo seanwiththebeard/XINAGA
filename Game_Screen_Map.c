@@ -20,7 +20,7 @@ void FillQuadBuffer();
 void LoadQuadrant(byte quadIndex, byte quad);
 void LoadMapQuads();
 byte GetPlayerQuad(); //Returns the viewport quadrant of the player character
-byte GetQuadInRelation(bool d_up, bool d_down, bool d_left, bool d_right); //Change this one to use two direction enums (dirV, dirH) instead of four bools
+byte GetQuadInRelation(sbyte v, sbyte h);
 void QuadScroll(byte direction);
 
 //Globals
@@ -281,30 +281,30 @@ byte GetPlayerQuad() //Returns the viewport quadrant of the player character
   }
 }
 
-byte GetQuadInRelation(bool d_up, bool d_down, bool d_left, bool d_right)
+byte GetQuadInRelation(sbyte v, sbyte h)
 {
   int int_x = characters.quadPosX[followIndex];
   int int_y = characters.quadPosY[followIndex];
 
-  if (d_up)
+  if (v < 0)
   {
     --int_y;
     if (int_y < 0)
       int_y = mapMatrixHeight - 1;
   }
-  if (d_down)
+  if (v > 0)
   {
     int_y++;
     if (int_y == mapMatrixHeight)
       int_y = 0;
   }
-  if (d_left)
+  if (h < 0)
   {
     int_x--;
     if (int_x < 0)
       int_x = mapMatrixWidth - 1;
   }
-  if (d_right)
+  if (h > 0)
   {
     ++int_x;
     if (int_x == mapMatrixWidth)
@@ -313,7 +313,7 @@ byte GetQuadInRelation(bool d_up, bool d_down, bool d_left, bool d_right)
   return (mapQuads[int_y][int_x]);  
 }
 
-void QuadScroll(byte dir)
+void QuadScroll(direction dir)
 {
   byte quadA; //Entering quad
   byte quadB; //Diagonal quad
@@ -321,73 +321,54 @@ void QuadScroll(byte dir)
   byte indexB;
   //byte QuadOriginX;
   //byte QuadOriginY;
-  bool qAUp = false;
-  bool qADown = false;
-  bool qALeft = false;
-  bool qARight = false;
-  bool qBUp = false;
-  bool qBDown = false;
-  bool qBLeft = false;
-  bool qBRight = false;
-  bool charPosX = characters.posX[followIndex] % 16 < quadWidth;
-  bool charPosY = characters.posY[followIndex] % 16 < quadHeight;
+  sbyte vA = 0;
+  sbyte hA = 0;
+  sbyte vB = 0;
+  sbyte hB = 0;
+  bool charPosX = (characters.posX[followIndex] % 16) < quadWidth;
+  bool charPosY = (characters.posY[followIndex] % 16) < quadHeight;
   byte compareQuad = GetPlayerQuad();
-  byte p = GetChar(COLS - 1, ROWS - 1);
   
-
+  byte p = GetChar(COLS - 1, ROWS - 1);
   SetChar('Q', COLS - 1, ROWS - 1);
-  //QuadOriginX = characters.quadPosX[followIndex];
-  //QuadOriginY = characters.quadPosY[followIndex];
   switch(dir)
   {
     case 0:
-      qAUp = true;
-      //indexA = GetQuadInRelation(true, false, false, false);
-      qBUp = true;
+      vA = -1;
+      vB = -1;
       if (charPosX)
-        qBLeft = true;
-      //indexB = GetQuadInRelation(true, false, true, false);
+        hB = -1;
       else
-        qBRight = true;
-      //indexB = GetQuadInRelation(true, false, false, true);
+        hB = 1;
       break;
     case 1:
-      qADown = true;
-      //indexA = GetQuadInRelation(false, true, false, false);
-      qBDown = true;
+      vA = 1;
+      vB = 1;
       if (charPosX)
-        qBLeft = true;
-      //indexB = GetQuadInRelation(false, true, true, false);
+        hB = -1;
       else
-        qBRight = true;
-      //indexB = GetQuadInRelation(false, true, false, true);
+        hB = 1;
       break;
     case 2:
-      qALeft = true;
-      //indexA = GetQuadInRelation(false, false, true, false);
-      qBLeft = true;
+      hA = -1;
+      hB = -1;
       if (charPosY)
-        qBUp = true;
-      //indexB = GetQuadInRelation(true, false, true, false);
+        vB = -1;
       else
-        qBDown = true;
-      //indexB = GetQuadInRelation(false, true, true, false);
+        vB = 1;
       break;
     case 3:
-      qARight = true;
-      //indexA = GetQuadInRelation(false, false, false, true);
-      qBRight = true;
+      hA = 1;
+      hB = 1;
       if (charPosY)
-        qBUp = true;
-      //indexB = GetQuadInRelation(true, false, false, true);
+        vB = -1;
       else
-        qBDown = true;
-      //indexB = GetQuadInRelation(false, true, false, true);
+        vB = 1;
       break;
   }
-
-  indexA = GetQuadInRelation(qAUp, qADown, qALeft, qARight);
-  indexB = GetQuadInRelation(qBUp, qBDown, qBLeft, qBRight);
+  
+  indexA = GetQuadInRelation(vA, hA);
+  indexB = GetQuadInRelation(vB, hB);
 
   if (dir < 2) // Vertical
     switch (compareQuad)
