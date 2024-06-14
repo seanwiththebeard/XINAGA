@@ -72,18 +72,19 @@ char *questLocation[6][4] = { //Map Location
   /*Play Cards*/	{"Castle", "Forrest", "Wormhole", "Tavern"}
 };
 
+void setSeed(uint16_t seed)
+{
+  srand(seed);
+  srand (rand());
+}
 
-
-void GenerateContinent(int seed)
+void GenerateContinent()
 {
   byte QuestOrigin = rand() % 4;
   byte QuestType = rand() % 6;
   byte QuestGiver = rand() % 4;
   byte QuestTarget = rand() % 4;
   byte QuestLocation = rand() % 4;
-  
-  srand(seed);
-  srand (rand() % 32767);
   
   sprintf(strTemp, "In %s, the %s asks you to %s the %s at the %s@", questOrigin[QuestOrigin], questGiver[QuestOrigin][QuestGiver], questType[QuestType], questTarget[QuestType][QuestTarget], questLocation[QuestType][QuestLocation]);
   WriteLineMessageWindow(strTemp, 0);
@@ -101,7 +102,7 @@ void GenerateContinent(int seed)
 screenName Update_Scenario()
 {
   bool exit = false;
-  randseed = 0;
+  uint16_t scenarioSeed = 0;
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   {
     ResetMenu("Scenario@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
@@ -111,26 +112,21 @@ screenName Update_Scenario()
     SetMenuItem(3, "End@");
     while (!exit)
     {
-      sprintf(strTemp, "Continent: %d @", randseed);
+      sprintf(strTemp, "Continent: %u @", scenarioSeed);
       SetLineMessageWindow(strTemp, 0);
       
       switch (GetMenuSelection())
       {
         case 0:
-          ++randseed;
-          if (randseed < 0)
-            randseed = 0;
+          ++scenarioSeed;
           break;
         case 1:
-          --randseed;
-          if (randseed < 0)
-            randseed = 32767;
+          --scenarioSeed;
           break;
         case 2:
-          GenerateContinent(randseed);
+          setSeed(scenarioSeed);
+          GenerateContinent();
           ++randseed;
-          if (randseed < 0)
-            randseed = 0;
           break;
         case 3:
           exit = true;

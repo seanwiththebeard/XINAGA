@@ -47,7 +47,7 @@ void AddToRoster()
   ConsoleBufferReset();
   sprintf(strTemp, "Hello %X@", &PlayerChar[0]);
   //ConsoleBufferAdd("Hello @");
-  ConsoleBufferAdd(strTemp);
+  //ConsoleBufferAdd(strTemp);
   //ConsoleBufferAddNumber(CountRoster());
   for (i = 0; strTemp[i] != '@'; ++i)
     PlayerChar->NAME[i] = strTemp[i];

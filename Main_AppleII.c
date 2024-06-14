@@ -23,19 +23,8 @@
 #define CFGFILE apple2-xinaga.cfg
 #endif
 
-//screenName Update_Title(){return EditParty;}
-//screenName Update_MapGen(){return EditParty;}
-//screenName Update_Scenario(){return EditParty;}
-//screenName Update_Combat(){return 0;}
-
-//void LoadMap(){}
-//screenName MapUpdate(){return 0;}
-
-//void Demo(void);
 void main()
-{
-  //STROBE(0xC080);
-  
+{  
   Demo();
 }
 #if defined(__APPLE2__)

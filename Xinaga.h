@@ -37,7 +37,7 @@ typedef int8_t sbyte;	// 8-bit signed
 #define left 2
 #define right 3
 
-extern int randseed;
+extern uint16_t randseed;
 byte ReadBit(byte byteToRead, char bit);
 void LoadMap();
 

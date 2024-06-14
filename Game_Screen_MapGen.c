@@ -2,7 +2,7 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "LC")
+//#pragma code-name (push, "LC")
 #endif
 
 #define height 16
@@ -46,17 +46,18 @@ typedef struct vector2
 
 struct vector2 *points = NULL;
 
-byte CountPoints()
+byte totalPoints = 0;
+/*byte CountPoints()
 {
-  byte i = 0;
   struct vector2 *temp = points;
+  totalPoints = 0;
   while(temp != NULL)
   {
-    ++i;
+    ++totalPoints;
     temp = temp->next;
   }
-  return i;
-}
+  return totalPoints;
+}*/
 
 void createPoint(byte x, byte y)
 {
@@ -81,6 +82,7 @@ void createPoint(byte x, byte y)
     }
     ptr->next=temp;
   }
+  ++totalPoints;
 }
 
 struct vector2 *getPoint(byte index)
@@ -130,6 +132,7 @@ void deletePoint(int pos)
     //sprintf(str, "Deleted element:%d",ptr->character.NAME);
     //WriteLineMessageWindow(str, 0);
     free(ptr);
+    --totalPoints;
   }
 }
 
@@ -152,6 +155,7 @@ void clearPoints()
 {
   while (points != NULL)
     deletePoint(0);
+  totalPoints = 0;
 }
 
 void clampPoint(struct vector2 *clmpt)
@@ -167,15 +171,11 @@ void clampPoint(struct vector2 *clmpt)
     clmpt->y = 0;
 }
 
+struct vector2 pointAdj;
 byte countAdjacent(byte x, byte y)
 {
   byte i = 0;
   byte z = 0;
-  //for (i = 0; i < CountPoints(); ++i)
-  //struct vector2 pointN;
-  //struct vector2 pointS;
-  //struct vector2 pointE;
-  //struct vector2 pointW;
   byte adjX[4];
   byte adjY[4];
   adjX[0] = x;
@@ -187,23 +187,8 @@ byte countAdjacent(byte x, byte y)
   adjY[2] = y;
   adjY[3] = y;
   
-  /*pointN.x = x;
-  pointN.y = y - 1;
-  pointS.x = x;
-  pointS.y = y + 1;
-  pointE.x = x + 1;
-  pointE.y = y;
-  pointW.x = x - 1;
-  pointW.y = y;
-
-  clampPoint(&pointN);
-  clampPoint(&pointS);
-  clampPoint(&pointE);
-  clampPoint(&pointW);*/
-  
   for (;z < 4; ++z)
   {
-    struct vector2 pointAdj;
     pointAdj.x = adjX[z];
     pointAdj.y = adjY[z];
     clampPoint(&pointAdj);
@@ -212,22 +197,13 @@ byte countAdjacent(byte x, byte y)
     if (map[adjY[z]][adjX[z]] != water)
       ++i;
   }
-
-  /*if (map[adjY[0]][adjX[0]] != water)
-    ++i;
-  if (map[adjY[1]][adjX[1]] != water)
-    ++i;
-  if (map[adjY[2]][adjX[2]] != water)
-    ++i;
-  if (map[adjY[3]][adjX[3]] != water)
-    ++i;*/
   return i;
 }
 
 void checkLandlocked()
 {
   byte i;
-  for (i = 0; i < CountPoints(); ++i)
+  for (i = 0; i < totalPoints; ++i)
   {
     struct vector2 *tmpt = getPoint(i);
 
@@ -264,7 +240,7 @@ void checkLandlocked()
   }
 }*/
 
-void RemoveIslands()
+/*void RemoveIslands()
 {
   byte x, y;
   for (y = 0; y < height; ++y)
@@ -281,7 +257,7 @@ void RemoveIslands()
     }
   sprintf(strTemp, "Islands Removed@");
   WriteLineMessageWindow(strTemp, 0);
-}
+}*/
 
 void addRandomPoints(byte count, int index)
 {
@@ -313,8 +289,8 @@ void attachRandomPoint(byte index)
   while (1)
   {
     byte dir = rand() % 4;
-    if (CountPoints() >= 1)
-      i = rand() % (CountPoints());
+    if (totalPoints >= 1)
+      i = rand() % (totalPoints);
     else
       i = 0;
 
@@ -359,8 +335,8 @@ void attachRandomPoint(byte index)
       sprintf(strTemp, "Removing point (%d)@", i);
       WriteLineMessageWindow(strTemp, 0);
       deletePoint(i);
-      if (CountPoints() >= 1)
-        i = rand() % (CountPoints());
+      if (totalPoints >= 1)
+        i = rand() % (totalPoints);
       else
         i = 0;
       x = getPoint(i)->x;
@@ -499,7 +475,7 @@ void GenerateMap(byte seed)
     createContinent(16 +  8*(y / 4));
   }
   DrawMap();
-  RotateAround();
+  //RotateAround();
   //sprintf(strTemp, "Done@");
   //WriteLineMessageWindow(strTemp, 0);
 }
@@ -510,6 +486,7 @@ screenName Update_MapGen()
   bool exit = false;
   ResizeMessageWindow(23, 12, 15, 10);
   DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
+  GenerateMap(seed);
   while (!exit)
   {
     UpdateInput();
@@ -519,7 +496,7 @@ screenName Update_MapGen()
       {
         ++seed;
         GenerateMap(seed);
-        break;
+        //break;
       }
       if (InputFire())
       {

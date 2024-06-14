@@ -10,7 +10,7 @@ byte strTemp[ConsoleBufferLength] = {};
 
 PartyDef Party = {0};
 
-int randseed = 0;
+uint16_t randseed = 0;
 
 byte RollDice(byte count, byte diceSize)
 {
