@@ -371,6 +371,8 @@ void QuadScroll(direction dir)
   if (dir < 2) // Vertical
     switch (compareQuad) //THESE TWO SWITCHES CAN BE REPLACED WITH A PRECALCULATED MATRIX
     {
+        //byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
+        //byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
       case 0:
         quadA = 2;
         quadB = 3;
