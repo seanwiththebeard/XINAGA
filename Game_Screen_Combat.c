@@ -17,7 +17,7 @@ bool exitCombat = false;
 #define CombatMapHeight 8
 
 #define MaxCombatParticipants 12 //CombatMapWidth * CombatMapHeight
-#define MonsterCount 8
+#define MonsterCount 1
 
 
 #define consolePosX 1

@@ -177,6 +177,10 @@ void FillQuadBuffer()
   quadBuffer[2] = mapQuads[byte_y][quadX];
   quadBuffer[3] = mapQuads[byte_y][byte_x];
 }
+static const byte quadOriginsX[4] = {0, quadWidthDouble, 0, quadWidthDouble};
+static const byte quadOriginsY[4] = {0, 0, quadHeightDouble, quadHeightDouble};
+static const byte quadOffsetX[4] = {0, quadWidth, 0, quadWidth};
+static const byte quadOffsetY[4] = {0, 0, quadHeight, quadHeight};
 
 void LoadQuadrant(byte quadIndex, byte quad)
 {
@@ -197,7 +201,7 @@ void LoadQuadrant(byte quadIndex, byte quad)
 
   for (byte_z = 0; byte_z < 4; ++byte_z)
   {
-    switch (quad)
+    /*switch (quad)
     {
       case 0:
         QuadOriginX = 0;
@@ -217,9 +221,10 @@ void LoadQuadrant(byte quadIndex, byte quad)
         break;
       default:
         break;
-    }
+    }*/
+    
 
-    switch (byte_z)
+    /*switch (byte_z)
     {
       case 0:
         break;
@@ -235,7 +240,10 @@ void LoadQuadrant(byte quadIndex, byte quad)
         break;
       default:
         break;
-    }
+    }*/
+    
+    QuadOriginX = quadOriginsX[quad] + quadOffsetX[byte_z];
+    QuadOriginY = quadOriginsY[quad] + quadOffsetY[byte_z];
     
     chardata = (int)&MapSetInfo[0] + 8*ScreenQuad.CharIndex[quadIndex][byte_z];
     for (byte_y = 0; byte_y < quadHeight; ++byte_y)
@@ -313,12 +321,21 @@ byte GetQuadInRelation(sbyte v, sbyte h)
   return (mapQuads[int_y][int_x]);  
 }
 
+//left -UP DOWN LEFT RIGHT right UP DOWN LEFT RIGHT
+static const byte quadRelationAV[8] = {-1,  1,  0,  0, -1, 1,  0, 0}; //vA
+static const byte quadRelationBV[8] = {-1,  1, -1, -1, -1, 1,  1, 1}; //vB
+static const byte quadRelationAH[8] = { 0,  0, -1,  1,  0, 0, -1, 1}; //hA
+static const byte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
+static const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
+static const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
 void QuadScroll(direction dir)
 {
   byte quadA; //Entering quad
   byte quadB; //Diagonal quad
   byte indexA;
   byte indexB;
+  byte relH;
+  byte relV;
   sbyte vA = 0;
   sbyte hA = 0;
   sbyte vB = 0;
@@ -329,15 +346,17 @@ void QuadScroll(direction dir)
   
   byte p = GetChar(COLS - 1, ROWS - 1);
   SetChar('Q', COLS - 1, ROWS - 1);
-  switch(dir) // REPLACE THIS WITH A MATRIX
+  
+  
+  /*switch(dir) // REPLACE THIS WITH A MATRIX
   {
     case 0:
       vA = -1;
       vB = -1;
-      if (charPosX)
+      if (charPosX) //Left
         hB = -1;
       else
-        hB = 1;
+        hB = 1; //Right
       break;
     case 1:
       vA = 1;
@@ -363,16 +382,25 @@ void QuadScroll(direction dir)
       else
         vB = 1;
       break;
-  }
+  }*/
+  
+  relH = dir;
+  relV = dir;
+  if (!charPosX)
+    relH += 4;
+  if (!charPosY)
+    relV += 4;
+  vA = quadRelationAV[relV];
+  vB = quadRelationBV[relV];
+  hA = quadRelationAH[relH];
+  hB = quadRelationBH[relH];
   
   indexA = GetQuadInRelation(vA, hA);
   indexB = GetQuadInRelation(vB, hB);
   
-  if (dir < 2) // Vertical
+  /*if (dir < 2) // Vertical
     switch (compareQuad) //THESE TWO SWITCHES CAN BE REPLACED WITH A PRECALCULATED MATRIX
     {
-        //byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
-        //byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
       case 0:
         quadA = 2;
         quadB = 3;
@@ -409,8 +437,14 @@ void QuadScroll(direction dir)
         quadA = 2;
         quadB = 0;
         break;
-    }
-
+    }*/
+  //byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
+  //byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
+  if (dir > 1)
+    compareQuad += 4;
+  quadA = CompareQuadValueA[compareQuad];
+  quadB = CompareQuadValueB[compareQuad];
+  
   if (quadBuffer[quadA] != indexA)
   {
     LoadQuadrant(indexA, quadA);
