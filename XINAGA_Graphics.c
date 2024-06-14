@@ -155,10 +155,10 @@ void InitializeGraphics(void)
   #define ColorRam 0xD800
   byte charpos = 7;
   byte screenpos = 2;
+  byte vicreg = 0x00;
   int screenposition;
   int* regd018 = (int*)0xD018;
 
-  byte vicreg = 0x00;
   CharRam = 0;
 
   if (bufferselect)
@@ -167,13 +167,13 @@ void InitializeGraphics(void)
   SetBG(ColorBG);
   SetBorder(ColorBorder);
 
-  screenposition = (bank * (16*1024) + (screenpos * 1024));
+  screenposition = (bank * (16<<10) + (screenpos <<10)); // *1024
   ScreenChars = 0;
   ScreenChars += screenposition;
   //CharRam += 2;
-  CharRam += (bank * (16*1024) + charpos * 2048);
+  CharRam += (bank * (16<<10) + (charpos <<11)); // *1024, *2048
 
-  memcpy(&CharRam[0], &charset[0], 256*8);
+  memcpy(&CharRam[0], &charset[0], 256<<3); // * 8
 
   ScreenCharBuffer = 0;
   ScreenCharBuffer += screenposition;
@@ -193,7 +193,7 @@ void InitializeGraphics(void)
   vicreg = screenpos + charpos;
   regd018[0] = vicreg;
   //Cursor Position
-  POKE (0x0288, screenposition / 256);
+  //POKE (0x0288, screenposition / 256);
   ClearScreen();
   //SetMulticolors(11, 15);
   #endif
@@ -286,11 +286,11 @@ void SetCharBuffer(byte index, byte x, byte y)
 
 byte GetChar(byte x, byte y)
 {
-  return ScreenChars[x + COLS*y];
+  return ScreenChars[x + YColumnIndex[y]];
 }
 
 //Buffer
-void CopyBuffer(void)
+/*void CopyBuffer(void)
 {
   #if defined(__APPLE2__)
   int i = 0;
@@ -307,7 +307,7 @@ void CopyBuffer(void)
   memcpy(&ScreenChars[0], &ScreenCharBuffer[0], 0x400);
   memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
   #endif
-}
+}*/
 
 void StoreBuffer(void)
 {
@@ -461,7 +461,7 @@ void ReadyArrow(byte x, byte y)
   
   arrowX = x + MapOriginX;
   arrowY = y + MapOriginY + 2;
-  while (arrowX >= COLS - 1)
+  while (arrowX > COLS)
     --arrowX;
   arrowA = GetChar(arrowX, arrowY);
   arrowB = GetChar(arrowX + 1, arrowY);
@@ -582,8 +582,7 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};*/
-#endif
-#if defined(__C64__)
+
 byte attributeset[256] = {/*{pal:"c64", layout:"c64"}*/
   0x01, 0x01, 0x0A, 0x0A, 0x0C, 0x0C, 0x01, 0x01, 0x01, 0x01, 0x0C, 0x0C,
   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x0A, 0x0A, 0x0C, 0x0C, 0x01, 0x01,
