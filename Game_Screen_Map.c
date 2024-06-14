@@ -283,8 +283,8 @@ byte GetPlayerQuad() //Returns the viewport quadrant of the player character
 
 byte GetQuadInRelation(sbyte v, sbyte h)
 {
-  int int_x = characters.quadPosX[followIndex];
-  int int_y = characters.quadPosY[followIndex];
+  sbyte int_x = characters.quadPosX[followIndex];
+  sbyte int_y = characters.quadPosY[followIndex];
 
   if (v < 0)
   {
@@ -319,8 +319,6 @@ void QuadScroll(direction dir)
   byte quadB; //Diagonal quad
   byte indexA;
   byte indexB;
-  //byte QuadOriginX;
-  //byte QuadOriginY;
   sbyte vA = 0;
   sbyte hA = 0;
   sbyte vB = 0;
@@ -369,9 +367,9 @@ void QuadScroll(direction dir)
   
   indexA = GetQuadInRelation(vA, hA);
   indexB = GetQuadInRelation(vB, hB);
-
+  
   if (dir < 2) // Vertical
-    switch (compareQuad)
+    switch (compareQuad) //THESE TWO SWITCHES CAN BE REPLACED WITH A PRECALCULATED MATRIX
     {
       case 0:
         quadA = 2;
