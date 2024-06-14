@@ -12,7 +12,7 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
 void ApplyLOS();
 void CameraFollow();
 void BufferCharacters();
-void MoveCharacter(byte index, byte dir, bool cameraUpdate);
+void MoveCharacter(byte index, byte dir);
 bool CheckCollision(byte charIndex, byte Direction);
 void DrawCharacterCoordinates(byte index);
 //      Quad Functions
@@ -28,15 +28,15 @@ void QuadScroll(byte direction);
 #define consolePosY 18
 #define consoleWidth 29
 #define consoleHeight 5
-#define consoleDelay 1
+//#define consoleDelay 1
 
 //Viewport
 #define viewportPosX 1
 #define viewportPosY 1
 #define viewportWidth 11
 #define viewportHeight 7
-const static byte playerX = (viewportWidth - 1) / 2; //Viewport Center used in line-of-sight calculations
-const static byte playerY = (viewportHeight - 1) / 2; //Viewport Center used in line-of-sight calculations
+#define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
+#define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
 const static byte viewportSize = viewportHeight * viewportWidth;
 byte viewportBuffer[viewportWidth][viewportHeight] = {};
 byte viewportBufferLast[viewportWidth][viewportHeight] = {};
@@ -84,13 +84,6 @@ byte quadY = 0;
 const byte quadWidthDouble = quadWidth * 2;
 const byte quadHeightDouble = quadHeight * 2;
 const byte yQuadHeight = 2*mapQuadHeight;
-
-//QuadScroll
-byte QuadOriginX = 0;
-byte QuadOriginY = 0;
-byte compareQuad = 0;
-bool scrollQuads = false;
-bool changedQuad = false;
 
 //Tile Data
 struct
@@ -204,6 +197,8 @@ void LoadQuadrant(byte quadIndex, byte quad)
   byte xPos;
   byte yPos;
   int chardata;
+  byte QuadOriginX;
+  byte QuadOriginY;
 
   //sprintf(str, "Tile%d to Quad%d@", index, quad);
   //WriteLineMessageWindow(str, 1);
@@ -340,6 +335,9 @@ void QuadScroll(byte dir)
   byte quadB; //Diagonal quad
   byte indexA;
   byte indexB;
+  byte compareQuad;
+  byte QuadOriginX;
+  byte QuadOriginY;
 
   bool charPosX;
   bool charPosY;
@@ -413,7 +411,7 @@ void QuadScroll(byte dir)
   indexA = GetQuadInRelation(qAUp, qADown, qALeft, qARight);
   indexB = GetQuadInRelation(qBUp, qBDown, qBLeft, qBRight);
 
-  if (dir < 2)
+  if (dir < 2) // Vertical
     switch (compareQuad)
     {
       case 0:
@@ -433,7 +431,7 @@ void QuadScroll(byte dir)
         quadB = 0;
         break;
     }
-  else
+  else //Horizontal
     switch (compareQuad)
     {
       case 0:
@@ -788,11 +786,11 @@ void DrawEntireMap()
   DrawCharacterCoordinates(followIndex);
 }
 
-void MoveCharacter(byte index, byte dir, bool cameraUpdate)
+void MoveCharacter(byte index, byte dir)
 {
   byte checkCollision = CheckCollision(index, dir);
-  scrollQuads = false;
-  changedQuad = false;
+  bool scrollQuads = false;
+  bool changedQuad = false;
 
   TickMoonPhase();
 
@@ -876,14 +874,8 @@ void MoveCharacter(byte index, byte dir, bool cameraUpdate)
             scrollQuads = true;
           break;
       }
-      /*
-      if ((direction == 0 && edgeCheck == 6)
-          || (direction == 1  && edgeCheck == 10)
-          || (direction == 2 && edgeCheck == 6)
-          || (direction == 3 && edgeCheck == 10))
-        scrollQuads = true;*/
-
-      if(cameraUpdate)
+      
+      if (index == followIndex)
         CameraFollow();
 
       DrawEntireMap();
@@ -937,7 +929,7 @@ screenName MapUpdate()
       if (InputFire())
         exit = true;
       if (Dir < 4)
-        MoveCharacter(followIndex, Dir, true);        
+        MoveCharacter(followIndex, Dir);        
     }
   }
   return EditParty;
