@@ -1,52 +1,65 @@
 #include "Xinaga.h"
 #include "GameData.h"
+
+//Prototypes
+//      Map Functions
+void InitializeMapData();
+void LoadMap();
+void DrawEntireMap();
+void wrapX(sbyte *posX); //Used in map positions
+void wrapY(sbyte *posY);
+void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
+void ApplyLOS();
+void CameraFollow();
+void BufferCharacters();
+void MoveCharacter(byte index, byte dir, bool cameraUpdate);
+bool CheckCollision(byte charIndex, byte Direction);
+void DrawCharacterCoordinates(byte index);
+//      Quad Functions
+void FillQuadBuffer();
+void LoadQuadrant(byte quadIndex, byte quad);
+void LoadMapQuads();
+byte GetPlayerQuad(); //Returns the viewport quadrant of the player character
+byte GetQuadInRelation(bool d_up, bool d_down, bool d_left, bool d_right); //Change this one to use two direction enums (dirV, dirH) instead of four bools
+void QuadScroll(byte direction);
+
+//Globals
 #define consolePosX 1
 #define consolePosY 18
 #define consoleWidth 29
 #define consoleHeight 5
 #define consoleDelay 1
 
-//Prototypes
-//byte ReadBit(byte byteToRead, char bit);//These are old
-void CameraFollow();
-void BufferCharacters();
-void FillQuadBuffer();
-void LoadQuadrant(byte quadIndex, byte quad);
-void LoadMapQuads();
-byte GetPlayerQuad(); //Returns the viewport quadrant of the player character
-byte GetQuadInRelation(bool d_up, bool d_down, bool d_left, bool d_right);
-void QuadScroll(byte direction);
-void InitializeMapData();
-int wrapX(int posX); //Used in map positions
-int wrapY(int posY);
-bool CheckCollision(byte charIndex, byte Direction);
-void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
-void ApplyLOS();
-void DrawEntireMap();
-void MoveCharacter(byte index, byte dir, bool cameraUpdate);
-void LoadMap();
-void DrawCharacterCoordinates(byte index);
+//Viewport
+#define viewportPosX 1
+#define viewportPosY 1
+#define viewportWidth 11
+#define viewportHeight 7
+const static byte playerX = (viewportWidth - 1) / 2; //Viewport Center used in line-of-sight calculations
+const static byte playerY = (viewportHeight - 1) / 2; //Viewport Center used in line-of-sight calculations
+const static byte viewportSize = viewportHeight * viewportWidth;
+byte viewportBuffer[viewportWidth][viewportHeight] = {};
+byte viewportBufferLast[viewportWidth][viewportHeight] = {};
+byte followIndex = 0;
 
-//Globals
-#define EmptyTile 7
-byte checkCollision = 0;
-bool scrollQuads = false;
-bool changedQuad = false;
-//byte byte_index = 0;
-//byte byte_offset = 0;
-byte playerX = 0; //Player Position in line-of-sight calculations
-byte playerY = 0; //Player Position in line-of-sight calculations
+//Camera Position
+sbyte offsetX = 0;
+sbyte offsetY = 0;
 
 //Map Data
 bool LOSEnabled = true;
+#define EmptyTile 7
 #define mapHeight 32
 #define mapWidth 32
 byte mapData[mapWidth][mapHeight] = {};
+
+//Quad Data
 #define mapQuadWidth 8
 #define mapQuadHeight 8
 #define mapMatrixWidth 8
 #define mapMatrixHeight 8
-byte mapQuads[mapMatrixHeight][mapMatrixWidth] = { //Map Data
+byte mapQuads[mapMatrixHeight][mapMatrixWidth] =  //These are the quad-tile references that make up the map
+{
   { 0,  1,  2,  3,  4,  5,  6,  7},
   { 8,  9, 10, 11, 12, 13, 14, 15},
   {16, 17, 18, 19, 20, 21, 22, 23},
@@ -56,6 +69,13 @@ byte mapQuads[mapMatrixHeight][mapMatrixWidth] = { //Map Data
   {48, 49, 50, 51, 52, 53, 54, 55},
   {56, 57, 58, 59, 60, 61, 62, 63}
 };
+struct
+{ //These are the quad indexes referenced in mapQuads[y][x]
+  #define ScreenQuadCount 64
+  byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
+  byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
+  byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
+}ScreenQuad = {};
 byte quadBuffer[4] = {0,0,0,0};
 byte quadX = 0;
 byte quadY = 0;
@@ -65,100 +85,60 @@ const byte quadWidthDouble = quadWidth * 2;
 const byte quadHeightDouble = quadHeight * 2;
 const byte yQuadHeight = 2*mapQuadHeight;
 
-//Viewport
-#define viewportPosX 1
-#define viewportPosY 1
-#define viewportWidth 11
-#define viewportHeight 7
-byte viewportSize = viewportHeight * viewportWidth;
-
-byte viewportBuffer[viewportWidth][viewportHeight] = {};
-byte viewportBufferLast[viewportWidth][viewportHeight] = {};
-
-byte followIndex = 0;
-
 //QuadScroll
 byte QuadOriginX = 0;
 byte QuadOriginY = 0;
-byte quadA = 0; //Entering quad
-byte quadB = 0; //Diagonal quad
-byte indexA = 0;
-byte indexB = 0;
 byte compareQuad = 0;
-
-//Camera Position
-sbyte offsetX = 0;
-sbyte offsetY = 0;
-byte cameraOffsetX = 0;
-byte cameraOffsetY = 0;
+bool scrollQuads = false;
+bool changedQuad = false;
 
 //Tile Data
-struct Tile
+struct
 {
   #define TileCount 64
-  //byte chars[4];
-  //byte colors[4];
-  //byte index;
   byte blocked[TileCount];
-  //byte trigger;
   byte opaque[TileCount];
 } tiles = {};
 
 struct
 {
-  byte CharIndex[4];
-  byte Chars[2];
-  byte ScatterIndex;
-  //byte NPCIndex;
-  //byte MusicIndex;
-}ScreenQuad[64] = {};
-
-#define charactersCount 8
-struct Character
-{
-  //byte chars[4];
-  //byte colors[4];
-  byte tile;
-  //byte trigger;
-  byte combat;
-  byte message;
-  bool visible;
-  bool collide;
-  sbyte posX;
-  sbyte posY;
-  sbyte quadPosX;
-  sbyte quadPosY;
-} characters[charactersCount] = {};
-
-byte ReadBit(byte byteToRead, char bit)//These are old
-{
-  bit = 1 << bit;
-  return(bit & byteToRead);
-}
+  #define charactersCount 8
+  byte tile[charactersCount];
+  byte combat[charactersCount];
+  byte message[charactersCount];
+  bool visible[charactersCount];
+  bool collide[charactersCount];
+  sbyte posX[charactersCount];
+  sbyte posY[charactersCount];
+  sbyte quadPosX[charactersCount];
+  sbyte quadPosY[charactersCount];
+} characters = {};
 
 void CameraFollow()
 {
   byte byte_x;
   byte byte_y;
-  offsetX = characters[followIndex].posX;
-  offsetY = characters[followIndex].posY;
+  offsetX = characters.posX[followIndex];
+  offsetY = characters.posY[followIndex];
 
-  for(byte_x = 0; byte_x < cameraOffsetX; ++byte_x)
+  for(byte_x = 0; byte_x < playerX; ++byte_x)
   {
     --offsetX;
-    if(offsetX >= mapWidth)
+    wrapX(&offsetX);
+    /*if(offsetX >= mapWidth)
       offsetX = 0;
     if (offsetX < 0)
-      offsetX = mapWidth - 1;
+      offsetX = mapWidth - 1;*/
   }
 
-  for(byte_y = 0; byte_y < cameraOffsetY; ++byte_y)
+  for(byte_y = 0; byte_y < playerY; ++byte_y)
   {
     --offsetY;
-    if(offsetY >= mapHeight)
+    wrapY(&offsetY);
+    /*if(offsetY >= mapHeight)
       offsetY = 0;
     if (offsetY < 0)
-      offsetY = mapHeight - 1;
+      offsetY = mapHeight - 1;*/
   }
 }
 
@@ -169,9 +149,9 @@ void BufferCharacters()
   byte byte_i;
   for(byte_i = 0; byte_i < charactersCount; ++byte_i)
   {
-    if(characters[byte_i].visible)
+    if(characters.visible[byte_i])
     {
-      byte_x = characters[byte_i].posX;
+      byte_x = characters.posX[byte_i];
       if(byte_x < offsetX)
         byte_x = (byte_x - offsetX + mapWidth);
       else
@@ -179,13 +159,13 @@ void BufferCharacters()
 
       if (byte_x < viewportWidth)
       {
-        byte_y = characters[byte_i].posY;
+        byte_y = characters.posY[byte_i];
         if (byte_y < offsetY)
           byte_y = byte_y - offsetY + mapHeight;
         else
           byte_y = byte_y - offsetY;
         if (byte_y < viewportHeight)
-          viewportBuffer[byte_x][byte_y] = characters[byte_i].tile;
+          viewportBuffer[byte_x][byte_y] = characters.tile[byte_i];
       }
     }
   }
@@ -196,8 +176,8 @@ void FillQuadBuffer()
   byte byte_x;
   byte byte_y;
 
-  quadX = characters[followIndex].quadPosX;
-  quadY = characters[followIndex].quadPosY;
+  quadX = characters.quadPosX[followIndex];
+  quadY = characters.quadPosY[followIndex];
 
   if (quadX + 1 == mapQuadWidth)
     byte_x = 0;
@@ -214,8 +194,6 @@ void FillQuadBuffer()
   quadBuffer[2] = mapQuads[byte_y][quadX];
   quadBuffer[3] = mapQuads[byte_y][byte_x];
 }
-
-
 
 void LoadQuadrant(byte quadIndex, byte quad)
 {
@@ -274,7 +252,7 @@ void LoadQuadrant(byte quadIndex, byte quad)
         break;
     }
 
-    chardata = (int)&MapSetInfo[0] + 8*ScreenQuad[quadIndex].CharIndex[byte_z];
+    chardata = (int)&MapSetInfo[0] + 8*ScreenQuad.CharIndex[quadIndex][byte_z];
     for (byte_y = 0; byte_y < quadHeight; ++byte_y)
     {
       yPos = byte_y + QuadOriginY;
@@ -291,7 +269,7 @@ void LoadQuadrant(byte quadIndex, byte quad)
         {
           //mapData[xPos][yPos] = ScreenQuad[quadIndex].Chars[0];
         }
-        mapData[xPos][yPos] = ScreenQuad[quadIndex].Chars[charIndex];
+        mapData[xPos][yPos] = ScreenQuad.Chars[quadIndex][charIndex];
       }
     }
   }
@@ -308,16 +286,16 @@ void LoadMapQuads()
 
 byte GetPlayerQuad() //Returns the viewport quadrant of the player character
 {
-  if (characters[followIndex].posX < quadWidthDouble)
+  if (characters.posX[followIndex] < quadWidthDouble)
   {
-    if (characters[followIndex].posY < yQuadHeight)
+    if (characters.posY[followIndex] < yQuadHeight)
       return 0;
     else
       return 2;
   }
   else
   {
-    if (characters[followIndex].posY < yQuadHeight)
+    if (characters.posY[followIndex] < yQuadHeight)
       return 1;
     else
       return 3;
@@ -326,8 +304,8 @@ byte GetPlayerQuad() //Returns the viewport quadrant of the player character
 
 byte GetQuadInRelation(bool d_up, bool d_down, bool d_left, bool d_right)
 {
-  int int_x = characters[followIndex].quadPosX;
-  int int_y = characters[followIndex].quadPosY;
+  int int_x = characters.quadPosX[followIndex];
+  int int_y = characters.quadPosY[followIndex];
 
   if (d_up)
   {
@@ -358,6 +336,11 @@ byte GetQuadInRelation(bool d_up, bool d_down, bool d_left, bool d_right)
 
 void QuadScroll(byte dir)
 {
+  byte quadA; //Entering quad
+  byte quadB; //Diagonal quad
+  byte indexA;
+  byte indexB;
+
   bool charPosX;
   bool charPosY;
   bool qAUp = false;
@@ -368,15 +351,16 @@ void QuadScroll(byte dir)
   bool qBDown = false;
   bool qBLeft = false;
   bool qBRight = false;
+
   byte p = GetChar(COLS - 1, ROWS - 1);
-  
+
   SetChar('Q', COLS - 1, ROWS - 1);
-  QuadOriginX = characters[followIndex].quadPosX;
-  QuadOriginY = characters[followIndex].quadPosY;
+  QuadOriginX = characters.quadPosX[followIndex];
+  QuadOriginY = characters.quadPosY[followIndex];
   compareQuad = GetPlayerQuad();
 
-  charPosX = characters[followIndex].posX % 16 < quadWidth;
-  charPosY = characters[followIndex].posY % 16 < quadHeight;
+  charPosX = characters.posX[followIndex] % 16 < quadWidth;
+  charPosY = characters.posY[followIndex] % 16 < quadHeight;
 
   switch(dir)
   {
@@ -386,10 +370,10 @@ void QuadScroll(byte dir)
       qBUp = true;
       if (charPosX)
         qBLeft = true;
-        //indexB = GetQuadInRelation(true, false, true, false);
+      //indexB = GetQuadInRelation(true, false, true, false);
       else
         qBRight = true;
-        //indexB = GetQuadInRelation(true, false, false, true);
+      //indexB = GetQuadInRelation(true, false, false, true);
       break;
     case 1:
       qADown = true;
@@ -397,10 +381,10 @@ void QuadScroll(byte dir)
       qBDown = true;
       if (charPosX)
         qBLeft = true;
-        //indexB = GetQuadInRelation(false, true, true, false);
+      //indexB = GetQuadInRelation(false, true, true, false);
       else
         qBRight = true;
-        //indexB = GetQuadInRelation(false, true, false, true);
+      //indexB = GetQuadInRelation(false, true, false, true);
       break;
     case 2:
       qALeft = true;
@@ -408,10 +392,10 @@ void QuadScroll(byte dir)
       qBLeft = true;
       if (charPosY)
         qBUp = true;
-        //indexB = GetQuadInRelation(true, false, true, false);
+      //indexB = GetQuadInRelation(true, false, true, false);
       else
         qBDown = true;
-        //indexB = GetQuadInRelation(false, true, true, false);
+      //indexB = GetQuadInRelation(false, true, true, false);
       break;
     case 3:
       qARight = true;
@@ -419,16 +403,16 @@ void QuadScroll(byte dir)
       qBRight = true;
       if (charPosY)
         qBUp = true;
-        //indexB = GetQuadInRelation(true, false, false, true);
+      //indexB = GetQuadInRelation(true, false, false, true);
       else
         qBDown = true;
-        //indexB = GetQuadInRelation(false, true, false, true);
+      //indexB = GetQuadInRelation(false, true, false, true);
       break;
   }
-  
+
   indexA = GetQuadInRelation(qAUp, qADown, qALeft, qARight);
   indexB = GetQuadInRelation(qBUp, qBDown, qBLeft, qBRight);
-  
+
   if (dir < 2)
     switch (compareQuad)
     {
@@ -492,9 +476,6 @@ void InitializeMapData()
   byte byte_index;
   byte byte_offset;
 
-  cameraOffsetX = viewportWidth / 2;
-  cameraOffsetY = viewportHeight / 2;
-
   for (byte_y = 0; byte_y < 8; ++byte_y)
     for (byte_x = 0; byte_x < 8; ++byte_x)
     {
@@ -509,26 +490,26 @@ void InitializeMapData()
 
       tiles.blocked[byte_index] = 0;
 
-      ScreenQuad[byte_index].CharIndex[0] = byte_offset; // Init screen quad prefabs for 8x8
-      ScreenQuad[byte_index].CharIndex[1] = byte_offset + 1;
-      ScreenQuad[byte_index].CharIndex[2] = byte_offset + 16;
-      ScreenQuad[byte_index].CharIndex[3] = byte_offset + 17;
-      ScreenQuad[byte_index].Chars[0] = 32;
-      ScreenQuad[byte_index].Chars[1] = byte_index;
+      ScreenQuad.CharIndex[byte_index][0] = byte_offset; // Init screen quad prefabs for 8x8
+      ScreenQuad.CharIndex[byte_index][1] = byte_offset + 1;
+      ScreenQuad.CharIndex[byte_index][2] = byte_offset + 16;
+      ScreenQuad.CharIndex[byte_index][3] = byte_offset + 17;
+      ScreenQuad.Chars[byte_index][0] = 32;
+      ScreenQuad.Chars[byte_index][1] = byte_index;
       //ScreenQuad[byte_index].MusicIndex = 0;
       //ScreenQuad[byte_index].NPCIndex = 0;
-      ScreenQuad[byte_index].ScatterIndex = 0;
+      ScreenQuad.ScatterIndex[byte_index] = 0;
     }
 
   tiles.opaque[44] = true; //Trees
 
-  ScreenQuad[2].Chars[0] = 36; // Set the wizard to grass on 0
-  ScreenQuad[2].Chars[1] = 44; // Set the wizard to trees on 1
+  ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
+  ScreenQuad.Chars[2][1] = 44; // Set the wizard to trees on 1
 
   //Init Characters
   for (byte_i = 0; byte_i < charactersCount; ++byte_i)
   {
-    characters[byte_i].tile = byte_i;
+    characters.tile[byte_i] = byte_i;
     //characters[byte_i].chars[0] = 8 + byte_i * 16;
     //characters[byte_i].chars[1] = 9 + byte_i * 16;
     //characters[byte_i].chars[2] = 10 + byte_i * 16;
@@ -537,59 +518,63 @@ void InitializeMapData()
     //characters[byte_i].colors[1] = byte_i + 1;
     //characters[byte_i].colors[2] = byte_i + 1;
     //characters[byte_i].colors[3] = byte_i + 1;
-    characters[byte_i].posX = byte_i;
-    characters[byte_i].posY = byte_i;
-    characters[byte_i].quadPosX = byte_i;
-    characters[byte_i].quadPosX = byte_i;
-    characters[byte_i].visible = false;
-    characters[byte_i].collide = false;
+    characters.posX[byte_i] = byte_i;
+    characters.posY[byte_i] = byte_i;
+    characters.quadPosX[byte_i] = byte_i;
+    characters.quadPosX[byte_i] = byte_i;
+    characters.visible[byte_i] = false;
+    characters.collide[byte_i] = false;
   }
-  characters[0].visible = true;
-  characters[0].posX  = 8;
-  characters[0].posY  = 8;
-  characters[0].quadPosX  = 2;
-  characters[0].quadPosY  = 0;
-  characters[0].tile = 2;
+  characters.visible[0] = true;
+  characters.posX[0]  = 8;
+  characters.posY[0]  = 8;
+  characters.quadPosX[0]  = 2;
+  characters.quadPosY[0]  = 0;
+  characters.tile[0] = 2;
 
-  characters[1].visible = true;
-  characters[1].collide = true;
-  characters[1].message = 0;
+  characters.visible[1] = true;
+  characters.collide[1] = true;
+  characters.message[1] = 0;
 
-  characters[2].tile = signpost;
-  characters[2].visible = true;
-  characters[2].collide = true;
-  characters[2].message = 1;
-  characters[2].posX = 8;
-  characters[2].posY = 6;
-  characters[2].quadPosX  = 2;
-  characters[2].quadPosY  = 0;
+  characters.tile[2] = signpost;
+  characters.visible[2] = true;
+  characters.collide[2] = true;
+  characters.message[2] = 1;
+  characters.posX[2] = 8;
+  characters.posY[2] = 6;
+  characters.quadPosX[2]  = 2;
+  characters.quadPosY[2]  = 0;
 
   LoadMapQuads();
 }
 
-int wrapX(int posX) //Used in map positions
+void wrapX(sbyte *posX) //Used in map positions
 {
-  if (posX < 0)
-    return mapWidth - 1;
-  if (posX >= mapWidth)
-    return 0;
-  return posX;
+  if (*posX < 0)
+    *posX = mapWidth - 1;
+    //return mapWidth - 1;
+  if (*posX >= mapWidth)
+    *posX = 0;
+    //return 0;
+  //return posX;
 }
 
-int wrapY(int posY)
+void wrapY(sbyte *posY)
 {
-  if (posY < 0)
-    return mapHeight - 1;
-  if (posY >= mapHeight)
-    return 0;
-  return posY;
+  if (*posY < 0)
+    *posY = mapHeight - 1;
+    //return mapHeight - 1;
+  if (*posY >= mapHeight)
+    *posY = 0;
+    //return 0;
+  //return posY;
 }
 
 bool CheckCollision(byte charIndex, byte Direction)
 {
   byte byte_i;
-  int xPos = characters[charIndex].posX;
-  int yPos = characters[charIndex].posY; //These need to be integers because they can wrap around the map
+  sbyte xPos = characters.posX[charIndex];
+  sbyte yPos = characters.posY[charIndex]; //These need to be signed because they can wrap around the map
 
   //Check the tile we're already standing on
   if(ReadBit(tiles.blocked[mapData[xPos][yPos]], Direction))
@@ -601,16 +586,20 @@ bool CheckCollision(byte charIndex, byte Direction)
   switch (Direction)
   {
     case up:
-      yPos = wrapY(yPos - 1);
+      --yPos;
+      wrapY(&yPos);
       break;
     case down:
-      yPos = wrapY(yPos + 1);
+      ++yPos;
+      wrapY(&yPos);
       break;
     case left:
-      xPos = wrapX(xPos - 1);
+      --xPos;
+      wrapX(&xPos);
       break;
     case right:
-      xPos = wrapX(xPos + 1);
+      ++xPos;
+      wrapX(&xPos);
       break;
     default:
       return false;
@@ -630,11 +619,11 @@ bool CheckCollision(byte charIndex, byte Direction)
 
   //Call Messagebox from NPC
   for (byte_i = 0; byte_i < charactersCount; ++byte_i)
-    if(characters[byte_i].collide)
-      if (characters[byte_i].posX == xPos)
-        if (characters[byte_i].posY == yPos)
+    if(characters.collide[byte_i])
+      if (characters.posX[byte_i] == xPos)
+        if (characters.posY[byte_i] == yPos)
         {
-          WriteLineMessageWindow(Messages[characters[byte_i].message], 1);
+          WriteLineMessageWindow(Messages[characters.message[byte_i]], 1);
           return true;
         }
 
@@ -645,27 +634,27 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Bl
 {
   byte x;
   byte y;
-  
-   //Are we ever going to get parameters outside bounds??
+
+  //Are we ever going to get parameters outside bounds??
   //if (xOrigin < 0 || yOrigin < 0 || xOrigin >= viewportWidth || yOrigin >= viewportHeight)
-    //return;
+  //return;
   if (xOrigin < 0)
     xOrigin = 0;
   if (yOrigin < 0)
     yOrigin = 0;
-  
+
   if (xOrigin + xSize > viewportWidth)
     --xSize;
 
   if (yOrigin + ySize > viewportHeight)
     --ySize;
-  
+
   //Ever going to be less than one in size??
   //if (xSize < 1)
-    //xSize = 1;
+  //xSize = 1;
 
   //if (ySize < 1)
-  
+
   for(y = 0; y < ySize; ++y)
   {
     for(x = 0; x < xSize; ++x)
@@ -675,87 +664,83 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Bl
 
 void ApplyLOS()
 {
-  if (LOSEnabled)
-  {
-    //Quadrant Layout:
-    //        ^
-    //        |       ^
-    //  000  666  111 |
-    //  000  666  111  ->
-    //  000  666  111
-    //
-    //  444  XXX  555
-    //  444  XPX  555 ->
-    //  444  XXX  555
-    //
-    //  333  777  222
-    //  333  777  222
-    //  333  777  222
-    //
-    //Center adjacent X always visible
-    //Diagonal quadrants 0-3 block everything behind the tile
-    //Cardinal quadrants 4-7 block only the tiles directly behind them
+  //Quadrant Layout:
+  //        ^
+  //        |       ^
+  //  000  666  111 |
+  //  000  666  111  ->
+  //  000  666  111
+  //
+  //  444  XXX  555
+  //  444  XPX  555 ->
+  //  444  XXX  555
+  //
+  //  333  777  222
+  //  333  777  222
+  //  333  777  222
+  //
+  //Center adjacent X always visible
+  //Diagonal quadrants 0-3 block everything behind the tile
+  //Cardinal quadrants 4-7 block only the tiles directly behind them
 
-    byte x;
-    byte y;
-    //Quad 0
-    for(y = playerY - 1; y > 0; --y)
-      for(x = playerX - 1; x > 0; --x)
-        if (tiles.opaque[viewportBuffer[x][y]])
-        {
-          //DrawSquare(0, y, x, 1);
-          DrawSquare(0, 0, x, y);
-        }
-    //Quad 1
-    for(y = playerY - 1; y > 0; --y)
-      for(x = playerX + 1; x < viewportWidth; ++x)
-        if (tiles.opaque[viewportBuffer[x][y]])
-        {
-          //DrawSquare(x + 1, y, viewportWidth - x, 1);
-          DrawSquare(x, 0, viewportWidth - x, y);
-        }
-    //Quad 2
-    for(y = playerY + 1; y < viewportHeight; ++y)
-      for(x = playerX + 1; x < viewportWidth; ++x)
-        if (tiles.opaque[viewportBuffer[x][y]])
-        {
-          //DrawSquare(x + 1, y, viewportWidth - x, 1);
-          DrawSquare(x + 1, y + 1, viewportWidth - x, viewportHeight - y);
-        }
-    //Quad 3
-    for(y = playerY + 1; y < viewportHeight; ++y)
-      for(x = playerX - 1; x > 0; --x)
-        if (tiles.opaque[viewportBuffer[x][y]])
-        {
-          //DrawSquare(0, y, x, 1);
-          DrawSquare(0, y + 1, x, viewportHeight - y);
-        }
-    //Horizontal
+  byte x;
+  byte y;
+  //Quad 0
+  for(y = playerY - 1; y > 0; --y)
     for(x = playerX - 1; x > 0; --x)
-      for(y = playerY - 1; y <= playerY + 1; ++y)
-        if (tiles.opaque[viewportBuffer[x][y]])
-          DrawSquare(0, y, x, 1);
+      if (tiles.opaque[viewportBuffer[x][y]])
+      {
+        //DrawSquare(0, y, x, 1);
+        DrawSquare(0, 0, x, y);
+      }
+  //Quad 1
+  for(y = playerY - 1; y > 0; --y)
     for(x = playerX + 1; x < viewportWidth; ++x)
-      for(y = playerY - 1; y <= playerY + 1; ++y)
-        if (tiles.opaque[viewportBuffer[x][y]])
-          DrawSquare(x + 1, y, viewportWidth - x - 1, 1);
-    //Vertical
-    for(y = playerY - 1; y > 0; --y)
-      for(x = playerX -1 ; x <= playerX + 1; ++x)
-        if (tiles.opaque[viewportBuffer[x][y]])
-          DrawSquare(x, 0, 1, y);
-    for(y = playerY + 1; y < viewportHeight; ++y)
-      for(x = playerX -1 ; x <= playerX + 1; ++x)
-        if (tiles.opaque[viewportBuffer[x][y]])
-          DrawSquare(x, y + 1, 1, viewportHeight - y);
-  }
+      if (tiles.opaque[viewportBuffer[x][y]])
+      {
+        //DrawSquare(x + 1, y, viewportWidth - x, 1);
+        DrawSquare(x, 0, viewportWidth - x, y);
+      }
+  //Quad 2
+  for(y = playerY + 1; y < viewportHeight; ++y)
+    for(x = playerX + 1; x < viewportWidth; ++x)
+      if (tiles.opaque[viewportBuffer[x][y]])
+      {
+        //DrawSquare(x + 1, y, viewportWidth - x, 1);
+        DrawSquare(x + 1, y + 1, viewportWidth - x, viewportHeight - y);
+      }
+  //Quad 3
+  for(y = playerY + 1; y < viewportHeight; ++y)
+    for(x = playerX - 1; x > 0; --x)
+      if (tiles.opaque[viewportBuffer[x][y]])
+      {
+        //DrawSquare(0, y, x, 1);
+        DrawSquare(0, y + 1, x, viewportHeight - y);
+      }
+  //Horizontal
+  for(x = playerX - 1; x > 0; --x)
+    for(y = playerY - 1; y <= playerY + 1; ++y)
+      if (tiles.opaque[viewportBuffer[x][y]])
+        DrawSquare(0, y, x, 1);
+  for(x = playerX + 1; x < viewportWidth; ++x)
+    for(y = playerY - 1; y <= playerY + 1; ++y)
+      if (tiles.opaque[viewportBuffer[x][y]])
+        DrawSquare(x + 1, y, viewportWidth - x - 1, 1);
+  //Vertical
+  for(y = playerY - 1; y > 0; --y)
+    for(x = playerX -1 ; x <= playerX + 1; ++x)
+      if (tiles.opaque[viewportBuffer[x][y]])
+        DrawSquare(x, 0, 1, y);
+  for(y = playerY + 1; y < viewportHeight; ++y)
+    for(x = playerX -1 ; x <= playerX + 1; ++x)
+      if (tiles.opaque[viewportBuffer[x][y]])
+        DrawSquare(x, y + 1, 1, viewportHeight - y);
 }
 
-const byte viewportsize = viewportHeight * viewportWidth;
 void DrawEntireMap()
 {
-  int int_a;
-  int int_b;
+  sbyte int_a;
+  sbyte int_b;
   byte byte_x;
   byte byte_y;
   #if defined(__C64__)
@@ -767,10 +752,10 @@ void DrawEntireMap()
   int_b = offsetY;
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {
-    int_b = wrapY(int_b); //Wrap the map data y reference
+    wrapY(&int_b); //Wrap the map data y reference
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
-      int_a = wrapX(int_a); //Wrap the map data X reference
+      wrapX(&int_a); //Wrap the map data X reference
       viewportBuffer[byte_x][byte_y] = mapData[int_a][int_b];
       int_a++;
     }
@@ -778,19 +763,16 @@ void DrawEntireMap()
     ++int_b;
   }
   BufferCharacters();
-  ApplyLOS();
+  if(LOSEnabled)
+    ApplyLOS();
 
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {      
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
-    { //On Apple, only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
+    { //Only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
       byte lastIndex = viewportBufferLast[byte_x][byte_y];
       byte newIndex = viewportBuffer[byte_x][byte_y];
-      #if defined(__APPLE2__)
-      //if(viewportBuffer[byte_x][byte_y] != viewportBufferLast[byte_x][byte_y]); //It's acrtually faster to skip this on Commodore
-      #endif
       if (lastIndex!=newIndex)
-        //DrawTileDirect(newIndex, byte_x, byte_y);
       {
         DrawTileIndex = newIndex;
         DrawTileX = byte_x;
@@ -799,22 +781,16 @@ void DrawEntireMap()
       }
     }
   }
-  #if defined(__APPLE2__)
-  //memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportsize); //It's acrtually faster to skip this on Commodore
-  #endif
   #if defined(__C64__)
   SwapBuffer();
   #endif
   memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportSize);
-
   DrawCharacterCoordinates(followIndex);
 }
 
 void MoveCharacter(byte index, byte dir, bool cameraUpdate)
 {
-  byte edgeCheckX;
-  byte edgeCheckY;
-  checkCollision = CheckCollision(index, dir);
+  byte checkCollision = CheckCollision(index, dir);
   scrollQuads = false;
   changedQuad = false;
 
@@ -825,51 +801,51 @@ void MoveCharacter(byte index, byte dir, bool cameraUpdate)
     switch (dir)
     {
       case up:
-        --characters[index].posY;
-        if (characters[index].posY < 0)
-          characters[index].posY = mapHeight - 1;
-        if (characters[index].posY == 15 || characters[index].posY == 31)
+        --characters.posY[index];
+        if (characters.posY[index] < 0)
+          characters.posY[index] = mapHeight - 1;
+        if (characters.posY[index] == 15 || characters.posY[index] == 31)
         {
           changedQuad = true;
-          --characters[index].quadPosY;
-          if(characters[index].quadPosY < 0)
-            characters[index].quadPosY = mapMatrixHeight - 1;
+          --characters.quadPosY[index];
+          if(characters.quadPosY[index] < 0)
+            characters.quadPosY[index] = mapMatrixHeight - 1;
         }
         break;
       case down:
-        ++characters[index].posY;
-        if (characters[index].posY >= mapHeight)
-          characters[index].posY = 0;
-        if (characters[index].posY == 0 || characters[index].posY == 16)
+        ++characters.posY[index];
+        if (characters.posY[index] >= mapHeight)
+          characters.posY[index] = 0;
+        if (characters.posY[index] == 0 || characters.posY[index] == 16)
         {
           changedQuad = true;
-          ++characters[index].quadPosY;
-          if(characters[index].quadPosY == mapMatrixHeight)
-            characters[index].quadPosY = 0; 
+          ++characters.quadPosY[index];
+          if(characters.quadPosY[index] == mapMatrixHeight)
+            characters.quadPosY[index] = 0; 
         }
         break;
       case left:
-        --characters[index].posX;
-        if (characters[index].posX < 0)
-          characters[index].posX = mapWidth - 1;
-        if (characters[index].posX == 15 || characters[index].posX == 31)
+        --characters.posX[index];
+        if (characters.posX[index] < 0)
+          characters.posX[index] = mapWidth - 1;
+        if (characters.posX[index] == 15 || characters.posX[index] == 31)
         {
           changedQuad = true;
-          --characters[index].quadPosX;
-          if(characters[index].quadPosX < 0)
-            characters[index].quadPosX = mapMatrixWidth - 1; 
+          --characters.quadPosX[index];
+          if(characters.quadPosX[index] < 0)
+            characters.quadPosX[index] = mapMatrixWidth - 1; 
         }
         break;
       case right:
-        ++characters[index].posX;
-        if (characters[index].posX >= mapWidth)
-          characters[index].posX = 0;
-        if (characters[index].posX == 0 || characters[index].posX == 16)
+        ++characters.posX[index];
+        if (characters.posX[index] >= mapWidth)
+          characters.posX[index] = 0;
+        if (characters.posX[index] == 0 || characters.posX[index] == 16)
         {
           changedQuad = true;
-          ++characters[index].quadPosX;
-          if(characters[index].quadPosX == mapMatrixWidth)
-            characters[index].quadPosX = 0; 
+          ++characters.quadPosX[index];
+          if(characters.quadPosX[index] == mapMatrixWidth)
+            characters.quadPosX[index] = 0; 
         }
         break;
       default:
@@ -878,8 +854,8 @@ void MoveCharacter(byte index, byte dir, bool cameraUpdate)
 
     if (index == followIndex)
     {
-      edgeCheckX = characters[index].posX % 16;
-      edgeCheckY = characters[index].posY % 16;
+      byte edgeCheckX = characters.posX[index] % 16;
+      byte edgeCheckY = characters.posY[index] % 16;
 
       switch (dir)
       {
@@ -920,53 +896,38 @@ void MoveCharacter(byte index, byte dir, bool cameraUpdate)
 
 void DrawCharacterCoordinates(byte index)
 {
-  sprintf(strTemp,"(%2d,%2d)@", characters[index].posX, characters[index].posY);
+  sprintf(strTemp,"(%2d,%2d)@", characters.posX[index], characters.posY[index]);
   PrintString(strTemp, viewportPosX + 6, viewportPosY - 1, true, false);
 }
 
 void LoadMap()
 {
-  /*viewportPosX = MapOriginX;
-  viewportPosY = MapOriginY;
-
-  while (viewportPosX + (2*viewportWidth) >= COLS)
-    --viewportPosX;
-  while (viewportPosY + (2*viewportHeight) >= ROWS)
-    --viewportPosY;
-
-  while (viewportPosX < 1)
-    ++viewportPosX;
-  while (viewportPosY < 1)
-    ++viewportPosY;*/
-
-  SetTileOrigin(viewportPosX, viewportPosY);
-
+  //SetTileOrigin(viewportPosX, viewportPosY);
   InitializeMapData();
-  playerX = (viewportWidth - 1) / 2;
-  playerY = (viewportHeight - 1) / 2;
-
-  viewportSize = viewportHeight * viewportWidth;
 }
 
 screenName MapUpdate()
 {
   bool exit = false;
   ClearScreen();
-  //screenName nextScreen;
   DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  //DrawMessageWindow();
-  DrawEntireMap();
   DrawCharStats();
+
+  //Initialize Viewport
+  memset(&viewportBuffer, EmptyTile, viewportSize);
+  memset(&viewportBufferLast, EmptyTile, viewportSize);
+  SetTileOrigin(viewportPosX, viewportPosY);
+  DrawEntireMap();
 
   while (!exit)
   {
-    //if (InputChanged())
     UpdateInput();
+    //if (InputChanged())
     {
       direction Dir = 4;
       if (InputUp())
-      	Dir = up;
+        Dir = up;
       if (InputDown()) 
         Dir = down;
       if (InputLeft())
@@ -975,7 +936,6 @@ screenName MapUpdate()
         Dir = right;
       if (InputFire())
         exit = true;
-      
       if (Dir < 4)
         MoveCharacter(followIndex, Dir, true);        
     }

@@ -58,6 +58,12 @@ void SetBG(byte color)
 }
 #endif
 
+byte ReadBit(byte byteToRead, char bit)
+{
+  bit = 1 << bit;
+  return(bit & byteToRead);
+}
+
 void ClearScreen(void)
 {
 
