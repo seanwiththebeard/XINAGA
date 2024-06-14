@@ -337,15 +337,13 @@ void InitializeMapData()
   byte byte_x;
   byte byte_y;
   byte byte_i;
-  byte byte_index;
   byte byte_offset;
+  byte byte_index = 0;
   
   for (byte_y = 0; byte_y < 8; ++byte_y)
     for (byte_x = 0; byte_x < 8; ++byte_x)
     {
-      byte_index = byte_x + byte_y*8;
       byte_offset = byte_x * 2 + 32*byte_y;
-
       tiles.blocked[byte_index] = 0;
       ScreenQuad.CharIndex[byte_index][0] = byte_offset; // Init screen quad prefabs for 8x8
       ScreenQuad.CharIndex[byte_index][1] = byte_offset + 1;
@@ -354,6 +352,7 @@ void InitializeMapData()
       ScreenQuad.Chars[byte_index][0] = 32;
       ScreenQuad.Chars[byte_index][1] = byte_index;
       ScreenQuad.ScatterIndex[byte_index] = 0;
+      ++byte_index;
     }
   tiles.opaque[44] = true; //Trees
   ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
