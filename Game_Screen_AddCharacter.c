@@ -112,7 +112,18 @@ void MenuGetClassPrimeStats()
   SetMenuItem(4, "Reroll@");
   SetMenuItem(5, "Exit@");
 }
-
+void WaitForInput(void)
+{
+  bool exit = false;
+  WriteLineMessageWindow("Press space to continue@", 0);
+  
+  while (!exit)
+  {
+    UpdateInput();
+    if (InputFire())
+      exit = true;
+  }
+}
 void MenuGetClass()
 {
   byte hitdice;
@@ -165,6 +176,7 @@ void MenuGetClass()
       HP = HPMAX;
       AddToRoster();
     }
+      WaitForInput();
 }
 
 void MenuGetRace()

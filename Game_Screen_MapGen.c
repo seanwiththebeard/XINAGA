@@ -5,13 +5,16 @@
 //#pragma code-name (push, "LC")
 #endif
 
-#define height 16
+#define height 9
 #define width 16
 #define posX 1
 #define posY 1
-#define pointsCount 32
-#define grass 0x88
-#define water 0x84
+#define pointsCount 12
+//#define grass 0x88
+//#define water 0x84
+#define grass 36
+#define water 34
+void DrawMapGenTiles(void);
 byte map[height][width] = {};
 
 /* World Seed Parameters
@@ -274,7 +277,7 @@ void addRandomPoints(byte count, int index)
     }
     createPoint(w, h);
     map[h][w] = index;
-    SetChar(index, posX + w, posY + h);
+    //SetChar(index, posX + w, posY + h);
     //SetColor(index + 2, posX + w, posY + h);
   }
 }
@@ -352,11 +355,15 @@ void attachRandomPoint(byte index)
   }
   createPoint(x, y);
   map[y][x] = index;
-  SetChar(index, posX + x, posY + y);
+  DrawTileIndex = index;
+  DrawTileX = x;
+  DrawTileY = y;
+  DrawTileDirect();
+  //SetChar(index, posX + x, posY + y);
   //SetColor(index + 2, posX + x, posY + y);  
 }
 
-void DrawMap()
+/*void DrawMap()
 {
   byte x, y;
   for (y = 0; y < height; ++y)
@@ -369,27 +376,47 @@ void DrawMap()
       #endif
       SetChar(index, posX + x, posY + y);
     }
+}*/
+
+#define MiniMapX 0
+#define MiniMapY 0
+#define MiniMapSizeX (width << 1)
+#define MiniMapSizeY (height << 1)
+
+void DrawMapGenTiles(void)
+{
+  byte x, y;
+  DrawBorder("MapGen@", MiniMapX, MiniMapY, MiniMapSizeX + 2, MiniMapSizeY + 2, true);
+  SetTileOrigin(MiniMapX + 1, MiniMapY + 1);
+  for (y = 0; y < height; ++y)
+    for (x = 0; x < width; ++x)
+    {
+      DrawTileIndex = map[y][x];
+      DrawTileX = x;
+      DrawTileY = y;
+      DrawTileDirect();
+    }
 }
 
 byte countContinents = 0;
 
 void createContinent(byte size)
 {
-  char index = '0' + countContinents;// grass;
+  //char index = '0' + countContinents;// grass;
   byte landcount = size + 1;
   
   //sprintf(&index, "%d", countContinents);
   
-  addRandomPoints(1, index);
+  addRandomPoints(1, grass);
   while (landcount && (points != NULL))
   {
-    attachRandomPoint(index);
+    attachRandomPoint(grass);
     checkLandlocked();
     --landcount;
   }
   ++countContinents;
   clearPoints();
-  DrawMap();
+  //DrawMapGenTiles();
 }
 
 void Rotate(direction dir)
@@ -449,7 +476,7 @@ void RotateAround()
   {
     Rotate(left);
     Rotate(up);
-    DrawMap();
+    DrawMapGenTiles();
   }
 }
 
@@ -468,24 +495,35 @@ void GenerateMap(byte seed)
       map[y][x] = water;
       //SetChar(map[y][x], posX + x, posY + y);
     }
-  DrawMap();
+  DrawMapGenTiles();
   srand(seed);
-  for ( y = 6; y > 0; --y)
+  for ( y = 4; y > 0; --y)
   {
     createContinent(16 +  8*(y / 4));
   }
-  DrawMap();
+  //DrawMapGenTiles();
   //RotateAround();
   //sprintf(strTemp, "Done@");
   //WriteLineMessageWindow(strTemp, 0);
 }
 
+void StoreMap()
+{
+  byte x, y;
+
+  for (y = 0; y < height; ++y)
+    for (x = 0; x < width; ++x)
+    {
+      mapQuads[y][x] = map[y][x];
+    }
+}
 screenName Update_MapGen()
 {
   byte seed  = 0;
   bool exit = false;
   ResizeMessageWindow(23, 12, 15, 10);
-  DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
+  //DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
+  //DrawMapGenTiles();
   GenerateMap(seed);
   while (!exit)
   {
@@ -505,5 +543,6 @@ screenName Update_MapGen()
     }
   }
   clearPoints();
+  StoreMap();
   return EditParty;
 }

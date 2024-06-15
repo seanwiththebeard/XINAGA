@@ -405,22 +405,24 @@ void DrawTileSetup(void)
 }
 void DrawTile()
 {
+  byte x = DrawTileX + MapOriginX;
+  byte y = DrawTileY + MapOriginY;
+  
   #if defined(__C64__)
-  
   memcpy(destinationChar, &indexes[0], 2);
-    memcpy(destinationColor, &attributeset[indexes[0]], 2);
-    destinationChar += COLS;
-    destinationColor += COLS;
-    //offset1 += COLS;
-    memcpy(destinationChar, &indexes[2], 2);
-    memcpy(destinationColor, &attributeset[indexes[2]], 2);
+  memcpy(destinationColor, &attributeset[indexes[0]], 2);
+  destinationChar += COLS;
+  destinationColor += COLS;
+  //offset1 += COLS;
+  memcpy(destinationChar, &indexes[2], 2);
+  memcpy(destinationColor, &attributeset[indexes[2]], 2);
   #endif
-  
+
   #if defined(__APPLE2__)
-  SetChar(indexes[0], DrawTileX + MapOriginX, DrawTileY + MapOriginY);
-  SetChar(indexes[1], DrawTileX + MapOriginX + 1, DrawTileY + MapOriginY);
-  SetChar(indexes[2], DrawTileX + MapOriginX, DrawTileY + 1 + MapOriginY);
-  SetChar(indexes[3], DrawTileX + MapOriginX + 1, DrawTileY + 1 + MapOriginY);
+  SetChar(indexes[0], x, y);
+  SetChar(indexes[1], x + 1, y);
+  SetChar(indexes[2], x, y + 1);
+  SetChar(indexes[3], x + 1, y + 1);
   #endif
 }
 void DrawTileBuffer(void)

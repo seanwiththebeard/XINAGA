@@ -23,6 +23,9 @@ byte GetPlayerQuad(); //Returns the viewport quadrant of the player character
 byte GetQuadInRelation(sbyte v, sbyte h);
 void QuadScroll(byte direction);
 
+//Minimap
+void DrawMiniMap(void);
+
 //Globals
 #define consolePosX 1
 #define consolePosY 18
@@ -56,8 +59,6 @@ byte mapData[mapWidth][mapHeight] = {};
 //Quad Data
 #define mapQuadWidth 8
 #define mapQuadHeight 8
-#define mapMatrixWidth 8
-#define mapMatrixHeight 8
 byte mapQuads[mapMatrixHeight][mapMatrixWidth] =  //These are the quad-tile references that make up the map
 {
   { 0,  1,  2,  3,  4,  5,  6,  7},
@@ -612,6 +613,7 @@ void DrawEntireMap()
 void MoveCharacter(byte index, byte dir)
 {
   bool scrollQuads = false;
+  bool changedQuads = false;
   byte checkCollision = CheckCollision(index, dir);
 
   TickMoonPhase();
@@ -626,6 +628,7 @@ void MoveCharacter(byte index, byte dir)
         if (characters.posY[index] == 15 || characters.posY[index] == 31)
         {
           --characters.quadPosY[index];
+          changedQuads = true;
           if(characters.quadPosY[index] < 0)
             characters.quadPosY[index] = mapMatrixHeight - 1;
         }
@@ -637,6 +640,7 @@ void MoveCharacter(byte index, byte dir)
         if (characters.posY[index] == 0 || characters.posY[index] == 16)
         {
           ++characters.quadPosY[index];
+          changedQuads = true;
           if(characters.quadPosY[index] == mapMatrixHeight)
             characters.quadPosY[index] = 0; 
         }
@@ -648,6 +652,7 @@ void MoveCharacter(byte index, byte dir)
         if (characters.posX[index] == 15 || characters.posX[index] == 31)
         {
           --characters.quadPosX[index];
+          changedQuads = true;
           if(characters.quadPosX[index] < 0)
             characters.quadPosX[index] = mapMatrixWidth - 1; 
         }
@@ -659,6 +664,7 @@ void MoveCharacter(byte index, byte dir)
         if (characters.posX[index] == 0 || characters.posX[index] == 16)
         {
           ++characters.quadPosX[index];
+          changedQuads = true;
           if(characters.quadPosX[index] == mapMatrixWidth)
             characters.quadPosX[index] = 0; 
         }
@@ -671,6 +677,8 @@ void MoveCharacter(byte index, byte dir)
     {
       byte edgeCheckX = characters.posX[index] % 16;
       byte edgeCheckY = characters.posY[index] % 16;
+      if(changedQuads)
+        DrawMiniMap();
 
       switch (dir)
       {
@@ -692,7 +700,9 @@ void MoveCharacter(byte index, byte dir)
           break;
       }
       if (scrollQuads)
+      {
         QuadScroll(dir);
+      }
     }
     DrawEntireMap();
   }
@@ -702,6 +712,29 @@ void DrawCharacterCoordinates(byte index)
 {
   sprintf(strTemp,"(%2d,%2d)@", characters.posX[index], characters.posY[index]);
   PrintString(strTemp, viewportPosX + 6, viewportPosY - 1, true, false);
+}
+
+#define MiniMapX 22
+#define MiniMapY 7
+#define MiniMapSize 16
+void DrawMiniMap(void)
+{
+  byte x, y;
+  DrawBorder("Minimap@", MiniMapX, MiniMapY, MiniMapSize + 2, MiniMapSize + 2, true);
+  SetTileOrigin(MiniMapX + 1, MiniMapY + 1);
+  for (y = 0; y < 8; ++y)
+    for (x = 0; x < 8; ++x)
+    {
+      if(x == characters.quadPosX[followIndex] && y == characters.quadPosY[followIndex])
+        DrawTileIndex = characters.tile[followIndex];
+      else
+        DrawTileIndex = mapQuads[y][x];
+      DrawTileX = x;
+      DrawTileY = y;
+      DrawTileDirect();
+    }
+    
+  SetTileOrigin(viewportPosX, viewportPosY);
 }
 
 void LoadMap()
@@ -721,7 +754,10 @@ screenName MapUpdate()
   memset(&viewportBuffer, EmptyTile, viewportSize);
   memset(&viewportBufferLast, EmptyTile, viewportSize);
   SetTileOrigin(viewportPosX, viewportPosY);
+  LoadMapQuads();
   DrawEntireMap();
+  
+  DrawMiniMap();
 
   while (!exit)
   {

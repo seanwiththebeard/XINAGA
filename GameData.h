@@ -13,6 +13,10 @@
 #define MapGen 6
 #define Scenario 7
 
+#define mapMatrixWidth 16
+#define mapMatrixHeight 9
+extern byte mapQuads[mapMatrixHeight][mapMatrixWidth];
+
 void Demo(void);
 
 //Title
