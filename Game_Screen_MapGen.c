@@ -5,8 +5,8 @@
 //#pragma code-name (push, "LC")
 #endif
 
-#define height 9
-#define width 16
+#define height 11
+#define width 11
 #define posX 1
 #define posY 1
 #define pointsCount 12
@@ -15,6 +15,7 @@
 #define grass 36
 #define water 34
 void DrawMapGenTiles(void);
+byte countContinents = 0;
 byte map[height][width] = {};
 
 /* World Seed Parameters
@@ -335,7 +336,7 @@ void attachRandomPoint(byte index)
     ++failure;
     if (failure == 48)
     {
-      sprintf(strTemp, "Removing point (%d)@", i);
+      sprintf(strTemp, "Removing point (%d), continent %d can't add@", i, countContinents);
       WriteLineMessageWindow(strTemp, 0);
       deletePoint(i);
       if (totalPoints >= 1)
@@ -398,7 +399,6 @@ void DrawMapGenTiles(void)
     }
 }
 
-byte countContinents = 0;
 
 void createContinent(byte size)
 {
@@ -480,21 +480,24 @@ void RotateAround()
   }
 }
 
-void GenerateMap(byte seed)
+void ClearMap()
 {
   byte x, y;
-  countContinents = 0;
   clearPoints();
-
-  sprintf(strTemp, "Seed (%d)@", seed);
-  WriteLineMessageWindow(strTemp, 0);
-
+  countContinents = 0;
+  
   for (y = 0; y < height; ++y)
     for (x = 0; x < width; ++x)
     {
       map[y][x] = water;
       //SetChar(map[y][x], posX + x, posY + y);
     }
+}
+
+void GenerateMap(byte seed)
+{
+  byte y;
+  ClearMap();
   DrawMapGenTiles();
   srand(seed);
   for ( y = 4; y > 0; --y)
@@ -517,32 +520,55 @@ void StoreMap()
       mapQuads[y][x] = map[y][x];
     }
 }
-screenName Update_MapGen()
+
+#define consolePosX  1
+#define consolePosY 17
+#define consoleWidth 28
+#define consoleHeight 6
+#define menuPosX  2 + ROWS - (ROWS - consoleWidth)
+#define menuPosY consolePosY
+#define menuWidth 8
+#define menuHeight consoleHeight
+#define menuCount 4
+void GetSeed()
 {
   byte seed  = 0;
   bool exit = false;
-  ResizeMessageWindow(23, 12, 15, 10);
-  //DrawBorder("Map Generator@",posX - 1, posY - 1, width + 2, height + 2, true);
-  //DrawMapGenTiles();
-  GenerateMap(seed);
+  ResetMenu("Scenario@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
+  SetMenuItem(0, "Next@");
+  SetMenuItem(1, "Last@");
+  SetMenuItem(2, "Go@");
+  SetMenuItem(3, "End@");
+
   while (!exit)
   {
-    UpdateInput();
-    if (InputChanged())
+    sprintf(strTemp, "Seed (%d)@", seed);
+    SetLineMessageWindow(strTemp, 0);
+    switch (GetMenuSelection())
     {
-      if (InputUp())
-      {
+      case 0:
         ++seed;
+        break;
+      case 1:
+        --seed;
+        break;
+      case 2:
         GenerateMap(seed);
-        //break;
-      }
-      if (InputFire())
-      {
+        break;
+      case 3:
         exit = true;
-      }
+        break;
     }
   }
-  clearPoints();
+}
+
+screenName Update_MapGen()
+{
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  ClearMap();
+  DrawMapGenTiles();
+  GetSeed();
   StoreMap();
-  return EditParty;
+  ClearMap();
+  return Map;
 }
