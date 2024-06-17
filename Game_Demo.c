@@ -176,6 +176,8 @@ void Demo()
   InitializeInput();
   InitializeGraphics();
   ClearScreen();    
+  //DiskSave("c64chars.bin", (int) (int*)&charset[2], 4096);
+  //DiskSave("c64attr.bin", (int)&attributeset[0], 256);
   
   #if defined(__APPLE2__)
   //DrawBorder("Hello Apple!@", 0, ROWS - 3, COLS, 3, false);

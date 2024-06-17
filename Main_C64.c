@@ -1,5 +1,6 @@
 #if defined(__C64__)
 //#resource "C64.cfg"
+//#resource "C64.ctm"
 #define CFGFILE C64.cfg
 #endif
 

@@ -33,7 +33,7 @@ void QuadScroll(byte direction);
 #define menuPosY consolePosY
 #define menuWidth 8
 #define menuHeight consoleHeight
-#define menuCount 4
+#define menuCount 5
 
 //Viewport
 #define viewportPosX 1
@@ -751,18 +751,23 @@ void DrawScreen()
   DrawCharStats();
   DrawEntireMap();
 }
+
+bool exitScreen = false;
 void ActionMenu()
 {
-  
+  byte action;
   ResetMenu("Action@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
-  SetMenuItem(0, "Talk@");
+  SetMenuItem(0, "Search@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Party@");
   SetMenuItem(3, "Map@");
-  switch (GetMenuSelection())
+  SetMenuItem(4, "Exit@");
+  
+  action = GetMenuSelection();
+  ClearMenu();
+  switch (action)
   {
     case 0:
-      ClearMenu();
       break;
     case 1:
       break;
@@ -775,24 +780,26 @@ void ActionMenu()
       WaitForInput();
       DrawScreen();
       break;
+    case 4:
+      exitScreen = true;
   }
 }
 screenName MapUpdate()
 {
-  bool exit = false;
   //ClearScreen();
   //DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   //DrawCharStats();
 
   //Initialize Viewport
+  exitScreen = false;
   
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
   DrawScreen();
   //DrawEntireMap();
  
-  while (!exit)
+  while (!exitScreen)
   {
     UpdateInput();
     //if (InputChanged())
