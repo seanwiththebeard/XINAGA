@@ -26,9 +26,14 @@ void QuadScroll(byte direction);
 //Globals
 #define consolePosX 1
 #define consolePosY 18
-#define consoleWidth 29
+#define consoleWidth 28
 #define consoleHeight 5
 //#define consoleDelay 1
+#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
+#define menuPosY consolePosY
+#define menuWidth 8
+#define menuHeight consoleHeight
+#define menuCount 4
 
 //Viewport
 #define viewportPosX 1
@@ -746,7 +751,32 @@ void DrawScreen()
   DrawCharStats();
   DrawEntireMap();
 }
-
+void ActionMenu()
+{
+  
+  ResetMenu("Action@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
+  SetMenuItem(0, "Talk@");
+  SetMenuItem(1, "Attack@");
+  SetMenuItem(2, "Party@");
+  SetMenuItem(3, "Map@");
+  switch (GetMenuSelection())
+  {
+    case 0:
+      ClearMenu();
+      break;
+    case 1:
+      break;
+    case 2:
+      break;
+    case 3:
+      ClearScreen();
+      UpdatePlayerOnMiniMap();
+      DrawMiniMap(true);
+      WaitForInput();
+      DrawScreen();
+      break;
+  }
+}
 screenName MapUpdate()
 {
   bool exit = false;
@@ -778,14 +808,13 @@ screenName MapUpdate()
         Dir = right;
       if (InputFire())
       {
-        ClearScreen();
-        UpdatePlayerOnMiniMap();
-        DrawMiniMap(true);
-        WaitForInput();
-        DrawScreen();
-      }
-        
+        if (InputChanged())
+        {
+          ActionMenu();
+          //DrawScreen();
         //exit = true;
+        }
+      }
       if (Dir < 4)
         MoveCharacter(followIndex, Dir);        
     }

@@ -145,4 +145,5 @@ byte GetMenuSelection(void);
 void HighlightMenuItem(byte index);
 byte IsMenuItemHighlighted(byte index);
 void DrawMenu(void);
+void ClearMenu(void);
 #endif

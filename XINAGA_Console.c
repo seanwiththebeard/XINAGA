@@ -144,9 +144,11 @@ void DrawItem(byte index)
   //PrintString(menuLine, MenuPosX, MenuPosY + index, true, false);
 }
 
+char *menutitle = 0;
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
 {
   byte x;
+  menutitle = title;
   MenuPosX = posX;
   MenuPosY = posY;
   MenuWidth = w;
@@ -154,7 +156,7 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
   MenuCount = c;
   MenuSelection = 0;
   
-  DrawBorder(title, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
+  DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
   for (x = 0; x < menuItemsCount; ++x)
   {
     MenuItems[x] = "";
@@ -184,12 +186,26 @@ byte IsMenuItemHighlighted(byte index)
 void DrawMenu()
 {
   byte x;
+  DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
   for (x = 0; x < MenuCount; ++x)
   {
     ClearItem(x);
     DrawItem(x);
   }
 }
+void ClearMenu()
+{
+  byte x;
+  byte xPos = MenuPosX;
+  byte yPos = MenuPosY;
+  
+  //for (i = 0; text[i] != '@' && text[i] != '\n'; ++i)
+    //++offset;
+  
+    for (x = 0; x < MenuHeight + 2; ++x)
+      DrawLineH(' ', xPos - 1, yPos + x - 1, MenuWidth + 2);
+}
+
 
 byte GetMenuSelection()
 {
@@ -225,6 +241,7 @@ byte GetMenuSelection()
         exit = true;
     }
   }
+  //ClearMenu();
   
   return MenuSelection;
 }
