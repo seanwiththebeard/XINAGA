@@ -54,8 +54,8 @@ bool LOSEnabled = true;
 byte mapData[mapWidth][mapHeight] = {};
 
 //Quad Data
-#define mapQuadWidth 8
-#define mapQuadHeight 8
+//#define mapQuadWidth 8
+//#define mapQuadHeight 8
 byte mapQuads[mapMatrixHeight][mapMatrixWidth] =  //These are the quad-tile references that make up the map
 {
   { 0,  1,  2,  3,  4,  5,  6,  7},
@@ -80,7 +80,7 @@ byte quadBuffer[4] = {0,0,0,0};
 #define quadHeight 8
 #define quadWidthDouble quadWidth << 1
 #define quadHeightDouble quadHeight << 1
-#define yQuadHeight mapQuadHeight << 1
+//#define yQuadHeight quadHeight << 1
 
 //Tile Data
 struct
@@ -160,12 +160,12 @@ void FillQuadBuffer()
   byte quadX = characters.quadPosX[followIndex];
   byte quadY = characters.quadPosY[followIndex];
 
-  if (quadX + 1 == mapQuadWidth)
+  if (quadX + 1 == quadWidth)
     byte_x = 0;
   else
     byte_x = quadX + 1;
 
-  if (quadY + 1 == mapQuadHeight)
+  if (quadY + 1 == quadHeight)
     byte_y = 0;
   else
     byte_y = quadY + 1;
@@ -220,27 +220,32 @@ void LoadQuadrant(byte quadIndex, byte quad)
   }
 }
 
+void UpdatePlayerOnMiniMap(void)
+{
+  MiniMapHighlightX = characters.quadPosX[followIndex];
+  MiniMapHighlightY = characters.quadPosY[followIndex];
+}
 
 void LoadMapQuads()
 {
   byte x;
   FillQuadBuffer();
   for (x = 0; x < 4; ++x)
-    LoadQuadrant(quadBuffer[x], x);
+    LoadQuadrant(quadBuffer[x], x);  
 }
 
 byte GetPlayerQuad() //Returns the viewport quadrant of the player character
 {
   if (characters.posX[followIndex] < quadWidthDouble)
   {
-    if (characters.posY[followIndex] < yQuadHeight)
+    if (characters.posY[followIndex] < quadHeightDouble)
       return 0;
     else
       return 2;
   }
   else
   {
-    if (characters.posY[followIndex] < yQuadHeight)
+    if (characters.posY[followIndex] < quadHeightDouble)
       return 1;
     else
       return 3;
@@ -278,7 +283,6 @@ byte GetQuadInRelation(sbyte v, sbyte h)
   }
   return (mapQuads[int_y][int_x]);  
 }
-
 
 //Directional data for finding a relative quad
 //left -UP DOWN LEFT RIGHT right UP DOWN LEFT RIGHT
@@ -362,7 +366,7 @@ void InitializeMapData()
     characters.posX[byte_i] = byte_i;
     characters.posY[byte_i] = byte_i;
     characters.quadPosX[byte_i] = byte_i;
-    characters.quadPosX[byte_i] = byte_i;
+    characters.quadPosY[byte_i] = byte_i;
     characters.visible[byte_i] = false;
     characters.collide[byte_i] = false;
   }
@@ -387,6 +391,7 @@ void InitializeMapData()
   characters.quadPosY[2]  = 0;
 
   LoadMapQuads();
+  UpdatePlayerOnMiniMap();
 }
 
 void wrapX(sbyte *posX) //Used in map positions
@@ -675,8 +680,7 @@ void MoveCharacter(byte index, byte dir)
       byte edgeCheckX = characters.posX[index] % 16;
       byte edgeCheckY = characters.posY[index] % 16;
       if(changedQuads)
-      {}
-        //DrawMiniMap();
+        UpdatePlayerOnMiniMap();
 
       switch (dir)
       {
@@ -708,27 +712,24 @@ void MoveCharacter(byte index, byte dir)
 
 void DrawCharacterCoordinates(byte index)
 {
-  sprintf(strTemp,"(%2d,%2d)@", characters.posX[index], characters.posY[index]);
+  byte posX = characters.posX[index];
+  byte posY = characters.posY[index];
+  
+  if (posX >= quadWidth * 2)
+    posX -= quadWidth * 2;
+  posX += quadWidth*2*characters.quadPosX[index];
+  
+  if (posY >= quadHeight * 2)
+    posY -= quadHeight * 2;
+  posY += quadHeight*2*characters.quadPosY[index];
+  
+  sprintf(strTemp,"(%3i,%3i)@", posX, posY);
   PrintString(strTemp, viewportPosX + 6, viewportPosY - 1, true, false);
 }
 
 //#define MiniMapX 22
 //#define MiniMapY 7
 //#define MiniMapSize 16
-void DrawMiniMap_(void)
-{
-  byte x, y, tile;
-  DrawBorder("Minimap@", MiniMapX, MiniMapY, mapMatrixWidth + 2, mapMatrixHeight + 2, true);
-  for (y = 0; y < mapMatrixHeight; ++y)
-    for (x = 0; x < mapMatrixWidth; ++x)
-    {
-      tile = mapQuads[y][x];
-      tile = (tile << 1) + ((tile >> 3) << 4);
-
-      SetChar(tile, x + MiniMapX + 1, y + MiniMapY + 1);
-    }
-  SetChar('X', characters.quadPosX[followIndex] + MiniMapX + 1, characters.quadPosY[followIndex] + MiniMapY + 1);
-}
 
 void LoadMap()
 {
@@ -778,7 +779,8 @@ screenName MapUpdate()
       if (InputFire())
       {
         ClearScreen();
-        DrawMiniMap_();
+        UpdatePlayerOnMiniMap();
+        DrawMiniMap(true);
         WaitForInput();
         DrawScreen();
       }

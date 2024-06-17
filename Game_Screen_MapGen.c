@@ -476,7 +476,7 @@ void RotateAround()
   {
     Rotate(left);
     Rotate(up);
-    DrawMiniMap();
+    DrawMiniMap(false);
   }
 }
 
@@ -499,7 +499,7 @@ void GenerateMap(byte seed)
 {
   byte y;
   ClearMap();
-  DrawMiniMap();
+  DrawMiniMap(false);
   srand(seed);
   for ( y = continentsBase; y > 0; --y)
   {
@@ -558,7 +558,7 @@ screenName Update_MapGen()
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   ClearMap();
   //DrawMapGenTiles();
-  DrawMiniMap();
+  DrawMiniMap(false);
   GetSeed();
   //StoreMap();
   //ClearMap();

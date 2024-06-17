@@ -20,11 +20,13 @@ extern byte mapQuads[mapMatrixHeight][mapMatrixWidth];
 extern byte followIndex;
 
 void Demo(void);
-void DrawMiniMap(void);
+void DrawMiniMap(bool highlightPlayer);
 void WaitForInput(void);
 
 #define MiniMapX 0
 #define MiniMapY 0
+extern byte MiniMapHighlightX;
+extern byte MiniMapHighlightY;
 
 //Title
 screenName Update_Title(void);
