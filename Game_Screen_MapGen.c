@@ -172,7 +172,7 @@ void clampPoint(struct vector2 *clmpt)
     clmpt->y = 0;
 }
 
-struct vector2 pointAdj;
+struct vector2 pointAdj = {};
 byte countAdjacent(byte x, byte y)
 {
   byte i = 0;

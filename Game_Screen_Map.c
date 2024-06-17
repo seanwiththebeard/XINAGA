@@ -107,7 +107,7 @@ struct
   sbyte posY[charactersCount];
   sbyte quadPosX[charactersCount];
   sbyte quadPosY[charactersCount];
-} characters;
+}characters = {};
 
 void CameraFollow()
 {
@@ -180,10 +180,10 @@ void FillQuadBuffer()
   quadBuffer[2] = mapQuads[byte_y][quadX];
   quadBuffer[3] = mapQuads[byte_y][byte_x];
 }
-static const byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
-static const byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
-static const byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
-static const byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
+byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
+byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
+byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
+byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
 
 void LoadQuadrant(byte quadIndex, byte quad)
 {
