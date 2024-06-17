@@ -5,18 +5,15 @@
 //#pragma code-name (push, "LC")
 #endif
 
-#define height 11
-#define width 11
-#define posX 1
-#define posY 1
-#define pointsCount 12
+#define pointsBase 48
+#define continentsBase 4
 //#define grass 0x88
 //#define water 0x84
 #define grass 36
 #define water 34
-void DrawMapGenTiles(void);
+//void DrawMapGenTiles(void);
 byte countContinents = 0;
-byte map[height][width] = {};
+//byte map[height][width] = {};
 
 /* World Seed Parameters
 (Eight flags building a byte)
@@ -165,13 +162,13 @@ void clearPoints()
 void clampPoint(struct vector2 *clmpt)
 {
   if (clmpt->x < 0)
-    clmpt->x = width - 1;
+    clmpt->x = mapMatrixWidth - 1;
   if (clmpt->y < 0)
-    clmpt->y = height - 1;
+    clmpt->y = mapMatrixHeight - 1;
 
-  if (clmpt->x >= width)
+  if (clmpt->x >= mapMatrixWidth)
     clmpt->x == 0;
-  if (clmpt->y >= height)
+  if (clmpt->y >= mapMatrixHeight)
     clmpt->y = 0;
 }
 
@@ -198,7 +195,7 @@ byte countAdjacent(byte x, byte y)
     clampPoint(&pointAdj);
     adjX[z] = pointAdj.x;
     adjY[z] = pointAdj.y;
-    if (map[adjY[z]][adjX[z]] != water)
+    if (mapQuads[adjY[z]][adjX[z]] != water)
       ++i;
   }
   return i;
@@ -268,19 +265,26 @@ void addRandomPoints(byte count, int index)
   byte x;
   for (x = 0; x < count; ++x)
   {
-    byte h = rand() % height;
-    byte w = rand() % width;
+    byte h = rand() % mapMatrixHeight;
+    byte w = rand() % mapMatrixWidth;
 
-    while (map[h][w] != water)
+    while (mapQuads[h][w] != water)
     {
-      h = rand() % height;
-      w = rand() % width;
+      h = rand() % mapMatrixHeight;
+      w = rand() % mapMatrixWidth;
     }
     createPoint(w, h);
-    map[h][w] = index;
+    mapQuads[h][w] = index;
     //SetChar(index, posX + w, posY + h);
     //SetColor(index + 2, posX + w, posY + h);
   }
+}
+
+void DrawPoint(byte x, byte y)
+{
+  byte tile = mapQuads[y][x];
+  tile = (tile << 1) + ((tile >> 3) << 4);
+  SetChar(tile, x + MiniMapX + 1, y + MiniMapY + 1);
 }
 
 void attachRandomPoint(byte index)
@@ -306,28 +310,28 @@ void attachRandomPoint(byte index)
       case 0:
         --y;
         if (y < 0)
-          y = height - 1;
+          y = mapMatrixHeight - 1;
         break;
       case 1:
         ++y;
-        if (y >= height)
+        if (y >= mapMatrixHeight)
           y = 0;
         break;
       case 2:
         --x;
         if (x < 0)
-          x = width - 1;
+          x = mapMatrixWidth - 1;
         break;
       case 3:
         ++x;
-        if (x >= width)
+        if (x >= mapMatrixWidth)
           x = 0;
         break;
       default:
         break;
     }
 
-    if (map[y][x] == water)
+    if (mapQuads[y][x] == water)
       exit = true;
 
     if (exit)
@@ -355,11 +359,13 @@ void attachRandomPoint(byte index)
     }
   }
   createPoint(x, y);
-  map[y][x] = index;
-  DrawTileIndex = index;
-  DrawTileX = x;
-  DrawTileY = y;
-  DrawTileDirect();
+  mapQuads[y][x] = index;
+  //DrawTileIndex = index;
+  //DrawTileX = x;
+  //DrawTileY = y;
+  //DrawTileDirect();
+  DrawPoint(x,y);
+  //DrawMiniMap();
   //SetChar(index, posX + x, posY + y);
   //SetColor(index + 2, posX + x, posY + y);  
 }
@@ -379,12 +385,7 @@ void attachRandomPoint(byte index)
     }
 }*/
 
-#define MiniMapX 0
-#define MiniMapY 0
-#define MiniMapSizeX (width << 1)
-#define MiniMapSizeY (height << 1)
-
-void DrawMapGenTiles(void)
+/*void DrawMapGenTiles(void)
 {
   byte x, y;
   DrawBorder("MapGen@", MiniMapX, MiniMapY, MiniMapSizeX + 2, MiniMapSizeY + 2, true);
@@ -392,12 +393,12 @@ void DrawMapGenTiles(void)
   for (y = 0; y < height; ++y)
     for (x = 0; x < width; ++x)
     {
-      DrawTileIndex = map[y][x];
+      DrawTileIndex = mapQuads[y][x];
       DrawTileX = x;
       DrawTileY = y;
       DrawTileDirect();
     }
-}
+}*/
 
 
 void createContinent(byte size)
@@ -416,52 +417,51 @@ void createContinent(byte size)
   }
   ++countContinents;
   clearPoints();
-  //DrawMapGenTiles();
 }
 
 void Rotate(direction dir)
 {
   byte h;
   byte w;
-  byte tempRow[width];
-  byte tempCol[height];
+  byte tempRow[mapMatrixWidth];
+  byte tempCol[mapMatrixHeight];
   switch (dir)
   {
     case up:
-      for (w = 0; w < width; ++w)
-        tempRow[w] = map[height - 1][w];
-      for (h = height - 1; h > 0; --h)  
-        for (w = 0; w < width; ++w)
-          map[h][w] = map[h - 1][w];
-      for (w = 0; w < width; ++w)
-        map[0][w] = tempRow[w];
+      for (w = 0; w < mapMatrixWidth; ++w)
+        tempRow[w] = mapQuads[mapMatrixHeight - 1][w];
+      for (h = mapMatrixHeight - 1; h > 0; --h)  
+        for (w = 0; w < mapMatrixWidth; ++w)
+          mapQuads[h][w] = mapQuads[h - 1][w];
+      for (w = 0; w < mapMatrixWidth; ++w)
+        mapQuads[0][w] = tempRow[w];
       break;
     case down:
-      for (w = 0; w < width; ++w)
-        tempRow[w] = map[0][w];
-      for (h = 0; h < height; ++h)  
-        for (w = 0; w < width; ++w)
-          map[h][w] = map[h + 1][w];
-      for (w = 0; w < width; ++w)
-        map[height - 1][w] = tempRow[w];
+      for (w = 0; w < mapMatrixWidth; ++w)
+        tempRow[w] = mapQuads[0][w];
+      for (h = 0; h < mapMatrixHeight; ++h)  
+        for (w = 0; w < mapMatrixWidth; ++w)
+          mapQuads[h][w] = mapQuads[h + 1][w];
+      for (w = 0; w < mapMatrixWidth; ++w)
+        mapQuads[mapMatrixHeight - 1][w] = tempRow[w];
       break;
     case left:
-      for (h = 0; h < height; ++h)
-        tempCol[h] = map[h][width - 1];
-      for (h = 0; h < height; ++h) 
-        for (w = width - 1; w > 0; --w)
-          map[h][w] = map[h][w - 1];
-      for (h = 0; h < height; ++h)
-        map[h][0] = tempCol[h];
+      for (h = 0; h < mapMatrixHeight; ++h)
+        tempCol[h] = mapQuads[h][mapMatrixWidth - 1];
+      for (h = 0; h < mapMatrixHeight; ++h) 
+        for (w = mapMatrixWidth - 1; w > 0; --w)
+          mapQuads[h][w] = mapQuads[h][w - 1];
+      for (h = 0; h < mapMatrixHeight; ++h)
+        mapQuads[h][0] = tempCol[h];
       break;
     case right:
-      for (h = 0; h < height; ++h)
-        tempCol[h] = map[h][0];
-      for (h = 0; h < height; ++h) 
-        for (w = 0; w < width; ++w)
-          map[h][w] = map[h][w + 1];
-      for (h = 0; h < height; ++h)
-        map[h][width - 1] = tempCol[h];
+      for (h = 0; h < mapMatrixHeight; ++h)
+        tempCol[h] = mapQuads[h][0];
+      for (h = 0; h < mapMatrixHeight; ++h) 
+        for (w = 0; w < mapMatrixWidth; ++w)
+          mapQuads[h][w] = mapQuads[h][w + 1];
+      for (h = 0; h < mapMatrixHeight; ++h)
+        mapQuads[h][mapMatrixWidth - 1] = tempCol[h];
       break;
     default:
       break;
@@ -472,11 +472,11 @@ void Rotate(direction dir)
 void RotateAround()
 {
   byte y;
-  for (y = 0; y < height; ++y)
+  for (y = 0; y < mapMatrixHeight; ++y)
   {
     Rotate(left);
     Rotate(up);
-    DrawMapGenTiles();
+    DrawMiniMap();
   }
 }
 
@@ -486,10 +486,11 @@ void ClearMap()
   clearPoints();
   countContinents = 0;
   
-  for (y = 0; y < height; ++y)
-    for (x = 0; x < width; ++x)
+  for (y = 0; y < mapMatrixHeight; ++y)
+    for (x = 0; x < mapMatrixWidth; ++x)
     {
-      map[y][x] = water;
+      mapQuads[y][x] = water;
+      DrawPoint(x, y);
       //SetChar(map[y][x], posX + x, posY + y);
     }
 }
@@ -498,27 +499,17 @@ void GenerateMap(byte seed)
 {
   byte y;
   ClearMap();
-  DrawMapGenTiles();
+  DrawMiniMap();
   srand(seed);
-  for ( y = 4; y > 0; --y)
+  for ( y = continentsBase; y > 0; --y)
   {
-    createContinent(16 +  8*(y / 4));
+    createContinent(pointsBase -  8*(y - 1));
   }
+  //DrawMiniMap();
   //DrawMapGenTiles();
   //RotateAround();
   //sprintf(strTemp, "Done@");
   //WriteLineMessageWindow(strTemp, 0);
-}
-
-void StoreMap()
-{
-  byte x, y;
-
-  for (y = 0; y < height; ++y)
-    for (x = 0; x < width; ++x)
-    {
-      mapQuads[y][x] = map[y][x];
-    }
 }
 
 #define consolePosX  1
@@ -566,9 +557,10 @@ screenName Update_MapGen()
 {
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   ClearMap();
-  DrawMapGenTiles();
+  //DrawMapGenTiles();
+  DrawMiniMap();
   GetSeed();
-  StoreMap();
-  ClearMap();
+  //StoreMap();
+  //ClearMap();
   return Map;
 }

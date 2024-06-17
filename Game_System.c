@@ -12,6 +12,19 @@ PartyDef Party = {0};
 
 uint16_t randseed = 0;
 
+void DrawMiniMap(void)
+{
+  byte x, y, tile;
+  DrawBorder("Minimap@", MiniMapX, MiniMapY, mapMatrixWidth + 2, mapMatrixHeight + 2, true);
+  for (y = 0; y < mapMatrixHeight; ++y)
+    for (x = 0; x < mapMatrixWidth; ++x)
+    {
+      tile = mapQuads[y][x];
+      tile = (tile << 1) + ((tile >> 3) << 4);
+      SetChar(tile, x + MiniMapX + 1, y + MiniMapY + 1);
+    }
+}
+
 byte RollDice(byte count, byte diceSize)
 {
   byte result = 0;

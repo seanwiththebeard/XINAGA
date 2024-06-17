@@ -14,10 +14,17 @@
 #define Scenario 7
 
 #define mapMatrixWidth 16
-#define mapMatrixHeight 9
+#define mapMatrixHeight 16
 extern byte mapQuads[mapMatrixHeight][mapMatrixWidth];
 
+extern byte followIndex;
+
 void Demo(void);
+void DrawMiniMap(void);
+void WaitForInput(void);
+
+#define MiniMapX 0
+#define MiniMapY 0
 
 //Title
 screenName Update_Title(void);

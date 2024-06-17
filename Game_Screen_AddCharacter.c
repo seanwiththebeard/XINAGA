@@ -115,7 +115,7 @@ void MenuGetClassPrimeStats()
 void WaitForInput(void)
 {
   bool exit = false;
-  WriteLineMessageWindow("Press space to continue@", 0);
+  SetLineMessageWindow("Press space to continue@", 0);
   
   while (!exit)
   {

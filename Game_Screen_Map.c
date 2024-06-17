@@ -23,9 +23,6 @@ byte GetPlayerQuad(); //Returns the viewport quadrant of the player character
 byte GetQuadInRelation(sbyte v, sbyte h);
 void QuadScroll(byte direction);
 
-//Minimap
-void DrawMiniMap(void);
-
 //Globals
 #define consolePosX 1
 #define consolePosY 18
@@ -105,7 +102,7 @@ struct
   sbyte posY[charactersCount];
   sbyte quadPosX[charactersCount];
   sbyte quadPosY[charactersCount];
-} characters = {};
+} characters;
 
 void CameraFollow()
 {
@@ -678,7 +675,8 @@ void MoveCharacter(byte index, byte dir)
       byte edgeCheckX = characters.posX[index] % 16;
       byte edgeCheckY = characters.posY[index] % 16;
       if(changedQuads)
-        DrawMiniMap();
+      {}
+        //DrawMiniMap();
 
       switch (dir)
       {
@@ -714,27 +712,22 @@ void DrawCharacterCoordinates(byte index)
   PrintString(strTemp, viewportPosX + 6, viewportPosY - 1, true, false);
 }
 
-#define MiniMapX 22
-#define MiniMapY 7
-#define MiniMapSize 16
-void DrawMiniMap(void)
+//#define MiniMapX 22
+//#define MiniMapY 7
+//#define MiniMapSize 16
+void DrawMiniMap_(void)
 {
-  byte x, y;
-  DrawBorder("Minimap@", MiniMapX, MiniMapY, MiniMapSize + 2, MiniMapSize + 2, true);
-  SetTileOrigin(MiniMapX + 1, MiniMapY + 1);
-  for (y = 0; y < 8; ++y)
-    for (x = 0; x < 8; ++x)
+  byte x, y, tile;
+  DrawBorder("Minimap@", MiniMapX, MiniMapY, mapMatrixWidth + 2, mapMatrixHeight + 2, true);
+  for (y = 0; y < mapMatrixHeight; ++y)
+    for (x = 0; x < mapMatrixWidth; ++x)
     {
-      if(x == characters.quadPosX[followIndex] && y == characters.quadPosY[followIndex])
-        DrawTileIndex = characters.tile[followIndex];
-      else
-        DrawTileIndex = mapQuads[y][x];
-      DrawTileX = x;
-      DrawTileY = y;
-      DrawTileDirect();
+      tile = mapQuads[y][x];
+      tile = (tile << 1) + ((tile >> 3) << 4);
+
+      SetChar(tile, x + MiniMapX + 1, y + MiniMapY + 1);
     }
-    
-  SetTileOrigin(viewportPosX, viewportPosY);
+  SetChar('X', characters.quadPosX[followIndex] + MiniMapX + 1, characters.quadPosY[followIndex] + MiniMapY + 1);
 }
 
 void LoadMap()
@@ -742,23 +735,32 @@ void LoadMap()
   InitializeMapData();
 }
 
-screenName MapUpdate()
+void DrawScreen()
 {
-  bool exit = false;
   ClearScreen();
+  memset(&viewportBuffer, EmptyTile, viewportSize);
+  memset(&viewportBufferLast, EmptyTile, viewportSize);
   DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   DrawCharStats();
+  DrawEntireMap();
+}
+
+screenName MapUpdate()
+{
+  bool exit = false;
+  //ClearScreen();
+  //DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+  //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  //DrawCharStats();
 
   //Initialize Viewport
-  memset(&viewportBuffer, EmptyTile, viewportSize);
-  memset(&viewportBufferLast, EmptyTile, viewportSize);
+  
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
-  DrawEntireMap();
-  
-  DrawMiniMap();
-
+  DrawScreen();
+  //DrawEntireMap();
+ 
   while (!exit)
   {
     UpdateInput();
@@ -774,7 +776,14 @@ screenName MapUpdate()
       if (InputRight())
         Dir = right;
       if (InputFire())
-        exit = true;
+      {
+        ClearScreen();
+        DrawMiniMap_();
+        WaitForInput();
+        DrawScreen();
+      }
+        
+        //exit = true;
       if (Dir < 4)
         MoveCharacter(followIndex, Dir);        
     }
