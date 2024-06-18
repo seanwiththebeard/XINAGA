@@ -3,6 +3,30 @@
 #if defined(__APPLE2__)
 #pragma code-name (push, "LC")
 #endif
+
+//Charset Layout C64
+//00-32 - Character Classes (8x 16x16 tiles)
+//33-95 - Numbers, symbols, lowercase characters
+//96-127 - NPC/Monsters (8x 16x16 tiles)
+//128-191 - Map Tiles (16x 16x16 tiles)
+//192-223 - Uppercase Characters
+//224-239 - Minimap
+//240-255 - Interface
+
+//Charset Layout Apple II (Swap NPCs and Uppercase from C64)
+//00-32 - Character Classes (8x 16x16 tiles)
+//33-95 - Numbers, symbols, lowercase characters
+//96-127 - Uppercase Characters
+//128-191 - Map Tiles (16x 16x16 tiles)
+//192-223 - NPC/Monsters (8x 16x16 tiles)
+//224-239 - Minimap
+//240-255 - Interface
+
+//Overworld Tileset
+//Tiles (Terrain):	Water Grass Sand Swamp Snow Tree Mountain Ice
+//Tiles (Landmarks):	Castle Town Archive Outpost Dungeon Tower Forrest Dock
+//NPCs:			Monster_A_B_C_D Treasure Gateway Ship Horse
+
 //Prototypes
 //      Map Functions
 void InitializeMapData();
