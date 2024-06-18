@@ -27,6 +27,16 @@
 //Tiles (Landmarks):	Castle Town Archive Outpost Dungeon Tower Forrest Dock
 //NPCs:			Monster_A_B_C_D Treasure Gateway Ship Horse
 
+//Town/Castle Tileset
+//Tiles (Terrain):	
+//Tiles (Landmarks):	
+//NPCs:			
+
+//Dungeon/Tower Tileset
+//Tiles (Terrain):	
+//Tiles (Landmarks):	
+//NPCs:			
+
 //Prototypes
 //      Map Functions
 void InitializeMapData();
