@@ -2,7 +2,7 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "LOWCODE")
+//#pragma code-name (push, "LOWCODE")
 #endif
 
 screenName nextScreen = EditParty;
@@ -328,7 +328,3 @@ screenName DrawAddCharacterScreen()
   ClearScreen();
   return nextScreen;
 }
-
-#if defined(__APPLE2__)
-#pragma code-name (pop)
-#endif
