@@ -452,6 +452,20 @@ void DrawTileDirect()
   SetChar(indexes[3], DrawTileX + MapOriginX + 1, DrawTileY + 1 + MapOriginY);*/
 }
 
+void DrawTileDirectXY(byte index, byte x, byte y)
+{
+  byte tempX = MapOriginX;
+  byte tempY = MapOriginY;
+  
+  SetTileOrigin(x, y);
+  DrawTileIndex = index;
+  DrawTileX = 0;
+  DrawTileY = 0;
+  DrawTileDirect();
+  
+  SetTileOrigin(tempX, tempY);
+}
+
 byte arrowA = 0;
 byte arrowB = 0;
 byte arrowX = 0;

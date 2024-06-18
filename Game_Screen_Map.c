@@ -37,6 +37,11 @@
 //Tiles (Landmarks):	
 //NPCs:			
 
+//Combat Tileset
+//Tiles (Terrain):	
+//Tiles (Landmarks):	
+//NPCs:			
+
 //Prototypes
 //      Map Functions
 void InitializeMapData();

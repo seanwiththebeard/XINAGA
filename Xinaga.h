@@ -87,6 +87,7 @@ extern byte DrawTileY;
 extern byte DrawTileIndex;
 void DrawTileBuffer();
 void DrawTileDirect();
+void DrawTileDirectXY(byte index, byte x, byte y);
 void ReadyArrow(byte x, byte y);
 void DrawArrow(byte x, byte y);
 void ClearArrow(void);

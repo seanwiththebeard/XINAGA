@@ -255,10 +255,11 @@ void DrawCharStatus(byte characterIndex)
   struct playerChar *PlayerChar = getPartyMember(characterIndex);
 
   DrawBorder(PlayerChar->NAME, CharStatPosX - 1, statY - 1, COLS - CharStatPosX + 1, 2 + CharStatRows, true);
+  DrawTileDirectXY(PlayerChar->CLASS, CharStatPosX, statY);
   ConsoleBufferReset();
   ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
   ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
-  ConsoleBufferPrint(CharStatPosX, statY);
+  ConsoleBufferPrint(CharStatPosX + 2, statY);
   sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
   PrintString(strTemp, CharStatPosX + 9, statY + 1, true, false);
   ConsoleBufferReset();
