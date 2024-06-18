@@ -2,7 +2,7 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-//#pragma code-name (push, "LOWCODE")
+#pragma code-name (push, "LOWCODE")
 #endif
 
 screenName nextScreen = EditParty;

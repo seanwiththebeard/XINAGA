@@ -1,6 +1,8 @@
 #include "Xinaga.h"
 #include "GameData.h"
-
+#if defined(__APPLE2__)
+#pragma code-name (push, "LC")
+#endif
 //Prototypes
 //      Map Functions
 void InitializeMapData();
@@ -788,11 +790,13 @@ void ActionMenu()
       break;
     case 4:
       exitScreen = true;
+      break;
     case 5:
       ClearScreen();
       DrawCharset();
       WaitForInput();
       DrawScreen();
+      break;
   }
 }
 screenName MapUpdate()
