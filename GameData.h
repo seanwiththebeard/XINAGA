@@ -51,7 +51,7 @@ screenName Update_Scenario(void);
 
 void TickMoonPhase(void);
 
-//BFRPG
+//RPG Data
 byte RollDice(byte count, byte diceSize);
 typedef struct
 {
@@ -77,7 +77,7 @@ typedef struct
   char NAME[12]; 
   byte HITDICE;
 }ClassDescriptionDef;
-extern ClassDescriptionDef ClassDescription[4];
+extern ClassDescriptionDef ClassDescription[8];
 
 extern sbyte AbilityModifier[];
 

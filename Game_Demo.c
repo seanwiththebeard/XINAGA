@@ -16,12 +16,17 @@ RaceDescriptionDef RaceDescription[4] =
 };
 
 
-ClassDescriptionDef ClassDescription[4]= 
+ClassDescriptionDef ClassDescription[8]= 
 {
   {"Fighter@", 8},
   {"Wizard@", 4}, 
   {"Cleric@", 6}, 
   {"Thief@", 4},
+  {"Ranger@", 8},
+  {"Monk@", 6},
+  {"Bard@", 4},
+  {"Construct@", 8} // Never levels up, strong early on but expensive to upgrade stats
+  
 };
 
 sbyte AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};

@@ -24,16 +24,7 @@ byte GetQuadInRelation(sbyte v, sbyte h);
 void QuadScroll(byte direction);
 
 //Globals
-#define consolePosX 1
-#define consolePosY 18
-#define consoleWidth 28
-#define consoleHeight 5
-//#define consoleDelay 1
-#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
-#define menuPosY consolePosY
-#define menuWidth 8
-#define menuHeight consoleHeight
-#define menuCount 5
+
 
 //Viewport
 #define viewportPosX 1
@@ -732,15 +723,29 @@ void DrawCharacterCoordinates(byte index)
   PrintString(strTemp, viewportPosX + 6, viewportPosY - 1, true, false);
 }
 
-//#define MiniMapX 22
-//#define MiniMapY 7
-//#define MiniMapSize 16
+void DrawCharset()
+{
+  byte x, y;
+  DrawBorder("Charset@", viewportPosX - 1, viewportPosY - 1, 16+ 2, 16 + 2, true);
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 16; ++x)
+      SetChar(x + y*16, x + viewportPosX, y + viewportPosY);
+}
 
 void LoadMap()
 {
   InitializeMapData();
 }
-
+#define consolePosX 1
+#define consolePosY 18
+#define consoleWidth 28
+#define consoleHeight 5
+//#define consoleDelay 1
+#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
+#define menuPosY consolePosY - 1
+#define menuWidth 8
+#define menuCount 6
+#define menuHeight menuCount
 void DrawScreen()
 {
   ClearScreen();
@@ -762,6 +767,7 @@ void ActionMenu()
   SetMenuItem(2, "Party@");
   SetMenuItem(3, "Map@");
   SetMenuItem(4, "Exit@");
+  SetMenuItem(5, "Draw Charset@");
   
   action = GetMenuSelection();
   ClearMenu();
@@ -782,6 +788,11 @@ void ActionMenu()
       break;
     case 4:
       exitScreen = true;
+    case 5:
+      ClearScreen();
+      DrawCharset();
+      WaitForInput();
+      DrawScreen();
   }
 }
 screenName MapUpdate()
