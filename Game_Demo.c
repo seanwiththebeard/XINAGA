@@ -7,7 +7,7 @@
 
 screenName currentScreen = EditParty;
 
-RaceDescriptionDef RaceDescription[4] = 
+const RaceDescriptionDef const RaceDescription[4] = 
 {
   {"Human@", 255},
   {"Elf@", 6}, 
@@ -16,7 +16,7 @@ RaceDescriptionDef RaceDescription[4] =
 };
 
 
-ClassDescriptionDef ClassDescription[8]= 
+const ClassDescriptionDef const ClassDescription[8]= 
 {
   {"Fighter@", 8},
   {"Wizard@", 4}, 
@@ -29,7 +29,7 @@ ClassDescriptionDef ClassDescription[8]=
   
 };
 
-sbyte AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
+const sbyte const AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 
 void SwitchScreen(screenName screen)
 {

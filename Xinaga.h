@@ -40,8 +40,8 @@ typedef int8_t sbyte;	// 8-bit signed
 extern uint16_t randseed;
 byte ReadBit(byte byteToRead, char bit);
 void LoadMap();
-extern byte charset[2048];
-extern byte attributeset[256];
+extern const byte const charset[2048];
+extern const byte const attributeset[256];
 extern byte* CharRam;
 
 

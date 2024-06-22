@@ -70,16 +70,16 @@ typedef struct
   byte
     	HITDICEMAX;
 }RaceDescriptionDef;
-extern RaceDescriptionDef RaceDescription[4];
+extern const RaceDescriptionDef const RaceDescription[4];
 
 typedef struct
 {
   char NAME[12]; 
   byte HITDICE;
 }ClassDescriptionDef;
-extern ClassDescriptionDef ClassDescription[8];
+extern const ClassDescriptionDef const ClassDescription[8];
 
-extern sbyte AbilityModifier[];
+extern const sbyte const AbilityModifier[];
 
 //Lists
 	//Roster
