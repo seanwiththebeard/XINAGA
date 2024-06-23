@@ -8,7 +8,14 @@
 
 byte strTemp[ConsoleBufferLength] = {};
 
-PartyDef Party = {0};
+struct
+{
+  int
+  	GOLD;
+  byte
+  	CARRYING_WEIGHT,
+  	CARRYING_CAPACITY; 
+}Party = {};
 
 uint16_t randseed = 0;
 

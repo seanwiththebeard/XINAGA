@@ -53,15 +53,7 @@ void TickMoonPhase(void);
 
 //RPG Data
 byte RollDice(byte count, byte diceSize);
-typedef struct
-{
-  int
-  	GOLD;
-  byte
-  	CARRYING_WEIGHT,
-  	CARRYING_CAPACITY;  
-}PartyDef;
-extern PartyDef Party;
+extern struct Party;
 
 typedef struct 
 {
@@ -90,9 +82,8 @@ typedef struct playerChar
 {
   struct playerChar *next;
   int	EXP;
-  bool 	inParty;
   char 	NAME[16];
-  
+  bool 	inParty;
   byte	HP,
   	HPMAX,
   	STR,
@@ -106,7 +97,8 @@ typedef struct playerChar
   	HITDICE,
   	LEVEL,
   	CARRYING_WEIGHT,
-  	CARRYING_CAPACITY;
+  	CARRYING_CAPACITY,
+  	HOMEWORLD;
 };
 
 struct playerChar *getPlayerChar(byte index);
