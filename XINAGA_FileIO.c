@@ -29,6 +29,11 @@ void DiskSave(char filename[], int source, int length)
   fwrite((int*)source, length, 1, filepointer);
   fclose(filepointer);
   #endif
+  #if defined(__NES__)
+  filename;
+  source;
+  length;
+  #endif
 }
 
 void DiskLoad(char filename[], int dest)
@@ -51,6 +56,10 @@ void DiskLoad(char filename[], int dest)
   fseek(filepointer, 0, SEEK_SET); //Move the pointer back to the beginning
   fread((int*)dest, length, 1, filepointer); //Copy the entire length to our destination
   fclose(filepointer);
+  #endif
+  #if defined(__NES__)
+  filename;
+  dest;
   #endif
 }
 

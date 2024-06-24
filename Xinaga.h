@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include <peekpoke.h>
 
-#define COLS 40
 
 #if defined(__APPLE2__)
+#define COLS 40
 #define ROWS 24
 #define STROBE(addr) __asm__ ("sta %w", addr)
 #pragma warn (remap-zero, push, off)
@@ -20,7 +20,13 @@
 
 #if defined(__C64__)
 #include <cbm_petscii_charmap.h>
+#define COLS 40
 #define ROWS 25
+#endif
+
+#if defined (__NES__)
+#define COLS 32
+#define ROWS 30
 #endif
 
 typedef uint8_t byte;
@@ -58,7 +64,7 @@ void SetBorder(byte color);
 void SetBG(byte color);
 #endif
 
-extern int YColumnIndex[25];
+extern int YColumnIndex[ROWS];
 extern byte* MapSetInfo;
 
 //	Drawing

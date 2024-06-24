@@ -4,12 +4,14 @@
 //#pragma code-name (push, "LOWCODE")
 #endif
 
-int YColumnIndex[25] = {
-  0, 40, 80, 120, 160,
-  200, 240, 280, 320, 360,
-  400, 440, 480, 520, 560,
-  600, 640, 680, 720, 760,
-  800, 840, 880, 920, 960};
+int YColumnIndex[ROWS] = {};
+
+void getYCols()
+{
+  byte y;
+  for (y = 0; y < ROWS; ++y)
+    YColumnIndex[y] = y * ROWS;
+}
 
 const byte const charset[2048];
 
@@ -40,6 +42,12 @@ void ScreenEnable(void)
   POKE(0xD011, PEEK(0xD011)|16);
 }
 #endif
+
+#if defined(__NES__)
+byte *ScreenChars = (byte *)0x2000;
+byte *ScreenColors = (byte *)0x23C0;
+#endif
+
 //byte  MapSet[];
 byte* CharRam = 0;
 //byte* MapSetInfo = (byte*) &MapSet[0];
@@ -92,9 +100,14 @@ void raster_wait(byte line)
   #if defined(__C64__)
   while ((RASTERCOUNT[0] < line)){}
   #endif
+  
   #if defined(__APPLE2__)
   byte x;
   while (++x < line){};
+  #endif
+  
+  #if defined(__NES__)
+  line;
   #endif
 }
 
@@ -140,7 +153,8 @@ void InitializeGraphics(void)
 {
   #if defined(__APPLE2__)
   byte y = 0;
-  ClearScreen();
+  getYCols();
+  ClearScreen();  
   STROBE(0xc052); // turn off mixed-mode
   STROBE(0xc054); // page 1
   STROBE(0xc057); // hi-res
@@ -158,7 +172,7 @@ void InitializeGraphics(void)
   byte vicreg = 0x00;
   int screenposition;
   int* regd018 = (int*)0xD018;
-
+  getYCols();
   CharRam = 0;
 
   if (bufferselect)
@@ -196,6 +210,10 @@ void InitializeGraphics(void)
   //POKE (0x0288, screenposition / 256);
   ClearScreen();
   //SetMulticolors(11, 15);
+  #endif
+  
+  #if defined(__NES__)
+  getYCols();
   #endif
 }
 
@@ -270,6 +288,9 @@ void SetColor(byte index, byte x, byte y)
   #if defined(__C64__)
   ScreenColors[x + YColumnIndex[y]] = index;
   #endif
+  #if defined(__NES__)
+  ScreenColors[(x / 2) + ((y / 2) * 8)] = index;
+  #endif
 }
 
 void SetCharBuffer(byte index, byte x, byte y)
@@ -281,6 +302,9 @@ void SetCharBuffer(byte index, byte x, byte y)
   int offset = x + YColumnIndex[y];
   ScreenCharBuffer[offset] = index;
   ScreenColorBuffer[offset] = attributeset[index];
+  #endif
+  #if defined(__NES__)
+  ScreenChars[x + YColumnIndex[y]] = index;
   #endif
 }
 
