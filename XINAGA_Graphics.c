@@ -283,9 +283,6 @@ void DrawChar(int index, byte xpos, byte ypos)
 char SetCharIndex = 0;
 byte SetCharX = 0;
 byte SetCharY = 0;
-void cputcxy(byte x, byte y, char ch) {
-  vrambuf_put(NTADR_A(x,y), &ch, 1);
-}
 //Set Char Macro is in XINAGA.h - #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void _SetChar(void)
 {
@@ -306,8 +303,6 @@ void _SetChar(void)
   #if defined (__NES__)
   vram_adr(NTADR_A(SetCharX,SetCharY));		// set address
   vram_put(SetCharIndex);
-  //cputcxy(SetCharX, SetCharY, SetCharIndex);
-  //vrambuf_flush();
   #endif
 }
 
