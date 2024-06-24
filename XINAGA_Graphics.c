@@ -10,7 +10,7 @@ void getYCols()
 {
   byte y;
   for (y = 0; y < ROWS; ++y)
-    YColumnIndex[y] = y * ROWS;
+    YColumnIndex[y] = y * COLS;
 }
 
 const byte const charset[2048];
