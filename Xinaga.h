@@ -26,7 +26,7 @@
 
 #if defined (__NES__)
 #define COLS 32
-#define ROWS 30
+#define ROWS 28
 #endif
 
 typedef uint8_t byte;

@@ -15,6 +15,15 @@ byte joyStateLast = 0;
 byte joyTemp = 0;
 #endif
 
+#if (__NES__)
+// include CC65 NES Header (PPU)
+#include <nes.h>
+// include NESLIB header
+#include "neslib.h"
+char pad = 0;
+char padTemp = 0;
+char padStateLast = 0;
+#endif
 void InitializeInput()
 {
   #if __C64__
@@ -64,6 +73,18 @@ void UpdateInput(void)
   key = keycode[0];
   SetChar(key, COLS - 1, 1);
   #endif
+  
+  #if (__NES__)
+  padTemp = pad_poll(0);
+  if (padTemp == pad)
+    ChangedState = false;
+  else
+  {
+    pad = padTemp;
+    ChangedState = true;
+    padStateLast = pad;
+  }
+  #endif
 }
 
 bool InputUp(void)
@@ -79,6 +100,11 @@ bool InputUp(void)
     return true;
   }
   #endif
+  
+  #if (__NES__)
+  return pad&PAD_UP;
+  #endif
+  
   return false;
 }
 
@@ -92,6 +118,11 @@ bool InputDown(void)
   if (key == 's' || key == 'S')
     return true;
   #endif
+  
+  #if (__NES__)
+  return pad&PAD_DOWN;
+  #endif
+  
   return false;
 }
 
@@ -101,9 +132,14 @@ bool InputLeft(void)
   if (JOY_LEFT(joyState))
     return true;
   #endif
+  
   #if defined(__APPLE2__)
   if (key == 'a' || key == 'A')
     return true;
+  #endif
+  
+  #if (__NES__)
+  return pad&PAD_LEFT;
   #endif
   return false;
 }
@@ -114,9 +150,14 @@ bool InputRight(void)
   if (JOY_RIGHT(joyState))
     return true;
   #endif
+  
   #if defined(__APPLE2__)
   if (key == 'd' || key == 'D')
     return true;
+  #endif
+  
+  #if (__NES__)
+  return pad&PAD_RIGHT;
   #endif
   return false;
 }
@@ -130,6 +171,10 @@ bool InputFire(void)
   #if defined(__APPLE2__)
   if (key == ' ')
     return true;
+  #endif
+  
+  #if (__NES__)
+  return pad&PAD_A;
   #endif
   return false;
 }

@@ -8,7 +8,7 @@
 screenName nextScreen = EditParty;
 #define consolePosX  1
 #define consolePosY 17
-#define consoleWidth 38
+#define consoleWidth 20
 #define consoleHeight 6
 bool AreYouSure();
 bool exitWindow = false;
@@ -245,7 +245,7 @@ void MenuEditParty()
   SetMenuItem(6, "Combat@");
   SetMenuItem(7, "Map Gen@");
   SetMenuItem(8, "Scenario Gen@");
-
+  
   switch(GetMenuSelection())
   {
     case 0: //Create

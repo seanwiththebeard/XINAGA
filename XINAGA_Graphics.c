@@ -4,6 +4,13 @@
 //#pragma code-name (push, "LOWCODE")
 #endif
 
+#if defined (__NES__)
+#include "neslib.h"
+// VRAM buffer module
+#include "vrambuf.h"
+//#link "vrambuf.c"
+#endif
+
 int YColumnIndex[ROWS] = {};
 
 void getYCols()
@@ -44,8 +51,8 @@ void ScreenEnable(void)
 #endif
 
 #if defined(__NES__)
-byte *ScreenChars = (byte *)0x2000;
-byte *ScreenColors = (byte *)0x23C0;
+//byte *ScreenChars = (byte *)0x2000;
+//byte *ScreenColors = (byte *)0x23C0;
 #endif
 
 //byte  MapSet[];
@@ -88,6 +95,9 @@ void ClearScreen(void)
     memset(&HGR[RowsHGR[i]], 0, 40); //Or just disable screen and clear it?
   memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
   //memset(HGR, 0, 0x2000); // clear HGR page 1
+  #endif
+  
+  #if defined (__NES__)
   #endif
 
 }
@@ -214,6 +224,19 @@ void InitializeGraphics(void)
   
   #if defined(__NES__)
   getYCols();
+  
+  // set palette colors
+  pal_col(0,0x04);	// set screen to dark blue
+  pal_col(1,0x14);	// fuchsia
+  pal_col(2,0x20);	// grey
+  pal_col(3,0x30);	// white
+  
+  // write text to name table
+  vram_adr(NTADR_A(2,2));		// set address
+  vram_write("HELLO, WORLD!", 13);	// write bytes to video RAM
+
+  // enable PPU rendering (turn on screen)
+  ppu_on_all();
   #endif
 }
 
@@ -260,7 +283,9 @@ void DrawChar(int index, byte xpos, byte ypos)
 char SetCharIndex = 0;
 byte SetCharX = 0;
 byte SetCharY = 0;
-
+void cputcxy(byte x, byte y, char ch) {
+  vrambuf_put(NTADR_A(x,y), &ch, 1);
+}
 //Set Char Macro is in XINAGA.h - #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void _SetChar(void)
 {
@@ -277,6 +302,13 @@ void _SetChar(void)
   ScreenChars[offset] = SetCharIndex;
   ScreenColors[offset] = attributeset[SetCharIndex];
   #endif
+  
+  #if defined (__NES__)
+  vram_adr(NTADR_A(SetCharX,SetCharY));		// set address
+  vram_put(SetCharIndex);
+  //cputcxy(SetCharX, SetCharY, SetCharIndex);
+  //vrambuf_flush();
+  #endif
 }
 
 
@@ -289,7 +321,10 @@ void SetColor(byte index, byte x, byte y)
   ScreenColors[x + YColumnIndex[y]] = index;
   #endif
   #if defined(__NES__)
-  ScreenColors[(x / 2) + ((y / 2) * 8)] = index;
+  //ScreenColors[(x / 2) + ((y / 2) * 8)] = index;
+  index;
+  x;
+  y;
   #endif
 }
 
@@ -304,13 +339,23 @@ void SetCharBuffer(byte index, byte x, byte y)
   ScreenColorBuffer[offset] = attributeset[index];
   #endif
   #if defined(__NES__)
-  ScreenChars[x + YColumnIndex[y]] = index;
+  //ScreenChars[x + YColumnIndex[y]] = index;
+  index;x;y;
   #endif
 }
 
 byte GetChar(byte x, byte y)
 {
+  #if defined (__C64__)
   return ScreenChars[x + YColumnIndex[y]];
+  #endif
+  #if defined (__APPLE2__)
+  return ScreenChars[x + YColumnIndex[y]];
+  #endif
+  #if defined (__NES__)
+  x;y;
+  return 0;
+  #endif
 }
 
 //Buffer
@@ -443,6 +488,13 @@ void DrawTile()
   #endif
 
   #if defined(__APPLE2__)
+  SetChar(indexes[0], x, y);
+  SetChar(indexes[1], x + 1, y);
+  SetChar(indexes[2], x, y + 1);
+  SetChar(indexes[3], x + 1, y + 1);
+  #endif
+  
+  #if defined(__NES__)
   SetChar(indexes[0], x, y);
   SetChar(indexes[1], x + 1, y);
   SetChar(indexes[2], x, y + 1);

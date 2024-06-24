@@ -219,23 +219,24 @@ byte GetMenuSelection()
       byte LastSelection = MenuSelection;
       if(InputUp())
       {
-        //ClearLine();
         --MenuSelection;
         if (MenuSelection < 0)
           MenuSelection = MenuCount - 1;
+        
+        DrawItem(LastSelection); 
+        DrawItem(MenuSelection);
       }
       
       if(InputDown())
       {
-        //ClearLine();
         ++MenuSelection;
         if (MenuSelection >= MenuCount)
           MenuSelection = 0;
+        
+        DrawItem(LastSelection); 
+        DrawItem(MenuSelection);
       }
-      //ClearItem(LastSelection);
-      DrawItem(LastSelection); 
-      //ClearItem(MenuSelection);
-      DrawItem(MenuSelection);
+      
       
       if (InputFire())
         exit = true;
