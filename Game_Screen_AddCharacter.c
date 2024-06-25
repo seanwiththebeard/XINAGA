@@ -5,6 +5,12 @@
 #pragma code-name (push, "LOWCODE")
 #endif
 
+#if defined (__NES__)
+#pragma code-name (push, "CODE0")
+//#pragma rodata-name (push, "CODE0")
+
+#endif
+
 screenName nextScreen = EditParty;
 #define consolePosX  1
 #define consolePosY 17

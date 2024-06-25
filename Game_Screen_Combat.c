@@ -5,6 +5,13 @@
 #pragma code-name (push, "LC")
 #endif
 
+#if defined (__NES__)
+#pragma code-name (push, "CODE2")
+//#pragma rodata-name (push, "CODE2")
+
+
+#endif
+
 #define fillTile 36
 
 sbyte SelectedCharacter = 0;

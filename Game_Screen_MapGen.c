@@ -5,6 +5,12 @@
 #pragma code-name (push, "LC")
 #endif
 
+#if defined (__NES__)
+#pragma code-name (push, "CODE2")
+//#pragma rodata-name (push, "CODE3")
+
+#endif
+
 #define pointsBase 48
 #define continentsBase 4
 //#define grass 0x88

@@ -9,6 +9,10 @@
 //#pragma code-name (push, "LOWCODE")
 #endif
 
+#if defined (__NES__)
+#pragma code-name (push, "CODE6")
+#endif
+
 void DiskSave(char filename[], int source, int length)
 {
   #if defined (__C64__)

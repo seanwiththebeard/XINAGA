@@ -5,6 +5,9 @@
 #pragma code-name (push, "LOWCODE")
 #endif
 
+#if defined (__NES__)
+#endif
+
 screenName Update_Title()
 {
   DrawBorder("@",12, 5, 16, 5, true);

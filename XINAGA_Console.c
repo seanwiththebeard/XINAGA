@@ -4,6 +4,13 @@
 //#pragma code-name (push, "LOWCODE")
 #endif
 
+#if defined (__NES__)
+#pragma code-name (push, "CODE6")
+//#pragma rodata-name (push, "CODE6")
+
+#endif
+
+
 //StringBuilder
 byte StringLength = 0;
 
@@ -210,6 +217,7 @@ void ClearMenu()
 byte GetMenuSelection()
 {
   bool exit = false;
+  bool refresh = false;
   //DrawMenu();
   while (!exit)
   {
@@ -223,8 +231,7 @@ byte GetMenuSelection()
         if (MenuSelection < 0)
           MenuSelection = MenuCount - 1;
         
-        DrawItem(LastSelection); 
-        DrawItem(MenuSelection);
+        refresh = true;
       }
       
       if(InputDown())
@@ -233,10 +240,14 @@ byte GetMenuSelection()
         if (MenuSelection >= MenuCount)
           MenuSelection = 0;
         
+        refresh = true;
+      }
+      
+      if (refresh)
+      {
         DrawItem(LastSelection); 
         DrawItem(MenuSelection);
       }
-      
       
       if (InputFire())
         exit = true;

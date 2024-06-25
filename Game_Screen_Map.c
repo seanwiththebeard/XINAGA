@@ -4,6 +4,11 @@
 #pragma code-name (push, "LC")
 #endif
 
+#if defined (__NES__)
+#pragma code-name (push, "CODE1")
+//#pragma rodata-name (push, "CODE1")
+#endif
+
 //Charset Layout C64
 //00-32 - Character Classes (8x 16x16 tiles)
 //32-63 - Numbers, symbols

@@ -1,3 +1,4 @@
+#include "Xinaga.h"
 #ifndef _NESLIB_H
 #define _NESLIB_H
 /*
@@ -36,8 +37,8 @@
 
 
 // define basic types for convenience
-typedef unsigned char byte;	// 8-bit unsigned
-typedef signed char sbyte;	// 8-bit signed
+//typedef unsigned char byte;	// 8-bit unsigned
+//typedef signed char sbyte;	// 8-bit signed
 typedef unsigned short word;	// 16-bit signed
 //typedef enum { false, true } bool;	// boolean
 

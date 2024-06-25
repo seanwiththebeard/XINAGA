@@ -4,6 +4,10 @@
 //#pragma code-name (push, "LOWCODE")
 #endif
 
+#if defined (__NES__)
+#endif
+
+
 sbyte key = 0;
 byte keyIgnore = 0;
 bool ChangedState = true;

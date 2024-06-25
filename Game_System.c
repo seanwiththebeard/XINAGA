@@ -3,7 +3,9 @@
 
 #if defined(__APPLE2__)
 #pragma code-name (push, "LOWCODE")
+#endif
 
+#if defined (__NES__)
 #endif
 
 byte strTemp[ConsoleBufferLength] = {};

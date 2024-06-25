@@ -5,6 +5,9 @@
 #pragma code-name (push, "LOWCODE")
 #endif
 
+#if defined (__NES__)
+#endif
+
 screenName currentScreen = EditParty;
 
 const RaceDescriptionDef const RaceDescription[4] = 
@@ -31,6 +34,25 @@ const ClassDescriptionDef const ClassDescription[8]=
 
 const sbyte const AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 
+byte BankLocation[] = {-1, 0, 1, 2, -1, -1, 2, 2};
+  #define Title 0
+#define EditParty 1
+#define Map 2
+#define Combat 3
+#define Menu 4
+#define SaveLoad 5
+#define MapGen 6
+#define Scenario 7
+
+void SelectBank()
+{
+  #if defined (__NES__)
+  sbyte bank = BankLocation[currentScreen];
+  if (bank >=0)
+    MMC3_PRG_8000(bank);
+  #endif
+}
+
 void SwitchScreen(screenName screen)
 {
   //ScreenDisable();
@@ -39,7 +61,7 @@ void SwitchScreen(screenName screen)
   //UpdateInput();
   currentScreen = screen;
   //ScreenEnable();
-  
+  SelectBank();
   switch (currentScreen)
   {
     case Title:
@@ -52,7 +74,6 @@ void SwitchScreen(screenName screen)
       currentScreen = DrawAddCharacterScreen();
       break;
     case Map:
-      //LoadMap();
       currentScreen = MapUpdate();
       break;
     case Combat:
@@ -64,6 +85,7 @@ void SwitchScreen(screenName screen)
     case Scenario:
       currentScreen = Update_Scenario();
     default:
+      currentScreen = EditParty;
       break;
   }
   
@@ -197,10 +219,12 @@ void Demo()
   
   LoadMap();
   
-  SwitchScreen(currentScreen);
   
-  //while(1)
+  
+  while(1)
   {
+  SwitchScreen(currentScreen);
+    
     //WriteLineMessageWindow("Hello@", 0);
     //PlaySound(2, freq);
     //++freq;

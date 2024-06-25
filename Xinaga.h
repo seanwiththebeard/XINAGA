@@ -27,6 +27,23 @@
 #if defined (__NES__)
 #define COLS 32
 #define ROWS 28
+
+#define MMC_MODE 0x00
+
+#define MMC3_SET_REG(r,n)\
+	POKE(0x8000, MMC_MODE|(r));\
+	POKE(0x8001, (n));
+
+#define MMC3_CHR_0000(n) MMC3_SET_REG(0,n)
+#define MMC3_CHR_0800(n) MMC3_SET_REG(1,n)
+#define MMC3_CHR_1000(n) MMC3_SET_REG(2,n)
+#define MMC3_CHR_1400(n) MMC3_SET_REG(3,n)
+#define MMC3_CHR_1800(n) MMC3_SET_REG(4,n)
+#define MMC3_CHR_1C00(n) MMC3_SET_REG(5,n)
+#define MMC3_PRG_8000(n) MMC3_SET_REG(6,n)
+#define MMC3_PRG_A000(n) MMC3_SET_REG(7,n)
+
+#define MMC3_MIRROR(n) POKE(0xa000, (n))
 #endif
 
 typedef uint8_t byte;
@@ -45,10 +62,27 @@ typedef int8_t sbyte;	// 8-bit signed
 
 extern uint16_t randseed;
 byte ReadBit(byte byteToRead, char bit);
-void LoadMap();
+void LoadMap(void);
+
+#if defined (__C64__)
 extern const byte const charset[2048];
 extern const byte const attributeset[256];
 extern byte* CharRam;
+#endif
+
+#if defined (__APPLE2__)
+extern const byte const charset[2048];
+extern const byte const attributeset[256];
+extern byte* CharRam;
+#endif
+
+#if defined (__NES__)
+#pragma rodata-name (push, "BANK2")
+extern const byte const *charset;
+extern const byte const *attributeset;
+extern byte* CharRam;
+#pragma rodata-name (pop)
+#endif
 
 
 //Graphics
@@ -99,7 +133,7 @@ void DrawArrow(byte x, byte y);
 void ClearArrow(void);
 
 //	Text
-void PrintString(char text[ROWS], byte posx, byte posy, bool fast, bool buffer);
+void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer);
 
 //	Buffer
 void SetBuffer(bool value);

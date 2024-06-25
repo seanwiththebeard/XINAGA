@@ -11,6 +11,7 @@
 //#link "vrambuf.c"
 #endif
 
+
 int YColumnIndex[ROWS] = {};
 
 void getYCols()
@@ -20,9 +21,9 @@ void getYCols()
     YColumnIndex[y] = y * COLS;
 }
 
-const byte const charset[2048];
 
 #if defined(__APPLE2__)
+const byte const charset[2048];
 byte* ScreenChars = (byte*)(0x0400);
 #pragma data-name (push, "HGR")
 char HGR[0x2000] = {};
@@ -33,7 +34,13 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
+#if defined (__NES__)
+const byte const *charset = 0x0;
+const byte const *attributeset = 0x0;
+#endif
+
 #if defined(__C64__)
+const byte const charset[2048];
 byte *ScreenCharBuffer = (byte *)0x0400;
 byte *ScreenColorBuffer = (byte *)0xF400;
 byte *ScreenChars = (byte *)0x0400;
@@ -50,16 +57,25 @@ void ScreenEnable(void)
 }
 #endif
 
-#if defined(__NES__)
-//byte *ScreenChars = (byte *)0x2000;
-//byte *ScreenColors = (byte *)0x23C0;
-#endif
 
+
+#if defined(__C64__)
 //byte  MapSet[];
 byte* CharRam = 0;
 //byte* MapSetInfo = (byte*) &MapSet[0];
 byte* MapSetInfo = (byte*) &charset[0];
+#endif
 
+#if defined(__APPLE2__)
+//byte  MapSet[];
+byte* CharRam = 0;
+//byte* MapSetInfo = (byte*) &MapSet[0];
+byte* MapSetInfo = (byte*) &charset[0];
+#endif
+
+#if defined(__NES__)
+byte* MapSetInfo = 0x0;
+#endif
 
 #if defined(__C64__)
 byte *bgReg = (byte*)0xD020;
@@ -98,6 +114,10 @@ void ClearScreen(void)
   #endif
   
   #if defined (__NES__)
+  ppu_off();
+  vram_adr(NTADR_A(0, 0));
+  vram_fill(' ', ROWS*COLS);
+  ppu_on_all();
   #endif
 
 }
@@ -230,11 +250,9 @@ void InitializeGraphics(void)
   pal_col(1,0x14);	// fuchsia
   pal_col(2,0x20);	// grey
   pal_col(3,0x30);	// white
-  
-  // write text to name table
-  vram_adr(NTADR_A(2,2));		// set address
-  vram_write("HELLO, WORLD!", 13);	// write bytes to video RAM
-
+  vrambuf_clear();
+  set_vram_update(updbuf);
+  //vrambuf_flush();
   // enable PPU rendering (turn on screen)
   ppu_on_all();
   #endif
@@ -280,6 +298,7 @@ void DrawChar(int index, byte xpos, byte ypos)
 }
 #endif
 
+byte charsDrawn = 0;
 char SetCharIndex = 0;
 byte SetCharX = 0;
 byte SetCharY = 0;
@@ -301,8 +320,18 @@ void _SetChar(void)
   #endif
   
   #if defined (__NES__)
-  vram_adr(NTADR_A(SetCharX,SetCharY));		// set address
-  vram_put(SetCharIndex);
+  //vram_adr(NTADR_A(SetCharX,SetCharY));		// set address
+  vrambuf_put(NTADR_A(SetCharX,SetCharY), &SetCharIndex, 1);
+   //vrambuf_end();
+  // wait for next frame to flush update buffer
+  // this will also set the scroll registers properly
+  //ppu_wait_frame();
+  // clear the buffer
+  //vrambuf_clear();
+
+  //vram_put(SetCharIndex);
+  //ppu_on_all();
+  
   #endif
 }
 

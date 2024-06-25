@@ -4,6 +4,12 @@
 //#pragma code-name (push, "LOWCODE")
 #endif
 
+#if defined (__NES__)
+#pragma code-name (push, "CODE6")
+#pragma rodata-name (push, "CODE6")
+
+#endif
+
 void PlaySong(byte index)
 {
   index;
