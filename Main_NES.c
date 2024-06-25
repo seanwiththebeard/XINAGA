@@ -3,16 +3,20 @@
 #include "neslib.h"
 
 
-//#resource "neslib2_.cfg"
-//#define CFGFILE neslib2_.cfg
+
 // VRAM buffer module
 #include "vrambuf.h"
 //#link "vrambuf.c"
+//#resource "neslib2_.cfg"
+#define CFGFILE neslib2_.cfg
 
 // bank-switching configuration
-#define NES_MAPPER 4		// Mapper 4 (MMC3)
-#define NES_PRG_BANKS 4		// # of 16KB PRG banks
-#define NES_CHR_BANKS 2		// # of 8KB CHR banks
+//#define NES_MAPPER 4		// Mapper 4 (MMC3)
+//#define NES_PRG_BANKS 4		// # of 16KB PRG banks
+//#define NES_CHR_BANKS 1		// # of 8KB CHR banks
+//#define INES_SRAM 1
+
+
 
 //#link "XINAGA_Graphics.c"
 //#link "XINAGA_Input.c"
@@ -36,6 +40,8 @@
 void main(void)
 {
       MMC3_PRG_8000(1);
+      MMC3_CHR_0000(0);
+  
   
   //byte x, y;
   //InitializeGraphics();
