@@ -6,6 +6,7 @@
 #endif
 
 #if defined (__NES__)
+#pragma code-name (push, "CODE5")
 #endif
 
 screenName currentScreen = EditParty;
