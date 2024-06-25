@@ -298,10 +298,10 @@ void DrawChar(int index, byte xpos, byte ypos)
 }
 #endif
 
-byte charsDrawn = 0;
 char SetCharIndex = 0;
 byte SetCharX = 0;
 byte SetCharY = 0;
+int charsDrawn = 0;
 //Set Char Macro is in XINAGA.h - #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void _SetChar(void)
 {
@@ -327,7 +327,9 @@ void _SetChar(void)
   // this will also set the scroll registers properly
   //ppu_wait_frame();
   // clear the buffer
-  //vrambuf_clear();
+  ++charsDrawn;
+  if (charsDrawn % 21 == 0)
+    vrambuf_flush();
 
   //vram_put(SetCharIndex);
   //ppu_on_all();
