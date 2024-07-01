@@ -44,6 +44,14 @@
 #define MMC3_PRG_A000(n) MMC3_SET_REG(7,n)
 
 #define MMC3_MIRROR(n) POKE(0xa000, (n))
+
+//; WRAM_OFF $40
+//; WRAM_ON $80
+//; WRAM_READ_ONLY $C0
+#define MMC3_WRAM_DISABLE() MMC3_SET_REG(1001,0x40)
+#define MMC3_WRAM_ENABLE() MMC3_SET_REG(1001,0x80)
+#define MMC3_WRAM_READ_ONLY() MMC3_SET_REG(1001,0xC0)
+
 #endif
 
 typedef uint8_t byte;

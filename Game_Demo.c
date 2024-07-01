@@ -35,6 +35,7 @@ const ClassDescriptionDef const ClassDescription[8]=
 
 const sbyte const AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 
+#if defined (__NES__)
 byte BankLocation[] = {-1, 0, 1, 2, -1, -1, 2, 2};
   #define Title 0
 #define EditParty 1
@@ -47,12 +48,12 @@ byte BankLocation[] = {-1, 0, 1, 2, -1, -1, 2, 2};
 
 void SelectBank()
 {
-  #if defined (__NES__)
   sbyte bank = BankLocation[currentScreen];
   if (bank >=0)
     MMC3_PRG_8000(bank);
-  #endif
 }
+#endif
+
 
 void SwitchScreen(screenName screen)
 {
@@ -62,7 +63,10 @@ void SwitchScreen(screenName screen)
   //UpdateInput();
   currentScreen = screen;
   //ScreenEnable();
+  #if defined (__NES__)
   SelectBank();
+  #endif
+
   switch (currentScreen)
   {
     case Title:
