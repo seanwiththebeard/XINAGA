@@ -28,7 +28,7 @@
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #define COLS 32
-#define ROWS 28
+#define ROWS 30
 
 #define MMC_MODE 0x00
 

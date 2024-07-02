@@ -118,6 +118,8 @@ void ClearScreen(void)
   ppu_off();
   vram_adr(NTADR_A(0, 0));
   vram_fill(' ', ROWS*COLS);
+  vram_adr(NTADR_A(0, 30));	// start address ($2000)
+  vram_fill(0, 64);
   ppu_on_all();
   #endif
 
