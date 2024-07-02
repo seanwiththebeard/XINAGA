@@ -41,30 +41,41 @@
 
 void heap_avail(void)
 {
-  char stringA[32] = "0";
-  unsigned int x;
+  int x;
   char *t;
+  char stringA[24] = "";
   
-  sprintf(stringA, "heap avail:  bytes@");
-  PrintString(stringA, 5, 5, true, false);
+  int *heap = (int*)&_heaporg;
+  heap[0] = 0x6000; //heaporg
+  heap[1] = heap[0]; //heapptr
+  heap[2] = 0x8000; //heapend
   
-  x=10;
-  while(1) {
+  x=1;
+  while(1)
+  {
     t=malloc(x);
-    if (! t) break;
+    if ( !t ) break;
     free(t);
-    x+=10;
-    sprintf(stringA, "heap avail: %u bytes\r\n",x);
-    PrintString(stringA, 5, 5, true, false);
+    ++x;
   }
-  if (x > 10)
-    x-=10;
-  else
-    x=0;
+  //if ( x > 10 ) 
+    //x-=10;
+  //else
+    //x=0;
   
-  sprintf(stringA, "heap avail: %u bytes\r\n",x);
-  PrintString(stringA, 5, 5, true, false);
+  sprintf(stringA, "heap avail:   %u bytes",x - 1);
+    vram_adr(NTADR_A(2,2));
+    vram_write(stringA, strlen(stringA));
+  
+  sprintf(stringA, "heap starts: $%4x",heap[0]);
+    vram_adr(NTADR_A(2,3));
+    vram_write(stringA, strlen(stringA));
+  
+  sprintf(stringA, "heap ends:   $%4x",heap[2]);
+    vram_adr(NTADR_A(2,4));
+    vram_write(stringA, strlen(stringA));
 }
+
 
 
 byte x, y;
@@ -72,9 +83,6 @@ byte x, y;
 void main(void)
 {
   MMC3_WRAM_ENABLE();
-  _heaporg[0] = 0x7000;
-  _heapptr[0] = 0x7000;
-  _heapend[0] = 0x7fff;
   
   MMC3_PRG_8000(1);
   MMC3_PRG_A000(5);
@@ -88,7 +96,8 @@ void main(void)
   //for (x = 0; x < 16; ++x)
     //for (y = 0; y < 16; ++y)
       //SetChar(x + 16*y,x, y);
-  //InitializeGraphics();
+  heap_avail();
+  InitializeGraphics();
   //ClearScreen();    
   //ResizeMessageWindow(3, 3, 12, 7);
   
@@ -104,9 +113,8 @@ void main(void)
   //SetMenuItem(8, "Scenario Gen@");
   
   
-  //heap_avail();
       
-  Demo();
+  //Demo();
   while(1){};
 }
 
