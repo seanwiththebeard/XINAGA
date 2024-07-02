@@ -25,6 +25,8 @@
 #endif
 
 #if defined (__NES__)
+//#pragma data-name (push, "XRAM")
+//#pragma bss-name (push, "XRAM")
 #define COLS 32
 #define ROWS 28
 

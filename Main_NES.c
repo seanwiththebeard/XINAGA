@@ -1,7 +1,12 @@
 #include "Xinaga.h"
 #include "GameData.h"
 #include "neslib.h"
-
+#include <_heap.h>
+//unsigned          _heaporg;    /* Bottom of heap */
+//unsigned*          __heapptr = (int*)0x7000;    /* Current top */
+//unsigned*          __heapend = (int*)0x7FFF;    /* Upper limit */
+//struct freeblock*  __heapfirst;  /* First free block in list */
+//struct freeblock*  __heaplast;   /* Last free block in list */
 
 
 // VRAM buffer module
@@ -33,11 +38,44 @@
 //#link "Game_Screen_Scenario.c"
 
 //#link "chr_generic.s"
+
+void heap_avail(void)
+{
+  char stringA[32] = "0";
+  unsigned int x;
+  char *t;
+  
+  sprintf(stringA, "heap avail:  bytes@");
+  PrintString(stringA, 5, 5, true, false);
+  
+  x=10;
+  while(1) {
+    t=malloc(x);
+    if (! t) break;
+    free(t);
+    x+=10;
+    sprintf(stringA, "heap avail: %u bytes\r\n",x);
+    PrintString(stringA, 5, 5, true, false);
+  }
+  if (x > 10)
+    x-=10;
+  else
+    x=0;
+  
+  sprintf(stringA, "heap avail: %u bytes\r\n",x);
+  PrintString(stringA, 5, 5, true, false);
+}
+
+
 byte x, y;
 //void Demo(void);
 void main(void)
 {
   MMC3_WRAM_ENABLE();
+  _heaporg[0] = 0x7000;
+  _heapptr[0] = 0x7000;
+  _heapend[0] = 0x7fff;
+  
   MMC3_PRG_8000(1);
   MMC3_PRG_A000(5);
 
@@ -45,11 +83,11 @@ void main(void)
 
 
   //byte x, y;
-  InitializeGraphics();
-  ClearScreen();
-  for (x = 0; x < 16; ++x)
-    for (y = 0; y < 16; ++y)
-      SetChar(x + 16*y,x, y);
+  //InitializeGraphics();
+  //ClearScreen();
+  //for (x = 0; x < 16; ++x)
+    //for (y = 0; y < 16; ++y)
+      //SetChar(x + 16*y,x, y);
   //InitializeGraphics();
   //ClearScreen();    
   //ResizeMessageWindow(3, 3, 12, 7);
@@ -65,6 +103,8 @@ void main(void)
   //SetMenuItem(7, "Map Gen@");
   //SetMenuItem(8, "Scenario Gen@");
   
+  
+  //heap_avail();
       
   Demo();
   while(1){};

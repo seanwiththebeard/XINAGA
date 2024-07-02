@@ -222,7 +222,7 @@ void Demo()
   //DrawTiles();
   //SetTileOrigin(3, 2);
   
-  LoadMap();
+  //LoadMap();
   
   
   
