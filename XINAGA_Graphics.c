@@ -5,7 +5,7 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "CODE5")
+//#pragma code-name (push, "CODE5")
 #include "neslib.h"
 // VRAM buffer module
 #include "vrambuf.h"
