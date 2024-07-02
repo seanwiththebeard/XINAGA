@@ -2,12 +2,6 @@
 #include "GameData.h"
 #include "neslib.h"
 #include <_heap.h>
-//unsigned          _heaporg;    /* Bottom of heap */
-//unsigned*          __heapptr = (int*)0x7000;    /* Current top */
-//unsigned*          __heapend = (int*)0x7FFF;    /* Upper limit */
-//struct freeblock*  __heapfirst;  /* First free block in list */
-//struct freeblock*  __heaplast;   /* Last free block in list */
-
 
 // VRAM buffer module
 #include "vrambuf.h"
@@ -45,10 +39,21 @@ void heap_avail(void)
   char *t;
   char stringA[24] = "";
   
-  int *heap = (int*)&_heaporg;
-  heap[0] = 0x6000; //heaporg
-  heap[1] = heap[0]; //heapptr
-  heap[2] = 0x8000; //heapend
+  int *heaporg = (int*)&_heaporg;
+  int *heapptr = (int*)&_heapptr;
+  int *heapend = (int*)&_heapend;
+  
+  heaporg[0] = 0x7000; //heaporg
+  heapptr[0] = heaporg[0]; //heapptr
+  heapend[0] = 0x8000; //heapend
+  
+  sprintf(stringA, "heap starts: $%x", heaporg[0]);
+    vram_adr(NTADR_A(2,3));
+    vram_write(stringA, strlen(stringA));
+  
+  sprintf(stringA, "heap ends:   $%x", heapend[0]);
+    vram_adr(NTADR_A(2,4));
+    vram_write(stringA, strlen(stringA));
   
   x=1;
   while(1)
@@ -67,13 +72,7 @@ void heap_avail(void)
     vram_adr(NTADR_A(2,2));
     vram_write(stringA, strlen(stringA));
   
-  sprintf(stringA, "heap starts: $%4x",heap[0]);
-    vram_adr(NTADR_A(2,3));
-    vram_write(stringA, strlen(stringA));
   
-  sprintf(stringA, "heap ends:   $%4x",heap[2]);
-    vram_adr(NTADR_A(2,4));
-    vram_write(stringA, strlen(stringA));
 }
 
 
@@ -97,7 +96,7 @@ void main(void)
     //for (y = 0; y < 16; ++y)
       //SetChar(x + 16*y,x, y);
   heap_avail();
-  InitializeGraphics();
+  //InitializeGraphics();
   //ClearScreen();    
   //ResizeMessageWindow(3, 3, 12, 7);
   
@@ -114,7 +113,7 @@ void main(void)
   
   
       
-  //Demo();
+  Demo();
   while(1){};
 }
 
