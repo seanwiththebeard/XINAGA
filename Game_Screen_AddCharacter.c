@@ -12,9 +12,9 @@
 #endif
 
 screenName nextScreen = EditParty;
-#define consolePosX  1
-#define consolePosY 17
-#define consoleWidth 20
+#define consolePosX  2
+#define consolePosY ROWS - consoleHeight - 2
+#define consoleWidth COLS - 10
 #define consoleHeight 6
 bool AreYouSure();
 bool exitWindow = false;
@@ -74,7 +74,7 @@ void AddToRoster()
 
 bool AreYouSure()
 {
-  ResetMenu("Confirm?@",31, 20, 8, 2, 2);
+  ResetMenu("Sure?@",consolePosX + consoleWidth + 1, 20, 5, 2, 2);
   SetMenuItem(0, "No @");
   SetMenuItem(1, "Yes@");
   
@@ -100,7 +100,7 @@ void RollStats()
 void MenuGetClassPrimeStats()
 {
   byte x;
-  ResetMenu("Class@",26, 1, 11, 9, 6);
+  ResetMenu("Class@",22, 2, 11, 9, 6);
   for (x = 0; x < 4; ++x)
   {
     SetMenuItem(x, ClassDescription[x].NAME);
@@ -187,7 +187,7 @@ void MenuGetClass()
 
 void MenuGetRace()
 {
-  ResetMenu("Race@",18, 1, 8, 9, 5);
+  ResetMenu("Race@", 13, 2, 8, 9, 5);
   SetMenuItem(0, RaceDescription[0].NAME);
   SetMenuItem(1, RaceDescription[1].NAME);
   SetMenuItem(2, RaceDescription[2].NAME);
@@ -209,7 +209,7 @@ void ListParty()
 {
   byte x;
   byte partyCount = CountParty();
-  ResetMenu("Party Members@",20, 12, 19, 4, partyCount);
+  ResetMenu("Party Members@", 17, 12, 13, 4, partyCount);
   if (partyCount > 0)
   {
 
@@ -225,7 +225,7 @@ void ListRoster()
 {
   byte x;
   byte rosterCount = CountRoster();
-  ResetMenu("Roster Members@",1, 12, 18, 4, rosterCount);
+  ResetMenu("Roster Members@",2, 12, 14, 4, rosterCount);
   if (rosterCount > 0)
   {
 
@@ -237,21 +237,19 @@ void ListRoster()
 
 void MenuEditParty()
 {
-  ListRoster();
-  ListParty();
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  
-  ResetMenu("Edit Party@",1, 1, 16, 9, 9);
+  ResetMenu("Edit Party@",2, 2, 10, 9, 9);
   SetMenuItem(0, "Create@");
   SetMenuItem(1, "Delete@");
   SetMenuItem(2, "Add@");
   SetMenuItem(3, "Remove@");
-  SetMenuItem(4, "Begin Adventure@");
+  SetMenuItem(4, "Begin@");
   SetMenuItem(5, "Credits@");
   SetMenuItem(6, "Combat@");
   SetMenuItem(7, "Map Gen@");
-  SetMenuItem(8, "Scenario Gen@");
-  
+  SetMenuItem(8, "Scenario@");
+  ListRoster();
+  ListParty();
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   switch(GetMenuSelection())
   {
     case 0: //Create

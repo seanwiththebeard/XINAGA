@@ -199,12 +199,22 @@ void BufferCharacters()
   }
 }
 
+void UpdatePlayerOnMiniMap(void)
+{
+  MiniMapHighlightX = characters.quadPosX[followIndex];
+  MiniMapHighlightY = characters.quadPosY[followIndex];
+}
+
+#pragma bss-name (push, "ZEROPAGE")
+byte byte_x;
+byte byte_y;
+byte quadX;
+byte quadY;
+#pragma bss-name (pop)
 void FillQuadBuffer()
 {
-  byte byte_x;
-  byte byte_y;
-  byte quadX = characters.quadPosX[followIndex];
-  byte quadY = characters.quadPosY[followIndex];
+  quadX = characters.quadPosX[followIndex];
+  quadY = characters.quadPosY[followIndex];
 
   if (quadX + 1 == quadWidth)
     byte_x = 0;
@@ -226,18 +236,22 @@ byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
 byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
 byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
 
+
+#pragma bss-name (push, "ZEROPAGE")
+byte* charByteData;
+byte byte_x;
+byte byte_y;
+byte byte_z;
+byte charIndex;
+byte xPos;
+byte yPos;
+byte QuadOriginX;
+byte QuadOriginY;
+byte charByte;
+#pragma bss-name (pop)
 void LoadQuadrant(byte quadIndex, byte quad)
 {
-  byte* charByteData;
-  byte byte_x;
-  byte byte_y;
-  byte byte_z;
-  byte charIndex;
-  byte xPos;
-  byte yPos;
-  byte QuadOriginX;
-  byte QuadOriginY;
-  byte charByte;
+  
   //sprintf(str, "Tile%d to Quad%d@", index, quad);
   //WriteLineMessageWindow(str, 1);
   
@@ -266,12 +280,6 @@ void LoadQuadrant(byte quadIndex, byte quad)
   }
 }
 
-void UpdatePlayerOnMiniMap(void)
-{
-  MiniMapHighlightX = characters.quadPosX[followIndex];
-  MiniMapHighlightY = characters.quadPosY[followIndex];
-}
-
 void LoadMapQuads()
 {
   byte x;
@@ -298,10 +306,15 @@ byte GetPlayerQuad() //Returns the viewport quadrant of the player character
   }
 }
 
+
+#pragma bss-name (push, "ZEROPAGE")
+sbyte int_x;
+sbyte int_y;
+#pragma bss-name (pop)
 byte GetQuadInRelation(sbyte v, sbyte h)
 {
-  sbyte int_x = characters.quadPosX[followIndex];
-  sbyte int_y = characters.quadPosY[followIndex];
+  int_x = characters.quadPosX[followIndex];
+  int_y = characters.quadPosY[followIndex];
 
   if (v < 0)
   {
@@ -339,19 +352,29 @@ static const byte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
 //Quad positions in the matrix for which way we're moving
 static const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
 static const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
+
+#pragma bss-name (push, "ZEROPAGE")
+byte quadA; //Entering quad
+byte quadB; //Diagonal quad
+byte indexA;
+byte indexB;
+byte relH;
+byte relV;
+bool charPosX;
+bool charPosY;
+byte compareQuad;
+byte p;
+#pragma bss-name (pop)
+
 void QuadScroll(direction dir)
 {
-  byte quadA; //Entering quad
-  byte quadB; //Diagonal quad
-  byte indexA;
-  byte indexB;
-  byte relH = dir;
-  byte relV = dir;
-  bool charPosX = (characters.posX[followIndex] % 16) < quadWidth;
-  bool charPosY = (characters.posY[followIndex] % 16) < quadHeight;
-  byte compareQuad = GetPlayerQuad();
+  relH = dir;
+  relV = dir;
+  charPosX = (characters.posX[followIndex] % 16) < quadWidth;
+  charPosY = (characters.posY[followIndex] % 16) < quadHeight;
+  compareQuad = GetPlayerQuad();
   
-  byte p = GetChar(COLS - 1, ROWS - 1);
+  p = GetChar(COLS - 1, ROWS - 1);
   SetChar('Q', COLS - 1, ROWS - 1);
   
   if (!charPosX)
@@ -376,6 +399,7 @@ void QuadScroll(direction dir)
   
   SetChar(p, COLS - 1, ROWS - 1);
 }
+
 
 void InitializeMapData()
 {
