@@ -13,7 +13,7 @@
 
 screenName nextScreen = EditParty;
 #define consolePosX  2
-#define consolePosY ROWS - consoleHeight - 2
+#define consolePosY ROWS - 1 - consoleHeight - 2
 #define consoleWidth COLS - 10
 #define consoleHeight 6
 bool AreYouSure();
@@ -237,6 +237,10 @@ void ListRoster()
 
 void MenuEditParty()
 {
+  ListRoster();
+  ListParty();
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  
   ResetMenu("Edit Party@",2, 2, 10, 9, 9);
   SetMenuItem(0, "Create@");
   SetMenuItem(1, "Delete@");
@@ -247,9 +251,7 @@ void MenuEditParty()
   SetMenuItem(6, "Combat@");
   SetMenuItem(7, "Map Gen@");
   SetMenuItem(8, "Scenario@");
-  ListRoster();
-  ListParty();
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  
   switch(GetMenuSelection())
   {
     case 0: //Create

@@ -32,6 +32,7 @@
 //#link "Game_Screen_Scenario.c"
 
 //#link "chr_generic.s"
+//#resource "neschars.bin"
 
 void heap_avail(void)
 {
@@ -116,4 +117,3 @@ void main(void)
   Demo();
   while(1){};
 }
-
