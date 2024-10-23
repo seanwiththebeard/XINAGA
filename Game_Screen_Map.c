@@ -205,12 +205,12 @@ void UpdatePlayerOnMiniMap(void)
   MiniMapHighlightY = characters.quadPosY[followIndex];
 }
 
-#pragma bss-name (push, "ZEROPAGE")
+//#pragma bss-name (push, "ZEROPAGE")
 byte byte_x;
 byte byte_y;
 byte quadX;
 byte quadY;
-#pragma bss-name (pop)
+//#pragma bss-name (pop)
 void FillQuadBuffer()
 {
   quadX = characters.quadPosX[followIndex];
@@ -237,7 +237,7 @@ byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
 byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
 
 
-#pragma bss-name (push, "ZEROPAGE")
+//#pragma bss-name (push, "ZEROPAGE")
 byte* charByteData;
 byte byte_x;
 byte byte_y;
@@ -248,7 +248,7 @@ byte yPos;
 byte QuadOriginX;
 byte QuadOriginY;
 byte charByte;
-#pragma bss-name (pop)
+//#pragma bss-name (pop)
 void LoadQuadrant(byte quadIndex, byte quad)
 {
   
@@ -307,10 +307,10 @@ byte GetPlayerQuad() //Returns the viewport quadrant of the player character
 }
 
 
-#pragma bss-name (push, "ZEROPAGE")
+//#pragma bss-name (push, "ZEROPAGE")
 sbyte int_x;
 sbyte int_y;
-#pragma bss-name (pop)
+//#pragma bss-name (pop)
 byte GetQuadInRelation(sbyte v, sbyte h)
 {
   int_x = characters.quadPosX[followIndex];
@@ -353,7 +353,7 @@ static const byte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
 static const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
 static const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
 
-#pragma bss-name (push, "ZEROPAGE")
+//#pragma bss-name (push, "ZEROPAGE")
 byte quadA; //Entering quad
 byte quadB; //Diagonal quad
 byte indexA;
@@ -364,7 +364,7 @@ bool charPosX;
 bool charPosY;
 byte compareQuad;
 byte p;
-#pragma bss-name (pop)
+//#pragma bss-name (pop)
 
 void QuadScroll(direction dir)
 {
