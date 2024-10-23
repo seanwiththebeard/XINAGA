@@ -103,13 +103,15 @@ void main(void)
   MMC3_CHR_1400(2);
   MMC3_CHR_1800(0);
   MMC3_CHR_1C00(2);
+  setHeap();
+  
+  
   InitializeGraphics();
   ClearScreen();
   
   Demo();
   
   
-  setHeap();
   heap_avail();
   
   while (1)

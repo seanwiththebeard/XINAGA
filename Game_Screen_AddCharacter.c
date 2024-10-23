@@ -121,14 +121,14 @@ void MenuGetClassPrimeStats()
 }
 void WaitForInput(void)
 {
-  bool exit = false;
-  SetLineMessageWindow("Press space to continue@", 0);
+  bool ex = false;
+  WriteLineMessageWindow("Press space to continue@", 0);
   
-  while (!exit)
+  while (!ex)
   {
     UpdateInput();
     if (InputFire())
-      exit = true;
+      ex = true;
   }
 }
 void MenuGetClass()
@@ -181,6 +181,8 @@ void MenuGetClass()
     {
       HPMAX = hitdice + AbilityModifier[CON];
       HP = HPMAX;
+      WaitForInput();
+      
       AddToRoster();
     }
       WaitForInput();
