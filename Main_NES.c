@@ -3,6 +3,9 @@
 #include "neslib.h"
 #include <_heap.h>
 
+//#resource "crt0.o"
+
+
 // VRAM buffer module
 #include "vrambuf.h"
 //#link "vrambuf.c"
@@ -89,8 +92,13 @@ void main(void)
   
   MMC3_PRG_8000(0);
   MMC3_PRG_A000(31);
-
-  //MMC3_CHR_0000(0);
+  
+  MMC3_CHR_0000(0);
+  MMC3_CHR_0800(2);
+  MMC3_CHR_1000(0);
+  MMC3_CHR_1400(2);
+  MMC3_CHR_1800(0);
+  MMC3_CHR_1C00(2);
 
 
   //byte x, y;
