@@ -222,8 +222,13 @@ void Demo()
   //DrawTiles();
   //SetTileOrigin(3, 2);
   
+  #if defined(__NES__)
+  MMC3_PRG_8000(1);
+  #endif
   LoadMap();
-  
+  #if defined(__NES__)
+  MMC3_PRG_8000(0);
+  #endif
   
   
   while(1)
