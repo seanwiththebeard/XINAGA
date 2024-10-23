@@ -96,8 +96,8 @@ void main(void)
   //byte x, y;
   InitializeGraphics();
   ClearScreen();
-  for (x = 0; x < 16; ++x)
-    for (y = 0; y < 16; ++y)
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 16; ++x)
       SetChar(x + 16*y,x, y);
   //heap_avail();
   //InitializeGraphics();
