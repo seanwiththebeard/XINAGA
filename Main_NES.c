@@ -10,10 +10,11 @@
 
 // bank-switching configuration
 #define NES_MAPPER 4		// Mapper 4 (MMC3)
-#define NES_PRG_BANKS 4		// # of 16KB PRG banks
-#define NES_CHR_BANKS 1		// # of 8KB CHR banks
-//#resource "neslib2_.cfg"
-#define CFGFILE neslib2_.cfg
+#define NES_PRG_BANKS 32	// # of 16KB PRG banks
+#define NES_CHR_BANKS 32	// # of 8KB CHR banks
+
+//#resource "nesbanked.cfg"
+#define CFGFILE nesbanked.cfg
 
 //#link "XINAGA_Graphics.c"
 //#link "XINAGA_Input.c"
@@ -33,6 +34,8 @@
 
 //#link "chr_generic.s"
 //#resource "neschars.bin"
+
+
 
 void heap_avail(void)
 {
@@ -84,19 +87,19 @@ void main(void)
 {
   MMC3_WRAM_ENABLE();
   
-  MMC3_PRG_8000(1);
-  MMC3_PRG_A000(5);
+  MMC3_PRG_8000(0);
+  MMC3_PRG_A000(31);
 
   //MMC3_CHR_0000(0);
 
 
   //byte x, y;
-  //InitializeGraphics();
-  //ClearScreen();
-  //for (x = 0; x < 16; ++x)
-    //for (y = 0; y < 16; ++y)
-      //SetChar(x + 16*y,x, y);
-  heap_avail();
+  InitializeGraphics();
+  ClearScreen();
+  for (x = 0; x < 16; ++x)
+    for (y = 0; y < 16; ++y)
+      SetChar(x + 16*y,x, y);
+  //heap_avail();
   //InitializeGraphics();
   //ClearScreen();    
   //ResizeMessageWindow(3, 3, 12, 7);
@@ -114,6 +117,7 @@ void main(void)
   
   
       
-  Demo();
+  //Demo();
   while(1){};
 }
+
