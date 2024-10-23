@@ -5,7 +5,7 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "CODEA_5")
+#pragma code-name (push, "CODEB_0")
 #endif
 
 void PlaySong(byte index)

@@ -117,7 +117,7 @@ void main(void)
   
   
       
-  //Demo();
+  Demo();
   while(1){};
 }
 
