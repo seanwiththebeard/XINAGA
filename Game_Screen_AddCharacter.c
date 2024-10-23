@@ -6,8 +6,9 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "CODEA_0")
-//#pragma rodata-name (push, "CODE0")
+#pragma code-name (push, "STARTUP")
+//#pragma data-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 
 #endif
 

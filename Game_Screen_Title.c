@@ -6,7 +6,7 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "CODEA_5")
+#pragma code-name (push, "STARTUP")
 #endif
 
 screenName Update_Title()

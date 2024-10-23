@@ -10,7 +10,7 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "CODEB_0")
+#pragma code-name (push, "STARTUP")
 #endif
 
 void DiskSave(char filename[], int source, int length)

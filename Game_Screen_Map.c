@@ -8,7 +8,7 @@
 #pragma code-name (push, "CODEA_1")
 #pragma data-name (push, "XRAM")
 #pragma bss-name (push, "XRAM")
-//#pragma rodata-name (push, "CODE1")
+//#pragma rodata-name (push, "CODEA_1")
 #endif
 
 //Charset Layout C64

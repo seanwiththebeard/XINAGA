@@ -26,8 +26,8 @@
 
 #if defined (__NES__)
 //#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
-#include <cbm_petscii_charmap.h>
+#pragma bss-name (push, "XRAM")
+//#include <cbm_petscii_charmap.h>
 #define COLS 32
 #define ROWS 30
 
@@ -54,7 +54,7 @@
 #define MMC3_WRAM_DISABLE() POKE(0xA001, 0x40)
 #define MMC3_WRAM_ENABLE() POKE(0xA001, 0x80)
 #define MMC3_WRAM_READ_ONLY() POKE(0xA001, 0xC0)
-
+//#pragma bss-name ("XRAM")
 #endif
 
 typedef uint8_t byte;
@@ -88,11 +88,11 @@ extern byte* CharRam;
 #endif
 
 #if defined (__NES__)
-#pragma rodata-name (push, "BANK2")
+//#pragma rodata-name (push, "BANK2")
 extern const byte const *charset;
 extern const byte const *attributeset;
 extern byte* CharRam;
-#pragma rodata-name (pop)
+//#pragma rodata-name (pop)
 #endif
 
 

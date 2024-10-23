@@ -7,7 +7,6 @@
 
 #if defined (__NES__)
 #pragma code-name (push, "CODEA_2")
-
 //#pragma rodata-name (push, "CODE3")
 #endif
 

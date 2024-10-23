@@ -249,10 +249,10 @@ void InitializeGraphics(void)
   getYCols();
   
   // set palette colors
-  pal_col(0,0x07);
-  pal_col(1,0x37);
-  pal_col(2,0x20);
-  pal_col(3,0x30);
+  pal_col(0,0x0f);
+  pal_col(1,0x22);
+  pal_col(2,0x06);
+  pal_col(3,0x10);
   vrambuf_clear();
   set_vram_update(updbuf);
   //vrambuf_flush();

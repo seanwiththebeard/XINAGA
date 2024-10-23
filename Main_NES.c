@@ -1,14 +1,16 @@
+//#resource "crt0.o"
+
 #include "Xinaga.h"
 #include "GameData.h"
 #include "neslib.h"
 #include <_heap.h>
 
-//#resource "crt0.o"
-
 
 // VRAM buffer module
 #include "vrambuf.h"
 //#link "vrambuf.c"
+
+#include <_heap.h>
 
 
 // bank-switching configuration
@@ -40,47 +42,49 @@
 
 
 
-void heap_avail(void)
+int *heaporg = (int*)&_heaporg;
+int *heapptr = (int*)&_heapptr;
+int *heapend = (int*)&_heapend;
+
+void setHeap()
 {
-  int x;
-  char *t;
-  char stringA[24] = "";
-  
-  int *heaporg = (int*)&_heaporg;
-  int *heapptr = (int*)&_heapptr;
-  int *heapend = (int*)&_heapend;
-  
   heaporg[0] = 0x7000; //heaporg
   heapptr[0] = heaporg[0]; //heapptr
   heapend[0] = 0x8000; //heapend
-  
-  sprintf(stringA, "heap starts: $%x", heaporg[0]);
-    vram_adr(NTADR_A(2,3));
-    vram_write(stringA, strlen(stringA));
-  
-  sprintf(stringA, "heap ends:   $%x", heapend[0]);
-    vram_adr(NTADR_A(2,4));
-    vram_write(stringA, strlen(stringA));
-  
-  x=1;
+  memset((int*)heaporg[0], 0, heapend[0] - heaporg[0]); 
+}
+#define length 128
+
+int heap_avail(void)
+{
+  char *t;
+  char stringA[24] = "";
+  int x = 1;
+
   while(1)
   {
-    t=malloc(x);
-    if ( !t ) break;
+    if (!(t=malloc(x))) break;
     free(t);
     ++x;
   }
-  //if ( x > 10 ) 
-    //x-=10;
-  //else
-    //x=0;
-  
-  sprintf(stringA, "heap avail:   %u bytes",x - 1);
-    vram_adr(NTADR_A(2,2));
-    vram_write(stringA, strlen(stringA));
-  
-  
+
+  ppu_off();
+  sprintf(stringA, "heap starts: $%4x", heaporg[0]);
+  vram_adr(NTADR_A(2,3));
+  vram_write(stringA, strlen(stringA));
+  sprintf(stringA, "heap ends:   $%4x", heapend[0]);
+  vram_adr(NTADR_A(2,4));
+  vram_write(stringA, strlen(stringA));
+  sprintf(stringA, "heap avail:   %4u bytes",x - 1);
+  vram_adr(NTADR_A(2,2));
+  vram_write(stringA, strlen(stringA));
+  sprintf(stringA, "Last %d bytes stored @ $%4x",length, heapptr[0]);
+  vram_adr(NTADR_A(2,7));
+  vram_write(stringA, strlen(stringA));
+  ppu_on_all();
+  return x - 1;
 }
+
 
 
 
@@ -88,19 +92,47 @@ byte x, y;
 //void Demo(void);
 void main(void)
 {
-  MMC3_WRAM_ENABLE();
+  //MMC3_WRAM_ENABLE();
   
   MMC3_PRG_8000(0);
   MMC3_PRG_A000(31);
   
   MMC3_CHR_0000(0);
-  MMC3_CHR_0800(2);
+  MMC3_CHR_0800(6);
   MMC3_CHR_1000(0);
   MMC3_CHR_1400(2);
   MMC3_CHR_1800(0);
   MMC3_CHR_1C00(2);
+  InitializeGraphics();
+  ClearScreen();
+  
+  Demo();
+  
+  
+  setHeap();
+  heap_avail();
+  
+  while (1)
+  {
+
+    byte i = 0;
+    char *dataA = malloc(length);
+    for (i = 0; i < length; ++i)
+      dataA[i] = i + heapptr[0];
 
 
+    ppu_off();
+    vram_adr(NTADR_A(2,8));
+    vram_write(dataA, length - 1);
+    ppu_on_all();
+    heap_avail();
+
+
+    if (heapend[0] - (heapptr[0] + length) < 0)
+      main();
+    
+  }
+  
   //byte x, y;
   //InitializeGraphics();
   //ClearScreen();
@@ -125,7 +157,6 @@ void main(void)
   
   
       
-  Demo();
   while(1){};
 }
 
