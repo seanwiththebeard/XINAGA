@@ -92,12 +92,12 @@ void main(void)
   //MMC3_WRAM_ENABLE();
   
   //Program Banks
-  MMC3_PRG_8000(0);
-  MMC3_PRG_A000(31);
+  MMC3_PRG_8000(0); //CPU $8000-$9FFF (or $C000-$DFFF): 8 KB switchable PRG ROM bank
+  MMC3_PRG_A000(31); //CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
   
   //Backgrounds
   MMC3_CHR_0000(0); 	//PPU $0000-$07FF (or $1000-$17FF): 2 KB switchable CHR bank
-  MMC3_CHR_0800(2); 	//PPU $0800-$0FFF (or $1800-$1FFF): 2 KB switchable CHR bank
+  MMC3_CHR_0800(3); 	//PPU $0800-$0FFF (or $1800-$1FFF): 2 KB switchable CHR bank
   
   //Sprites
   MMC3_CHR_1000(0); 	//PPU $1000-$13FF (or $0000-$03FF): 1 KB switchable CHR bank
