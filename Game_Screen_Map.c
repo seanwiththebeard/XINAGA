@@ -77,10 +77,27 @@ void QuadScroll(byte direction);
 
 
 //Viewport
+#if defined(__APPLE2__)
 #define viewportPosX 1
 #define viewportPosY 1
 #define viewportWidth 11
 #define viewportHeight 7
+#endif
+
+#if defined(__C64__)
+#define viewportPosX 1
+#define viewportPosY 1
+#define viewportWidth 11
+#define viewportHeight 7
+#endif
+
+#if defined(__NES__)
+#define viewportPosX 2
+#define viewportPosY 2
+#define viewportWidth 8
+#define viewportHeight 7
+#endif
+
 #define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define viewportSize viewportHeight * viewportWidth

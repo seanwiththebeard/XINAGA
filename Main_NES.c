@@ -91,15 +91,19 @@ void main(void)
 {
   //MMC3_WRAM_ENABLE();
   
+  //Program Banks
   MMC3_PRG_8000(0);
   MMC3_PRG_A000(31);
   
-  MMC3_CHR_0000(0);
-  MMC3_CHR_0800(6);
-  MMC3_CHR_1000(7);
-  MMC3_CHR_1400(8);
-  MMC3_CHR_1800(9);
-  MMC3_CHR_1C00(10);
+  //Backgrounds
+  MMC3_CHR_0000(0); 	//PPU $0000-$07FF (or $1000-$17FF): 2 KB switchable CHR bank
+  MMC3_CHR_0800(2); 	//PPU $0800-$0FFF (or $1800-$1FFF): 2 KB switchable CHR bank
+  
+  //Sprites
+  MMC3_CHR_1000(0); 	//PPU $1000-$13FF (or $0000-$03FF): 1 KB switchable CHR bank
+  MMC3_CHR_1400(0); 	//PPU $1400-$17FF (or $0400-$07FF): 1 KB switchable CHR bank
+  MMC3_CHR_1800(0); 	//PPU $1800-$1BFF (or $0800-$0BFF): 1 KB switchable CHR bank
+  MMC3_CHR_1C00(0);	//PPU $1C00-$1FFF (or $0C00-$0FFF): 1 KB switchable CHR bank
   setHeap();
   
   
@@ -109,9 +113,9 @@ void main(void)
   Demo();
   
   
-  heap_avail();
+  /*//heap_avail();
   
-  while (1)
+  //while (1)
   {
 
     byte i = 0;
@@ -130,14 +134,14 @@ void main(void)
     if (heapend[0] - (heapptr[0] + length) < 0)
       main();
     
-  }
+  }*/
   
   //byte x, y;
   //InitializeGraphics();
-  //ClearScreen();
-  //for (y = 0; y < 16; ++y)
-   //for (x = 0; x < 16; ++x)
-      //SetChar(x + 16*y,x, y);
+  ClearScreen();
+  for (y = 0; y < 16; ++y)
+   for (x = 0; x < 16; ++x)
+      SetChar(x + 16*y,x, y);
   //heap_avail();
   //InitializeGraphics();
   //ClearScreen();    
@@ -154,8 +158,8 @@ void main(void)
   //SetMenuItem(7, "Map Gen@");
   //SetMenuItem(8, "Scenario Gen@");
   
-  
-      
-  while(1){};
+  while(1)
+  {
+  };
 }
 

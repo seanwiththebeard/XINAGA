@@ -520,10 +520,27 @@ void GenerateMap(byte seed)
   //WriteLineMessageWindow(strTemp, 0);
 }
 
+#if defined(__APPLE2__)
 #define consolePosX  1
 #define consolePosY 17
 #define consoleWidth 28
 #define consoleHeight 6
+#endif
+
+#if defined(__C64__)
+#define consolePosX  1
+#define consolePosY 17
+#define consoleWidth 28
+#define consoleHeight 6
+#endif
+
+#if defined(__NES__)
+#define consolePosX 2
+#define consolePosY 15
+#define consoleWidth 20
+#define consoleHeight 6
+#endif
+
 #define menuPosX  2 + ROWS - (ROWS - consoleWidth)
 #define menuPosY consolePosY
 #define menuWidth 8
