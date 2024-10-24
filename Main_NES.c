@@ -3,14 +3,11 @@
 #include "Xinaga.h"
 #include "GameData.h"
 #include "neslib.h"
-#include <_heap.h>
-
 
 // VRAM buffer module
 #include "vrambuf.h"
 //#link "vrambuf.c"
 
-#include <_heap.h>
 
 
 // bank-switching configuration
@@ -41,7 +38,7 @@
 //#resource "neschars.bin"
 
 
-
+#include <_heap.h>
 int *heaporg = (int*)&_heaporg;
 int *heapptr = (int*)&_heapptr;
 int *heapend = (int*)&_heapend;
