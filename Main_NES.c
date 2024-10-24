@@ -96,10 +96,10 @@ void main(void)
   
   MMC3_CHR_0000(0);
   MMC3_CHR_0800(6);
-  MMC3_CHR_1000(0);
-  MMC3_CHR_1400(2);
-  MMC3_CHR_1800(0);
-  MMC3_CHR_1C00(2);
+  MMC3_CHR_1000(7);
+  MMC3_CHR_1400(8);
+  MMC3_CHR_1800(9);
+  MMC3_CHR_1C00(10);
   setHeap();
   
   
