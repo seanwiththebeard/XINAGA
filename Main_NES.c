@@ -36,6 +36,7 @@
 
 //#link "chr_generic.s"
 //#resource "neschars.bin"
+//#resource "tileset.bin"
 
 
 #include <_heap.h>
@@ -97,7 +98,7 @@ void main(void)
   
   //Backgrounds
   MMC3_CHR_0000(0); 	//PPU $0000-$07FF (or $1000-$17FF): 2 KB switchable CHR bank
-  MMC3_CHR_0800(3); 	//PPU $0800-$0FFF (or $1800-$1FFF): 2 KB switchable CHR bank
+  MMC3_CHR_0800(2); 	//PPU $0800-$0FFF (or $1800-$1FFF): 2 KB switchable CHR bank
   
   //Sprites
   MMC3_CHR_1000(0); 	//PPU $1000-$13FF (or $0000-$03FF): 1 KB switchable CHR bank
@@ -141,7 +142,7 @@ void main(void)
   ClearScreen();
   for (y = 0; y < 16; ++y)
    for (x = 0; x < 16; ++x)
-      SetChar(x + 16*y,x, y);
+      SetChar(x + 16*y, x + 2, y + 2);
   //heap_avail();
   //InitializeGraphics();
   //ClearScreen();    
