@@ -827,10 +827,13 @@ void LoadMap()
 {
   InitializeMapData();
 }
-#define consolePosX 1
-#define consolePosY 18
-#define consoleWidth 28
-#define consoleHeight 5
+#define consolePosX  2
+#define consolePosY ROWS - 1 - consoleHeight - 2
+#define consoleWidth COLS - 10
+#define consoleHeight 6
+
+
+
 //#define consoleDelay 1
 #define menuPosX  3 + ROWS - (ROWS - consoleWidth)
 #define menuPosY consolePosY - 1

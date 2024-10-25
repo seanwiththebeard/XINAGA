@@ -257,7 +257,18 @@ void RemoveParty() //Removes Last Party Member (?)
   DeleteParty(index);
 }
 
+#if defined(__APPLE2__)
 #define CharStatPosX 24
+#endif
+
+#if defined(__C64__)
+#define CharStatPosX 24
+#endif
+
+#if defined(__NES__)
+#define CharStatPosX 19
+#endif
+
 #define CharStatPosY 3
 #define CharStatRows 2
 void DrawCharStatus(byte characterIndex)
