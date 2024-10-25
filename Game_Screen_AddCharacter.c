@@ -101,7 +101,7 @@ void RollStats()
 void MenuGetClassPrimeStats()
 {
   byte x;
-  ResetMenu("Class@",22, 2, 11, 9, 6);
+  ResetMenu("Class@",22, 2, 8, 9, 6);
   for (x = 0; x < 4; ++x)
   {
     SetMenuItem(x, ClassDescription[x].NAME);
@@ -190,7 +190,7 @@ void MenuGetClass()
 
 void MenuGetRace()
 {
-  ResetMenu("Race@", 13, 2, 8, 9, 5);
+  ResetMenu("Race@", 12, 2, 9, 9, 5);
   SetMenuItem(0, RaceDescription[0].NAME);
   SetMenuItem(1, RaceDescription[1].NAME);
   SetMenuItem(2, RaceDescription[2].NAME);
@@ -212,7 +212,7 @@ void ListParty()
 {
   byte x;
   byte partyCount = CountParty();
-  ResetMenu("Party Members@", 17, 12, 13, 4, partyCount);
+  ResetMenu("Party Members@", 16, 16, 13, 4, partyCount);
   if (partyCount > 0)
   {
 
@@ -228,7 +228,7 @@ void ListRoster()
 {
   byte x;
   byte rosterCount = CountRoster();
-  ResetMenu("Roster Members@",2, 12, 14, 4, rosterCount);
+  ResetMenu("Roster Members@",2, 16, 14, 4, rosterCount);
   if (rosterCount > 0)
   {
 
@@ -242,9 +242,8 @@ void MenuEditParty()
 {
   ListRoster();
   ListParty();
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   
-  ResetMenu("Edit Party@",2, 2, 10, 9, 9);
+  ResetMenu("Party@",2, 2, 9, 9, 9);
   SetMenuItem(0, "Create@");
   SetMenuItem(1, "Delete@");
   SetMenuItem(2, "Add@");
@@ -254,6 +253,9 @@ void MenuEditParty()
   SetMenuItem(6, "Combat@");
   SetMenuItem(7, "Map Gen@");
   SetMenuItem(8, "Scenario@");
+  
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  
   
   switch(GetMenuSelection())
   {

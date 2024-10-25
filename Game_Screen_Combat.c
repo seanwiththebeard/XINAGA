@@ -29,10 +29,28 @@ bool exitCombat = false;
 #define MonsterCount 1
 
 
-#define consolePosX 1
-#define consolePosY 18
-#define consoleWidth 29
-#define consoleHeight 5
+#if defined(__APPLE2__)
+#define consolePosX  1
+#define consolePosY 17
+#define consoleWidth 28
+#define consoleHeight 6
+#endif
+
+#if defined(__C64__)
+#define consolePosX  1
+#define consolePosY 17
+#define consoleWidth 28
+#define consoleHeight 6
+#endif
+
+#if defined(__NES__)
+#define consolePosX 2
+#define consolePosY 15
+#define consoleWidth 20
+#define consoleHeight 6
+#endif
+
+
 #define consoleDelay 1
 
 #define menuPosX consolePosX + consoleWidth + 1

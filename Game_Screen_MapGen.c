@@ -536,21 +536,21 @@ void GenerateMap(byte seed)
 
 #if defined(__NES__)
 #define consolePosX 2
-#define consolePosY 15
-#define consoleWidth 20
+#define consolePosY 21
+#define consoleWidth 22
 #define consoleHeight 6
 #endif
 
-#define menuPosX  2 + ROWS - (ROWS - consoleWidth)
+#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
 #define menuPosY consolePosY
-#define menuWidth 8
+#define menuWidth 5
 #define menuHeight consoleHeight
 #define menuCount 4
 void GetSeed()
 {
   byte seed  = 0;
   bool exit = false;
-  ResetMenu("Scenario@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
+  ResetMenu("Seed@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
   SetMenuItem(0, "Next@");
   SetMenuItem(1, "Last@");
   SetMenuItem(2, "Go@");
