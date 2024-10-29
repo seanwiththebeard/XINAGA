@@ -181,7 +181,6 @@ void MenuGetClass()
     {
       HPMAX = hitdice + AbilityModifier[CON];
       HP = HPMAX;
-      WaitForInput();
       
       AddToRoster();
     }
@@ -190,6 +189,7 @@ void MenuGetClass()
 
 void MenuGetRace()
 {
+  ClearScreen();
   ResetMenu("Race@", 12, 2, 9, 9, 5);
   SetMenuItem(0, RaceDescription[0].NAME);
   SetMenuItem(1, RaceDescription[1].NAME);
@@ -197,7 +197,9 @@ void MenuGetRace()
   SetMenuItem(3, RaceDescription[3].NAME);
   SetMenuItem(4, "Exit@");
   RACE = GetMenuSelection();
-  if (RACE != 4)
+  if (RACE == 4)
+    ClearMenu();
+  else
   {
     ConsoleBufferReset();
     ConsoleBufferAdd("Race Confirmed:@");
@@ -322,7 +324,8 @@ void MenuEditParty()
       exitWindow = true;
       nextScreen = Scenario;
       break;
-  }  
+  }
+  ClearScreen();
 }
 
 screenName DrawAddCharacterScreen()
@@ -330,12 +333,11 @@ screenName DrawAddCharacterScreen()
   exitWindow = false;
   CurrentCharacter = 0;
   srand(randseed);
-
+  ClearScreen();
   while (!exitWindow)
   {
-    ClearScreen();
     MenuEditParty();
+    ClearScreen();
   }
-  ClearScreen();
   return nextScreen;
 }

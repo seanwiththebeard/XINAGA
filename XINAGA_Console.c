@@ -250,9 +250,7 @@ byte GetMenuSelection()
       if (InputFire())
         exit = true;
     }
-  }
-  //ClearMenu();
-  
+  }  
   return MenuSelection;
 }
 

@@ -115,11 +115,15 @@ void ClearScreen(void)
   #endif
   
   #if defined (__NES__)
+  //byte x, y;
   ppu_off();
   vram_adr(NTADR_A(0, 0));
+  //for (y = 0; y < ROWS; ++y)
+    //for (x = 0; x < COLS; ++x)
+      //SetChar(' ', x, y);
   vram_fill(' ', ROWS*COLS);
-  vram_adr(NTADR_A(0, 30));	// start address ($2000)
-  vram_fill(0, 64);
+  //vram_adr(NTADR_A(0, 30));	// start address ($2000)
+  //vram_fill(0, 64);
   ppu_on_all();
   #endif
 

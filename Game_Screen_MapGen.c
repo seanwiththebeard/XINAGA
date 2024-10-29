@@ -580,6 +580,7 @@ void GetSeed()
 
 screenName Update_MapGen()
 {
+  ClearScreen();
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   ClearMap();
   //DrawMapGenTiles();

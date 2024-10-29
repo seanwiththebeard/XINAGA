@@ -16,7 +16,7 @@ const RaceDescriptionDef const RaceDescription[4] =
   {"Human@", 255},
   {"Elf@", 6}, 
   {"Dwarf@", 255}, 
-  {"Halfling@", 6}
+  {"Construct@", 6}
 };
 
 
