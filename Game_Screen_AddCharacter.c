@@ -13,10 +13,7 @@
 #endif
 
 screenName nextScreen = EditParty;
-#define consolePosX  2
-#define consolePosY ROWS - 1 - consoleHeight - 2
-#define consoleWidth COLS - 10
-#define consoleHeight 6
+
 bool AreYouSure();
 bool exitWindow = false;
 byte CurrentCharacter = 0;
@@ -214,7 +211,7 @@ void ListParty()
 {
   byte x;
   byte partyCount = CountParty();
-  ResetMenu("Party Members@", 16, 16, 13, 4, partyCount);
+  ResetMenu("Party Members@", 24, 7, 14, 4, partyCount);
   if (partyCount > 0)
   {
 
@@ -230,7 +227,7 @@ void ListRoster()
 {
   byte x;
   byte rosterCount = CountRoster();
-  ResetMenu("Roster Members@",2, 16, 14, 4, rosterCount);
+  ResetMenu("Roster Members@",24, 2, 14, 12, rosterCount);
   if (rosterCount > 0)
   {
 

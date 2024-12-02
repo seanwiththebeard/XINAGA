@@ -9,6 +9,18 @@
 #include <peekpoke.h>
 
 
+//Viewport and Console
+#define consolePosX  2
+#define consolePosY 15
+#define consoleWidth 18
+#define consoleHeight 6
+
+#define viewportPosX 1
+#define viewportPosY 1
+#define viewportWidth 9
+#define viewportHeight 9
+
+
 #if defined(__APPLE2__)
 #define COLS 40
 #define ROWS 24

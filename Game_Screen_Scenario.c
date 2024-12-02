@@ -10,11 +10,6 @@
 //#pragma rodata-name (push, "CODE3")
 #endif
 
-#define consolePosX  1
-#define consolePosY 17
-#define consoleWidth 28
-#define consoleHeight 6
-
 #define menuPosX  2 + ROWS - (ROWS - consoleWidth)
 #define menuPosY consolePosY
 #define menuWidth 8
