@@ -289,7 +289,7 @@ void DrawMoonPhase()
 {
   ConsoleBufferReset();
   sprintf(strTemp, "< %c > < %c >@", phaseChar[moonA], phaseChar[moonB]);
-  PrintString(strTemp, contextMenuPosX + 2, contextMenuPosY + 1, true, false);
+  PrintString(strTemp, contextMenuPosX + 1, contextMenuPosY, true, false);
   ConsoleBufferReset();
 }
 void TickMoonPhase()
@@ -320,9 +320,9 @@ void TickMoonPhase()
 void DrawCharStats()
 {
   byte i;
-  DrawBorder("Moon Phases@", contextMenuPosX - 1, contextMenuPosY, contextMenuWidth, 3, true);
+  DrawBorder("Moon Phases@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, 3, true);
   DrawMoonPhase();
-  DrawBorder("Party@", contextMenuPosX - 1, contextMenuPosY + 2, contextMenuWidth, 1 + 4 * (3), true);
+  DrawBorder("Party@", contextMenuPosX - 1, contextMenuPosY + 2, contextMenuWidth + 2, 1 + 4 * (3), true);
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
 }

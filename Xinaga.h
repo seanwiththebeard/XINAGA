@@ -13,7 +13,7 @@
 #define consolePosX  2
 #define consolePosY ROWS - consoleHeight - 3
 #define consoleWidth COLS - 10
-#define consoleHeight 6
+#define consoleHeight 7
 
 #define viewportPosX 1
 #define viewportPosY 1
