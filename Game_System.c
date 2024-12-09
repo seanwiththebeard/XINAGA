@@ -257,34 +257,21 @@ void RemoveParty() //Removes Last Party Member (?)
   DeleteParty(index);
 }
 
-#if defined(__APPLE2__)
-#define CharStatPosX 24
-#endif
 
-#if defined(__C64__)
-#define CharStatPosX 24
-#endif
-
-#if defined(__NES__)
-#define CharStatPosX 19
-#endif
-
-#define CharStatPosY 3
-#define CharStatRows 2
 void DrawCharStatus(byte characterIndex)
 {
   //byte statX = CharStatPosX;
-  byte statY = CharStatPosY + characterIndex * (CharStatRows + 1);
+  byte statY = contextMenuPosY + characterIndex * (3);
   struct playerChar *PlayerChar = getPartyMember(characterIndex);
 
-  DrawBorder(PlayerChar->NAME, CharStatPosX - 1, statY - 1, COLS - CharStatPosX + 1, 2 + CharStatRows, true);
-  DrawTileDirectXY(PlayerChar->CLASS, CharStatPosX, statY);
+  DrawBorder(PlayerChar->NAME, contextMenuPosX - 1, statY - 1, contextMenuWidth, 4, true);
+  DrawTileDirectXY(PlayerChar->CLASS, contextMenuPosX, statY);
   ConsoleBufferReset();
   ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
   ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
-  ConsoleBufferPrint(CharStatPosX + 2, statY);
+  ConsoleBufferPrint(contextMenuPosX + 2, statY);
   sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
-  PrintString(strTemp, CharStatPosX + 9, statY + 1, true, false);
+  PrintString(strTemp, contextMenuPosX + 9, statY + 1, true, false);
   ConsoleBufferReset();
   
   //sprintf(strTemp, "%s@", ClassDescriptions[PlayerChar->CLASS].NAME);
@@ -302,7 +289,7 @@ void DrawMoonPhase()
 {
   ConsoleBufferReset();
   sprintf(strTemp, "< %c > < %c >@", phaseChar[moonA], phaseChar[moonB]);
-  PrintString(strTemp, CharStatPosX + 2, CharStatPosY - 2, true, false);
+  PrintString(strTemp, contextMenuPosX + 2, contextMenuPosY + 1, true, false);
   ConsoleBufferReset();
 }
 void TickMoonPhase()
@@ -333,10 +320,9 @@ void TickMoonPhase()
 void DrawCharStats()
 {
   byte i;
-  DrawBorder("Moon Phases@", CharStatPosX - 1, CharStatPosY - 3, COLS - CharStatPosX + 1, 3, true);
+  DrawBorder("Moon Phases@", contextMenuPosX - 1, contextMenuPosY, contextMenuWidth, 3, true);
   DrawMoonPhase();
-  
-  DrawBorder("Party@", CharStatPosX - 1, CharStatPosY - 1, COLS - CharStatPosX + 1, 1 + 4 * (CharStatRows + 1), true);
+  DrawBorder("Party@", contextMenuPosX - 1, contextMenuPosY + 2, contextMenuWidth, 1 + 4 * (3), true);
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
 }

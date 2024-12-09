@@ -20,6 +20,10 @@
 #define viewportWidth 9
 #define viewportHeight 9
 
+#define contextMenuPosX 16
+#define contextMenuPosY 2
+#define contextMenuWidth 14
+
 
 #if defined(__APPLE2__)
 #define COLS 40
