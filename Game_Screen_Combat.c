@@ -22,8 +22,8 @@ sbyte MovementRemaining = 0;
 bool CombatSuccess = false;
 bool exitCombat = false;
 
-#define CombatMapWidth 11
-#define CombatMapHeight 8
+#define CombatMapWidth 7
+#define CombatMapHeight 7
 
 #define MaxCombatParticipants 12 //CombatMapWidth * CombatMapHeight
 #define MonsterCount 1
@@ -114,7 +114,7 @@ void Initialize(void)
   GetCharacters();
   GetMonsters();
 
-  DrawBorder("Combat@",0, 0, 2 + 2*CombatMapWidth, 2 + 2*CombatMapHeight, false);
+  DrawBorder("Combat@",0, 1, 2 + 2*CombatMapWidth, 2 + 2*CombatMapHeight, false);
   DrawCharStats();
   DrawCombatMap();
 
@@ -563,7 +563,7 @@ void DrawCombatMap(void)
 {
   byte x;
   byte y;
-  SetTileOrigin(1, 1);
+  SetTileOrigin(1, 2);
   //wait_vblank(1);
 
   //StoreBuffer();

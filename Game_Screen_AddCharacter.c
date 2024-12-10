@@ -243,7 +243,7 @@ void MenuEditParty()
   
   ListRoster();
   
-  ResetMenu("Party@",2, 2, 9, 9, 9);
+  ResetMenu("Party@",consolePosX, 2, 9, 9, 9);
   SetMenuItem(0, "Create@");
   SetMenuItem(1, "Delete@");
   SetMenuItem(2, "Add@");
