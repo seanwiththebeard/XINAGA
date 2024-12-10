@@ -17,8 +17,8 @@
 
 #define viewportPosX 1
 #define viewportPosY 1
-#define viewportWidth 7//((COLS - (contextMenuWidth + 2) - 1) / 2)
-#define viewportHeight 7
+#define viewportWidth 11//((COLS - (contextMenuWidth + 2) - 1) / 2)
+#define viewportHeight 11
 
 #define contextMenuPosX 16
 #define contextMenuPosY 1
