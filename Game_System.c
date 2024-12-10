@@ -41,7 +41,7 @@ void DrawMiniMap(bool highlightPlayer)
     }
   }
   if(highlightPlayer)
-    SetChar('X', MiniMapX + MiniMapHighlightX + 1, MiniMapY + MiniMapHighlightY + 1);
+    SetChar('X', MiniMapX + 1 + MiniMapHighlightX, MiniMapY + 1 + MiniMapHighlightY);
 }
 
 byte RollDice(byte count, byte diceSize)
@@ -322,7 +322,7 @@ void DrawCharStats()
   byte i;
   DrawBorder("Moon Phases@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, 3, true);
   DrawMoonPhase();
-  DrawBorder("Party@", contextMenuPosX - 1, contextMenuPosY + 2, contextMenuWidth + 2, 1 + 4 * (3), true);
+  DrawBorder("Party@", contextMenuPosX - 1, contextMenuPosY + 1, contextMenuWidth + 2, 2 + 4 * (3), true);
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
 }

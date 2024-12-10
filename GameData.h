@@ -23,20 +23,9 @@ void Demo(void);
 void DrawMiniMap(bool highlightPlayer);
 void WaitForInput(void);
 
-#if defined(__APPLE2__)
 #define MiniMapX 0
 #define MiniMapY 0
-#endif
 
-#if defined(__C64__)
-#define MiniMapX 0
-#define MiniMapY 0
-#endif
-
-#if defined(__NES__)
-#define MiniMapX 1
-#define MiniMapY 1
-#endif
 extern byte MiniMapHighlightX;
 extern byte MiniMapHighlightY;
 

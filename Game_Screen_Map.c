@@ -85,6 +85,9 @@ byte followIndex = 0;
 sbyte offsetX = 0;
 sbyte offsetY = 0;
 
+byte CoordPosX = 0;
+byte CoordPosY = 0;
+
 //Map Data
 bool LOSEnabled = true;
 #define EmptyTile 7
@@ -194,8 +197,11 @@ void BufferCharacters()
 
 void UpdatePlayerOnMiniMap(void)
 {
-  MiniMapHighlightX = characters.quadPosX[followIndex];
-  MiniMapHighlightY = characters.quadPosY[followIndex];
+  //MiniMapHighlightX = characters.quadPosX[followIndex];
+  //MiniMapHighlightY = characters.quadPosY[followIndex];
+  
+  MiniMapHighlightX = CoordPosX >> 4;
+  MiniMapHighlightY = CoordPosY >> 4;
 }
 
 //#pragma bss-name (push, "ZEROPAGE")
@@ -775,19 +781,19 @@ void MoveCharacter(byte index, byte dir)
 
 void DrawCharacterCoordinates(byte index)
 {
-  byte posX = characters.posX[index];
-  byte posY = characters.posY[index];
+  CoordPosX = characters.posX[index];
+  CoordPosY = characters.posY[index];
   
-  if (posX >= quadWidth * 2)
-    posX -= quadWidth * 2;
-  posX += quadWidth*2*characters.quadPosX[index];
+  if (CoordPosX >= quadWidth * 2)
+    CoordPosX -= quadWidth * 2;
+  CoordPosX += quadWidth*2*characters.quadPosX[index];
   
-  if (posY >= quadHeight * 2)
-    posY -= quadHeight * 2;
-  posY += quadHeight*2*characters.quadPosY[index];
+  if (CoordPosY >= quadHeight * 2)
+    CoordPosY -= quadHeight * 2;
+  CoordPosY += quadHeight*2*characters.quadPosY[index];  
   
-  sprintf(strTemp,"(%3i,%3i)@", posX, posY);
-  PrintString(strTemp, viewportPosX + 6, viewportPosY - 1, true, false);
+  sprintf(strTemp,"(%3i,%3i)@", CoordPosX, CoordPosY);
+  PrintString(strTemp, viewportPosX + 4, viewportPosY - 1, true, false);
 }
 
 void DrawCharset()
