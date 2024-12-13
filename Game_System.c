@@ -288,7 +288,7 @@ byte moonTick = 0;
 void DrawMoonPhase()
 {
   ConsoleBufferReset();
-  sprintf(strTemp, "< %c > < %c >@", phaseChar[moonA], phaseChar[moonB]);
+  sprintf(strTemp, "{%c}{%c}@", phaseChar[moonA], phaseChar[moonB]);
   PrintString(strTemp, contextMenuPosX + 1, contextMenuPosY, true, false);
   ConsoleBufferReset();
 }

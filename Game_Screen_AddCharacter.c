@@ -323,6 +323,7 @@ void MenuEditParty()
       nextScreen = Scenario;
       break;
   }
+  ClearMenu();
   ClearScreen();
 }
 

@@ -117,6 +117,7 @@ void ClearScreen(void)
   #if defined (__NES__)
   //byte x, y;
   ppu_off();
+  vrambuf_flush();
   vram_adr(NTADR_A(0, 0));
   //for (y = 0; y < ROWS; ++y)
     //for (x = 0; x < COLS; ++x)

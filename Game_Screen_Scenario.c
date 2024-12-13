@@ -10,11 +10,11 @@
 //#pragma rodata-name (push, "CODE3")
 #endif
 
-#define menuPosX  (ROWS - consoleWidth)
-#define menuPosY consolePosY
-#define menuWidth 8
-#define menuHeight consoleHeight
-#define menuCount 4
+#define selectionPosX consoleWidth + 3
+#define selectionPosY consolePosY
+#define selectionWidth 6
+#define selectionHeight consoleHeight
+#define selectionCount 4
 
 //Quests are like stars in Mario 64
 //Each world is like a level, each continent/quest is like a star
@@ -102,7 +102,8 @@ screenName Update_Scenario()
   uint16_t scenarioSeed = 0;
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   {
-    ResetMenu("Scenario@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
+    
+    ResetMenu("@", selectionPosX, selectionPosY, selectionWidth, selectionHeight, selectionCount);
     SetMenuItem(0, "Next@");
     SetMenuItem(1, "Last@");
     SetMenuItem(2, "Go@");

@@ -5,7 +5,7 @@
 #include "neslib.h"
 
 // VBUFSIZE = maximum update buffer bytes
-#define VBUFSIZE 80
+#define VBUFSIZE 128
 
 // update buffer starts at $100 (stack page)
 #define updbuf ((byte*)0x100)
