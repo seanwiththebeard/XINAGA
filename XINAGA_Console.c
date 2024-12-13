@@ -75,7 +75,6 @@ byte Height;
 byte Width;
 byte PosX;
 byte PosY;
-//char *MessageLines;
 
 #define MessageCount 4
 char *Messages[MessageCount]= {
@@ -198,8 +197,8 @@ byte GetMenuSelection()
 {
   bool exit = false;
   bool refresh = false;
-  //DrawMenu();
-  while (!exit)
+  
+  while (1)
   {
     UpdateInput();
     if(InputChanged())
@@ -230,27 +229,14 @@ byte GetMenuSelection()
       }
       
       if (InputFire())
-        exit = true;
+        return MenuSelection;
     }
   }  
-  return MenuSelection;
 }
 
-void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
+void ClearConsoleContent()
 {
-  byte x, y;
-  PosX = xPos;
-  PosY = yPos;
-  Width = w;
-  Height = h;
-  //free(MessageLines);
-  //size = w * h;
-  //MessageLines = malloc(w*h);
-
-  DrawBorder("Console@",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
-  for (y = 0; y < Height; ++y)
-    for (x = 0; x < Width; ++x)
-      SetChar(' ', PosX + x, PosY + y);
+  memset(&consoleContents[0], ' ', consoleHeight*consoleWidth);
 }
 
 void DrawConsoleContent()
@@ -264,6 +250,20 @@ void DrawConsoleContent()
     }
   }
 }
+
+void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
+{
+  PosX = xPos;
+  PosY = yPos;
+  Width = w;
+  Height = h;
+
+  DrawBorder("Console@",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
+  ClearConsoleContent();
+  DrawConsoleContent();
+}
+
+
 
 void ScrollMessageWindowUp()
 {
