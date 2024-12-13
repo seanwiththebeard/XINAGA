@@ -26,10 +26,6 @@ void ConsoleBufferReset()
 void ConsoleBufferAdd(char *message)
 {
   byte i;
-  if (StringLength > 0)
-  {
-    //++StringLength;
-  }
   for (i = 0; message[i] != '@' && message[i] != 0; ++i)
   {
     strTemp[StringLength] = message[i];
@@ -46,6 +42,7 @@ void ConsoleBufferAddNumber(int value)
   sprintf(string, "%d", value);
   ConsoleBufferAdd(string);
 }
+
 void ConsoleBufferBackspace()
 {
   --StringLength;
@@ -56,7 +53,6 @@ void ConsoleBufferEndline()
   while (strTemp[StringLength] == ' ')
     --StringLength;
   strTemp[StringLength - 1] = '@';
-  //strTemp[StringLength + 1] = '@';
 }
   
 void ConsoleBufferPrint(byte x, byte y)
@@ -120,18 +116,6 @@ void ClearItem(byte index)
 
 void DrawItem(byte index)
 {
-  //char menuLine[38];
-  //char *selector, *highlight;
-  //if (MenuSelection == index)
-    //selector = ">";
-  //else
-   // selector = "";
-
-  //if(MenuHighlight[index])
-   // highlight = "+";
-  //else
-    //highlight = "";
-  //ClearItem(index);
   ConsoleBufferReset();
   if(MenuSelection == index)
     ConsoleBufferAdd(">");
@@ -147,11 +131,7 @@ void DrawItem(byte index)
   
   ConsoleBufferAdd(MenuItems[index]);
   ConsoleBufferPrint(MenuPosX, MenuPosY + index);
-  
   wait_vblank(1);
-  
-  //sprintf(menuLine, "%s%s%s", selector, highlight, MenuItems[index]);
-  //PrintString(menuLine, MenuPosX, MenuPosY + index, true, false);
 }
 
 char *menutitle = 0;
@@ -201,7 +181,6 @@ void DrawMenu()
   {
     ClearItem(x);
     DrawItem(x);
-    //wait_vblank(1);
   }
 }
 void ClearMenu()
@@ -209,9 +188,6 @@ void ClearMenu()
   byte x;
   byte xPos = MenuPosX;
   byte yPos = MenuPosY;
-  
-  //for (i = 0; text[i] != '@' && text[i] != '\n'; ++i)
-    //++offset;
   
     for (x = 0; x < MenuHeight + 2; ++x)
       DrawLineH(' ', xPos - 1, yPos + x - 1, MenuWidth + 2);
@@ -281,36 +257,30 @@ void DrawConsoleContent()
 {
   byte x, y;
   for (y = 0; y < Height; ++y)
+  {
     for (x = 0; x < Width; ++x)
+    {
       SetChar(consoleContents[x + y*consoleWidth], PosX + x, PosY + y);
-  wait_vblank(1);
+    }
+  }
 }
 
 void ScrollMessageWindowUp()
 {
   byte x;
   int y;
-  //for (y = 0; y < Height - 1; ++y)  
-    //for (x = 0; x < (Width); ++x)
-    //{
-      //MessageLines[x] = MessageLines[x + Width];
-      //consoleContents[x + y*consoleWidth] = consoleContents[x + y*(consoleWidth )+1];
-      //SetChar(consoleContents[x + y*consoleWidth], PosX + x, PosY + y);
-    
-    //}
+  
   for (y = 0; y < contentOffset; ++y)
   {
     consoleContents[y] = consoleContents[y + consoleWidth];
   }
-  DrawConsoleContent();
   
   for (x = 0; x < (Width); ++x)
   {
-    SetChar(' ', PosX + x, PosY + Height - 1);
+    //SetChar(' ', PosX + x, PosY + Height - 1);
     consoleContents[contentOffset + x] = ' ';
   }
   DrawConsoleContent();
-  wait_vblank(1);
 }
 
 void SetLineMessageWindow(char *message, byte delay)
@@ -389,6 +359,6 @@ void WriteLineMessageWindow(char *message, byte delay)
 {
   ScrollMessageWindowUp();
   SetLineMessageWindow(message, delay);
-  wait_vblank(1);
+  //wait_vblank(1);
 }
 
