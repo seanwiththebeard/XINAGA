@@ -130,7 +130,7 @@ void DrawItem(byte index)
   
   ConsoleBufferAdd(MenuItems[index]);
   ConsoleBufferPrint(MenuPosX, MenuPosY + index);
-  wait_vblank(1);
+  //wait_vblank(1);
 }
 
 char *menutitle = 0;
@@ -321,7 +321,8 @@ void SetLineMessageWindow(char *message, byte delay)
       {
         SetChar(message[x], PosX + x, PosY + Height - 1);
         consoleContents[contentOffset + x] = message[x];
-        wait_vblank(delay);
+        if(delay)
+          wait_vblank(delay);
       }
     }
     

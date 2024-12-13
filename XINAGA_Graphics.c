@@ -472,6 +472,7 @@ void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer)
       SetChar(text[i], posx + i, posy);
     SetColor(ColorText, posx + i, posy);
   }
+  wait_vblank(1);
 }
 
 int originOffset = 0;
@@ -602,11 +603,13 @@ void DrawArrow(byte x, byte y)
   
   SetChar('^', arrowX, arrowY);
   SetChar('^', arrowX + 1, arrowY);
+  //wait_vblank(1);
 }
 void ClearArrow(void)
 {
   SetChar(arrowA, arrowX, arrowY);
   SetChar(arrowB, arrowX + 1, arrowY);
+  //wait_vblank(1);
 }
 
 void DrawLineH(byte index, byte x, byte y, byte length)
@@ -622,6 +625,7 @@ void DrawLineH(byte index, byte x, byte y, byte length)
       ++tempIndex;
     SetChar(tempIndex, posX, y);
   }
+  //wait_vblank(1);
 }
 void DrawLineV(byte index, byte x, byte y, byte length)
 {
@@ -633,6 +637,7 @@ void DrawLineV(byte index, byte x, byte y, byte length)
   {
     SetChar(tempIndex, x, y + count);
   }
+  //wait_vblank(1);
 }
 
 void DrawCorners(byte xPos, byte yPos, byte widthInside1, byte heightInside1)
@@ -648,6 +653,7 @@ void DrawCorners(byte xPos, byte yPos, byte widthInside1, byte heightInside1)
   SetChar(corner2, xPos + widthInside1, yPos);
   SetChar(corner1, xPos, yPos + heightInside1);
   SetChar(corner2, xPos + widthInside1, yPos + heightInside1);
+  //wait_vblank(1);
 }
 void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool fill)
 {
@@ -666,8 +672,14 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
     //++offset;
   
   if (fill)
+  {
     for (x = 0; x < heightInside2; ++x)
+    {
       DrawLineH(' ', xPos1, yPos1 + x, widthInside2);
+    }
+    //wait_vblank(1);
+  }
+  
 
   DrawLineH(0xEC, xPos1, yPos, widthInside2);
   DrawLineH(0xFC, xPos1, yPos + heightInside1, widthInside2);
@@ -675,6 +687,8 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
   DrawLineV(0xFE, xPos + widthInside1, yPos1, heightInside2);
   DrawCorners(xPos, yPos, widthInside1, heightInside1);
   PrintString(text, xPos1, yPos, true, false);
+  
+  wait_vblank(1);
 }
 
 #if defined(__C64__)
