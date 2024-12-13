@@ -133,16 +133,17 @@ void ClearScreen(void)
 #if defined(__C64__)
 byte* RASTERCOUNT = (byte*)0xD012;
 #endif
-void raster_wait(int line)
+void raster_wait(byte line)
 {
   #if defined(__C64__)
   while ((RASTERCOUNT[0] < line)){}
   #endif
   
   #if defined(__APPLE2__)
-  int x = 0;
-  while (x < 4096 * line)
-    ++x;
+  ++line;
+  //int x = 0;
+  //while (x < 4096 * line)
+    //++x;
   #endif
   
   #if defined(__NES__)
