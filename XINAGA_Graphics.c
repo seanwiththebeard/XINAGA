@@ -154,7 +154,7 @@ void wait_vblank(byte frames)
   byte count = frames;
   for (count = frames; count; --count)
   {
-    UpdateInput();
+    //UpdateInput();
     
   #if defined (__C64__)
     raster_wait(255);    
