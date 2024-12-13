@@ -151,15 +151,20 @@ void raster_wait(byte line)
 
 void wait_vblank(byte frames) 
 {
-  #if defined (__C64__)
   byte count = frames;
   for (count = frames; count; --count)
   {
     UpdateInput();
+    
+  #if defined (__C64__)
     raster_wait(255);    
   }
   #endif
-  frames;
+  
+  #if defined (__NES__)
+  vrambuf_flush();
+  #endif
+}
 }
 
 #if defined(__C64__)

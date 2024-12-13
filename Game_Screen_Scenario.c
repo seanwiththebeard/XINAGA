@@ -84,7 +84,7 @@ void GenerateContinent()
   byte QuestLocation = rand() % 4;
   
   sprintf(strTemp, "In %s, the %s asks you to %s the %s at the %s@", questOrigin[QuestOrigin], questGiver[QuestOrigin][QuestGiver], questType[QuestType], questTarget[QuestType][QuestTarget], questLocation[QuestType][QuestLocation]);
-  WriteLineMessageWindow(strTemp, 0);
+  WriteLineMessageWindow(strTemp, 1);
   WriteLineMessageWindow("@", 0);
 
   //Add Landmarks

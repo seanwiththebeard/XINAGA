@@ -11,8 +11,8 @@
 
 //Viewport and Console
 #define consolePosX  2
-#define consolePosY ROWS - (consoleHeight + 3)
-#define consoleWidth COLS - (contextMenuWidth - 3)
+#define consolePosY (ROWS - (consoleHeight + 3))
+#define consoleWidth (COLS - (contextMenuWidth - 3))
 #define consoleHeight 5
 
 #define viewportPosX 2
