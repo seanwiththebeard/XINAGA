@@ -133,15 +133,16 @@ void ClearScreen(void)
 #if defined(__C64__)
 byte* RASTERCOUNT = (byte*)0xD012;
 #endif
-void raster_wait(byte line)
+void raster_wait(int line)
 {
   #if defined(__C64__)
   while ((RASTERCOUNT[0] < line)){}
   #endif
   
   #if defined(__APPLE2__)
-  byte x;
-  while (++x < line){};
+  int x = 0;
+  while (x < 4096 * line)
+    ++x;
   #endif
   
   #if defined(__NES__)
@@ -155,13 +156,19 @@ void wait_vblank(byte frames)
   for (count = frames; count; --count)
   {
     //UpdateInput();
-    
-  #if defined (__C64__)
+
+    #if defined (__C64__)
     raster_wait(255);    
-  #endif
-  
-  #if defined (__NES__)
-  vrambuf_flush();
+    #endif
+
+    #if defined (__APPLE2__)
+    int x = 0;
+    while (x < 512)
+      ++x;
+    #endif
+
+    #if defined (__NES__)
+    vrambuf_flush();
   #endif
   }
 }
