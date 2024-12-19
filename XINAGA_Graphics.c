@@ -134,7 +134,7 @@ void ClearScreen(void)
 #if defined(__C64__)
 byte* RASTERCOUNT = (byte*)0xD012;
 #endif
-void raster_wait(int line)
+void raster_wait(byte line)
 {
   #if defined(__C64__)
   while ((RASTERCOUNT[0] < line)){}
