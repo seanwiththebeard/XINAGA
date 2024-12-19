@@ -10,12 +10,6 @@
 //#pragma rodata-name (push, "CODE3")
 #endif
 
-#define selectionPosX consoleWidth + 3
-#define selectionPosY consolePosY
-#define selectionWidth 6
-#define selectionHeight consoleHeight
-#define selectionCount 4
-
 //Quests are like stars in Mario 64
 //Each world is like a level, each continent/quest is like a star
 //100 coin star?

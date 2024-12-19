@@ -22,19 +22,13 @@ sbyte MovementRemaining = 0;
 bool CombatSuccess = false;
 bool exitCombat = false;
 
-#define CombatMapWidth viewportWidth
-#define CombatMapHeight viewportHeight
-
-#define MaxCombatParticipants 12 //CombatMapWidth * CombatMapHeight
+#define MaxCombatParticipants 12
 #define MonsterCount 1
-
 
 #define consoleDelay 1
 
-#define menuPosX consolePosX + consoleWidth + 1
-#define menuPosY consolePosY
-#define menuWidth 8
-#define menuHeight 5
+#define CombatMapWidth viewportWidth
+#define CombatMapHeight viewportHeight
 
 //Functions
 void Initialize(void);
@@ -114,7 +108,7 @@ void Initialize(void)
   GetCharacters();
   GetMonsters();
 
-  DrawBorder("Combat@",0, 0, 2 + 2*CombatMapWidth, 2 + 2*CombatMapHeight, false);
+  DrawBorder("Combat@",viewportPosX - 1, viewportPosY - 1, 2 + 2*CombatMapWidth, 2 + 2*CombatMapHeight, true);
   DrawCharStats();
   DrawCombatMap();
 
@@ -401,7 +395,7 @@ void SelectPlayerAction(void)
   byte moveX = combatParticipant.posX[SelectedCharacter];
   byte moveY = combatParticipant.posY[SelectedCharacter];
 
-  ResetMenu("Action@", menuPosX, menuPosY, menuWidth, menuHeight, 5);
+  ResetMenu("Action@", selectionPosX, selectionPosY, selectionWidth, selectionHeight, 5);
   SetMenuItem(0, "Move@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Magic@");
@@ -563,7 +557,7 @@ void DrawCombatMap(void)
 {
   byte x;
   byte y;
-  SetTileOrigin(1, 1);
+  SetTileOrigin(viewportPosX, viewportPosY);
   //wait_vblank(1);
 
   //StoreBuffer();
@@ -576,6 +570,7 @@ void DrawCombatMap(void)
       DrawTileDirect();
     }
   DrawCharacters();
+  wait_vblank(1);
   //SwapBuffer();
 }
 
@@ -603,6 +598,7 @@ void DrawCharacters(void)
       DrawTileX = combatParticipant.posX[i];
       DrawTileY = combatParticipant.posY[i];
       DrawTileDirect();
+      wait_vblank(1);
     }
   }
 }
@@ -616,6 +612,7 @@ screenName Update_Combat(void)
   while (!exitCombat)
   {
     DoCombatRound();
+    UpdateInput();
   }
   WriteLineMessageWindow("Combat End, Press Space...@", consoleDelay);
   while (!InputFire())

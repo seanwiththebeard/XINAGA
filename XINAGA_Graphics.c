@@ -38,6 +38,7 @@ unsigned int RowsHGR[192];
 #if defined (__NES__)
 const byte const *charset = 0x0;
 const byte const *attributeset = 0x0;
+byte ScreenChars[ROWS*COLS];
 #endif
 
 #if defined(__C64__)
@@ -133,17 +134,16 @@ void ClearScreen(void)
 #if defined(__C64__)
 byte* RASTERCOUNT = (byte*)0xD012;
 #endif
-void raster_wait(byte line)
+void raster_wait(int line)
 {
   #if defined(__C64__)
   while ((RASTERCOUNT[0] < line)){}
   #endif
   
   #if defined(__APPLE2__)
-  ++line;
-  //int x = 0;
-  //while (x < 4096 * line)
-    //++x;
+  int x = 0;
+  while (x < 4096 * line)
+    ++x;
   #endif
   
   #if defined(__NES__)
@@ -340,6 +340,7 @@ void _SetChar(void)
   #endif
   
   #if defined (__NES__)
+  ScreenChars[offset] = SetCharIndex;
   //vram_adr(NTADR_A(SetCharX,SetCharY));		// set address
   vrambuf_put(NTADR_A(SetCharX,SetCharY), &SetCharIndex, 1);
    //vrambuf_end();
@@ -392,16 +393,22 @@ void SetCharBuffer(byte index, byte x, byte y)
 
 byte GetChar(byte x, byte y)
 {
-  #if defined (__C64__)
+ // #if defined (__C64__)
+ // return ScreenChars[x + YColumnIndex[y]];
+  //#endif
+ // #if defined (__APPLE2__)
   return ScreenChars[x + YColumnIndex[y]];
-  #endif
-  #if defined (__APPLE2__)
-  return ScreenChars[x + YColumnIndex[y]];
-  #endif
-  #if defined (__NES__)
-  x;y;
-  return 0;
-  #endif
+ // #endif
+ // #if defined (__NES__)
+  
+  //char value;
+  //x;y;
+  //ppu_off();
+  //vram_adr(NTADR_A(x,y));
+  //vram_read(&value, 1);
+  //ppu_on_all();
+  //return value;
+  //#endif
 }
 
 //Buffer

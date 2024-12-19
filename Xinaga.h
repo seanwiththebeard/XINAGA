@@ -15,6 +15,12 @@
 #define consoleWidth (COLS - (contextMenuWidth - 3))
 #define consoleHeight 5
 
+#define selectionPosX consoleWidth + 3
+#define selectionPosY consolePosY
+#define selectionWidth 6
+#define selectionHeight consoleHeight
+#define selectionCount 4
+
 #define viewportPosX 2
 #define viewportPosY 2
 #define viewportWidth 7//((COLS - (contextMenuWidth + 2) - 1) / 2)
