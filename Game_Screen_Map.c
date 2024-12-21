@@ -8,7 +8,6 @@
 #pragma code-name (push, "CODEA_1")
 #pragma data-name (push, "XRAM")
 #pragma bss-name (push, "XRAM")
-//#pragma rodata-name (push, "CODEA_1")
 #endif
 
 //Charset Layout C64
@@ -148,18 +147,18 @@ struct
 
 void CameraFollow()
 {
-  byte byte_x;
-  byte byte_y;
+  byte x;
+  byte y;
   offsetX = characters.posX[followIndex];
   offsetY = characters.posY[followIndex];
 
-  for(byte_x = 0; byte_x < playerX; ++byte_x)
+  for(x = 0; x < playerX; ++x)
   {
     --offsetX;
     wrapX(&offsetX);
   }
 
-  for(byte_y = 0; byte_y < playerY; ++byte_y)
+  for(y = 0; y < playerY; ++y)
   {
     --offsetY;
     wrapY(&offsetY);
@@ -168,28 +167,28 @@ void CameraFollow()
 
 void BufferCharacters()
 {
-  byte byte_x;
-  byte byte_y;
+  byte x;
+  byte y;
   byte byte_i;
   for(byte_i = 0; byte_i < charactersCount; ++byte_i)
   {
     if(characters.visible[byte_i])
     {
-      byte_x = characters.posX[byte_i];
-      if(byte_x < offsetX)
-        byte_x = (byte_x - offsetX + mapWidth);
+      x = characters.posX[byte_i];
+      if(x < offsetX)
+        x = (x - offsetX + mapWidth);
       else
-        byte_x = byte_x - offsetX;
+        x = x - offsetX;
 
-      if (byte_x < viewportWidth)
+      if (x < viewportWidth)
       {
-        byte_y = characters.posY[byte_i];
-        if (byte_y < offsetY)
-          byte_y = byte_y - offsetY + mapHeight;
+        y = characters.posY[byte_i];
+        if (y < offsetY)
+          y = y - offsetY + mapHeight;
         else
-          byte_y = byte_y - offsetY;
-        if (byte_y < viewportHeight)
-          viewportBuffer[byte_x][byte_y] = characters.tile[byte_i];
+          y = y - offsetY;
+        if (y < viewportHeight)
+          viewportBuffer[x][y] = characters.tile[byte_i];
       }
     }
   }
@@ -205,8 +204,8 @@ void UpdatePlayerOnMiniMap(void)
 }
 
 //#pragma bss-name (push, "ZEROPAGE")
-byte byte_x;
-byte byte_y;
+byte x;
+byte y;
 byte quadX;
 byte quadY;
 //#pragma bss-name (pop)
@@ -216,19 +215,19 @@ void FillQuadBuffer()
   quadY = characters.quadPosY[followIndex];
 
   if (quadX + 1 == quadWidth)
-    byte_x = 0;
+    x = 0;
   else
-    byte_x = quadX + 1;
+    x = quadX + 1;
 
   if (quadY + 1 == quadHeight)
-    byte_y = 0;
+    y = 0;
   else
-    byte_y = quadY + 1;
+    y = quadY + 1;
 
   quadBuffer[0] = mapQuads[quadY][quadX];
-  quadBuffer[1] = mapQuads[quadY][byte_x];
-  quadBuffer[2] = mapQuads[byte_y][quadX];
-  quadBuffer[3] = mapQuads[byte_y][byte_x];
+  quadBuffer[1] = mapQuads[quadY][x];
+  quadBuffer[2] = mapQuads[y][quadX];
+  quadBuffer[3] = mapQuads[y][x];
 }
 byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
 byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
@@ -238,8 +237,8 @@ byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
 
 //#pragma bss-name (push, "ZEROPAGE")
 byte* charByteData;
-byte byte_x;
-byte byte_y;
+byte x;
+byte y;
 byte byte_z;
 byte charIndex;
 byte xPos;
@@ -262,14 +261,14 @@ void LoadQuadrant(byte quadIndex, byte quad)
     QuadOriginY = quadOriginsY[quad] + quadOffsetY[byte_z];
     
     charByteData = (byte*)((int)&MapSetInfo[0] + 8*ScreenQuad.CharIndex[quadIndex][byte_z]);
-    for (byte_y = 0; byte_y < quadHeight; ++byte_y)
+    for (y = 0; y < quadHeight; ++y)
     {
-      charByte = charByteData[byte_y];
-      yPos = byte_y + QuadOriginY;
-      for (byte_x = 0; byte_x < quadWidth; ++byte_x)
+      charByte = charByteData[y];
+      yPos = y + QuadOriginY;
+      for (x = 0; x < quadWidth; ++x)
       {
-        xPos = byte_x + QuadOriginX;
-        if (ReadBit(charByte, 7 - byte_x) > 0)
+        xPos = x + QuadOriginX;
+        if (ReadBit(charByte, 7 - x) > 0)
           charIndex = 1;
         else
           charIndex = 0;
@@ -405,16 +404,16 @@ void InitializeMapData()
   #define grass 36
   #define water 34
   #define signpost 35
-  byte byte_x;
-  byte byte_y;
+  byte x;
+  byte y;
   byte byte_i;
   byte byte_offset;
   byte byte_index = 0;
   
-  for (byte_y = 0; byte_y < 8; ++byte_y)
-    for (byte_x = 0; byte_x < 8; ++byte_x)
+  for (y = 0; y < 8; ++y)
+    for (x = 0; x < 8; ++x)
     {
-      byte_offset = byte_x * 2 + 32*byte_y;
+      byte_offset = x * 2 + 32*y;
       tiles.blocked[byte_index] = 0;
       ScreenQuad.CharIndex[byte_index][0] = byte_offset; // Init screen quad prefabs for 8x8
       ScreenQuad.CharIndex[byte_index][1] = byte_offset + 1;
@@ -582,34 +581,22 @@ void ApplyLOS()
   for(y = playerY - 1; y > 0; --y)
     for(x = playerX - 1; x > 0; --x)
       if (tiles.opaque[viewportBuffer[x][y]])
-      {
-        //DrawSquare(0, y, x, 1);
         DrawSquare(0, 0, x, y);
-      }
   //Quad 1
   for(y = playerY - 1; y > 0; --y)
     for(x = playerX + 1; x < viewportWidth; ++x)
       if (tiles.opaque[viewportBuffer[x][y]])
-      {
-        //DrawSquare(x + 1, y, viewportWidth - x, 1);
         DrawSquare(x, 0, viewportWidth - x, y);
-      }
   //Quad 2
   for(y = playerY + 1; y < viewportHeight; ++y)
     for(x = playerX + 1; x < viewportWidth; ++x)
       if (tiles.opaque[viewportBuffer[x][y]])
-      {
-        //DrawSquare(x + 1, y, viewportWidth - x, 1);
         DrawSquare(x + 1, y + 1, viewportWidth - x, viewportHeight - y);
-      }
   //Quad 3
   for(y = playerY + 1; y < viewportHeight; ++y)
     for(x = playerX - 1; x > 0; --x)
       if (tiles.opaque[viewportBuffer[x][y]])
-      {
-        //DrawSquare(0, y, x, 1);
         DrawSquare(0, y + 1, x, viewportHeight - y);
-      }
   //Horizontal
   for(x = playerX - 1; x > 0; --x)
     for(y = playerY - 1; y <= playerY + 1; ++y)
@@ -632,44 +619,44 @@ void ApplyLOS()
 
 void DrawEntireMap()
 {
-  sbyte int_a;
-  sbyte int_b;
-  byte byte_x;
-  byte byte_y;
+  sbyte offsetA;
+  sbyte offsetB;
+  byte x;
+  byte y;
   #if defined(__C64__)
   StoreBuffer();
   #endif
   //Buffer the matrix of tiles for our viewport
   CameraFollow();
-  int_a = offsetX;
-  int_b = offsetY;
-  for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
+  offsetA = offsetX;
+  offsetB = offsetY;
+  for(y = 0; y < viewportHeight; ++y)
   {
-    wrapY(&int_b); //Wrap the map data y reference
-    for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
+    wrapY(&offsetB); //Wrap the map data y reference
+    for(x = 0; x < viewportWidth; ++x)
     {
-      wrapX(&int_a); //Wrap the map data X reference
-      viewportBuffer[byte_x][byte_y] = mapData[int_a][int_b];
-      int_a++;
+      wrapX(&offsetA); //Wrap the map data X reference
+      viewportBuffer[x][y] = mapData[offsetA][offsetB];
+      offsetA++;
     }
-    int_a = offsetX;
-    ++int_b;
+    offsetA = offsetX;
+    ++offsetB;
   }
   BufferCharacters();
   if(LOSEnabled)
     ApplyLOS();
 
-  for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
+  for(y = 0; y < viewportHeight; ++y)
   {      
-    for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
+    for(x = 0; x < viewportWidth; ++x)
     { //Only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
-      byte lastIndex = viewportBufferLast[byte_x][byte_y];
-      byte newIndex = viewportBuffer[byte_x][byte_y];
+      byte lastIndex = viewportBufferLast[x][y];
+      byte newIndex = viewportBuffer[x][y];
       if (lastIndex!=newIndex)
       {
         DrawTileIndex = newIndex;
-        DrawTileX = byte_x;
-        DrawTileY = byte_y;
+        DrawTileX = x;
+        DrawTileY = y;
         DrawTileBuffer();
       }
     }
@@ -687,7 +674,6 @@ void MoveCharacter(byte index, byte dir)
   bool changedQuads = false;
   byte checkCollision = CheckCollision(index, dir);
 
-  TickMoonPhase();
   if(!checkCollision)
   {
     switch (dir)
@@ -810,7 +796,6 @@ void LoadMap()
   InitializeMapData();
 }
 
-//#define consoleDelay 1
 #define menuPosX  3 + ROWS - (ROWS - consoleWidth)
 #define menuPosY consolePosY - 1
 #define menuWidth 8
@@ -869,18 +854,11 @@ void ActionMenu()
 }
 screenName MapUpdate()
 {
-  //ClearScreen();
-  //DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
-  //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  //DrawCharStats();
-
   //Initialize Viewport
   exitScreen = false;
-  
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
   DrawScreen();
-  //DrawEntireMap();
  
   while (!exitScreen)
   {
@@ -901,12 +879,13 @@ screenName MapUpdate()
         if (InputChanged())
         {
           ActionMenu();
-          //DrawScreen();
-        //exit = true;
         }
       }
       if (Dir < 4)
-        MoveCharacter(followIndex, Dir);        
+      {
+        MoveCharacter(followIndex, Dir);
+        TickMoonPhase();
+      }   
     }
   }
   return EditParty;
