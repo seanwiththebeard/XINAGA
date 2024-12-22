@@ -15,7 +15,7 @@
 
 #define mapMatrixWidth 16
 #define mapMatrixHeight 16
-extern byte mapQuads[mapMatrixHeight][mapMatrixWidth];
+extern byte mapQuads[mapMatrixHeight * mapMatrixWidth];
 
 extern byte followIndex;
 

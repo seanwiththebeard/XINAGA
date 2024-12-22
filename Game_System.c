@@ -35,7 +35,7 @@ void DrawMiniMap(bool highlightPlayer)
   {
     for (x = 0; x < mapMatrixWidth; ++x)
     {
-      tile = mapQuads[y][x];
+      tile = mapQuads[x + (y * mapMatrixWidth)];
       tile = (tile << 1) + ((tile >> 3) << 4);
       SetChar(tile, x + MiniMapX + 1, y + MiniMapY + 1);
     }

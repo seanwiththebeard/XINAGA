@@ -203,7 +203,7 @@ byte countAdjacent(byte x, byte y)
     clampPoint(&pointAdj);
     adjX[z] = pointAdj.x;
     adjY[z] = pointAdj.y;
-    if (mapQuads[adjY[z]][adjX[z]] != water)
+    if (mapQuads[adjX[z] + (mapMatrixWidth * adjY[z])] != water)
       ++i;
   }
   return i;
@@ -276,13 +276,13 @@ void addRandomPoints(byte count, int index)
     byte h = rand() % mapMatrixHeight;
     byte w = rand() % mapMatrixWidth;
 
-    while (mapQuads[h][w] != water)
+    while (mapQuads[w + (mapMatrixWidth * h)] != water)
     {
       h = rand() % mapMatrixHeight;
       w = rand() % mapMatrixWidth;
     }
     createPoint(w, h);
-    mapQuads[h][w] = index;
+    mapQuads[w+ (mapMatrixWidth * h)] = index;
     //SetChar(index, posX + w, posY + h);
     //SetColor(index + 2, posX + w, posY + h);
   }
@@ -290,7 +290,7 @@ void addRandomPoints(byte count, int index)
 
 void DrawPoint(byte x, byte y)
 {
-  byte tile = mapQuads[y][x];
+  byte tile = mapQuads[x + (mapMatrixWidth * y)];
   tile = (tile << 1) + ((tile >> 3) << 4);
   SetChar(tile, x + MiniMapX + 1, y + MiniMapY + 1);
 }
@@ -339,7 +339,7 @@ void attachRandomPoint(byte index)
         break;
     }
 
-    if (mapQuads[y][x] == water)
+    if (mapQuads[x + (mapMatrixWidth * y)] == water)
       exit = true;
 
     if (exit)
@@ -367,7 +367,7 @@ void attachRandomPoint(byte index)
     }
   }
   createPoint(x, y);
-  mapQuads[y][x] = index;
+  mapQuads[x + (mapMatrixWidth * y)] = index;
   //DrawTileIndex = index;
   //DrawTileX = x;
   //DrawTileY = y;
@@ -427,7 +427,7 @@ void createContinent(byte size)
   clearPoints();
 }
 
-void Rotate(direction dir)
+/*void Rotate(direction dir)
 {
   byte h;
   byte w;
@@ -486,7 +486,7 @@ void RotateAround()
     Rotate(up);
     DrawMiniMap(false);
   }
-}
+}*/
 
 void ClearMap()
 {
@@ -497,7 +497,7 @@ void ClearMap()
   for (y = 0; y < mapMatrixHeight; ++y)
     for (x = 0; x < mapMatrixWidth; ++x)
     {
-      mapQuads[y][x] = water;
+      mapQuads[x + (mapMatrixWidth * y)] = water;
       DrawPoint(x, y);
       //SetChar(map[y][x], posX + x, posY + y);
     }

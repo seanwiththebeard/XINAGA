@@ -94,21 +94,21 @@ bool LOSEnabled = true;
 #define mapHeight 32
 #define mapWidth 32
 byte mapData[mapWidth * mapHeight] = {};
+byte MapSet[];
 
 //Quad Data
 //#define mapQuadWidth 8
 //#define mapQuadHeight 8
-byte mapQuads[mapMatrixHeight][mapMatrixWidth] =  //These are the quad-tile references that make up the map
+byte mapQuads[mapMatrixHeight * mapMatrixWidth] =  //These are the quad-tile references that make up the map
 {
-  { 0,  1,  2,  3,  4,  5,  6,  7},
-  { 8,  9, 10, 11, 12, 13, 14, 15},
-  {16, 17, 18, 19, 20, 21, 22, 23},
-  {24, 25, 26, 27, 28, 29, 30, 31},
-  {32, 33, 34, 35, 36, 37, 38, 39},
-  {40, 41, 42, 43, 44, 45, 46, 47},
-  {48, 49, 50, 51, 52, 53, 54, 55},
-  {56, 57, 58, 59, 60, 61, 62, 63}
-};
+  0,  1,  2,  3,  4,  5,  6,  7,
+   8,  9, 10, 11, 12, 13, 14, 15,
+  16, 17, 18, 19, 20, 21, 22, 23,
+  24, 25, 26, 27, 28, 29, 30, 31,
+  32, 33, 34, 35, 36, 37, 38, 39,
+  40, 41, 42, 43, 44, 45, 46, 47,
+  48, 49, 50, 51, 52, 53, 54, 55,
+  56, 57, 58, 59, 60, 61, 62, 63};
 struct
 { //These are the quad indexes referenced in mapQuads[y][x]
   #define ScreenQuadCount 64
@@ -225,10 +225,10 @@ void FillQuadBuffer()
   else
     byte_y = quadY + 1;
 
-  quadBuffer[0] = mapQuads[quadY][quadX];
-  quadBuffer[1] = mapQuads[quadY][byte_x];
-  quadBuffer[2] = mapQuads[byte_y][quadX];
-  quadBuffer[3] = mapQuads[byte_y][byte_x];
+  quadBuffer[0] = mapQuads[quadX + (mapMatrixWidth * quadY)];
+  quadBuffer[1] = mapQuads[byte_x + + (mapMatrixWidth * quadY)];
+  quadBuffer[2] = mapQuads[quadX + (mapMatrixWidth * byte_y)];
+  quadBuffer[3] = mapQuads[byte_x + (mapMatrixWidth * byte_y)];
 }
 byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
 byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
@@ -339,7 +339,7 @@ byte GetQuadInRelation(sbyte v, sbyte h)
     if (int_x == mapMatrixWidth)
       int_x = 0;
   }
-  return (mapQuads[int_y][int_x]);  
+  return (mapQuads[int_x +  + (mapMatrixWidth * int_y)]);  
 }
 
 //Directional data for finding a relative quad
@@ -373,8 +373,8 @@ void QuadScroll(direction dir)
   charPosY = (characters.posY[followIndex] % 16) < quadHeight;
   compareQuad = GetPlayerQuad();
 
-  p = GetChar(COLS - 1, ROWS - 1);
-  SetChar('Q', COLS - 1, ROWS - 1);
+  //p = GetChar(COLS - 1, ROWS - 1);
+  //SetChar('Q', COLS - 1, ROWS - 1);
 
   if (!charPosX)
     relH += 4;
@@ -396,7 +396,7 @@ void QuadScroll(direction dir)
   if (quadBuffer[quadB] != indexB)
     LoadQuadrant(indexB, quadB);
 
-  SetChar(p, COLS - 1, ROWS - 1);
+  //SetChar(p, COLS - 1, ROWS - 1);
 }
 
 
@@ -910,6 +910,23 @@ screenName MapUpdate()
   }
   return EditParty;
 }
+
+#if defined(__C64__)
+byte* CharRam = 0;
+byte* MapSetInfo = (byte*) &MapSet[0];
+//byte* MapSetInfo = (byte*) &charset[0];
+#endif
+
+#if defined(__APPLE2__)
+byte* CharRam = 0;
+byte* MapSetInfo = (byte*) &MapSet[0];
+//byte* MapSetInfo = (byte*) &charset[0];
+#endif
+
+#if defined(__NES__)
+//byte* MapSetInfo = (byte*) &MapSet[0];
+byte* MapSetInfo = 0x0;
+#endif
 
 byte MapSet[] = { /*{w:8,h:8,brev:1,count:64, bpp:1, pal:"c64"}*/
   0xFF,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00

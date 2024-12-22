@@ -9,7 +9,8 @@
 //#pragma code-name (push, "CODEA_0")
 #endif
 
-screenName currentScreen = EditParty;
+//screenName currentScreen = EditParty;
+screenName currentScreen = Map;
 
 const RaceDescriptionDef const RaceDescription[4] = 
 {
