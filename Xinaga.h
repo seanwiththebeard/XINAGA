@@ -148,7 +148,7 @@ byte GetChar(byte x, byte y);
 void DrawLineH(byte index, byte x, byte y, byte length);
 void DrawLineV(byte index, byte x, byte y, byte length);
 void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool fill);
-
+void DrawCharset(void);
 //	Scrolling
 //void ScrollReset(void);
 //void Scroll(direction);
