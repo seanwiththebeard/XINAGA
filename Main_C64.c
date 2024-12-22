@@ -21,12 +21,5 @@
 
 void main(void)
 {
-  //byte x, y;
-  //InitializeGraphics();
-  
-  //for (y = 0; y < 16; ++y)
-   //for (x = 0; x < 16; ++x)
-      //SetChar(x + 16*y,x, y);
-  //while (1);
   Demo();
 }
