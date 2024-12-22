@@ -77,8 +77,8 @@ void QuadScroll(byte direction);
 #define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define viewportSize viewportHeight * viewportWidth
-byte viewportBuffer[viewportWidth][viewportHeight] = {};
-byte viewportBufferLast[viewportWidth][viewportHeight] = {};
+byte viewportBuffer[viewportWidth * viewportHeight] = {};
+byte viewportBufferLast[viewportWidth * viewportHeight] = {};
 byte followIndex = 0;
 
 //Camera Position
@@ -93,7 +93,7 @@ bool LOSEnabled = true;
 #define EmptyTile 7
 #define mapHeight 32
 #define mapWidth 32
-byte mapData[mapWidth][mapHeight] = {};
+byte mapData[mapWidth * mapHeight] = {};
 
 //Quad Data
 //#define mapQuadWidth 8
@@ -189,7 +189,7 @@ void BufferCharacters()
         else
           byte_y = byte_y - offsetY;
         if (byte_y < viewportHeight)
-          viewportBuffer[byte_x][byte_y] = characters.tile[byte_i];
+          viewportBuffer[byte_x + (viewportWidth * byte_y)] = characters.tile[byte_i];
       }
     }
   }
@@ -273,7 +273,7 @@ void LoadQuadrant(byte quadIndex, byte quad)
           charIndex = 1;
         else
           charIndex = 0;
-        mapData[xPos][yPos] = ScreenQuad.Chars[quadIndex][charIndex];
+        mapData[xPos + (mapWidth *yPos)] = ScreenQuad.Chars[quadIndex][charIndex];
       }
     }
   }
@@ -486,7 +486,7 @@ bool CheckCollision(byte charIndex, direction dir)
   sbyte yPos = characters.posY[charIndex]; //These need to be signed because they can wrap around the map
 
   //Check the tile we're already standing on
-  if(ReadBit(tiles.blocked[mapData[xPos][yPos]], dir))
+  if(ReadBit(tiles.blocked[mapData[xPos + (mapWidth * yPos)]], dir))
   {
     //WriteLineMessageWindow("Standing on blocked@", 0);
     return true;
@@ -514,7 +514,7 @@ bool CheckCollision(byte charIndex, direction dir)
       return false;
   }
 
-  if(ReadBit(tiles.blocked[mapData[xPos][yPos]], dir))
+  if(ReadBit(tiles.blocked[mapData[xPos + (mapWidth *yPos)]], dir))
   {
     /*WriteLineMessageWindow("Entry blocked@", 1);
     sprintf(str, "Index: %d@", tiles[mapData[xPos][yPos]].index);
@@ -551,7 +551,7 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Bl
     //--ySize;
   for(y = yOrigin; y < ySize + yOrigin; ++y)
     for(x = xOrigin; x < xSize + xOrigin; ++x)
-        viewportBuffer[x][y] = EmptyTile;
+        viewportBuffer[x + (viewportWidth * y)] = EmptyTile;
 }
 
 void ApplyLOS() //437bytes
@@ -561,7 +561,7 @@ void ApplyLOS() //437bytes
   
   for (y = 0; y < viewportHeight; ++y)
     for (x = 0; x < viewportWidth; ++x)
-      if (tiles.opaque[viewportBuffer[x][y]])
+      if (tiles.opaque[viewportBuffer[x + (viewportWidth * y)]])
       {
         byte xDist = viewportWidth - x - 1;
         byte yDist = viewportHeight - y - 1;
@@ -666,7 +666,7 @@ void DrawEntireMap()
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
       wrapX(&int_a); //Wrap the map data X reference
-      viewportBuffer[byte_x][byte_y] = mapData[int_a][int_b];
+      viewportBuffer[byte_x + (viewportWidth * byte_y)] = mapData[int_a + (mapWidth * int_b)];
       int_a++;
     }
     int_a = offsetX;
@@ -680,8 +680,8 @@ void DrawEntireMap()
   {      
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     { //Only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
-      byte lastIndex = viewportBufferLast[byte_x][byte_y];
-      byte newIndex = viewportBuffer[byte_x][byte_y];
+      byte lastIndex = viewportBufferLast[byte_x + (viewportWidth * byte_y)];
+      byte newIndex = viewportBuffer[byte_x + (viewportWidth * byte_y)];
       if (lastIndex!=newIndex)
       {
         DrawTileIndex = newIndex;
@@ -694,7 +694,7 @@ void DrawEntireMap()
   #if defined(__C64__)
   SwapBuffer();
   #endif
-  memcpy(&viewportBufferLast[0][0], &viewportBuffer[0][0], viewportSize);
+  memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);
   DrawCharacterCoordinates(followIndex);
 }
 
