@@ -6,7 +6,7 @@
 
 #if defined (__NES__)
 #pragma code-name (push, "CODEA_0")
-//#pragma rodata-name (push, "CODEA_0")
+#pragma rodata-name (push, "CODEA_0")
 #pragma data-name (push, "XRAM")
 #pragma bss-name (push, "XRAM")
 #endif
@@ -77,46 +77,38 @@ void QuadScroll(byte direction);
 #define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define viewportSize viewportHeight * viewportWidth
-byte viewportBuffer[viewportWidth * viewportHeight] = {};
-byte viewportBufferLast[viewportWidth * viewportHeight] = {};
-byte followIndex = 0;
+byte viewportBuffer[viewportWidth * viewportHeight];
+byte viewportBufferLast[viewportWidth * viewportHeight];
+byte followIndex;
 
 //Camera Position
-sbyte offsetX = 0;
-sbyte offsetY = 0;
+sbyte offsetX;
+sbyte offsetY;
 
-byte CoordPosX = 0;
-byte CoordPosY = 0;
+byte CoordPosX;
+byte CoordPosY;
 
 //Map Data
-bool LOSEnabled = true;
+bool LOSEnabled;
 #define EmptyTile 7
 #define mapHeight 32
 #define mapWidth 32
 byte mapData[mapWidth * mapHeight] = {};
-byte MapSet[];
+const byte MapSet[];
 
 //Quad Data
 //#define mapQuadWidth 8
 //#define mapQuadHeight 8
 byte mapQuads[mapMatrixHeight * mapMatrixWidth] =  //These are the quad-tile references that make up the map
-{
-  0,  1,  2,  3,  4,  5,  6,  7,
-  8,  9, 10, 11, 12, 13, 14, 15,
-  16, 17, 18, 19, 20, 21, 22, 23,
-  24, 25, 26, 27, 28, 29, 30, 31,
-  32, 33, 34, 35, 36, 37, 38, 39,
-  40, 41, 42, 43, 44, 45, 46, 47,
-  48, 49, 50, 51, 52, 53, 54, 55,
-  56, 57, 58, 59, 60, 61, 62, 63};
+{};
 struct
 { //These are the quad indexes referenced in mapQuads[y][x]
   #define ScreenQuadCount 64
   byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
   byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
   byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
-}ScreenQuad = {};
-byte quadBuffer[4] = {0,0,0,0};
+}ScreenQuad;
+byte quadBuffer[4];
 
 #define quadWidth 8
 #define quadHeight 8
@@ -130,7 +122,7 @@ struct
   #define TileCount 64
   byte blocked[TileCount];
   byte opaque[TileCount];
-} tiles = {};
+} tiles;
 
 struct
 {
@@ -144,7 +136,7 @@ struct
   sbyte posY[charactersCount];
   sbyte quadPosX[charactersCount];
   sbyte quadPosY[charactersCount];
-}characters = {};
+}characters;
 
 void CameraFollow()
 {
@@ -204,14 +196,15 @@ void UpdatePlayerOnMiniMap(void)
   MiniMapHighlightY = CoordPosY >> 4;
 }
 
-//#pragma bss-name (push, "ZEROPAGE")
-byte byte_x;
-byte byte_y;
-byte quadX;
-byte quadY;
-//#pragma bss-name (pop)
+
 void FillQuadBuffer()
 {
+  //#pragma bss-name (push, "ZEROPAGE")
+  byte byte_x;
+  byte byte_y;
+  byte quadX;
+  byte quadY;
+  //#pragma bss-name (pop)
   quadX = characters.quadPosX[followIndex];
   quadY = characters.quadPosY[followIndex];
 
@@ -230,13 +223,11 @@ void FillQuadBuffer()
   quadBuffer[2] = mapQuads[quadX + (mapMatrixWidth * byte_y)];
   quadBuffer[3] = mapQuads[byte_x + (mapMatrixWidth * byte_y)];
 }
-byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
-byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
-byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
-byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
 
-
-
+const byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
+const byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
+const byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
+const byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
 void LoadQuadrant(byte quadIndex, byte quad)
 {  
   //#pragma bss-name (push, "ZEROPAGE")
@@ -251,21 +242,18 @@ void LoadQuadrant(byte quadIndex, byte quad)
   byte QuadOriginY;
   byte charByte;
   //#pragma bss-name (pop)
-  
+
   quadBuffer[quad] = quadIndex;
-  
-  //sprintf(strTemp, "Roll: %d + MOD %d@", 1, 1);
-    //WriteLineMessageWindow(strTemp, 0);
-  
+
   for (byte_z = 0; byte_z < 4; ++byte_z)
   {    
     QuadOriginX = quadOriginsX[quad] + quadOffsetX[byte_z];
     QuadOriginY = quadOriginsY[quad] + quadOffsetY[byte_z];
 
-    charByteData = &MapSet[8*ScreenQuad.CharIndex[quadIndex][byte_z]];
+    //charByteData = &MapSet[8*ScreenQuad.CharIndex[quadIndex][byte_z]];
     for (byte_y = 0; byte_y < quadHeight; ++byte_y)
     {
-      charByte = charByteData[byte_y];
+      charByte = MapSet[byte_y + 8*ScreenQuad.CharIndex[quadIndex][byte_z]];//charByteData[byte_y];
       yPos = byte_y + QuadOriginY;
       for (byte_x = 0; byte_x < quadWidth; ++byte_x)
       {
@@ -306,13 +294,12 @@ byte GetPlayerQuad() //Returns the viewport quadrant of the player character
   }
 }
 
-
-//#pragma bss-name (push, "ZEROPAGE")
-sbyte int_x;
-sbyte int_y;
-//#pragma bss-name (pop)
 byte GetQuadInRelation(sbyte v, sbyte h)
 {
+  //#pragma bss-name (push, "ZEROPAGE")
+  sbyte int_x;
+  sbyte int_y;
+  //#pragma bss-name (pop)
   int_x = characters.quadPosX[followIndex];
   int_y = characters.quadPosY[followIndex];
 
@@ -345,37 +332,33 @@ byte GetQuadInRelation(sbyte v, sbyte h)
 
 //Directional data for finding a relative quad
 //left -UP DOWN LEFT RIGHT right UP DOWN LEFT RIGHT
-static const byte quadRelationAV[8] = {-1,  1,  0,  0, -1, 1,  0, 0}; //vA
-static const byte quadRelationBV[8] = {-1,  1, -1, -1, -1, 1,  1, 1}; //vB
-static const byte quadRelationAH[8] = { 0,  0, -1,  1,  0, 0, -1, 1}; //hA
-static const byte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
+const byte quadRelationAV[8] = {-1,  1,  0,  0, -1, 1,  0, 0}; //vA
+const byte quadRelationBV[8] = {-1,  1, -1, -1, -1, 1,  1, 1}; //vB
+const byte quadRelationAH[8] = { 0,  0, -1,  1,  0, 0, -1, 1}; //hA
+const byte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
 //Quad positions in the matrix for which way we're moving
-static const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
-static const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
-
-//#pragma bss-name (push, "ZEROPAGE")
-byte quadA; //Entering quad
-byte quadB; //Diagonal quad
-byte indexA;
-byte indexB;
-byte relH;
-byte relV;
-bool charPosX;
-bool charPosY;
-byte compareQuad;
-byte p;
-//#pragma bss-name (pop)
+const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
+const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
 
 void QuadScroll(direction dir)
 {
+  //#pragma bss-name (push, "ZEROPAGE")
+  byte quadA; //Entering quad
+  byte quadB; //Diagonal quad
+  byte indexA;
+  byte indexB;
+  byte relH;
+  byte relV;
+  bool charPosX;
+  bool charPosY;
+  byte compareQuad;
+  //#pragma bss-name (pop)
+
   relH = dir;
   relV = dir;
   charPosX = (characters.posX[followIndex] % 16) < quadWidth;
   charPosY = (characters.posY[followIndex] % 16) < quadHeight;
   compareQuad = GetPlayerQuad();
-
-  //p = GetChar(COLS - 1, ROWS - 1);
-  //SetChar('Q', COLS - 1, ROWS - 1);
 
   if (!charPosX)
     relH += 4;
@@ -396,8 +379,6 @@ void QuadScroll(direction dir)
 
   if (quadBuffer[quadB] != indexB)
     LoadQuadrant(indexB, quadB);
-
-  //SetChar(p, COLS - 1, ROWS - 1);
 }
 
 
@@ -411,6 +392,10 @@ void InitializeMapData()
   byte byte_i;
   byte byte_offset;
   byte byte_index = 0;
+
+  for (byte_y = 0; byte_y < 8; ++byte_y)
+    for (byte_x = 0; byte_x < 8; ++byte_x)
+      mapQuads[byte_x + 16*byte_y] = byte_x + 16*byte_y;
 
   for (byte_y = 0; byte_y < 8; ++byte_y)
     for (byte_x = 0; byte_x < 8; ++byte_x)
@@ -462,6 +447,7 @@ void InitializeMapData()
 
   LoadMapQuads();
   UpdatePlayerOnMiniMap();
+  LOSEnabled = true;
 }
 
 void wrapX(sbyte *posX) //Used in map positions
@@ -883,11 +869,11 @@ screenName MapUpdate()
 {
   exitScreen = false;
   LoadMap();
-  
+
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
   DrawScreen();
-  
+
 
   while (!exitScreen)
   {
@@ -918,7 +904,7 @@ byte* CharRam = 0;
 //byte* MapSetInfo = (byte*) &charset[0];
 //byte* MapSetInfo = 0x0;
 
-byte MapSet[] = { /*{w:8,h:8,brev:1,count:64, bpp:1, pal:"c64"}*/
+const byte MapSet[] = { /*{w:8,h:8,brev:1,count:64, bpp:1, pal:"c64"}*/
   0xFF,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0xE7,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x01,0x01,0x01,0x01,0x01,0x01,0x01
     ,0x24,0x24,0x24,0x24,0x24,0x24,0x24,0x24,0x00,0x00,0xFF,0x00,0x00,0xFF,0x00,0x00

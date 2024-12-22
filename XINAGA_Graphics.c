@@ -8,7 +8,7 @@
 #pragma code-name (push, "STARTUP")
 //#pragma rodata-name (push, "STARTUP")
 #pragma data-name (push, "XRAM")
-#pragma bss-name (push, "XRAM")
+//#pragma bss-name (push, "XRAM")
 #include "neslib.h"
 // VRAM buffer module
 #include "vrambuf.h"
@@ -39,8 +39,8 @@ unsigned int RowsHGR[192];
 #endif
 
 #if defined (__NES__)
-const byte const *charset = 0x0;
-const byte const *attributeset = 0x0;
+//const byte const *charset = 0x0;
+//const byte const *attributeset = 0x0;
 byte ScreenChars[ROWS*COLS];
 #endif
 
