@@ -6,7 +6,7 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "CODEA_0")
+#pragma code-name (push, "ADDCHAR")
 //#pragma rodata-name (push, "CODEA_0")
 #pragma data-name (push, "XRAM")
 #pragma bss-name (push, "XRAM")
@@ -116,18 +116,7 @@ void MenuGetClassPrimeStats()
   SetMenuItem(4, "Reroll@");
   SetMenuItem(5, "Exit@");
 }
-void WaitForInput(void)
-{
-  bool ex = false;
-  WriteLineMessageWindow("Press space to continue@", 0);
-  
-  while (!ex)
-  {
-    UpdateInput();
-    if (InputFire())
-      ex = true;
-  }
-}
+
 void MenuGetClass()
 {
   byte hitdice;

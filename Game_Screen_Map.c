@@ -5,8 +5,8 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "CODEA_0")
-#pragma rodata-name (push, "CODEA_0")
+#pragma code-name (push, "MAP")
+#pragma rodata-name (push, "MAP")
 #pragma data-name (push, "XRAM")
 #pragma bss-name (push, "XRAM")
 #endif
@@ -519,7 +519,7 @@ bool CheckCollision(byte charIndex, direction dir)
       if (characters.posX[byte_i] == xPos)
         if (characters.posY[byte_i] == yPos)
         {
-          WriteLineMessageWindow(Messages[characters.message[byte_i]], 1);
+          WriteLineMessageWindow((char*)Messages[characters.message[byte_i]], 1);
           return true;
         }
 

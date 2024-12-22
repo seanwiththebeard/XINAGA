@@ -8,11 +8,11 @@
 #if defined (__NES__)
 //#pragma code-name (push, "STARTUP")
 //#pragma code-name (push, "LOWCODE")
-#pragma data-name (push, "XRAM")
-#pragma bss-name (push, "XRAM")
+//#pragma data-name (push, "XRAM")
+//#pragma bss-name (push, "XRAM")
 #endif
 
-byte strTemp[ConsoleBufferLength] = {};
+byte strTemp[ConsoleBufferLength];
 
 struct
 {
@@ -21,12 +21,12 @@ struct
   byte
   	CARRYING_WEIGHT,
   	CARRYING_CAPACITY; 
-}Party = {};
+}Party;
 
-uint16_t randseed = 0;
+uint16_t randseed;
 
-byte MiniMapHighlightX = 0;
-byte MiniMapHighlightY = 0;
+byte MiniMapHighlightX;
+byte MiniMapHighlightY;
 
 void DrawMiniMap(bool highlightPlayer)
 {
@@ -283,7 +283,7 @@ void DrawCharStatus(byte characterIndex)
 
 byte moonA = 0;
 byte moonB = 0;
-char phaseChar[4] = " )O(";
+const char phaseChar[4] = " )O(";
 byte moonTick = 0;
 
 void DrawMoonPhase()

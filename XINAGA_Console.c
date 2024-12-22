@@ -8,15 +8,15 @@
 #pragma code-name (push, "STARTUP")
 //#pragma rodata-name (push, "STARTUP")
 //#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 #endif
 
 //Console Buffer
 byte consoleContents[consoleWidth * consoleHeight];
-int contentOffset = consoleWidth * (consoleHeight - 1); //Offset of Last Line
+int contentOffset; //Offset of Last Line
 
 //StringBuilder
-byte StringLength = 0;
+byte StringLength;
 
 void ConsoleBufferReset()
 {
@@ -86,15 +86,15 @@ char *Messages[MessageCount]= {
   "Wizard's Forest@"};
 
 //Selection Menu
-byte MenuHeight = 5;
-byte MenuWidth = 5;
-byte MenuPosX = 5;
-byte MenuPosY = 5;
-byte MenuCount = 5;
-sbyte MenuSelection = 0;
+byte MenuHeight;
+byte MenuWidth;
+byte MenuPosX;
+byte MenuPosY;
+byte MenuCount;
+sbyte MenuSelection;
 #define menuItemsCount 16
-char *MenuItems[menuItemsCount] = {("")};
-bool MenuHighlight[menuItemsCount] = { 0 };
+char *MenuItems[menuItemsCount];
+bool MenuHighlight[menuItemsCount];
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
 void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();
@@ -260,6 +260,8 @@ void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
   PosY = yPos;
   Width = w;
   Height = h;
+  
+  contentOffset = Width * (Height - 1);
 
   DrawBorder("Console@",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
   ClearConsoleContent();

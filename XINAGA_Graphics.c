@@ -8,7 +8,7 @@
 #pragma code-name (push, "STARTUP")
 //#pragma rodata-name (push, "STARTUP")
 #pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 #include "neslib.h"
 // VRAM buffer module
 #include "vrambuf.h"
@@ -16,7 +16,7 @@
 #endif
 
 
-int YColumnIndex[ROWS] = {};
+int YColumnIndex[ROWS];
 
 void getYCols()
 {

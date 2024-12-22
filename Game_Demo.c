@@ -12,8 +12,7 @@
 //#pragma bss-name (push, "XRAM")
 #endif
 
-//screenName currentScreen = EditParty;
-screenName currentScreen = Map;
+screenName currentScreen;
 
 const RaceDescriptionDef const RaceDescription[4] = 
 {
@@ -40,21 +39,10 @@ const ClassDescriptionDef const ClassDescription[8]=
 const sbyte const AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 
 #if defined (__NES__)
-byte BankLocation[] = {-1, 0, 0, 2, -1, -1, 2, 2};
-  #define Title 0
-#define EditParty 1
-#define Map 2
-#define Combat 3
-#define Menu 4
-#define SaveLoad 5
-#define MapGen 6
-#define Scenario 7
 
 void SelectBank()
 {
-  sbyte bank = BankLocation[currentScreen];
-  if (bank >=0)
-    MMC3_PRG_8000(bank);
+    MMC3_PRG_8000(currentScreen);
 }
 #endif
 

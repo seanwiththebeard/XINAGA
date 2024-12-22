@@ -3,15 +3,15 @@
 
 #include "Xinaga.h"
 
-#define screenName byte
-#define Title 0
-#define EditParty 1
-#define Map 2
-#define Combat 3
-#define Menu 4
-#define SaveLoad 5
-#define MapGen 6
-#define Scenario 7
+#define screenName byte //Corresponds to NES banks at 0x8000
+#define Title 3
+#define EditParty 4
+#define Map 0
+#define Combat 1
+//#define Menu 4
+//#define SaveLoad 5
+#define MapGen 5
+#define Scenario 2
 
 #define mapMatrixWidth 16
 #define mapMatrixHeight 16
@@ -23,8 +23,8 @@ void Demo(void);
 void DrawMiniMap(bool highlightPlayer);
 void WaitForInput(void);
 
-#define MiniMapX 0
-#define MiniMapY 0
+#define MiniMapX (((COLS - mapMatrixWidth) / 2) - 1)
+#define MiniMapY 2
 
 extern byte MiniMapHighlightX;
 extern byte MiniMapHighlightY;
@@ -110,5 +110,4 @@ void RemoveParty(void);
 byte CountParty(void);
 
 struct playerChar *getPartyMember(byte index);
-
 #endif

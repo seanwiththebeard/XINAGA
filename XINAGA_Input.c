@@ -7,8 +7,8 @@
 #if defined (__NES__)
 #pragma code-name (push, "STARTUP")
 //#pragma rodata-name (push, "STARTUP")
-//#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
+#pragma data-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 #endif
 
 
@@ -185,4 +185,17 @@ bool InputFire(void)
   return pad&PAD_A;
   #endif
   return false;
+}
+
+void WaitForInput(void)
+{
+  bool ex = false;
+  WriteLineMessageWindow("Press space to continue@", 0);
+  
+  while (!ex)
+  {
+    UpdateInput();
+    if (InputFire())
+      ex = true;
+  }
 }

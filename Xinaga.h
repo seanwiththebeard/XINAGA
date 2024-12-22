@@ -109,15 +109,6 @@ extern const byte const attributeset[256];
 extern byte* CharRam;
 #endif
 
-#if defined (__NES__)
-//#pragma rodata-name (push, "BANK2")
-//extern const byte const *charset;
-//extern const byte const *attributeset;
-//extern byte* CharRam;
-//#pragma rodata-name (pop)
-#endif
-
-
 //Graphics
 //	System
 #define ColorBG 0
@@ -132,7 +123,6 @@ void SetBG(byte color);
 #endif
 
 extern int YColumnIndex[ROWS];
-//extern byte* MapSetInfo;
 
 //	Drawing
 void ClearScreen(void);
@@ -144,14 +134,10 @@ void _SetChar(void);
 #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void SetColor(byte x, byte y, byte index);
 byte GetChar(byte x, byte y);
-//void SetCharBuffer(byte x, byte y, byte index);
 void DrawLineH(byte index, byte x, byte y, byte length);
 void DrawLineV(byte index, byte x, byte y, byte length);
 void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool fill);
 void DrawCharset(void);
-//	Scrolling
-//void ScrollReset(void);
-//void Scroll(direction);
 
 //	Tiles
 void SetTileOrigin(byte x, byte y);
@@ -174,11 +160,6 @@ void SwapBuffer(void);
 void UpdateColors(void);
 void CopyBuffer(void);
 void StoreBuffer(void);
-//void CopyBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
-//void ReverseBufferArea(byte posX, byte posY, byte sizeX, byte sizeY);
-
-//Debug
-void DrawCharacterSet(byte destX, byte destY);
 
 //Audio
 extern void PlaySong(byte index);
@@ -206,7 +187,7 @@ void ResizeMessageWindow (byte x, byte y, byte w, byte h);
 
 void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
-extern char *Messages[4];
+extern char *Messages[];
 void DrawCharStats(void);
 #define ConsoleBufferLength 128
 extern byte strTemp[ConsoleBufferLength];
