@@ -73,8 +73,8 @@ byte GetQuadInRelation(sbyte v, sbyte h);
 void QuadScroll(byte direction);
 
 //Globals
-#define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
-#define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
+byte playerX = ((viewportWidth - 1) >> 1); //Viewport Center used in line-of-sight calculations
+byte playerY = ((viewportHeight - 1) >> 1); //Viewport Center used in line-of-sight calculations
 #define viewportSize viewportHeight * viewportWidth
 byte viewportBuffer[viewportWidth][viewportHeight] = {};
 byte viewportBufferLast[viewportWidth][viewportHeight] = {};
@@ -538,24 +538,57 @@ bool CheckCollision(byte charIndex, direction dir)
   return false;
 }
 
+
 void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Blocking
 {
   byte x;
   byte y;
   
-  if (xOrigin + xSize > viewportWidth)
-    --xSize;
-  if (yOrigin + ySize > viewportHeight)
-    --ySize;
-  for(y = 0; y < ySize; ++y)
-  {
-    for(x = 0; x < xSize; ++x)
-      viewportBuffer[x + xOrigin][y + yOrigin] = EmptyTile;
-  }
+  //if ((xOrigin + xSize > viewportWidth) || (yOrigin + ySize > viewportHeight))
+    //WriteLineMessageWindow("Out of bounds@", 0);
+    //--xSize;
+  //if (yOrigin + ySize > viewportHeight)
+    //--ySize;
+  for(y = yOrigin; y < ySize + yOrigin; ++y)
+    for(x = xOrigin; x < xSize + xOrigin; ++x)
+        viewportBuffer[x][y] = EmptyTile;
 }
 
-void ApplyLOS()
+void ApplyLOS() //437bytes
 {
+  byte x;
+  byte y;
+  
+  for (y = 0; y < viewportHeight; ++y)
+    for (x = 0; x < viewportWidth; ++x)
+      if (tiles.opaque[viewportBuffer[x][y]])
+      {
+        byte xDist = viewportWidth - x - 1;
+        byte yDist = viewportHeight - y - 1;
+        if (x < playerX)
+        {
+          if (y <= playerY)
+            DrawSquare(0, 0, x, y); //Upper Left
+          if (y >= playerY)
+            DrawSquare(0, y + 1, x, yDist); //Lower Left
+          if (y == playerY)
+            DrawSquare(0, y, x, 1); //Left
+        }
+        if (x > playerX)
+        {
+          if (y <= playerY)
+            DrawSquare(x + 1, 0, xDist, y); //Upper Right
+          if (y >= playerY)
+            DrawSquare(x + 1, y + 1, xDist, yDist); //Lower Right
+          if (y == playerY)
+            DrawSquare(x + 1, y, xDist, 1); //Right
+        }
+        if (y < playerY)
+          DrawSquare(x, 0, 1, y); //Up
+        if (y > playerY)
+          DrawSquare(x, y + 1, 1, yDist); //Down
+      }
+
   //Quadrant Layout:
   //        ^
   //        |       ^
@@ -574,11 +607,8 @@ void ApplyLOS()
   //Center adjacent X always visible
   //Diagonal quadrants 0-3 block everything behind the tile
   //Cardinal quadrants 4-7 block only the tiles directly behind them
-
-  byte x;
-  byte y;
   //Quad 0
-  for(y = playerY - 1; y > 0; --y)
+  /*for(y = playerY - 1; y > 0; --y)
     for(x = playerX - 1; x > 0; --x)
       if (tiles.opaque[viewportBuffer[x][y]])
         DrawSquare(0, 0, x, y);
@@ -614,7 +644,7 @@ void ApplyLOS()
   for(y = playerY + 1; y < viewportHeight; ++y)
     for(x = playerX -1 ; x <= playerX + 1; ++x)
       if (tiles.opaque[viewportBuffer[x][y]])
-        DrawSquare(x, y + 1, 1, viewportHeight - y);
+        DrawSquare(x, y + 1, 1, viewportHeight - y);*/
 }
 
 void DrawEntireMap()
