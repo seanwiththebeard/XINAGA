@@ -16,9 +16,9 @@
 
 //#resource "apple2-xinaga.cfg"
 //#resource "apple2.rom"
+#pragma code-name (push, "LOWCODE")
 #define CFGFILE apple2-xinaga.cfg
 
-#pragma code-name (push, "LOWCODE")
 void main()
 {  
   Demo();
