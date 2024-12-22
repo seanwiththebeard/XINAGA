@@ -544,19 +544,51 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Bl
   byte x;
   byte y;
   
-  if (xOrigin + xSize > viewportWidth)
-    --xSize;
-  if (yOrigin + ySize > viewportHeight)
-    --ySize;
-  for(y = 0; y < ySize; ++y)
-  {
-    for(x = 0; x < xSize; ++x)
-      viewportBuffer[x + xOrigin][y + yOrigin] = EmptyTile;
-  }
+  //if ((xOrigin + xSize > viewportWidth) || (yOrigin + ySize > viewportHeight))
+    //WriteLineMessageWindow("Out of bounds@", 0);
+    //--xSize;
+  //if (yOrigin + ySize > viewportHeight)
+    //--ySize;
+  for(y = yOrigin; y < ySize + yOrigin; ++y)
+    for(x = xOrigin; x < xSize + xOrigin; ++x)
+        viewportBuffer[x][y] = EmptyTile;
 }
 
-void ApplyLOS()
+void ApplyLOS() //437bytes
 {
+  byte x;
+  byte y;
+  
+  for (y = 0; y < viewportHeight; ++y)
+    for (x = 0; x < viewportWidth; ++x)
+      if (tiles.opaque[viewportBuffer[x][y]])
+      {
+        byte xDist = viewportWidth - x - 1;
+        byte yDist = viewportHeight - y - 1;
+        if (x < playerX)
+        {
+          if (y <= playerY)
+            DrawSquare(0, 0, x, y); //Upper Left
+          if (y >= playerY)
+            DrawSquare(0, y + 1, x, yDist); //Lower Left
+          if (y == playerY)
+            DrawSquare(0, y, x, 1); //Left
+        }
+        if (x > playerX)
+        {
+          if (y <= playerY)
+            DrawSquare(x + 1, 0, xDist, y); //Upper Right
+          if (y >= playerY)
+            DrawSquare(x + 1, y + 1, xDist, yDist); //Lower Right
+          if (y == playerY)
+            DrawSquare(x + 1, y, xDist, 1); //Right
+        }
+        if (y < playerY)
+          DrawSquare(x, 0, 1, y); //Up
+        if (y > playerY)
+          DrawSquare(x, y + 1, 1, yDist); //Down
+      }
+
   //Quadrant Layout:
   //        ^
   //        |       ^
@@ -575,41 +607,26 @@ void ApplyLOS()
   //Center adjacent X always visible
   //Diagonal quadrants 0-3 block everything behind the tile
   //Cardinal quadrants 4-7 block only the tiles directly behind them
-
-  byte x;
-  byte y;
   //Quad 0
-  for(y = playerY - 1; y > 0; --y)
+  /*for(y = playerY - 1; y > 0; --y)
     for(x = playerX - 1; x > 0; --x)
       if (tiles.opaque[viewportBuffer[x][y]])
-      {
-        //DrawSquare(0, y, x, 1);
         DrawSquare(0, 0, x, y);
-      }
   //Quad 1
   for(y = playerY - 1; y > 0; --y)
     for(x = playerX + 1; x < viewportWidth; ++x)
       if (tiles.opaque[viewportBuffer[x][y]])
-      {
-        //DrawSquare(x + 1, y, viewportWidth - x, 1);
         DrawSquare(x, 0, viewportWidth - x, y);
-      }
   //Quad 2
   for(y = playerY + 1; y < viewportHeight; ++y)
     for(x = playerX + 1; x < viewportWidth; ++x)
       if (tiles.opaque[viewportBuffer[x][y]])
-      {
-        //DrawSquare(x + 1, y, viewportWidth - x, 1);
         DrawSquare(x + 1, y + 1, viewportWidth - x, viewportHeight - y);
-      }
   //Quad 3
   for(y = playerY + 1; y < viewportHeight; ++y)
     for(x = playerX - 1; x > 0; --x)
       if (tiles.opaque[viewportBuffer[x][y]])
-      {
-        //DrawSquare(0, y, x, 1);
         DrawSquare(0, y + 1, x, viewportHeight - y);
-      }
   //Horizontal
   for(x = playerX - 1; x > 0; --x)
     for(y = playerY - 1; y <= playerY + 1; ++y)
@@ -627,7 +644,7 @@ void ApplyLOS()
   for(y = playerY + 1; y < viewportHeight; ++y)
     for(x = playerX -1 ; x <= playerX + 1; ++x)
       if (tiles.opaque[viewportBuffer[x][y]])
-        DrawSquare(x, y + 1, 1, viewportHeight - y);
+        DrawSquare(x, y + 1, 1, viewportHeight - y);*/
 }
 
 void DrawEntireMap()
