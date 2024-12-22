@@ -59,26 +59,6 @@ void ScreenEnable(void)
 }
 #endif
 
-
-
-#if defined(__C64__)
-//byte  MapSet[];
-byte* CharRam = 0;
-//byte* MapSetInfo = (byte*) &MapSet[0];
-byte* MapSetInfo = (byte*) &charset[0];
-#endif
-
-#if defined(__APPLE2__)
-//byte  MapSet[];
-byte* CharRam = 0;
-//byte* MapSetInfo = (byte*) &MapSet[0];
-byte* MapSetInfo = (byte*) &charset[0];
-#endif
-
-#if defined(__NES__)
-byte* MapSetInfo = 0x0;
-#endif
-
 #if defined(__C64__)
 byte *bgReg = (byte*)0xD020;
 void SetBorder(byte color)

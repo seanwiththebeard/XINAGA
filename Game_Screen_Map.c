@@ -123,6 +123,24 @@ byte quadBuffer[4] = {0,0,0,0};
 #define quadHeightDouble quadHeight << 1
 //#define yQuadHeight quadHeight << 1
 
+byte  MapSet[];
+#if defined(__C64__)
+byte* CharRam = 0;
+byte* MapSetInfo = (byte*) &MapSet[0];
+//byte* MapSetInfo = (byte*) &charset[0];
+#endif
+
+#if defined(__APPLE2__)
+byte* CharRam = 0;
+byte* MapSetInfo = (byte*) &MapSet[0];
+//byte* MapSetInfo = (byte*) &charset[0];
+#endif
+
+#if defined(__NES__)
+byte* MapSetInfo = (byte*) &MapSet[0];
+//byte* MapSetInfo = 0x0;
+#endif
+
 //Tile Data
 struct
 {
