@@ -6,8 +6,10 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "CODEA_2")
-//#pragma rodata-name (push, "CODE3")
+#pragma code-name (push, "CODEA_1")
+//#pragma rodata-name (push, "CODEA_1")
+#pragma data-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 #endif
 
 //Quests are like stars in Mario 64

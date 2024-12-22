@@ -6,12 +6,10 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "CODEA_2")
-//#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
-//#pragma rodata-name (push, "CODE2")
-
-
+#pragma code-name (push, "CODEA_1")
+//#pragma rodata-name (push, "CODEA_1")
+#pragma data-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 #endif
 
 #define fillTile 36

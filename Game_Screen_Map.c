@@ -5,10 +5,10 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "CODEA_1")
+#pragma code-name (push, "CODEA_0")
+//#pragma rodata-name (push, "CODEA_0")
 #pragma data-name (push, "XRAM")
 #pragma bss-name (push, "XRAM")
-//#pragma rodata-name (push, "CODEA_1")
 #endif
 
 //Charset Layout C64
@@ -102,7 +102,7 @@ byte MapSet[];
 byte mapQuads[mapMatrixHeight * mapMatrixWidth] =  //These are the quad-tile references that make up the map
 {
   0,  1,  2,  3,  4,  5,  6,  7,
-   8,  9, 10, 11, 12, 13, 14, 15,
+  8,  9, 10, 11, 12, 13, 14, 15,
   16, 17, 18, 19, 20, 21, 22, 23,
   24, 25, 26, 27, 28, 29, 30, 31,
   32, 33, 34, 35, 36, 37, 38, 39,
@@ -236,32 +236,33 @@ byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
 byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
 
 
-//#pragma bss-name (push, "ZEROPAGE")
-byte* charByteData;
-byte byte_x;
-byte byte_y;
-byte byte_z;
-byte charIndex;
-byte xPos;
-byte yPos;
-byte QuadOriginX;
-byte QuadOriginY;
-byte charByte;
-//#pragma bss-name (pop)
+
 void LoadQuadrant(byte quadIndex, byte quad)
-{
-
-  //sprintf(str, "Tile%d to Quad%d@", index, quad);
-  //WriteLineMessageWindow(str, 1);
-
+{  
+  //#pragma bss-name (push, "ZEROPAGE")
+  byte* charByteData = 0;
+  byte byte_x;
+  byte byte_y;
+  byte byte_z;
+  byte charIndex;
+  byte xPos;
+  byte yPos;
+  byte QuadOriginX;
+  byte QuadOriginY;
+  byte charByte;
+  //#pragma bss-name (pop)
+  
   quadBuffer[quad] = quadIndex;
-
+  
+  //sprintf(strTemp, "Roll: %d + MOD %d@", 1, 1);
+    //WriteLineMessageWindow(strTemp, 0);
+  
   for (byte_z = 0; byte_z < 4; ++byte_z)
   {    
     QuadOriginX = quadOriginsX[quad] + quadOffsetX[byte_z];
     QuadOriginY = quadOriginsY[quad] + quadOffsetY[byte_z];
 
-    charByteData = (byte*)((int)&MapSetInfo[0] + 8*ScreenQuad.CharIndex[quadIndex][byte_z]);
+    charByteData = &MapSet[8*ScreenQuad.CharIndex[quadIndex][byte_z]];
     for (byte_y = 0; byte_y < quadHeight; ++byte_y)
     {
       charByte = charByteData[byte_y];
@@ -880,12 +881,13 @@ void ActionMenu()
 
 screenName MapUpdate()
 {
-
   exitScreen = false;
-
+  LoadMap();
+  
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
   DrawScreen();
+  
 
   while (!exitScreen)
   {
@@ -911,22 +913,10 @@ screenName MapUpdate()
   return EditParty;
 }
 
-#if defined(__C64__)
 byte* CharRam = 0;
-byte* MapSetInfo = (byte*) &MapSet[0];
-//byte* MapSetInfo = (byte*) &charset[0];
-#endif
-
-#if defined(__APPLE2__)
-byte* CharRam = 0;
-byte* MapSetInfo = (byte*) &MapSet[0];
-//byte* MapSetInfo = (byte*) &charset[0];
-#endif
-
-#if defined(__NES__)
 //byte* MapSetInfo = (byte*) &MapSet[0];
-byte* MapSetInfo = 0x0;
-#endif
+//byte* MapSetInfo = (byte*) &charset[0];
+//byte* MapSetInfo = 0x0;
 
 byte MapSet[] = { /*{w:8,h:8,brev:1,count:64, bpp:1, pal:"c64"}*/
   0xFF,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00

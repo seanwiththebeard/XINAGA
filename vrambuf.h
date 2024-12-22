@@ -1,4 +1,3 @@
-
 #ifndef _VRAMBUF_H
 #define _VRAMBUF_H
 

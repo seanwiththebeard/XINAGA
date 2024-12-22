@@ -1,4 +1,3 @@
-
 #include "neslib.h"
 #include "vrambuf.h"
 #include <string.h>

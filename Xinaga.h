@@ -48,7 +48,7 @@
 
 #if defined (__NES__)
 //#pragma data-name (push, "XRAM")
-#pragma bss-name (push, "XRAM")
+//#pragma bss-name (push, "XRAM")
 //#include <cbm_petscii_charmap.h>
 #define COLS 32
 #define ROWS 30
@@ -111,9 +111,9 @@ extern byte* CharRam;
 
 #if defined (__NES__)
 //#pragma rodata-name (push, "BANK2")
-extern const byte const *charset;
-extern const byte const *attributeset;
-extern byte* CharRam;
+//extern const byte const *charset;
+//extern const byte const *attributeset;
+//extern byte* CharRam;
 //#pragma rodata-name (pop)
 #endif
 
@@ -132,7 +132,7 @@ void SetBG(byte color);
 #endif
 
 extern int YColumnIndex[ROWS];
-extern byte* MapSetInfo;
+//extern byte* MapSetInfo;
 
 //	Drawing
 void ClearScreen(void);
