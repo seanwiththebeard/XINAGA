@@ -13,7 +13,7 @@ typedef int8_t sbyte;	// 8-bit signed
 #define consolePosX 1
 #define consolePosY 2 + 2*viewportHeight
 #define consoleWidth 38
-#define consoleHeight (ROWS - viewportHeight * 2 - 4)
+#define consoleHeight (ROWS - viewportHeight * 2 - 3)
 #define selectionPosX consoleWidth + 2
 #define selectionPosY consolePosY
 #define selectionWidth 6
