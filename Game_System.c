@@ -292,14 +292,14 @@ void DrawCharStatus(byte characterIndex)
 
 byte moonA = 0;
 byte moonB = 0;
-const char phaseChar[4] = " )O(";
+const char phaseChar[4] = " )*(";
 byte moonTick = 0;
 
 void DrawMoonPhase()
 {
   ConsoleBufferReset();
   sprintf(strTemp, "<%c><%c>@", phaseChar[moonA], phaseChar[moonB]);
-  PrintString(strTemp, viewportPosX + (viewportWidth / 2) + 1, viewportPosY -1, true, false);
+  PrintString(strTemp, viewportPosX + (viewportWidth / 2) + 2, viewportPosY -1, true, false);
   ConsoleBufferReset();
 }
 void TickMoonPhase()
@@ -332,7 +332,7 @@ void DrawCharStats()
   byte i;
   //DrawBorder("Moon Phases@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, 3, true);
   DrawMoonPhase();
-  DrawBorder("Party@", contextMenuPosX - 1, contextMenuPosY + 1, contextMenuWidth + 2, viewportHeight*2 + 2, true);
+  DrawBorder("Party@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, viewportHeight*2 + 2, true);
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
 }

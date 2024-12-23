@@ -12,7 +12,7 @@
 #endif
 
 //Console Buffer
-byte consoleContents[consoleWidth * consoleHeight];
+byte* consoleContents;
 int contentOffset; //Offset of Last Line
 
 //StringBuilder
@@ -239,6 +239,8 @@ byte GetMenuSelection()
 
 void ClearConsoleContent()
 {
+  free(consoleContents);
+  consoleContents = malloc(consoleWidth * consoleHeight);
   memset(&consoleContents[0], ' ', consoleHeight*consoleWidth);
 }
 

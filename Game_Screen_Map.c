@@ -77,8 +77,8 @@ void QuadScroll(byte direction);
 #define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define viewportSize viewportHeight * viewportWidth
-byte viewportBuffer[viewportWidth * viewportHeight];
-byte viewportBufferLast[viewportWidth * viewportHeight];
+byte viewportBuffer[viewportSize];
+byte viewportBufferLast[viewportSize];
 byte followIndex;
 
 //Camera Position
@@ -93,7 +93,7 @@ bool LOSEnabled;
 #define EmptyTile 7
 #define mapHeight 32
 #define mapWidth 32
-byte mapData[mapWidth * mapHeight] = {};
+byte mapData[mapWidth * mapHeight];
 const byte MapSet[];
 
 //Quad Data
@@ -795,8 +795,8 @@ void DrawCharacterCoordinates(byte index)
     CoordPosY -= quadHeight * 2;
   CoordPosY += quadHeight*2*characters.quadPosY[index];  
 
-  sprintf(strTemp,"(%3i)(%3i)@", CoordPosX, CoordPosY);
-  PrintString(strTemp, viewportPosX + viewportWidth / 2 - 1, viewportPosY + viewportHeight * 2, true, false);
+  sprintf(strTemp,"<%3i><%3i>@", CoordPosX, CoordPosY);
+  PrintString(strTemp, viewportPosX + viewportWidth / 2, viewportPosY + viewportHeight * 2, true, false);
 }
 
 

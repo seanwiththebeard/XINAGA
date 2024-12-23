@@ -5,27 +5,65 @@
 #include <stdint.h> //For byte and sbyte
 #include <stdio.h> //For sprintf
 #include <stdlib.h> //For srand
+typedef uint8_t byte;
+typedef int8_t sbyte;	// 8-bit signed
 
-//Viewport and Console
-#define consolePosX  2
-#define consolePosY (ROWS - (consoleHeight + 3))
-#define consoleWidth 28
-#define consoleHeight 6
-
-#define selectionPosX consoleWidth + 3
+//Screen Layout
+#if defined(__APPLE2__)
+#define consolePosX 1
+#define consolePosY 2 + 2*viewportHeight
+#define consoleWidth 38
+#define consoleHeight (ROWS - viewportHeight * 2 - 4)
+#define selectionPosX consoleWidth + 2
 #define selectionPosY consolePosY
 #define selectionWidth 6
 #define selectionHeight consoleHeight
 #define selectionCount 4
-
+#define viewportPosX 1
+#define viewportPosY 1
+#define viewportWidth 9
+#define viewportHeight 9
+#define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
+#define contextMenuPosY viewportPosY
+#define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
+#endif
+#if defined(__C64__)
+#define consolePosX 1
+#define consolePosY 2 + 2*viewportHeight
+#define consoleWidth 38
+#define consoleHeight (ROWS - viewportHeight * 2 - 4)
+#define selectionPosX consoleWidth + 2
+#define selectionPosY consolePosY
+#define selectionWidth 6
+#define selectionHeight consoleHeight
+#define selectionCount 4
+#define viewportPosX 1
+#define viewportPosY 1
+#define viewportWidth 9
+#define viewportHeight 9
+#define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
+#define contextMenuPosY viewportPosY
+#define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
+#endif
+#if defined(__NES__)
+#define consolePosX  2
+#define consolePosY (2 * viewportHeight) + viewportPosY
+#define consoleWidth 28
+#define consoleHeight 4
+#define selectionPosX consoleWidth + 2
+#define selectionPosY consolePosY
+#define selectionWidth 6
+#define selectionHeight consoleHeight
+#define selectionCount 4
 #define viewportPosX 2
 #define viewportPosY 2
-#define viewportWidth 9//((COLS - (contextMenuWidth + 2) - 1) / 2)
+#define viewportWidth 9
 #define viewportHeight 9
-
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY 0
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
+#endif
+
 
 
 #if defined(__APPLE2__)
@@ -45,8 +83,6 @@
 #endif
 
 #if defined (__NES__)
-//#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
 #include <peekpoke.h>
 #define COLS 32
 #define ROWS 30
@@ -77,8 +113,7 @@
 //#pragma bss-name ("XRAM")
 #endif
 
-typedef uint8_t byte;
-typedef int8_t sbyte;	// 8-bit signed
+
 
 //typedef enum { false, true } bool;
 #define bool byte
