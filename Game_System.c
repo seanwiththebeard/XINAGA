@@ -45,6 +45,15 @@ void DrawMiniMap(bool highlightPlayer)
     SetChar('X', MiniMapX + 1 + MiniMapHighlightX, MiniMapY + 1 + MiniMapHighlightY);
 }
 
+void DrawCharset()
+{
+  byte x, y;
+  DrawBorder("Charset@", MiniMapX - 1, MiniMapY - 1, 16+ 2, 16 + 2, true);
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 16; ++x)
+      SetChar(x + y*16, x + MiniMapX, y + MiniMapY);
+}
+
 byte RollDice(byte count, byte diceSize)
 {
   byte result = 0;

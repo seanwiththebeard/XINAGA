@@ -3,11 +3,8 @@
 
 #include <string.h> //For memcpy
 #include <stdint.h> //For byte and sbyte
-#include <conio.h> //for cgetc() and kbhit()
-#include <stdio.h>
-#include <stdlib.h>
-#include <peekpoke.h>
-
+#include <stdio.h> //For sprintf
+#include <stdlib.h> //For srand
 
 //Viewport and Console
 #define consolePosX  2
@@ -32,6 +29,7 @@
 
 
 #if defined(__APPLE2__)
+#include <conio.h> //for cgetc() and kbhit()
 #define COLS 40
 #define ROWS 24
 #define STROBE(addr) __asm__ ("sta %w", addr)
@@ -49,7 +47,7 @@
 #if defined (__NES__)
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
-//#include <cbm_petscii_charmap.h>
+#include <peekpoke.h>
 #define COLS 32
 #define ROWS 30
 
@@ -98,8 +96,8 @@ byte ReadBit(byte byteToRead, char bit);
 void LoadMap(void);
 
 #if defined (__C64__)
-extern const byte const charset[2048];
-extern const byte const attributeset[256];
+//extern const byte const charset[2048];
+extern byte attributeset[256];
 extern byte* CharRam;
 #endif
 
