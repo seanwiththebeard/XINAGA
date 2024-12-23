@@ -9,8 +9,8 @@
 //Viewport and Console
 #define consolePosX  2
 #define consolePosY (ROWS - (consoleHeight + 3))
-#define consoleWidth (COLS - (contextMenuWidth - 3))
-#define consoleHeight 5
+#define consoleWidth 28
+#define consoleHeight 6
 
 #define selectionPosX consoleWidth + 3
 #define selectionPosY consolePosY
@@ -20,12 +20,12 @@
 
 #define viewportPosX 2
 #define viewportPosY 2
-#define viewportWidth 7//((COLS - (contextMenuWidth + 2) - 1) / 2)
-#define viewportHeight 7
+#define viewportWidth 9//((COLS - (contextMenuWidth + 2) - 1) / 2)
+#define viewportHeight 9
 
-#define contextMenuPosX 17
-#define contextMenuPosY 2
-#define contextMenuWidth 13
+#define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
+#define contextMenuPosY 0
+#define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
 
 
 #if defined(__APPLE2__)

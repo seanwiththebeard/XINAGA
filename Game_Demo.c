@@ -93,13 +93,10 @@ void Demo()
   InitializeGraphics();
   ClearScreen();
   
-  //#if defined(__NES__)
-  //MMC3_PRG_8000(1);
-  //#endif
-  //LoadMap();
-  //#if defined(__NES__)
-  //MMC3_PRG_8000(0);
-  //#endif
+  #if defined(__NES__)
+  MMC3_PRG_8000(0);
+  #endif
+  LoadMap();
   
   while(1)
   {

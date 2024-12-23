@@ -12,6 +12,7 @@
 //#define SaveLoad 5
 #define MapGen 5
 #define Scenario 2
+extern screenName currentScreen;
 
 #define mapMatrixWidth 16
 #define mapMatrixHeight 16

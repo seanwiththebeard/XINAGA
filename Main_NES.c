@@ -55,6 +55,9 @@ void main(void)
   MMC3_CHR_1800(0); 	//PPU $1800-$1BFF (or $0800-$0BFF): 1 KB switchable CHR bank
   MMC3_CHR_1C00(0);	//PPU $1C00-$1FFF (or $0C00-$0FFF): 1 KB switchable CHR bank  
   
+  currentScreen = Map;
+  //currentScreen = EditParty;
+  
   Demo();
 }
 

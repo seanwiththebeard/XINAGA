@@ -263,7 +263,7 @@ void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
   
   contentOffset = Width * (Height - 1);
 
-  DrawBorder("Console@",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
+  DrawBorder("@",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
   ClearConsoleContent();
   DrawConsoleContent();
 }

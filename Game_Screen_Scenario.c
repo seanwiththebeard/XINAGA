@@ -7,10 +7,16 @@
 
 #if defined (__NES__)
 #pragma code-name (push, "SCENARIO")
-//#pragma rodata-name (push, "CODEA_1")
-#pragma data-name (push, "XRAM")
+#pragma rodata-name (push, "SCENARIO")
+#pragma data-name (push, "SCENARIO")
 #pragma bss-name (push, "XRAM")
 #endif
+
+byte QuestOrigin;
+byte QuestType;
+byte QuestGiver;
+byte QuestTarget;
+byte QuestLocation;
 
 //Quests are like stars in Mario 64
 //Each world is like a level, each continent/quest is like a star
@@ -73,11 +79,11 @@ void setSeed(uint16_t seed)
 
 void GenerateContinent()
 {
-  byte QuestOrigin = rand() % 4;
-  byte QuestType = rand() % 6;
-  byte QuestGiver = rand() % 4;
-  byte QuestTarget = rand() % 4;
-  byte QuestLocation = rand() % 4;
+  QuestOrigin = rand() % 4;
+  QuestType = rand() % 6;
+  QuestGiver = rand() % 4;
+  QuestTarget = rand() % 4;
+  QuestLocation = rand() % 4;
   
   sprintf(strTemp, "In %s, the %s asks you to %s the %s at the %s@", questOrigin[QuestOrigin], questGiver[QuestOrigin][QuestGiver], questType[QuestType], questTarget[QuestType][QuestTarget], questLocation[QuestType][QuestLocation]);
   WriteLineMessageWindow(strTemp, 1);

@@ -15,19 +15,19 @@
 screenName nextScreen = EditParty;
 
 bool AreYouSure();
-bool exitWindow = false;
-byte CurrentCharacter = 0;
-byte HPMAX = 0;
-byte HP = 0;
-byte STR = 0;
-byte DEX = 0;
-byte CON = 0;
-byte INT = 0;
-byte WIS = 0;
-byte CHR = 0;
-byte RACE = 0;
-byte CLASS = 0;
-byte HITDICE = 0;
+bool exitWindow;
+byte CurrentCharacter;
+byte HPMAX;
+byte HP;
+byte STR;
+byte DEX;
+byte CON;
+byte INT;
+byte WIS;
+byte CHR;
+byte RACE;
+byte CLASS;
+byte HITDICE;
 
 void AddToRoster()
 {
@@ -89,10 +89,10 @@ void RollStats()
   CHR = RollDice(3, 6);
 
   WriteLineMessageWindow("Rolled Stats:@", 0);
-  sprintf(strTemp, "(STR: %2d) (CON: %2d) (DEX %2d)@", STR, CON, DEX);
+  sprintf(strTemp, "STR:%2d CON:%2d DEX:%2d WIS:%2d INT:%2d CHR:%2d@", STR, CON, DEX, WIS, INT, CHR);
   WriteLineMessageWindow(strTemp, 0);
-  sprintf(strTemp, "(WIS: %2d) (INT: %2d) (CHR %2d)@", WIS, INT, CHR);
-  WriteLineMessageWindow(strTemp, 0);
+  //sprintf(strTemp, "(WIS: %2d) (INT: %2d) (CHR: %2d)@", WIS, INT, CHR);
+  //WriteLineMessageWindow(strTemp, 0);
 }
 
 void MenuGetClassPrimeStats()
@@ -139,12 +139,8 @@ void MenuGetClass()
         CLASS = GetMenuSelection();
       }
       if (CLASS == 5)
-      {
-        ClearScreen();
         return;
-      }
     }
-    
   }
     WriteLineMessageWindow("Class Confirmed:@", 0);
     WriteLineMessageWindow(ClassDescription[CLASS].NAME, 0);
@@ -167,7 +163,6 @@ void MenuGetClass()
     {
       HPMAX = hitdice + AbilityModifier[CON];
       HP = HPMAX;
-      
       AddToRoster();
     }
       WaitForInput();
@@ -175,7 +170,6 @@ void MenuGetClass()
 
 void MenuGetRace()
 {
-  ClearScreen();
   ResetMenu("Race@", 12, 2, 9, 9, 5);
   SetMenuItem(0, RaceDescription[0].NAME);
   SetMenuItem(1, RaceDescription[1].NAME);
@@ -193,7 +187,6 @@ void MenuGetRace()
     ConsoleBufferPrintConsole(0);
     MenuGetClass();
   }
-  ClearScreen();
 }
 
 void ListParty()
@@ -229,7 +222,6 @@ void ListRoster()
 void MenuEditParty()
 {
   ListParty();
-  
   ListRoster();
   
   ResetMenu("Party@",consolePosX, contextMenuPosY, 9, 9, 9);
@@ -312,8 +304,8 @@ void MenuEditParty()
       nextScreen = Scenario;
       break;
   }
-  ClearMenu();
-  ClearScreen();
+  //ClearMenu();
+  //ClearScreen();
 }
 
 screenName DrawAddCharacterScreen()

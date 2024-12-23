@@ -381,7 +381,6 @@ void QuadScroll(direction dir)
     LoadQuadrant(indexB, quadB);
 }
 
-
 void InitializeMapData()
 {
   #define grass 36
@@ -796,8 +795,8 @@ void DrawCharacterCoordinates(byte index)
     CoordPosY -= quadHeight * 2;
   CoordPosY += quadHeight*2*characters.quadPosY[index];  
 
-  sprintf(strTemp,"(%3i,%3i)@", CoordPosX, CoordPosY);
-  PrintString(strTemp, viewportPosX + 4, viewportPosY - 1, true, false);
+  sprintf(strTemp,"(%3i)(%3i)@", CoordPosX, CoordPosY);
+  PrintString(strTemp, viewportPosX + viewportWidth / 2 - 1, viewportPosY + viewportHeight * 2, true, false);
 }
 
 
@@ -818,7 +817,7 @@ void DrawScreen()
   ClearScreen();
   memset(&viewportBuffer, EmptyTile, viewportSize);
   memset(&viewportBufferLast, EmptyTile, viewportSize);
-  DrawBorder("Map@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+  DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   DrawCharStats();
   DrawEntireMap();
@@ -868,7 +867,6 @@ void ActionMenu()
 screenName MapUpdate()
 {
   exitScreen = false;
-  LoadMap();
 
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
@@ -898,11 +896,6 @@ screenName MapUpdate()
   }
   return EditParty;
 }
-
-byte* CharRam = 0;
-//byte* MapSetInfo = (byte*) &MapSet[0];
-//byte* MapSetInfo = (byte*) &charset[0];
-//byte* MapSetInfo = 0x0;
 
 const byte MapSet[] = { /*{w:8,h:8,brev:1,count:64, bpp:1, pal:"c64"}*/
   0xFF,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00
