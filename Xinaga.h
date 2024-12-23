@@ -21,11 +21,13 @@ typedef int8_t sbyte;	// 8-bit signed
 #define selectionCount 4
 #define viewportPosX 1
 #define viewportPosY 1
-#define viewportWidth 9
+#define viewportWidth 11
 #define viewportHeight 9
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
+#define contextMenuHeight (2 * viewportHeight)
+
 #endif
 #if defined(__C64__)
 #define consolePosX 1
@@ -44,13 +46,15 @@ typedef int8_t sbyte;	// 8-bit signed
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
+#define contextMenuHeight (2 * viewportHeight)
+
 #endif
 #if defined(__NES__)
 #define consolePosX 2
 #define consolePosY 3 + 2*viewportHeight
 #define consoleWidth 28
 #define consoleHeight (ROWS - viewportHeight * 2 - 6)
-#define selectionPosX consoleWidth + 2
+#define selectionPosX COLS - selectionWidth
 #define selectionPosY consolePosY
 #define selectionWidth 6
 #define selectionHeight consoleHeight
@@ -62,6 +66,8 @@ typedef int8_t sbyte;	// 8-bit signed
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
+#define contextMenuHeight (2 * viewportHeight)
+
 #endif
 
 
@@ -224,11 +230,13 @@ extern char *Messages[];
 void DrawCharStats(void);
 #define ConsoleBufferLength 128
 extern byte strTemp[ConsoleBufferLength];
-void ConsoleBufferReset();
+void ConsoleBufferReset(void);
 void ConsoleBufferAdd(char *message);
 void ConsoleBufferAddNumber(int value);
 void ConsoleBufferPrint(byte x, byte y);
 void ConsoleBufferPrintConsole(byte delay);
+void DrawConsoleContent(void);
+
 
 //Selection Menu
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);

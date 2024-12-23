@@ -105,7 +105,7 @@ screenName Update_Scenario()
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   {
     
-    ResetMenu("@", selectionPosX, selectionPosY, selectionWidth, selectionHeight, selectionCount);
+    ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, selectionCount);
     SetMenuItem(0, "Next@");
     SetMenuItem(1, "Last@");
     SetMenuItem(2, "Go@");

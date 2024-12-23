@@ -191,8 +191,8 @@ void ClearMenu()
   byte xPos = MenuPosX;
   byte yPos = MenuPosY;
   
-    for (x = 0; x < MenuHeight + 2; ++x)
-      DrawLineH(' ', xPos - 1, yPos + x - 1, MenuWidth + 2);
+    for (x = 1; x < MenuHeight; ++x)
+      DrawLineH(' ', xPos, yPos + x - 1, MenuWidth);
 }
 
 

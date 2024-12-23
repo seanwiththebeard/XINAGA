@@ -807,14 +807,14 @@ void LoadMap()
 }
 
 //#define consoleDelay 1
-#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
-#define menuPosY consolePosY - 1
-#define menuWidth 8
+//#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
+//#define menuPosY consolePosY - 1
+#define menuWidth 13
 #define menuCount 6
 #define menuHeight menuCount
 void DrawScreen()
 {
-  ClearScreen();
+  //ClearScreen();
   memset(&viewportBuffer, EmptyTile, viewportSize);
   memset(&viewportBufferLast, EmptyTile, viewportSize);
   DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
@@ -827,13 +827,13 @@ bool exitScreen = false;
 void ActionMenu()
 {
   byte action;
-  ResetMenu("Action@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
+  ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, menuCount);
   SetMenuItem(0, "Search@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Party@");
   SetMenuItem(3, "Map@");
   SetMenuItem(4, "Exit@");
-  SetMenuItem(5, "Draw Charset@");
+  SetMenuItem(5, "Charset@");
 
   action = GetMenuSelection();
   ClearMenu();
@@ -862,6 +862,7 @@ void ActionMenu()
       DrawScreen();
       break;
   }
+  DrawCharStats();
 }
 
 screenName MapUpdate()
