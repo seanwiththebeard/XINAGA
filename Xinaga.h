@@ -46,10 +46,10 @@ typedef int8_t sbyte;	// 8-bit signed
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
 #endif
 #if defined(__NES__)
-#define consolePosX  2
-#define consolePosY (2 * viewportHeight) + viewportPosY
+#define consolePosX 2
+#define consolePosY 3 + 2*viewportHeight
 #define consoleWidth 28
-#define consoleHeight 4
+#define consoleHeight (ROWS - viewportHeight * 2 - 6)
 #define selectionPosX consoleWidth + 2
 #define selectionPosY consolePosY
 #define selectionWidth 6
@@ -60,7 +60,7 @@ typedef int8_t sbyte;	// 8-bit signed
 #define viewportWidth 9
 #define viewportHeight 9
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
-#define contextMenuPosY 0
+#define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
 #endif
 
