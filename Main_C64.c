@@ -16,8 +16,6 @@
 
 #if defined(__C64__)
 //#resource "C64.cfg"
-//#resource "C64.ctm"
-//#resource "1bitchars.ctm"
 //#resource "c64charset.bin"
 //#resource "c64attributeset.bin"
 //#link "chr_c64.s"
