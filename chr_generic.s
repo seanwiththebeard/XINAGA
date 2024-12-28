@@ -1,3 +1,3 @@
 .segment "CHARS"
 .incbin "tileset.bin"
-.incbin "neschars.bin"
+;.incbin "neschars.bin"
