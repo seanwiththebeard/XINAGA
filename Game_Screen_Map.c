@@ -11,6 +11,35 @@
 #pragma bss-name (push, "XRAM")
 #endif
 
+//Prototypes
+//      Map Functions
+screenName MapUpdate(void);
+void DrawScreen(void);
+void ActionMenu(void);
+void InitializeMapData(void);
+void LoadMap(void);
+void DrawMapViewport(void);
+void DrawEntireMap(void);
+void wrapX(sbyte *posX); //Used in map positions
+void wrapY(sbyte *posY);
+void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
+void ApplyLOS(void);
+void CameraFollow(void);
+void BufferCharacters(void);
+void MoveCharacter(byte index, byte dir);
+bool CheckCollision(byte charIndex, byte Direction);
+void DrawCharacterCoordinates(byte index);
+void UpdatePlayerOnMiniMap(void);
+
+//      Quad Functions
+void FillQuadBuffer(void);
+void LoadQuadrant(byte quadIndex, byte quad);
+void LoadMapQuads(void);
+byte GetPlayerQuad(void); //Returns the viewport quadrant of the player character
+byte GetQuadInRelation(sbyte v, sbyte h);
+void QuadScroll(byte direction);
+
+
 //Charset Layout C64
 //00-32 - Character Classes (8x 16x16 tiles)
 //32-63 - Numbers, symbols
@@ -51,27 +80,7 @@
 //Tiles (Landmarks):	
 //NPCs:			
 
-//Prototypes
-//      Map Functions
-void InitializeMapData();
-void LoadMap();
-void DrawEntireMap();
-void wrapX(sbyte *posX); //Used in map positions
-void wrapY(sbyte *posY);
-void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
-void ApplyLOS();
-void CameraFollow();
-void BufferCharacters();
-void MoveCharacter(byte index, byte dir);
-bool CheckCollision(byte charIndex, byte Direction);
-void DrawCharacterCoordinates(byte index);
-//      Quad Functions
-void FillQuadBuffer();
-void LoadQuadrant(byte quadIndex, byte quad);
-void LoadMapQuads();
-byte GetPlayerQuad(); //Returns the viewport quadrant of the player character
-byte GetQuadInRelation(sbyte v, sbyte h);
-void QuadScroll(byte direction);
+
 
 //Globals
 #define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
@@ -646,6 +655,10 @@ void DrawEntireMap()
   #if defined(__C64__)
   StoreBuffer();
   #endif
+  
+  //memset(&viewportBuffer, EmptyTile, viewportSize);
+  //memset(&viewportBufferLast, EmptyTile, viewportSize);
+  
   //Buffer the matrix of tiles for our viewport
   CameraFollow();
   int_a = offsetX;
@@ -816,15 +829,17 @@ void LoadMap()
 #define menuWidth 13
 #define menuCount 6
 #define menuHeight menuCount
-void DrawScreen()
+
+void DrawMapViewport(void)
 {
-  //ClearScreen();
-  memset(&viewportBuffer, EmptyTile, viewportSize);
-  memset(&viewportBufferLast, EmptyTile, viewportSize);
-  DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  DrawCharStats();
+  memset(&viewportBufferLast, 255, viewportSize);
   DrawEntireMap();
+  //DrawCharacterCoordinates(followIndex);
+}
+void DrawScreen(void)
+{
+  DrawMapViewport();
+  DrawCharStats();
 }
 
 bool exitScreen = false;
@@ -850,20 +865,18 @@ void ActionMenu()
     case 2:
       break;
     case 3:
-      ClearScreen();
       UpdatePlayerOnMiniMap();
       DrawMiniMap(true);
       WaitForInput();
-      DrawScreen();
+      DrawMapViewport();
       break;
     case 4:
       exitScreen = true;
       break;
     case 5:
-      ClearScreen();
       DrawCharset();
       WaitForInput();
-      DrawScreen();
+      DrawMapViewport();
       break;
   }
   DrawCharStats();
@@ -874,9 +887,10 @@ screenName MapUpdate()
   exitScreen = false;
 
   SetTileOrigin(viewportPosX, viewportPosY);
-  LoadMapQuads();
+  //LoadMapQuads();
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawScreen();
-
 
   while (!exitScreen)
   {

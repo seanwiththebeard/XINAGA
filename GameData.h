@@ -24,9 +24,6 @@ void Demo(void);
 void DrawMiniMap(bool highlightPlayer);
 void WaitForInput(void);
 
-#define MiniMapX (((COLS - mapMatrixWidth) / 2) - 1)
-#define MiniMapY 1
-
 extern byte MiniMapHighlightX;
 extern byte MiniMapHighlightY;
 
