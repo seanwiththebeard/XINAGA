@@ -401,9 +401,9 @@ void InitializeMapData()
   byte byte_i;
   byte byte_offset;
   byte byte_index = 0;
-  memset(&mapQuads[0], 63, 256);
-  for (byte_y = 0; byte_y < 8; ++byte_y)
-    for (byte_x = 0; byte_x < 8; ++byte_x)
+  //memset(&mapQuads[0], 0, 256);
+  for (byte_y = 0; byte_y < 16; ++byte_y)
+    for (byte_x = 0; byte_x < 16; ++byte_x)
     {
       mapQuads[byte_x + 16*byte_y] = byte_x + 16*byte_y;
     }
@@ -819,8 +819,6 @@ void DrawCharacterCoordinates(byte index)
   PrintString(strTemp, viewportPosX + viewportWidth / 2, viewportPosY + viewportHeight * 2, true, false);
 }
 
-
-
 void LoadMap()
 {
   InitializeMapData();
@@ -890,7 +888,7 @@ screenName MapUpdate()
   exitScreen = false;
 
   SetTileOrigin(viewportPosX, viewportPosY);
-  //LoadMapQuads();
+  LoadMapQuads();
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawScreen();
