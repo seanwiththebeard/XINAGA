@@ -7,9 +7,7 @@
 
 #if defined (__NES__)
 //#pragma code-name (push, "STARTUP")
-//#pragma code-name (push, "LOWCODE")
-//#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
+//#pragma rodata-name (push, "STARTUP")
 #endif
 
 byte strTemp[ConsoleBufferLength];

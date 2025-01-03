@@ -7,8 +7,8 @@
 #if defined (__NES__)
 #pragma code-name (push, "MAP")
 #pragma rodata-name (push, "MAP")
-#pragma data-name (push, "XRAM")
-#pragma bss-name (push, "XRAM")
+//#pragma data-name (push, "XRAM")
+//#pragma bss-name (push, "XRAM")
 #endif
 
 //Prototypes
@@ -103,13 +103,13 @@ bool LOSEnabled;
 #define mapHeight 32
 #define mapWidth 32
 byte mapData[mapWidth * mapHeight];
-const static byte MapSet[];
+const byte MapSet[];
 
 //Quad Data
 //#define mapQuadWidth 8
 //#define mapQuadHeight 8
-byte mapQuads[mapMatrixHeight * mapMatrixWidth] =  //These are the quad-tile references that make up the map
-{};
+byte mapQuads[mapMatrixHeight * mapMatrixWidth];  //These are the quad-tile references that make up the map
+
 struct
 { //These are the quad indexes referenced in mapQuads[y][x]
   #define ScreenQuadCount 256
@@ -121,8 +121,8 @@ byte quadBuffer[4];
 
 #define quadWidth 8
 #define quadHeight 8
-#define quadWidthDouble quadWidth << 1
-#define quadHeightDouble quadHeight << 1
+#define quadWidthDouble (quadWidth << 1)
+#define quadHeightDouble (quadHeight << 1)
 //#define yQuadHeight quadHeight << 1
 
 //Tile Data
@@ -233,10 +233,10 @@ void FillQuadBuffer()
   quadBuffer[3] = mapQuads[byte_x + (mapMatrixWidth * byte_y)];
 }
 
-const static byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
-const static byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
-const static byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
-const static byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
+const byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
+const byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
+const byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
+const byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
 void LoadQuadrant(byte quadIndex, byte quad)
 {  
   //#pragma bss-name (push, "ZEROPAGE")
@@ -341,13 +341,13 @@ byte GetQuadInRelation(sbyte v, sbyte h)
 
 //Directional data for finding a relative quad
 //left -UP DOWN LEFT RIGHT right UP DOWN LEFT RIGHT
-const static byte quadRelationAV[8] = {-1,  1,  0,  0, -1, 1,  0, 0}; //vA
-const static byte quadRelationBV[8] = {-1,  1, -1, -1, -1, 1,  1, 1}; //vB
-const static byte quadRelationAH[8] = { 0,  0, -1,  1,  0, 0, -1, 1}; //hA
-const static byte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
+const sbyte quadRelationAV[8] = {-1,  1,  0,  0, -1, 1,  0, 0}; //vA
+const sbyte quadRelationBV[8] = {-1,  1, -1, -1, -1, 1,  1, 1}; //vB
+const sbyte quadRelationAH[8] = { 0,  0, -1,  1,  0, 0, -1, 1}; //hA
+const sbyte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
 //Quad positions in the matrix for which way we're moving
-const static byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
-const static byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
+const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
+const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
 
 void QuadScroll(direction dir)
 {
@@ -917,7 +917,7 @@ screenName MapUpdate()
   return EditParty;
 }
 
-const static byte MapSet[2048] = { /*{w:8,h:8,brev:1,count:256, bpp:1, pal:"c64"}*/
+const byte MapSet[2048] = { /*{w:8,h:8,brev:1,count:256, bpp:1, pal:"c64"}*/
   0x00,0x3C,0x60,0x40,0x40,0x40,0x00,0x00,0x00,0x3C,0x06,0x02,0x02,0x02,0x00,0x00
     ,0xE7,0x81,0x81,0x00,0x00,0x81,0x81,0xE7,0xC3,0xC3,0xC3,0x00,0x00,0xC3,0xC3,0xC3
     ,0x24,0x24,0x24,0x24,0x24,0x24,0x24,0x24,0x00,0x00,0xFF,0x00,0x00,0xFF,0x00,0x00

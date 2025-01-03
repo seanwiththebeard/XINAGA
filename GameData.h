@@ -3,6 +3,14 @@
 
 #include "Xinaga.h"
 
+
+#if defined (__NES__)
+//#pragma code-name (push, "STARTUP")
+//#pragma rodata-name (push, "STARTUP")
+//#pragma data-name (push, "XRAM")
+//#pragma bss-name (push, "XRAM")
+#endif
+
 #define screenName byte //Corresponds to NES banks at 0x8000
 #define Title 3
 #define EditParty 4
