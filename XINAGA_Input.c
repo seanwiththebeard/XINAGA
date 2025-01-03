@@ -12,15 +12,15 @@
 #endif
 
 
-sbyte key = 0;
-byte keyIgnore = 0;
-bool ChangedState = true;
+sbyte key;
+byte keyIgnore;
+bool ChangedState;
 
 #if __C64__
 #include <joystick.h>
-byte joyState = 0;
-byte joyStateLast = 0;
-byte joyTemp = 0;
+byte joyState;
+byte joyStateLast;
+byte joyTemp;
 #endif
 
 #if (__NES__)
@@ -28,10 +28,11 @@ byte joyTemp = 0;
 #include <nes.h>
 // include NESLIB header
 #include "neslib.h"
-char pad = 0;
-char padTemp = 0;
-char padStateLast = 0;
+char pad;
+char padTemp;
+char padStateLast;
 #endif
+
 void InitializeInput()
 {
   #if __C64__
@@ -39,8 +40,8 @@ void InitializeInput()
   #endif
 }
 
-byte* keycode = (byte*)0xC000;
-byte* keyflag = (byte*)0xC010;
+const byte* keycode = (byte*)0xC000;
+const byte* keyflag = (byte*)0xC010;
 
 bool InputChanged(void)
 {

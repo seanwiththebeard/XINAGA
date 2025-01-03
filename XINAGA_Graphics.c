@@ -305,10 +305,10 @@ void DrawChar(int index, byte xpos, byte ypos)
 }
 #endif
 
-char SetCharIndex = 0;
-byte SetCharX = 0;
-byte SetCharY = 0;
-int charsDrawn = 0;
+char SetCharIndex;
+byte SetCharX;
+byte SetCharY;
+int charsDrawn;
 //Set Char Macro is in XINAGA.h - #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void _SetChar(void)
 {
