@@ -12,7 +12,7 @@
 //#pragma bss-name (push, "XRAM")
 #endif
 
-screenName nextScreen = EditParty;
+screenName nextScreen;
 
 bool AreYouSure();
 bool exitWindow;
@@ -310,6 +310,7 @@ void MenuEditParty()
 
 screenName DrawAddCharacterScreen()
 {
+  nextScreen = EditParty;
   exitWindow = false;
   CurrentCharacter = 0;
   srand(randseed);

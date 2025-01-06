@@ -22,7 +22,7 @@ byte QuestLocation;
 //Each world is like a level, each continent/quest is like a star
 //100 coin star?
 
-char *questOrigin[4] = { "the castle", "a tavern rumor", "your library studies", "a dream at the inn"};
+const char* const questOrigin[4] = { "the castle", "a tavern rumor", "your library studies", "a dream at the inn"};
 //Map Location Types (rule of fours, four tileset variations of each of four options)
 
 //Primary Settlement: 	
@@ -47,14 +47,14 @@ char *questOrigin[4] = { "the castle", "a tavern rumor", "your library studies",
 //			Shipwreck	Ship, Airship, Siege Engine, Leviathan Fossil
 //			Tomb		Pyramid, Crypt, Graveyard, Catacombs
 
-char *questGiver[4][4] = {
+const char* const questGiver[4][4] = {
   /*Castle*/		{"King", "Blacksmith", "Guildmaster", "Council"},
   /*Town Tavern*/	{"Innkeeper", "Shadow", "Guildmaster", "People"},
   /*Library Book*/	{"History Book", "Librarian", "Scholar", "Shadow"},
   /*Dream*/		{"Statue", "Spirit", "Animal", "Wise Tree"}
 };
-char *questType[6] = 	{ "kill", "retrieve", "map out", "solve a puzzle in", "visit", "play cards with"};
-char *questTarget[6][4] = { //Point of Interest
+const char* const questType[6] = 	{ "kill", "retrieve", "map out", "solve a puzzle in", "visit", "play cards with"};
+const char* const questTarget[6][4] = { //Point of Interest
   /*Kill*/		{"Dragon", "Vampire", "Wizard", "Owlbear"},
   /*Retrieve*/		{"Scroll", "Gauntlet", "Orb", "Artifact"},
   /*Explore*/		{"Cavern", "Hidden Cellar", "Burial Site", "Treasure Room"},
@@ -62,7 +62,7 @@ char *questTarget[6][4] = { //Point of Interest
   /*Visit*/		{"Crypt", "Water's Edge", "Monument", "Wise Tree"},
   /*PlayCards*/		{"Shadow", "Lost Knight", "Animal", "Wizard"}
 };
-char *questLocation[6][4] = { //Map Location
+const char* const questLocation[6][4] = { //Map Location
   /*Kill*/		{"Forrest", "Dungeon", "Dwarven Tower", "Wormhole"},
   /*Retrieve*/		{"Archive", "Dungeon", "Oubliette", "Dwarven Tower"},
   /*Explore*/		{"Siege Engine", "Archive", "Dwarven Tower", "Wormhole"},

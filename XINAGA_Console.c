@@ -92,6 +92,7 @@ byte MenuPosX;
 byte MenuPosY;
 byte MenuCount;
 sbyte MenuSelection;
+char *menutitle;
 #define menuItemsCount 16
 char *MenuItems[menuItemsCount];
 bool MenuHighlight[menuItemsCount];
@@ -136,7 +137,6 @@ void DrawItem(byte index)
   //wait_vblank(1);
 }
 
-char *menutitle = 0;
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
 {
   byte x;

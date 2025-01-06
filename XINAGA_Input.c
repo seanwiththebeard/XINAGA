@@ -40,8 +40,10 @@ void InitializeInput()
   #endif
 }
 
-const byte* keycode = (byte*)0xC000;
-const byte* keyflag = (byte*)0xC010;
+#define keycode ((byte*)0xC000)
+#define keyflag ((byte*)0xC010)
+//const byte* keycode = (byte*)0xC000;
+//const byte* keyflag = (byte*)0xC010;
 
 bool InputChanged(void)
 {

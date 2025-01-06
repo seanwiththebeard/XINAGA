@@ -19,7 +19,7 @@
 #define grass 36
 #define water 34
 //void DrawMapGenTiles(void);
-byte countContinents = 0;
+byte countContinents;
 //byte map[height][width] = {};
 
 /* World Seed Parameters
@@ -52,9 +52,9 @@ typedef struct vector2
   struct vector2 *next;
 };
 
-struct vector2 *points = NULL;
+struct vector2 *points;
 
-byte totalPoints = 0;
+byte totalPoints;
 /*byte CountPoints()
 {
   struct vector2 *temp = points;
@@ -179,7 +179,7 @@ void clampPoint(struct vector2 *clmpt)
     clmpt->y = 0;
 }
 
-struct vector2 pointAdj = {};
+struct vector2 pointAdj;
 byte countAdjacent(byte x, byte y)
 {
   byte i = 0;

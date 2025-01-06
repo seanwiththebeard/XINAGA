@@ -60,7 +60,8 @@ byte RollDice(byte count, byte diceSize)
   return result;
 }
 
-struct playerChar *startRoster=NULL;
+struct playerChar *startRoster;
+//struct playerChar *startRoster=NULL;
 
 byte CountRoster()
 {
@@ -147,7 +148,8 @@ void delete_pos(byte pos)
 }
 
 //Party
-struct playerChar *startParty=NULL;
+struct playerChar *startParty;
+//struct playerChar *startParty=NULL;
 
 byte CountParty()
 {
@@ -287,10 +289,10 @@ void DrawCharStatus(byte characterIndex)
   //CopyDoubleBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
 }
 
-byte moonA = 0;
-byte moonB = 0;
+byte moonA;
+byte moonB;
 const char phaseChar[4] = " )*(";
-byte moonTick = 0;
+byte moonTick;
 
 void DrawMoonPhase()
 {

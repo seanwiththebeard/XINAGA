@@ -14,11 +14,11 @@
 
 #define fillTile 36
 
-sbyte SelectedCharacter = 0;
-sbyte SelectedTarget = 0;
-sbyte MovementRemaining = 0;
-bool CombatSuccess = false;
-bool exitCombat = false;
+sbyte SelectedCharacter;
+sbyte SelectedTarget;
+sbyte MovementRemaining;
+bool CombatSuccess;
+bool exitCombat;
 
 #define MaxCombatParticipants 12
 #define MonsterCount 1
@@ -76,7 +76,7 @@ struct
   sbyte posX[MaxCombatParticipants];
   sbyte posY[MaxCombatParticipants];
   sbyte initiativeMod[MaxCombatParticipants];
-}combatParticipant = {};
+}combatParticipant;
 
 void ClearRoster(void)
 {
