@@ -7,7 +7,7 @@
 
 #if defined (__NES__)
 #pragma code-name (push, "COMBAT")
-#pragma rodata-name (push, "COMBAT")
+//#pragma rodata-name (push, "COMBAT")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #endif
