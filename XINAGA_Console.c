@@ -80,7 +80,7 @@ byte PosX;
 byte PosY;
 
 #define MessageCount 4
-char *Messages[MessageCount]= {
+const char* const Messages[MessageCount]= {
   "Hello there!@",
   "This is a sign@",
   "Wizard's Forest@"};

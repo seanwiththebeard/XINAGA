@@ -226,7 +226,7 @@ void ResizeMessageWindow (byte x, byte y, byte w, byte h);
 
 void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
-extern char *Messages[];
+extern const char* const Messages[];
 void DrawCharStats(void);
 #define ConsoleBufferLength 128
 extern byte strTemp[ConsoleBufferLength];
