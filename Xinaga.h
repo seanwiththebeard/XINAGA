@@ -8,9 +8,10 @@
 typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
 
-
+#if defined(MSX)
 #define COLS 40
 #define ROWS 25
+#endif
 
 //Screen Layout
 #if defined(__APPLE2__)
