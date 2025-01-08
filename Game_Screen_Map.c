@@ -103,7 +103,7 @@ bool LOSEnabled;
 #define mapHeight 32
 #define mapWidth 32
 byte mapData[mapWidth * mapHeight];
-const byte MapSet[2048];
+const extern byte MapSet[2048];
 
 //Quad Data
 //#define mapQuadWidth 8
