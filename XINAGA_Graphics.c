@@ -15,6 +15,9 @@
 //#link "vrambuf.c"
 #endif
 
+#if defined (MSX)
+#include "msxbios.h"
+#endif
 
 int YColumnIndex[ROWS];
 
@@ -40,6 +43,10 @@ unsigned int RowsHGR[192];
 #if defined (__NES__)
 //const byte const *charset = 0x0;
 //const byte const *attributeset = 0x0;
+byte ScreenChars[ROWS*COLS];
+#endif
+
+#if defined (MSX)
 byte ScreenChars[ROWS*COLS];
 #endif
 
@@ -121,6 +128,11 @@ void raster_wait(byte line)
   #endif
   
   #if defined(__NES__)
+  line;
+  #endif
+  
+  #if defined(MSX)
+  __asm__("HALT");
   line;
   #endif
 }
@@ -338,10 +350,13 @@ void _SetChar(void)
   ++charsDrawn;
   if (charsDrawn % 21 == 0)
     vrambuf_flush();
-
   //vram_put(SetCharIndex);
   //ppu_on_all();
+  #endif
   
+  #if defined(MSX)
+  POSIT(SetCharY+1+(SetCharX<<8));
+  CHPUT(SetCharIndex);
   #endif
 }
 
@@ -360,6 +375,10 @@ void SetColor(byte index, byte x, byte y)
   x;
   y;
   #endif
+  #if defined(MSX)
+  FORCLR = index;
+  SetChar(x, y, index);
+  #endif
 }
 
 void SetCharBuffer(byte index, byte x, byte y)
@@ -374,6 +393,9 @@ void SetCharBuffer(byte index, byte x, byte y)
   #endif
   #if defined(__NES__)
   //ScreenChars[x + YColumnIndex[y]] = index;
+  index;x;y;
+  #endif
+  #if defined(MSX)
   index;x;y;
   #endif
 }
@@ -538,6 +560,13 @@ void DrawTile()
   #endif
   
   #if defined(__NES__)
+  SetChar(indexes[0], x, y);
+  SetChar(indexes[1], x + 1, y);
+  SetChar(indexes[2], x, y + 1);
+  SetChar(indexes[3], x + 1, y + 1);
+  #endif
+  
+  #if defined(MSX)
   SetChar(indexes[0], x, y);
   SetChar(indexes[1], x + 1, y);
   SetChar(indexes[2], x, y + 1);

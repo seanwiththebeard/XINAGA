@@ -73,7 +73,7 @@ void createPoint(byte x, byte y)
   temp=(struct vector2 *)malloc(sizeof(struct vector2));  
 
   if(temp==NULL)
-    exit(0);
+    return;
 
   temp->x = x;
   temp->y = y;
@@ -112,9 +112,10 @@ void deletePoint(int pos)
 {
   byte i;
   struct vector2 *temp,*ptr;
+  temp = NULL;
 
   if(points==NULL)
-    exit(0);
+    return;
   else
   {
     if(pos==0)

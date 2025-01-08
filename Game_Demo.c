@@ -11,6 +11,7 @@
 #endif
 
 screenName currentScreen;
+byte strTemp[ConsoleBufferLength];
 
 const RaceDescriptionDef const RaceDescription[4] = 
 {

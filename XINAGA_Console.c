@@ -151,7 +151,7 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
   DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
   for (x = 0; x < menuItemsCount; ++x)
   {
-    MenuItems[x] = "";
+    MenuItems[x] = (char*)"";
     MenuHighlight[x] = false;    
   }
 }
@@ -240,8 +240,8 @@ byte GetMenuSelection()
 void ClearConsoleContent()
 {
   free(consoleContents);
-  consoleContents = malloc(consoleWidth * consoleHeight);
-  memset(&consoleContents[0], ' ', consoleHeight*consoleWidth);
+  consoleContents = malloc(Width * Height);
+  memset(&consoleContents[0], ' ', Width*Height);
 }
 
 void DrawConsoleContent()
@@ -251,7 +251,7 @@ void DrawConsoleContent()
   {
     for (x = 0; x < Width; ++x)
     {
-      SetChar(consoleContents[x + y*consoleWidth], PosX + x, PosY + y);
+      SetChar(consoleContents[x + y*Width], PosX + x, PosY + y);
     }
   }
 }
@@ -279,7 +279,7 @@ void ScrollMessageWindowUp()
   
   for (y = 0; y < contentOffset; ++y)
   {
-    consoleContents[y] = consoleContents[y + consoleWidth];
+    consoleContents[y] = consoleContents[y + Width];
   }
   
   for (x = 0; x < (Width); ++x)

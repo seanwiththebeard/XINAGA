@@ -52,8 +52,8 @@ typedef int8_t sbyte;	// 8-bit signed
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
 #define contextMenuHeight (2 * viewportHeight)
-
 #endif
+
 #if defined(__NES__)
 #define consolePosX 2
 #define consolePosY 3 + 2*viewportHeight
@@ -74,7 +74,25 @@ typedef int8_t sbyte;	// 8-bit signed
 #define contextMenuHeight (2 * viewportHeight)
 #endif
 
-
+#if defined(MSX)
+#define consolePosX 2
+#define consolePosY 3 + 2*viewportHeight
+#define consoleWidth 28
+#define consoleHeight (ROWS - viewportHeight * 2 - 6)
+#define selectionPosX COLS - selectionWidth
+#define selectionPosY consolePosY
+#define selectionWidth 6
+#define selectionHeight consoleHeight
+#define selectionCount 4
+#define viewportPosX 2
+#define viewportPosY 2
+#define viewportWidth 11
+#define viewportHeight 11
+#define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
+#define contextMenuPosY viewportPosY
+#define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
+#define contextMenuHeight (2 * viewportHeight)
+#endif
 
 #if defined(__APPLE2__)
 #include <conio.h> //for cgetc() and kbhit()

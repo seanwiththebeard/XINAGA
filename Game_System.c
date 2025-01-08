@@ -10,7 +10,6 @@
 //#pragma rodata-name (push, "STARTUP")
 #endif
 
-byte strTemp[ConsoleBufferLength];
 
 struct
 {
@@ -81,7 +80,7 @@ void create()
   temp=(struct playerChar *)malloc(sizeof(struct playerChar));  
 
   if(temp==NULL)
-    exit(0);
+    return;
 
   temp->next=NULL;
   if(startRoster==NULL)
@@ -116,9 +115,10 @@ void delete_pos(byte pos)
 {
   byte i;
   struct playerChar *temp,*ptr;
+  temp = NULL;
 
   if(startRoster==NULL)
-    exit(0);
+    return;
   else
   {
     if(pos==0)
@@ -139,7 +139,7 @@ void delete_pos(byte pos)
           return;
         }
       }
-      temp->next =ptr->next ;
+      temp->next = ptr->next ;
     }
     //sprintf(str, "Deleted element:%d",ptr->character.NAME);
     //WriteLineMessageWindow(str, 0);
@@ -185,7 +185,7 @@ void AddParty(byte index)
   src = getPlayerChar(index);
 
   if(temp==NULL)
-    exit(0);
+    return;
   
   memcpy(temp, src, sizeof(struct playerChar));
   
@@ -208,9 +208,10 @@ void DeleteParty(byte pos)
 {
   byte i;
   struct playerChar *temp,*ptr;
+  temp = NULL;
 
   if(startParty==NULL)
-    exit(0);
+    return;
   else
   {
     if(pos==0)
@@ -247,7 +248,7 @@ void RemoveParty() //Removes Last Party Member (?)
   src = getPartyMember(index);
 
   if(temp==NULL)
-    exit(0);
+    return;
   
   memcpy(temp, src, sizeof(struct playerChar));
   
@@ -291,7 +292,7 @@ void DrawCharStatus(byte characterIndex)
 
 byte moonA;
 byte moonB;
-const char phaseChar[4] = " )*(";
+const char phaseChar[] = " )*(";
 byte moonTick;
 
 void DrawMoonPhase()

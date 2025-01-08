@@ -41,6 +41,12 @@ void DiskSave(char filename[], int source, int length)
   source;
   length;
   #endif
+  
+  #if defined (MSX)
+  filename;
+  source;
+  length;
+  #endif
 }
 
 void DiskLoad(char filename[], int dest)
@@ -64,9 +70,16 @@ void DiskLoad(char filename[], int dest)
   fread((int*)dest, length, 1, filepointer); //Copy the entire length to our destination
   fclose(filepointer);
   #endif
+  
   #if defined(__NES__)
   filename;
   dest;
   #endif
+  
+  #if defined(MSX)
+  filename;
+  dest;
+  #endif
 }
+
 
