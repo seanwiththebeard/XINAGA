@@ -10,7 +10,7 @@
 //#pragma rodata-name (push, "STARTUP")
 #endif
 
-screenName currentScreen = Map;
+screenName currentScreen = EditParty;
 byte strTemp[ConsoleBufferLength];
 
 const RaceDescriptionDef const RaceDescription[4] = 
@@ -70,13 +70,13 @@ void SwitchScreen(screenName screen)
       currentScreen = DrawAddCharacterScreen();
       break;
     case Map:
-      currentScreen = MapUpdate();
+      //currentScreen = MapUpdate();
       break;
     case Combat:
-      currentScreen = Update_Combat();
+      //currentScreen = Update_Combat();
       break;
     case MapGen:
-      currentScreen = Update_MapGen();
+      //currentScreen = Update_MapGen();
       break;
     case Scenario:
       currentScreen = Update_Scenario();
@@ -97,7 +97,7 @@ void Demo()
   #if defined(__NES__)
   MMC3_PRG_8000(0);
   #endif
-  LoadMap();
+  //LoadMap();
   
   while(1)
   {
