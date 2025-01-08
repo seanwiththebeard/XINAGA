@@ -10,7 +10,7 @@
 //#pragma rodata-name (push, "STARTUP")
 #endif
 
-screenName currentScreen = EditParty;
+screenName currentScreen = Map;
 byte strTemp[ConsoleBufferLength];
 
 const RaceDescriptionDef const RaceDescription[4] = 
