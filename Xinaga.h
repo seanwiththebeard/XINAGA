@@ -8,6 +8,10 @@
 typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
 
+
+#define COLS 40
+#define ROWS 25
+
 //Screen Layout
 #if defined(__APPLE2__)
 #define consolePosX 1
@@ -67,7 +71,6 @@ typedef int8_t sbyte;	// 8-bit signed
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
 #define contextMenuHeight (2 * viewportHeight)
-
 #endif
 
 
@@ -118,7 +121,6 @@ typedef int8_t sbyte;	// 8-bit signed
 #define MMC3_WRAM_READ_ONLY() POKE(0xA001, 0xC0)
 //#pragma bss-name ("XRAM")
 #endif
-
 
 
 //typedef enum { false, true } bool;
