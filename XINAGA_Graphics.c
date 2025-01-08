@@ -109,7 +109,10 @@ void ClearScreen(void)
   //vram_fill(0, 64);
   ppu_on_all();
   #endif
-
+  
+  #if defined (MSX)
+  CLS();
+  #endif
 }
 
 #if defined(__C64__)

@@ -309,14 +309,14 @@ void MenuEditParty()
 }
 
 screenName DrawAddCharacterScreen()
-{
+{  
   nextScreen = EditParty;
   exitWindow = false;
   CurrentCharacter = 0;
   srand(randseed);
   ClearScreen();
   while (!exitWindow)
-  {
+  {  
     MenuEditParty();
     ClearScreen();
   }

@@ -9,8 +9,8 @@ typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
 
 #if defined(MSX)
-#define COLS 40
-#define ROWS 25
+#define COLS 32
+#define ROWS 24
 #endif
 
 //Screen Layout
@@ -76,9 +76,9 @@ typedef int8_t sbyte;	// 8-bit signed
 
 #if defined(MSX)
 #define consolePosX 2
-#define consolePosY 3 + 2*viewportHeight
+#define consolePosY 2*viewportHeight
 #define consoleWidth 28
-#define consoleHeight (ROWS - viewportHeight * 2 - 6)
+#define consoleHeight (ROWS - (viewportHeight * 2) - 2)
 #define selectionPosX COLS - selectionWidth
 #define selectionPosY consolePosY
 #define selectionWidth 6
@@ -86,8 +86,8 @@ typedef int8_t sbyte;	// 8-bit signed
 #define selectionCount 4
 #define viewportPosX 2
 #define viewportPosY 2
-#define viewportWidth 11
-#define viewportHeight 11
+#define viewportWidth 9
+#define viewportHeight 9
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
