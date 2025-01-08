@@ -18,17 +18,7 @@
 #include "msxbios.h"
 //#link "msxbios.c"
 
-//typedef uint8_t byte;
-//typedef uint16_t word;
-//typedef uint8_t bool;
-
-//byte strTemp[ConsoleBufferLength];
-//uint16_t randseed;
-
 void main(void)
 {
-
-  //ResizeMessageWindow(1, 1, 10, 15);
-  //WriteLineMessageWindow("Hello@", 0);
   Demo();
 }

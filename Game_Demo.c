@@ -97,7 +97,7 @@ void Demo()
   #if defined(__NES__)
   MMC3_PRG_8000(0);
   #endif
-  //LoadMap();
+  LoadMap();
   
   while(1)
   {
