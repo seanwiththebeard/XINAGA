@@ -70,13 +70,13 @@ void SwitchScreen(screenName screen)
       currentScreen = DrawAddCharacterScreen();
       break;
     case Map:
-      //currentScreen = MapUpdate();
+      currentScreen = MapUpdate();
       break;
     case Combat:
-      //currentScreen = Update_Combat();
+      currentScreen = Update_Combat();
       break;
     case MapGen:
-      //currentScreen = Update_MapGen();
+      currentScreen = Update_MapGen();
       break;
     case Scenario:
       currentScreen = Update_Scenario();
