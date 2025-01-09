@@ -10,7 +10,8 @@
 //#pragma rodata-name (push, "STARTUP")
 #endif
 
-screenName currentScreen = EditParty;
+#define DefaultScreen EditParty
+screenName currentScreen;
 byte strTemp[ConsoleBufferLength];
 
 const RaceDescriptionDef const RaceDescription[4] = 
@@ -81,7 +82,7 @@ void SwitchScreen(screenName screen)
     case Scenario:
       currentScreen = Update_Scenario();
     default:
-      currentScreen = EditParty;
+      currentScreen = DefaultScreen;
       break;
   }
   
@@ -98,6 +99,7 @@ void Demo()
   MMC3_PRG_8000(0);
   #endif
   LoadMap();
+  currentScreen = DefaultScreen;
   
   while(1)
   {
