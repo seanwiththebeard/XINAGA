@@ -33,13 +33,23 @@ char padTemp;
 char padStateLast;
 #endif
 
+#if (MSX)
+#include "msxbios.h"
+char pad;
+char padTemp;
+char padStateLast;
+char trigA;
+char trigATemp;
+char trigAStateLast;
+#endif
+
 void InitializeInput()
 {
   #if __C64__
   joy_install(joy_static_stddrv);
   #endif
 }
-
+//Apple II
 #define keycode ((byte*)0xC000)
 #define keyflag ((byte*)0xC010)
 //const byte* keycode = (byte*)0xC000;
@@ -96,6 +106,21 @@ void UpdateInput(void)
     padStateLast = pad;
   }
   #endif
+  
+  #if (MSX)
+  padTemp = GTSTCK(STCK_Joy1);
+  trigATemp = GTTRIG(TRIG_Joy1_A);
+  if ((padTemp == pad) && (trigATemp == trigA))
+    ChangedState = false;
+  else
+  {
+    pad = padTemp;
+    trigA = trigATemp;
+    ChangedState = true;
+    padStateLast = pad;
+    trigAStateLast = trigA;
+  }
+  #endif
 }
 
 bool InputUp(void)
@@ -116,6 +141,11 @@ bool InputUp(void)
   return pad&PAD_UP;
   #endif
   
+  #if (MSX)
+  if (pad == STCK_N)
+    return true;
+  #endif
+  
   return false;
 }
 
@@ -132,6 +162,11 @@ bool InputDown(void)
   
   #if (__NES__)
   return pad&PAD_DOWN;
+  #endif
+  
+  #if (MSX)
+  if (pad == STCK_S)
+    return true;
   #endif
   
   return false;
@@ -152,6 +187,12 @@ bool InputLeft(void)
   #if (__NES__)
   return pad&PAD_LEFT;
   #endif
+  
+  #if (MSX)
+  if (pad == STCK_W)
+    return true;
+  #endif
+  
   return false;
 }
 
@@ -170,6 +211,12 @@ bool InputRight(void)
   #if (__NES__)
   return pad&PAD_RIGHT;
   #endif
+  
+  #if (MSX)
+  if (pad == STCK_E)
+    return true;
+  #endif
+  
   return false;
 }
 
@@ -187,6 +234,15 @@ bool InputFire(void)
   #if (__NES__)
   return pad&PAD_A;
   #endif
+  
+  #if (MSX)
+  if (GTTRIG(TRIG_Joy1_A))
+  {
+    ChangedState = true;
+    return true;
+  }
+  #endif
+  
   return false;
 }
 
