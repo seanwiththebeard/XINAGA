@@ -35,7 +35,8 @@ unsigned char find_rom_page_2() __naked {
 ; Comprobacion de RAM/ROM
 
 find_rom_page_2::
-  call _Start1
+            ;
+
 	ld hl, #0x4000
 	ld b, (hl)
 	xor a
@@ -43,8 +44,9 @@ find_rom_page_2::
 	ld a, (hl)
 	or a
 	jr nz,5$ ; jr nz,@@ROM
-	; El programa esta en RAM - no buscar
-	ld (hl),b
+          ; El programa esta en RAM - no buscar
+            ld (hl),b
+            
 	ret
 5$: ; ----------- @@ROM:
 	di
@@ -74,18 +76,9 @@ find_rom_page_2::
 	; Habilitar permanentemente
 	call #0x0024 ; call ENASLT
 	ei
+  	call gsinit			; Initialize global and static variables. (THIS FIXES THE HEAP/STACK)   
 	ret
 ;------------------------------------------------
-  
-  _Start1:
-	di
-	;ld sp, #0xe000			; Set stack pointer directly above top of memory.
-	im	1
-
-	call gsinit			; Initialize global and static variables.
-	;call _main
-	;rst 0x0				; Restart when main() returns.
-          ret
         __endasm;
 }
 void main(void)
