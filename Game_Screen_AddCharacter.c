@@ -193,7 +193,7 @@ void ListParty()
 {
   byte x;
   byte partyCount = CountParty();
-  ResetMenu("Party Members@", contextMenuPosX, contextMenuPosY, contextMenuWidth, partyCount + 1, partyCount);
+  ResetMenu("Party@", contextMenuPosX, contextMenuPosY, contextMenuWidth, partyCount + 1, partyCount);
   if (partyCount > 0)
   {
 
@@ -209,7 +209,7 @@ void ListRoster()
 {
   byte x;
   byte rosterCount = CountRoster();
-  ResetMenu("Roster Members@", contextMenuPosX, contextMenuPosY + CountParty() + 2, contextMenuWidth, rosterCount + 1, rosterCount);
+  ResetMenu("Roster@", contextMenuPosX, contextMenuPosY + CountParty() + 2, contextMenuWidth, rosterCount + 1, rosterCount);
   if (rosterCount > 0)
   {
 

@@ -18,9 +18,35 @@
 #include "msxbios.h"
 //#link "msxbios.c"
 
-unsigned char frp2() __naked {
-   __asm
-      frp2: ; ----------- @@ROM:
+unsigned char find_rom_page_2() __naked {
+  __asm
+    ;------------------------------------------------
+; find_rom_page_2
+; original name     : LOCALIZAR_SEGUNDA_PAGINA
+; Original author   : Eduardo Robsy Petrus
+; Snippet taken from: http://karoshi.auic.es/index.php?topic=117.msg1465
+;
+; Rutina que localiza la segunda pagina de 16 KB
+; de una ROM de 32 KB ubicada en 4000h
+; -Basada en la rutina de Konami-
+; Compatible con carga en RAM
+; Compatible con expansores de slots
+;------------------------------------------------
+; Comprobacion de RAM/ROM
+
+find_rom_page_2::
+  call _Start1
+	ld hl, #0x4000
+	ld b, (hl)
+	xor a
+	ld (hl), a
+	ld a, (hl)
+	or a
+	jr nz,5$ ; jr nz,@@ROM
+	; El programa esta en RAM - no buscar
+	ld (hl),b
+	ret
+5$: ; ----------- @@ROM:
 	di
 	; Slot primario
 	call #0x0138 ; call RSLREG
@@ -49,26 +75,19 @@ unsigned char frp2() __naked {
 	call #0x0024 ; call ENASLT
 	ei
 	ret
-   __endasm;
+;------------------------------------------------
+  
+  _Start1:
+	di
+	;ld sp, #0xe000			; Set stack pointer directly above top of memory.
+	im	1
+
+	call gsinit			; Initialize global and static variables.
+	;call _main
+	;rst 0x0				; Restart when main() returns.
+          ret
+        __endasm;
 }
-
-unsigned char find_rom_page_2() __naked {
-   __asm
-      ld hl, #0x4000
-	ld b, (hl)
-	xor a
-	ld (hl), a
-	ld a, (hl)
-	or a
-	jr nz,frp2 ; jr nz,@@ROM
-	; El programa esta en RAM - no buscar
-	ld (hl),b
-	ret
-   __endasm;
-}
-
-
-
 void main(void)
 {
   find_rom_page_2();
