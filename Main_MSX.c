@@ -83,5 +83,25 @@ unsigned char find_rom_page_2() __naked
 void main(void)
 {
   find_rom_page_2();
+  
+  // Changes the screencolors
+  //CHGCLR();
+  
+  // Initialises all sprites
+  //CLRSPR();
+  
+  // Switches to SCREEN 0 (40x24 text mode)
+  //INITXT();
+  
+  // Switches to SCREEN 1 (text screen with 32*24 characters)
+  //INIT32();
+  
+  // Switches to SCREEN 2 (high resolution screen with 256*192 pixels)
+  //INIGRP();
+  
+  // Switches to SCREEN 3 (multi-color screen 64*48 pixels)
+  //INIMLT();
+  
+  
   Demo();
 }
