@@ -11,14 +11,14 @@
 //#pragma bss-name (push, "XRAM")
 #endif
 
-void PlaySong(byte index)
-{
-  index;
-}
+//void PlaySong(byte index)
+//{
+  //index;
+//}
 
-void StopSong(void)
-{
-}
+//void StopSong(void)
+//{
+//}
 //byte soundData[1];
 //unsigned char rawData[1];
 /*
@@ -52,8 +52,8 @@ unsigned char rawData[16*8] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 */
-void MakeSound()
-{
+//void MakeSound()
+//{
   /*
   int x;
   for (x = 0; x < 16*8; x++)
@@ -64,12 +64,12 @@ void MakeSound()
       rawData[x] = 0;
   }
   */
-}
+//}
 
-void PlaySound(int length, int freq)
-{
-  length;
-  freq;
+//void PlaySound(int length, int freq)
+//{
+  //length;
+  //freq;
   /*
   #if defined (__APPLE2__)
   int count;
@@ -103,4 +103,4 @@ void PlaySound(int length, int freq)
   freq;
   #endif
   */
-}
+//}

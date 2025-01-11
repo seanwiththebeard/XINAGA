@@ -11,6 +11,8 @@ typedef int8_t sbyte;	// 8-bit signed
 
 //Screen Layout
 #if defined(__APPLE2__)
+#define COLS 40
+#define ROWS 24
 #define consolePosX 1
 #define consolePosY 2 + 2*viewportHeight
 #define consoleWidth 38
@@ -31,6 +33,8 @@ typedef int8_t sbyte;	// 8-bit signed
 
 #endif
 #if defined(__C64__)
+#define COLS 40
+#define ROWS 25
 #define consolePosX 1
 #define consolePosY 2 + 2*viewportHeight
 #define consoleWidth 38
@@ -51,6 +55,8 @@ typedef int8_t sbyte;	// 8-bit signed
 #endif
 
 #if defined(__NES__)
+#define COLS 32
+#define ROWS 30
 #define consolePosX 2
 #define consolePosY 3 + 2*viewportHeight
 #define consoleWidth 28
@@ -94,8 +100,7 @@ typedef int8_t sbyte;	// 8-bit signed
 
 #if defined(__APPLE2__)
 #include <conio.h> //for cgetc() and kbhit()
-#define COLS 40
-#define ROWS 24
+
 #define STROBE(addr) __asm__ ("sta %w", addr)
 #pragma warn (remap-zero, push, off)
 #pragma charmap ('^', 0x7E)
@@ -104,14 +109,11 @@ typedef int8_t sbyte;	// 8-bit signed
 
 #if defined(__C64__)
 #include <cbm_petscii_charmap.h>
-#define COLS 40
-#define ROWS 25
 #endif
 
 #if defined (__NES__)
 #include <peekpoke.h>
-#define COLS 32
-#define ROWS 30
+
 
 #define MMC_MODE 0x00
 
@@ -220,9 +222,9 @@ void CopyBuffer(void);
 void StoreBuffer(void);
 
 //Audio
-extern void PlaySong(byte index);
-extern void StopSong(void);
-extern void PlaySound(int length, int freq);
+//extern void PlaySong(byte index);
+//extern void StopSong(void);
+//extern void PlaySound(int length, int freq);
 
 
 //File I/O
