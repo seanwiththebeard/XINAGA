@@ -237,6 +237,9 @@ void MenuEditParty()
   
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   
+  //sprintf(strTemp, "Address %4x %s@", &RaceDescription[0], &RaceDescription[0]);
+    //WriteLineMessageWindow(strTemp, 0);
+  
   
   switch(GetMenuSelection())
   {
@@ -315,6 +318,7 @@ screenName DrawAddCharacterScreen()
   CurrentCharacter = 0;
   srand(randseed);
   ClearScreen();
+  
   while (!exitWindow)
   {  
     MenuEditParty();

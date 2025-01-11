@@ -14,7 +14,7 @@
 screenName currentScreen;
 byte strTemp[ConsoleBufferLength];
 
-const RaceDescriptionDef const RaceDescription[4] = 
+const RaceDescriptionDef const RaceDescription[] = 
 {
   {"Human@", 255},
   {"Elf@", 6}, 
@@ -23,7 +23,7 @@ const RaceDescriptionDef const RaceDescription[4] =
 };
 
 
-const ClassDescriptionDef const ClassDescription[8]= 
+const ClassDescriptionDef const ClassDescription[]= 
 {
   {"Fighter@", 8},
   {"Wizard@", 4}, 
