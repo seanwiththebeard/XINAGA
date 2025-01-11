@@ -26,7 +26,7 @@ unsigned char find_rom_page_2() __naked
     ; original name     : LOCALIZAR_SEGUNDA_PAGINA
     ; Original author   : Eduardo Robsy Petrus
     ; Snippet taken from: http://karoshi.auic.es/index.php?topic=117.msg1465
-    ;
+    ; Alt: https://github.com/mvac7/SDCC_startup_MSX32kROM4000/blob/master/README.md
     ; Rutina que localiza la segunda pagina de 16 KB
     ; de una ROM de 32 KB ubicada en 4000h
     ; -Basada en la rutina de Konami-
