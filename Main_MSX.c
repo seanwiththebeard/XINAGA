@@ -76,7 +76,7 @@ find_rom_page_2::
 	; Habilitar permanentemente
 	call #0x0024 ; call ENASLT
 	ei
-  	call gsinit			; Initialize global and static variables. (THIS FIXES THE HEAP/STACK)   
+  	call gsinit ; Initialize global and static variables. (THIS FIXES THE HEAP/STACK)   
 	ret
 ;------------------------------------------------
         __endasm;
