@@ -17,10 +17,22 @@
 //#resource "apple2-xinaga.cfg"
 //#resource "apple2.rom"
 #define CFGFILE apple2-xinaga.cfg
-
+void GFX_DEMO()
+{
+  int x, y;
+  InitializeGraphics();
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 192; ++x)
+  {
+    //SetChar(x + 16*y, x+1, y);
+    A2Pixel(x, y, 1);
+  }
+  while(1);
+}
 void main()
 {  
-  Demo();
+  GFX_DEMO();
+  //Demo();
 }
 
 const byte const charset[2048] = {/*{w:8,h:8,count:256, bpp:1}*/

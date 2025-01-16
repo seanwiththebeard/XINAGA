@@ -302,6 +302,48 @@ void SwapBuffer(void)
 }
 
 #if defined(__APPLE2__)
+
+void A2Pixel(byte x, byte y, byte color)
+{
+  /*int offset = RowsHGR[y] + x / 7;
+  byte temp = HGR[offset];
+  byte colorP = 0x00;
+  switch (color)
+  {
+    case 0:
+      break;
+    case 1:
+      colorP = 0x03;
+      break;
+  }
+  colorP << (x / 7);
+  temp = (temp | colorP);
+  HGR[offset]  = temp;*/
+  //byte y;
+  int offset = RowsHGR[y] + (x / 7);
+  byte colorP = 0b00000000;
+  switch (color)
+  {
+    case 0:
+      break;
+    case 1:
+      colorP = 0b00000011;
+      break;
+    case 2: colorP = 0b00000001;
+      break;
+    case 3: colorP = 0b00000010;
+      break;
+  }
+  colorP = colorP << ((x % 7));
+  HGR[offset] = (HGR[offset] | colorP);
+  if (x % 14 < 7)
+  {
+    HGR[offset] = (HGR[offset] >> 1);
+    HGR[offset] = (HGR[offset] | 0b10000000);
+  }
+    
+}
+
 void DrawChar(int index, byte xpos, byte ypos)
 {
   byte y;

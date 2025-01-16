@@ -167,6 +167,7 @@ extern byte* CharRam;
 extern const byte const charset[2048];
 extern const byte const attributeset[256];
 extern byte* CharRam;
+void A2Pixel(byte x, byte y, byte color);
 #endif
 
 //Graphics
