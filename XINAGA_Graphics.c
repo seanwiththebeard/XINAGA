@@ -307,49 +307,55 @@ void A2Pixel(byte x, byte y, byte color)
 {
   int offsetX = (x*2) / 7;
   int offset = RowsHGR[y] + offsetX;
-  color;
-
-  //  byte 1/byte 2
-  // 0 1 2 (3) 4 5 6
-  if (offsetX % 2 == 0)
+  byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
+  switch (color)
   {
-    HGR[offset] = (HGR[offset] | 0b11);
-    HGR[offset] = (HGR[offset] | 0b11 << 2);
-    HGR[offset] = (HGR[offset] | 0b11 << 4);
-    
-    HGR[offset] = (HGR[offset] | 0b1 << 6); //Last
-  }
-  else 
-  {
-    HGR[offset] = (HGR[offset] | 0b1); //First
-    
-    
-    HGR[offset] = (HGR[offset] | 0b11 << 1);
-    HGR[offset] = (HGR[offset] | 0b11 << 3);
-    HGR[offset] = (HGR[offset] | 0b11 << 5);
+    case 0:
+      break;
+    case 1:
+      color = 0b11;
+      break;
+    case 2:
+      color = 0b01;
+      break;
+    case 3:
+      color = 0b10;
+      break;
   }
   
-  //if (x % 7 < 3) //Even columns)
+  if ( xPixel < 3)
   {
-    // 0 1 2 (3)
-    //HGR[offset] = (HGR[offset] | (colorP << 0));
-    //HGR[offset] = (HGR[offset] | (colorP << 2));
-    //HGR[offset] = (HGR[offset] | (colorP << 4));
+    //HGR[offset] = (HGR[offset] | color << (xPixel * 2));
   }
-  //else if (x % 7 == 3)
+  else if (xPixel == 3)
   {
-    //HGR[offset] = (HGR[offset] | (colorP << 6));
-    //HGR[offset+1] = (HGR[offset+1] | (colorP >> 2));    
+    HGR[offset] = (HGR[offset] | color << 6); //Last
+    HGR[offset+ 1] = (HGR[offset + 1] | color >> 2); //First
   }
-  //else //Odd Columns
+  else if (xPixel > 3)
   {
-    //++offset;
-    // 4 5 6
-    //HGR[offset] = (HGR[offset] | (colorP << 7));
-    //HGR[offset] = (HGR[offset] | (colorP << 5));
-    //HGR[offset] = (HGR[offset] | (colorP << 3)); 
+    //HGR[offset+ 1] = (HGR[offset + 1] | color << (xPixel * 2));
   }
     
+  //  byte 1/byte 2
+  // 0 1 2 (3) 4 5 6
+  //if (offsetX % 2 == 0)
+  {
+    //HGR[offset] = (HGR[offset] | color);
+    //HGR[offset] = (HGR[offset] | color << 2);
+    //HGR[offset] = (HGR[offset] | color << 4);
+    
+    
+    
+  }
+  //else 
+  {
+    
+    
+    //HGR[offset] = (HGR[offset] | color << 1);
+    //HGR[offset] = (HGR[offset] | color << 3);
+    //HGR[offset] = (HGR[offset] | color << 5);
+  } 
 }
 
 void DrawChar(int index, byte xpos, byte ypos)
