@@ -19,10 +19,13 @@
 #define CFGFILE apple2-xinaga.cfg
 void GFX_DEMO()
 {
-  int x, y;
+  int x, y = 0;
   InitializeGraphics();
-  for (y = 0; y < 16; ++y)
-    for (x = 0; x < 192; ++x)
+  ClearScreen();
+    //A2Pixel(0, 0, 5);
+  
+  for (y = 0; y < 32; ++y)
+    for (x = 0; x < 140; ++x)
   {
     //SetChar(x + 16*y, x+1, y);
     A2Pixel(x, y, 1);
