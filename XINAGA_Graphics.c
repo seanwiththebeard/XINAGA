@@ -305,40 +305,49 @@ void SwapBuffer(void)
 
 void A2Pixel(byte x, byte y, byte color)
 {
-  byte colorP = 0b00000000;
   int offsetX = (x*2) / 7;
   int offset = RowsHGR[y] + offsetX;
-  switch (color)
-  {
-    case 0: //Black
-      break;
-    case 1: // White
-      colorP = 0b00000011;
-      break;
-    case 2: //Purple-Blue
-      colorP = 0b00000001;
-      break;
-    case 3: //Green-Orange
-      colorP = 0b00000010;
-      break;
-  }
+  color;
+
   //  byte 1/byte 2
   // 0 1 2 (3) 4 5 6
+  if (offsetX % 2 == 0)
+  {
+    HGR[offset] = (HGR[offset] | 0b11);
+    HGR[offset] = (HGR[offset] | 0b11 << 2);
+    HGR[offset] = (HGR[offset] | 0b11 << 4);
+    
+    HGR[offset] = (HGR[offset] | 0b1 << 6); //Last
+  }
+  else 
+  {
+    HGR[offset] = (HGR[offset] | 0b1); //First
+    
+    
+    HGR[offset] = (HGR[offset] | 0b11 << 1);
+    HGR[offset] = (HGR[offset] | 0b11 << 3);
+    HGR[offset] = (HGR[offset] | 0b11 << 5);
+  }
   
-  if (offsetX % 2 == 1) //Even columns)
+  //if (x % 7 < 3) //Even columns)
   {
     // 0 1 2 (3)
-    HGR[offset] = (HGR[offset] | (colorP << 0));
-    HGR[offset] = (HGR[offset] | (colorP << 2));
-    HGR[offset] = (HGR[offset] | (colorP << 4));
+    //HGR[offset] = (HGR[offset] | (colorP << 0));
+    //HGR[offset] = (HGR[offset] | (colorP << 2));
+    //HGR[offset] = (HGR[offset] | (colorP << 4));
   }
-  else //Odd Columns
+  //else if (x % 7 == 3)
   {
-    ++offset;
+    //HGR[offset] = (HGR[offset] | (colorP << 6));
+    //HGR[offset+1] = (HGR[offset+1] | (colorP >> 2));    
+  }
+  //else //Odd Columns
+  {
+    //++offset;
     // 4 5 6
-    //HGR[offset] = (HGR[offset] | (colorP << 1));
-    //HGR[offset] = (HGR[offset] | (colorP << 3));
-    //HGR[offset] = (HGR[offset] | (colorP << 5)); 
+    //HGR[offset] = (HGR[offset] | (colorP << 7));
+    //HGR[offset] = (HGR[offset] | (colorP << 5));
+    //HGR[offset] = (HGR[offset] | (colorP << 3)); 
   }
     
 }
