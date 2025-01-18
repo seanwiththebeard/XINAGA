@@ -334,8 +334,10 @@ void A2Pixel(byte x, byte y, byte color)
       break;
   }
   
+  
+  
   if (xPixel < 3)
-  {
+  {    
     HGR[offset] = (HGR[offset] | color << (xPixel * 2));
   }
   if (xPixel == 3)
@@ -344,9 +346,10 @@ void A2Pixel(byte x, byte y, byte color)
     HGR[offset+ 1] = (HGR[offset + 1] | color >> 1); //First
   }
   if (xPixel > 3)
-  {
+  {    
     HGR[offset] = (HGR[offset] | color << (1 + (xPixel - 4) * 2));
   }
+  
   HGR[offset] = (HGR[offset] & 0b01111111) + palette;
   
   //if (palette)
