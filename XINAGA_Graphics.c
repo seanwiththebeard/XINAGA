@@ -302,7 +302,18 @@ void SwapBuffer(void)
 }
 
 #if defined(__APPLE2__)
-
+const byte blanksA[3] = 
+{
+  0b01111100,
+  0b01110011,
+  0b01001111,
+};
+const byte blanksB[3] = 
+{
+  0b01111001,
+  0b01100111,
+  0b00011111,
+};
 void A2Pixel(byte x, byte y, byte color)
 {
   int offset = RowsHGR[y] + ((2*x) / 7);
@@ -335,27 +346,26 @@ void A2Pixel(byte x, byte y, byte color)
   }
   
   
-  
   if (xPixel < 3)
-  {    
+  {
+    HGR[offset] = (HGR[offset] & blanksA[xPixel]);
     HGR[offset] = (HGR[offset] | color << (xPixel * 2));
   }
   if (xPixel == 3)
   {
+    HGR[offset] = (HGR[offset] & 0b10111111);
+    HGR[offset+1] = (HGR[offset+1] & 0b11111110);
+    
     HGR[offset] = (HGR[offset] | (color << 7) >> 1); //Last
     HGR[offset+ 1] = (HGR[offset + 1] | color >> 1); //First
   }
   if (xPixel > 3)
-  {    
+  {
+    HGR[offset] = (HGR[offset] & blanksB[xPixel - 4]);
     HGR[offset] = (HGR[offset] | color << (1 + (xPixel - 4) * 2));
   }
   
   HGR[offset] = (HGR[offset] & 0b01111111) + palette;
-  
-  //if (palette)
-  {
-    //HGR[offset] = (HGR[offset] & 0b01111111) + 128;
-  }
 }
 
 void DrawChar(int index, byte xpos, byte ypos)

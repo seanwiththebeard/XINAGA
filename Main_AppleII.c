@@ -21,8 +21,8 @@
 void DrawSq(byte xPos, byte yPos, byte size, byte color)
 {
   byte x, y;
-  for (y = yPos ;y < (yPos + size); ++y)
-    for (x = xPos ;x < (xPos + (size / 2)); ++x)
+  for (y = yPos * 7 ;y < (yPos*7 + size * 7); ++y)
+    for (x = xPos * 7 ;x < (xPos*7 + (size * 7) / 2); ++x)
       A2Pixel(x, y, color);
 }
 
@@ -32,9 +32,11 @@ void GFX_DEMO()
   InitializeGraphics();
   ClearScreen();
 
-  DrawSq(0, 0, 16, 1);
-  DrawSq(2, 8, 16, 2);
-  DrawSq(4, 16, 16, 3);
+  DrawSq(0, 0, 2, 1);
+  DrawSq(2, 2, 2, 2);
+  DrawSq(4, 4, 2, 3);
+  DrawSq(6, 6, 2, 5);
+  
 
   for (y = 0; y < 32; ++y)
     for (x = 64; x < 80; ++x)
