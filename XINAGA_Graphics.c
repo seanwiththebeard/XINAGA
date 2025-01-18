@@ -304,56 +304,53 @@ void SwapBuffer(void)
 #if defined(__APPLE2__)
 const byte blanksA[7] = 
 {
-  0b01111100,
-  0b01110011,
-  0b01001111,
+  0b11111100,
+  0b11110011,
+  0b11001111,
   0b10111111,
-  0b01111001,
-  0b01100111,
-  0b00011111,
+  0b11111001,
+  0b11100111,
+  0b10011111,
 };
-const byte paletteTable[7] = {
+const byte paletteTable[6] = {
   0b00,
   0b11,
   0b01,
   0b10,
   0b01,
   0b10,
-  0b11
+};
+const byte shiftTable[7] = {
+  0,
+  2,
+  4,
+  0,
+  1,
+  3,
+  5,
 };
 void A2Pixel(byte x, byte y, byte color)
 {
-  int offset = RowsHGR[y] + ((2*x) / 7);
+  int offset = RowsHGR[y] + ((x<<1) / 7);
   byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
-  byte palette = 0;
-  color = color % 7;
-  
-  if (color > 3)
-  {
-    palette = 128; 
-  }
-  
+  byte index = color;
   color = paletteTable[color];
   
-  HGR[offset] = (HGR[offset] & blanksA[xPixel]);
-
-  if (xPixel < 3)
-  {
-    HGR[offset] |= color << (xPixel * 2);
-  }
-  else if (xPixel == 3)
-  {
-    HGR[offset+1] &= 0b01111110;    
-    HGR[offset] |= (color << 7) >> 1; //Last
-    HGR[offset + 1] |= color >> 1; //First
-  }
-  else if (xPixel > 3)
-  {
-    HGR[offset] |= color << (1 + (xPixel - 4) * 2);
-  }
+  HGR[offset] &= blanksA[xPixel]; //Blank Pixels
   
-  HGR[offset] &= 0b01111111;
-  HGR[offset] += palette;
+  if (xPixel == 3)
+  { 
+    HGR[offset] |= ((color << 7) >> 1); //Last
+    HGR[offset + 1] &= 0b11111110;
+    HGR[offset + 1] |= (color >> 1); //First
+  }
+  else
+    HGR[offset] |= color << shiftTable[xPixel];
+  
+  HGR[offset] &= 0b01111111; //Clear Palette
+  if (index > 3)
+    HGR[offset] |= 0b10000000; //Set Palette
+
 }
 
 void DrawChar(int index, byte xpos, byte ypos)

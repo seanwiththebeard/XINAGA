@@ -18,8 +18,7 @@
 //#resource "apple2.rom"
 #define CFGFILE apple2-xinaga.cfg
 
-#define size 1
-
+#define size 3
 void DrawSq(byte xPos, byte yPos, byte sqSize, byte color)
 {
   byte x, y;
@@ -39,13 +38,15 @@ void GFX_DEMO()
   byte random1 = rand();
   InitializeGraphics();
   ClearScreen();
-
   
   while(1)
   {
+    ++color;
     x = rand() % (140 - size);
     y = rand() % (192 - (size*2));
-    DrawSq(x, y, size, ++color);
+    DrawSq(x, y, size, color);
+    if (color > 6)
+      color = 1;
   }
 }
 void main()
