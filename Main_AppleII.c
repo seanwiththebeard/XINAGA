@@ -18,7 +18,7 @@
 //#resource "apple2.rom"
 #define CFGFILE apple2-xinaga.cfg
 
-#define size 3
+#define size 7
 void DrawSq(byte xPos, byte yPos, byte sqSize, byte color)
 {
   byte x, y;
@@ -28,6 +28,8 @@ void DrawSq(byte xPos, byte yPos, byte sqSize, byte color)
   for (y = yPos ;y < (yPos+ sqSize*2); ++y)
     for (x = xPos ;x < (xPos + sqSize); ++x)
       A2Pixel(x, y, color);
+  
+  SetChar(x%COLS, y%ROWS, color);
 }
 byte random;
 
@@ -51,8 +53,8 @@ void GFX_DEMO()
 }
 void main()
 {  
-  GFX_DEMO();
-  //Demo();
+  //GFX_DEMO();
+  Demo();
 }
 
 const byte const charset[2048] = {/*{w:8,h:8,count:256, bpp:1}*/
