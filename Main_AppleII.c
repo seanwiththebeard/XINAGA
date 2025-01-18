@@ -18,40 +18,35 @@
 //#resource "apple2.rom"
 #define CFGFILE apple2-xinaga.cfg
 
-void DrawSq(byte xPos, byte yPos, byte size, byte color)
+#define size 1
+
+void DrawSq(byte xPos, byte yPos, byte sqSize, byte color)
 {
   byte x, y;
-  for (y = yPos * 7 ;y < (yPos*7 + size * 7); ++y)
-    for (x = xPos * 7 ;x < (xPos*7 + (size * 7) / 2); ++x)
+  xPos -= (xPos % size);
+  yPos -= (yPos % (size*2));
+  
+  for (y = yPos ;y < (yPos+ sqSize*2); ++y)
+    for (x = xPos ;x < (xPos + sqSize); ++x)
       A2Pixel(x, y, color);
 }
+byte random;
 
 void GFX_DEMO()
 {
   int x, y = 0;
+  byte color = 0;
+  byte random1 = rand();
   InitializeGraphics();
   ClearScreen();
 
-  DrawSq(0, 0, 2, 1);
-  DrawSq(2, 2, 2, 2);
-  DrawSq(4, 4, 2, 3);
-  DrawSq(6, 6, 2, 5);
   
-
-  for (y = 0; y < 32; ++y)
-    for (x = 64; x < 80; ++x)
-    {
-      //SetChar(x + 16*y, x+1, y);
-      A2Pixel(x, y, 5);
-      //A2Pixel(1, y, 1);
-      //A2Pixel(2, y, 1);
-      //A2Pixel(3, y, 1);
-      //A2Pixel(4, y, 1);
-      //A2Pixel(5, y, 1);
-      //A2Pixel(6, y, 1);
-    }
-  
-  while(1);
+  while(1)
+  {
+    x = rand() % (140 - size);
+    y = rand() % (192 - (size*2));
+    DrawSq(x, y, size, ++color);
+  }
 }
 void main()
 {  

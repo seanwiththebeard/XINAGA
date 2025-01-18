@@ -302,70 +302,58 @@ void SwapBuffer(void)
 }
 
 #if defined(__APPLE2__)
-const byte blanksA[3] = 
+const byte blanksA[7] = 
 {
   0b01111100,
   0b01110011,
   0b01001111,
-};
-const byte blanksB[3] = 
-{
+  0b10111111,
   0b01111001,
   0b01100111,
   0b00011111,
+};
+const byte paletteTable[7] = {
+  0b00,
+  0b11,
+  0b01,
+  0b10,
+  0b01,
+  0b10,
+  0b11
 };
 void A2Pixel(byte x, byte y, byte color)
 {
   int offset = RowsHGR[y] + ((2*x) / 7);
   byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
   byte palette = 0;
-  color = color % 6;
+  color = color % 7;
   
-  switch (color)
+  if (color > 3)
   {
-    case 0:
-      //color = 0b00; //Black
-      break;
-    case 1:
-      color = 0b11; // White
-      break;
-    case 2:
-      color = 0b01; //Purple
-      break;
-    case 3:
-      color = 0b10; //Green
-      break;
-    case 4:
-      color = 0b01;
-      palette = 128;
-      break;
-    case 5:
-      color = 0b10;
-      palette = 128;
-      break;
+    palette = 128; 
   }
   
+  color = paletteTable[color];
   
+  HGR[offset] = (HGR[offset] & blanksA[xPixel]);
+
   if (xPixel < 3)
   {
-    HGR[offset] = (HGR[offset] & blanksA[xPixel]);
-    HGR[offset] = (HGR[offset] | color << (xPixel * 2));
+    HGR[offset] |= color << (xPixel * 2);
   }
-  if (xPixel == 3)
+  else if (xPixel == 3)
   {
-    HGR[offset] = (HGR[offset] & 0b10111111);
-    HGR[offset+1] = (HGR[offset+1] & 0b11111110);
-    
-    HGR[offset] = (HGR[offset] | (color << 7) >> 1); //Last
-    HGR[offset+ 1] = (HGR[offset + 1] | color >> 1); //First
+    HGR[offset+1] &= 0b01111110;    
+    HGR[offset] |= (color << 7) >> 1; //Last
+    HGR[offset + 1] |= color >> 1; //First
   }
-  if (xPixel > 3)
+  else if (xPixel > 3)
   {
-    HGR[offset] = (HGR[offset] & blanksB[xPixel - 4]);
-    HGR[offset] = (HGR[offset] | color << (1 + (xPixel - 4) * 2));
+    HGR[offset] |= color << (1 + (xPixel - 4) * 2);
   }
   
-  HGR[offset] = (HGR[offset] & 0b01111111) + palette;
+  HGR[offset] &= 0b01111111;
+  HGR[offset] += palette;
 }
 
 void DrawChar(int index, byte xpos, byte ypos)
