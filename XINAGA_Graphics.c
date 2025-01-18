@@ -305,57 +305,54 @@ void SwapBuffer(void)
 
 void A2Pixel(byte x, byte y, byte color)
 {
-  int offsetX = (x*2) / 7;
-  int offset = RowsHGR[y] + offsetX;
+  int offset = RowsHGR[y] + ((2*x) / 7);
   byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
+  byte palette = 0;
+  color = color % 6;
+  
   switch (color)
   {
     case 0:
+      //color = 0b00; //Black
       break;
     case 1:
-      color = 0b11;
+      color = 0b11; // White
       break;
     case 2:
-      color = 0b01;
+      color = 0b01; //Purple
       break;
     case 3:
+      color = 0b10; //Green
+      break;
+    case 4:
+      color = 0b01;
+      palette = 128;
+      break;
+    case 5:
       color = 0b10;
+      palette = 128;
       break;
   }
   
-  if ( xPixel < 3)
+  if (xPixel < 3)
   {
-    //HGR[offset] = (HGR[offset] | color << (xPixel * 2));
+    HGR[offset] = (HGR[offset] | color << (xPixel * 2));
   }
-  else if (xPixel == 3)
+  if (xPixel == 3)
   {
-    HGR[offset] = (HGR[offset] | color << 6); //Last
-    HGR[offset+ 1] = (HGR[offset + 1] | color >> 2); //First
+    HGR[offset] = (HGR[offset] | (color << 7) >> 1); //Last
+    HGR[offset+ 1] = (HGR[offset + 1] | color >> 1); //First
   }
-  else if (xPixel > 3)
+  if (xPixel > 3)
   {
-    //HGR[offset+ 1] = (HGR[offset + 1] | color << (xPixel * 2));
+    HGR[offset] = (HGR[offset] | color << (1 + (xPixel - 4) * 2));
   }
-    
-  //  byte 1/byte 2
-  // 0 1 2 (3) 4 5 6
-  //if (offsetX % 2 == 0)
+  HGR[offset] = (HGR[offset] & 0b01111111) + palette;
+  
+  //if (palette)
   {
-    //HGR[offset] = (HGR[offset] | color);
-    //HGR[offset] = (HGR[offset] | color << 2);
-    //HGR[offset] = (HGR[offset] | color << 4);
-    
-    
-    
+    //HGR[offset] = (HGR[offset] & 0b01111111) + 128;
   }
-  //else 
-  {
-    
-    
-    //HGR[offset] = (HGR[offset] | color << 1);
-    //HGR[offset] = (HGR[offset] | color << 3);
-    //HGR[offset] = (HGR[offset] | color << 5);
-  } 
 }
 
 void DrawChar(int index, byte xpos, byte ypos)

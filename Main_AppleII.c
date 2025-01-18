@@ -24,11 +24,24 @@ void GFX_DEMO()
   ClearScreen();
     //A2Pixel(0, 0, 5);
   
+    A2Pixel(75, 120, 5);
+    A2Pixel(75, 128, 3);
+    A2Pixel(87, 120, 3);
+  
+  
+  
+  
   for (y = 0; y < 32; ++y)
     for (x = 0; x < 140; ++x)
   {
     //SetChar(x + 16*y, x+1, y);
-    A2Pixel(x, y, 1);
+    A2Pixel(x, y, y);
+    //A2Pixel(1, y, 1);
+    //A2Pixel(2, y, 1);
+    //A2Pixel(3, y, 1);
+    //A2Pixel(4, y, 1);
+    //A2Pixel(5, y, 1);
+    //A2Pixel(6, y, 1);
   }
   while(1);
 }
