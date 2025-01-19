@@ -329,28 +329,36 @@ const byte shiftTable[7] = {
   3,
   5,
 };
+const byte paletteBits[6] = {
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b10000000,
+  0b10000000
+};
 void A2Pixel(byte x, byte y, byte color)
 {
-  int offset = RowsHGR[y] + ((x<<1) / 7);
+  int offset = RowsHGR[y] + (x<<1) / 7;
   byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
   byte index = color;
-  color = paletteTable[color];
+  color = paletteTable[index];
   
   HGR[offset] &= blanksA[xPixel]; //Blank Pixels
+  HGR[offset] &= 0b01111111; //Clear Palette
   
   if (xPixel == 3)
   { 
-    HGR[offset] |= ((color << 7) >> 1); //Last
+    //HGR[offset] |= ((color << 7) >> 1); //Last
+    HGR[offset] |= ((color << 6) & 0b01000000); //Last
     HGR[offset + 1] &= 0b11111110;
     HGR[offset + 1] |= (color >> 1); //First
   }
   else
     HGR[offset] |= color << shiftTable[xPixel];
   
-  HGR[offset] &= 0b01111111; //Clear Palette
   if (index > 3)
     HGR[offset] |= 0b10000000; //Set Palette
-
 }
 
 void DrawChar(int index, byte xpos, byte ypos)
