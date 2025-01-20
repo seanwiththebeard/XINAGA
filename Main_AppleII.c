@@ -29,7 +29,7 @@ void DrawGfx()
       {
         for (j = 0; j < 7; ++j)
         {
-          if ((charset[x *8 +i + 16 * y] >> j) & (0b1))
+          if ((charset[x *8 +i + y * 128] >> j) & (0b1))
           {
             A2Pixel(x*7 + j, y*8 + i, 2);
           }
@@ -62,7 +62,11 @@ void GFX_DEMO()
   byte random1 = rand();
   InitializeGraphics();
   ClearScreen();
+  
   DrawGfx();
+  while(1)
+  {
+  }
   
   while(1)
   {
@@ -75,7 +79,7 @@ void GFX_DEMO()
   }
 }
 void main()
-{  
+{    
   GFX_DEMO();
   Demo();
 }
