@@ -18,7 +18,7 @@
 //#resource "apple2.rom"
 #define CFGFILE apple2-xinaga.cfg
 
-#define size 14
+#define size 21
 void DrawSq(byte xPos, byte yPos, byte sqSize, byte color)
 {
   byte x, y;

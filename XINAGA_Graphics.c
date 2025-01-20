@@ -340,8 +340,9 @@ const byte paletteBits[6] = {
 void A2Pixel(byte x, byte y, byte color)
 {
   int offset = RowsHGR[y] + (x<<1) / 7;
-  byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
   byte index = color;
+  byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
+  
   color = paletteTable[index];
   
   HGR[offset] &= blanksA[xPixel]; //Blank Pixels
