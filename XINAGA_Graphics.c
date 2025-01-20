@@ -359,7 +359,7 @@ void A2Pixel(byte x, byte y, byte color)
     HGR[offset] |= color << shiftTable[xPixel];
   
   if (index > 3)
-    HGR[offset] |= 0b10000000; //Set Palette
+    HGR[offset] |= 0b10000000; //Set Palette  
 }
 
 void DrawChar(int index, byte xpos, byte ypos)
