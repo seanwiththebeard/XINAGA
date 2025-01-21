@@ -17,7 +17,17 @@
 //#resource "apple2-xinaga.cfg"
 //#resource "apple2.rom"
 #define CFGFILE apple2-xinaga.cfg
-
+void DrawCharPixel(byte index, byte color, byte x, byte y)
+{
+  byte i, j;
+  int offset = (index *8);
+  for (i = 0; i < 8; ++i)
+    for (j = 0; j < 7; ++j)
+      if ((charset[offset + i] >> j) & (0b1))
+        A2Pixel(x*7 + j, y*8 + i, color);
+      //else
+      //A2Pixel(x*7 + j, y*8 + i, 0);
+}
 void DrawGfx( byte color)
 {
   byte x, y, i, j;
@@ -31,7 +41,7 @@ void DrawGfx( byte color)
         {
           if ((charset[x *8 +i + y * 128] >> j) & (0b1))
           {
-            A2Pixel(x*7 + j, y*8 + i, 1);
+            A2Pixel(x*7 + j, y*8 + i, color);
           }
           //else
             //A2Pixel(x*7 + j, y*8 + i, 0);
@@ -64,7 +74,11 @@ void GFX_DEMO()
   InitializeGraphics();
   ClearScreen();
   
-  DrawGfx(3);
+  //byte x, y;  
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 16; ++x)
+      DrawCharPixel(x + 16*y, 2, x, y);
+  //DrawGfx(3);
   while(1)
   {
   }
