@@ -22,22 +22,28 @@ void DrawCharPixel(byte index, byte color, byte x, byte y)
   #define charWidth 7
   #define charHeight 8
   byte i, j;
-  int offset = (index *8);
+  int offset = (index *charHeight);
   color;
   for (i = 0; i < charHeight; ++i)
   {
     //Clear HGR byte
-        HGR[RowsHGR[y*8 +i] + x*2] = 0;
-        HGR[RowsHGR[y*8 + i] + x*2 + 1] = 0;
+        HGR[RowsHGR[y*2*charHeight + i*2] + x*2] = 0;
+        HGR[RowsHGR[y*2*charHeight + i*2] + x*2 + 1] = 0;
     
         //HGR[RowsHGR[y*8] + 2*x + 1] = 255;
     
     for (j = 0; j < charWidth; ++j)
       if ((charset[offset + i] >> j) & (0b1))
-        A2Pixel(x*charWidth + j, y*charHeight + i, color);
+      {
+        A2Pixel(x*charWidth + j, y*charHeight*2 + i * 2, color);
+        A2Pixel(x*charWidth + j, y*charHeight*2 + i * 2 + 1, color);        
+      }
+      else
+      {
+        A2Pixel(x*charWidth + j, y*charHeight*2 + i * 2, color % 4);
+        A2Pixel(x*charWidth + j, y*charHeight*2 + i * 2 + 1, color / 2);        
+      }
   }
-      //else
-      //A2Pixel(x*7 + j, y*8 + i, 0);
 }
 void DrawGfx( byte color)
 {
@@ -54,8 +60,8 @@ void DrawGfx( byte color)
           {
             A2Pixel(x*7 + j, y*8 + i, color);
           }
-          //else
-            //A2Pixel(x*7 + j, y*8 + i, 0);
+          else
+            A2Pixel(x*7 + j, y*8 + i, 0);
             
         }
       }
@@ -80,7 +86,7 @@ byte random;
 void GFX_DEMO()
 {
   int x, y = 0;
-  byte color = 4;
+  byte color = 5;
   byte index = 0;
   byte random1 = rand();
   InitializeGraphics();
@@ -91,10 +97,10 @@ void GFX_DEMO()
   //DrawGfx(3);
   while(1)
   {
-    for (y = 0; y < 16; ++y)
-      for (x = 0; x < 16; ++x)
+    for (y = 0; y < 4; ++y)
+      for (x = 0; x < 4; ++x)
         DrawCharPixel(x + 16*y + index, color, x, y);
-    ++index;
+    //++index;
     ++color;
   }
   
