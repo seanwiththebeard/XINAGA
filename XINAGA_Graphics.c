@@ -343,7 +343,7 @@ void A2Pixel(byte x, byte y, byte color)
   byte index = color;
   byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
   
-  color = paletteTable[index];
+  color = paletteTable[index % 6];
   
   HGR[offset] &= blanksA[xPixel]; //Blank Pixels
   HGR[offset] &= 0b01111111; //Clear Palette

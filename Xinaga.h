@@ -105,6 +105,9 @@ typedef int8_t sbyte;	// 8-bit signed
 #pragma warn (remap-zero, push, off)
 #pragma charmap ('^', 0x7E)
 #pragma warn (remap-zero, pop)
+
+extern char HGR[0x2000];
+extern unsigned int RowsHGR[192];
 #endif
 
 #if defined(__C64__)

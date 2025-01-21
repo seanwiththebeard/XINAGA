@@ -19,12 +19,23 @@
 #define CFGFILE apple2-xinaga.cfg
 void DrawCharPixel(byte index, byte color, byte x, byte y)
 {
+  #define charWidth 7
+  #define charHeight 8
   byte i, j;
   int offset = (index *8);
-  for (i = 0; i < 8; ++i)
-    for (j = 0; j < 7; ++j)
+  color;
+  for (i = 0; i < charHeight; ++i)
+  {
+    //Clear HGR byte
+        HGR[RowsHGR[y*8 +i] + x*2] = 0;
+        HGR[RowsHGR[y*8 + i] + x*2 + 1] = 0;
+    
+        //HGR[RowsHGR[y*8] + 2*x + 1] = 255;
+    
+    for (j = 0; j < charWidth; ++j)
       if ((charset[offset + i] >> j) & (0b1))
-        A2Pixel(x*7 + j, y*8 + i, color);
+        A2Pixel(x*charWidth + j, y*charHeight + i, color);
+  }
       //else
       //A2Pixel(x*7 + j, y*8 + i, 0);
 }
@@ -69,18 +80,22 @@ byte random;
 void GFX_DEMO()
 {
   int x, y = 0;
-  byte color = 0;
+  byte color = 4;
+  byte index = 0;
   byte random1 = rand();
   InitializeGraphics();
   ClearScreen();
   
   //byte x, y;  
-  for (y = 0; y < 16; ++y)
-    for (x = 0; x < 16; ++x)
-      DrawCharPixel(x + 16*y, 2, x, y);
+  
   //DrawGfx(3);
   while(1)
   {
+    for (y = 0; y < 16; ++y)
+      for (x = 0; x < 16; ++x)
+        DrawCharPixel(x + 16*y + index, color, x, y);
+    ++index;
+    ++color;
   }
   
   while(1)
