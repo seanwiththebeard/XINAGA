@@ -111,7 +111,7 @@ void ClearScreen(void)
   #endif
   
   #if defined (MSX)
-  CLS();
+  FILVRM(0x1800, 768, ' ');
   #endif
 }
 

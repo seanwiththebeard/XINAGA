@@ -33,6 +33,8 @@ void SetCharPalette(byte index, byte fgColor, byte bgColor)
   
 }
 unsigned char MSX_CharSet[];
+uint8_t __at(0xf3e2) VDP3;
+uint8_t __at(0xf3e3) VDP4;
 void SetupGraphics() 
 {
   CHGMOD(2);
@@ -40,17 +42,13 @@ void SetupGraphics()
   BAKCLR = 1;
   BDRCLR = 1;
   CHGCLR();
-  // Enable VDP to write
-  //SETWRT();
-  // fill VRAM with value
-  LDIRVM(0, &MSX_CharSet[0], 2048);
-  //ClearScreen();
-  //LDIRVM(0x2000, &ColorTable[0], 8);
   
-  FILVRM(0x1800, 32*24, '@');
+  LDIRVM(0, &MSX_CharSet[0], 2048);
+  LDIRVM(2048, &MSX_CharSet[0], 2048);
+  LDIRVM(4096, &MSX_CharSet[0], 2048);
   FILVRM(0x2000, 0x800 * 3, 15<<4);
   
-  DrawCharset();
+  //DrawCharset();
  
   //LDIRVM(0x2000, &MSX_CharSet[0], 2048);
   
@@ -146,7 +144,7 @@ void main(void)
   //INIMLT();
   
   
-  //Demo();
+  Demo();
   
   while(1);
 }
