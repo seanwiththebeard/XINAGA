@@ -533,7 +533,7 @@ void InitializeMapData()
   for (byte_y = 0; byte_y < 16; ++byte_y)
     for (byte_x = 0; byte_x < 16; ++byte_x)
     {
-      mapQuads[byte_x + 16*byte_y] = grass;//byte_x + 16*byte_y;
+      mapQuads[byte_x + 16*byte_y] = byte_x + 16*byte_y;
     }
   
   //Quad definitions (64 tiles)
