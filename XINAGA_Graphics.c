@@ -329,14 +329,6 @@ const byte shiftTable[7] = {
   3,
   5,
 };
-const byte paletteBits[6] = {
-  0b00000000,
-  0b00000000,
-  0b00000000,
-  0b00000000,
-  0b10000000,
-  0b10000000
-};
 void A2Pixel(byte x, byte y, byte color)
 {
   int offset = RowsHGR[y] + (x<<1) / 7;
@@ -418,8 +410,11 @@ void _SetChar(void)
   #endif
   
   #if defined(MSX)
-  POSIT(SetCharY+1+(SetCharX<<8));
-  CHPUT(SetCharIndex);
+  //POSIT(SetCharY+1+(SetCharX<<8));
+  //CHPUT((int)SetCharIndex);
+  //SETWRT();
+  WRTVRM(0x1800 + (SetCharY * 32 + SetCharX),SetCharIndex);
+  
   #endif
 }
 
