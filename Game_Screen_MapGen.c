@@ -561,7 +561,7 @@ screenName Update_MapGen()
 {
   ClearScreen();
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  ClearMap();
+  //ClearMap();
   //DrawMapGenTiles();
   DrawMiniMap(false);
   GetSeed();

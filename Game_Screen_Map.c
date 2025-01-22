@@ -236,7 +236,7 @@ static const byte MapSet[2048] = { /*{w:8,h:8,brev:1,count:256, bpp:1, pal:"c64"
 //Quad Data
 //#define mapQuadWidth 8
 //#define mapQuadHeight 8
-byte mapQuads[mapMatrixHeight * mapMatrixWidth];  //These are the quad-tile references that make up the map
+byte mapQuads[mapMatrixHeight * mapMatrixWidth] = {0};  //These are the quad-tile references that make up the map
 
 struct
 { //These are the quad indexes referenced in mapQuads[y][x]
@@ -533,7 +533,7 @@ void InitializeMapData()
   for (byte_y = 0; byte_y < 16; ++byte_y)
     for (byte_x = 0; byte_x < 16; ++byte_x)
     {
-      mapQuads[byte_x + 16*byte_y] = byte_x + 16*byte_y;
+      mapQuads[byte_x + 16*byte_y] = grass;//byte_x + 16*byte_y;
     }
   
   //Quad definitions (64 tiles)
