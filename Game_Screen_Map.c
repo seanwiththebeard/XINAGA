@@ -590,7 +590,7 @@ void InitializeMapData()
 
   LoadMapQuads();
   UpdatePlayerOnMiniMap();
-  //LOSEnabled = true;
+  LOSEnabled = true;
 }
 
 void wrapX(sbyte *posX) //Used in map positions
