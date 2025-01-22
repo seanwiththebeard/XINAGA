@@ -88,7 +88,7 @@ typedef int8_t sbyte;	// 8-bit signed
 #define selectionWidth 6
 #define selectionHeight consoleHeight
 #define selectionCount 4
-#define viewportPosX 0
+#define viewportPosX 1
 #define viewportPosY 1
 #define viewportWidth 9
 #define viewportHeight 9

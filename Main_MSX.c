@@ -19,10 +19,23 @@
 //#link "msxbios.c"
 ////#link "MSX_CharSet.C"
 
+byte ColorTable[] = {
+  0,1,0,2,0,3,0,5
+};
+void SetCharPalette(byte index, byte fgColor, byte bgColor)
+{
+  //FILVRM(0x2000 + (8*index), 1, (fgColor <<4 | bgColor));
+  byte x = index;
+  fgColor;
+  bgColor;
+  for (x = 0; x < 128; ++x)
+    WRTVRM(0x2000 + x, 11);
+  
+}
 unsigned char MSX_CharSet[];
 void SetupGraphics() 
 {
-  INIT32();
+  CHGMOD(2);
   FORCLR = 14;
   BAKCLR = 1;
   BDRCLR = 1;
@@ -31,7 +44,17 @@ void SetupGraphics()
   //SETWRT();
   // fill VRAM with value
   LDIRVM(0, &MSX_CharSet[0], 2048);
-  //FILVRM(0x1000, 0x3000, 0b11110000);
+  //ClearScreen();
+  //LDIRVM(0x2000, &ColorTable[0], 8);
+  
+  FILVRM(0x1800, 32*24, '@');
+  FILVRM(0x2000, 0x800 * 3, 15<<4);
+  
+  DrawCharset();
+ 
+  //LDIRVM(0x2000, &MSX_CharSet[0], 2048);
+  
+  //SetCharPalette(1, 12, 0);
   
   //LDIRVM(0, (char*)0x1B80, 32);
   
@@ -123,7 +146,9 @@ void main(void)
   //INIMLT();
   
   
-  Demo();
+  //Demo();
+  
+  while(1);
 }
 
 /*{w:8,h:8,brev:1,count:256}*/

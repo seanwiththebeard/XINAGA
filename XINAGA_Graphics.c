@@ -412,9 +412,8 @@ void _SetChar(void)
   #if defined(MSX)
   //POSIT(SetCharY+1+(SetCharX<<8));
   //CHPUT((int)SetCharIndex);
-  //SETWRT();
-  WRTVRM(0x1800 + (SetCharY * 32 + SetCharX),SetCharIndex);
-  
+  SETWRT();
+  WRTVRM(0x1800 + SetCharX +(SetCharY*32), SetCharIndex);
   #endif
 }
 
