@@ -138,6 +138,10 @@ void raster_wait(byte line)
   __asm__("HALT");
   line;
   #endif
+  
+  #if defined(__ATARI__)
+  line;
+  #endif
 }
 
 void wait_vblank(byte frames) 
@@ -436,6 +440,10 @@ void SetColor(byte index, byte x, byte y)
   FORCLR = index;
   SetChar(x, y, index);
   #endif
+  
+  #if defined(__ATARI__)
+  index;x;y;
+  #endif
 }
 
 void SetCharBuffer(byte index, byte x, byte y)
@@ -449,11 +457,15 @@ void SetCharBuffer(byte index, byte x, byte y)
   ScreenColorBuffer[offset] = attributeset[index];
   #endif
   #if defined(__NES__)
-  //ScreenChars[x + YColumnIndex[y]] = index;
-  index;x;y;
+  ScreenChars[x + YColumnIndex[y]] = index;
+  //index;x;y;
   #endif
   #if defined(MSX)
   index;x;y;
+  #endif
+  
+  #if defined(__ATARI__)
+  ScreenChars[x + YColumnIndex[y]] = index;
   #endif
 }
 
