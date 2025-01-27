@@ -46,6 +46,10 @@ unsigned int RowsHGR[192];
 byte ScreenChars[ROWS*COLS];
 #endif
 
+#if defined (__ATARI__)
+byte ScreenChars[ROWS*COLS];
+#endif
+
 #if defined (MSX)
 byte ScreenChars[ROWS*COLS];
 #endif
@@ -461,7 +465,8 @@ void SetCharBuffer(byte index, byte x, byte y)
   //index;x;y;
   #endif
   #if defined(MSX)
-  index;x;y;
+  ScreenChars[x + YColumnIndex[y]] = index;
+  //index;x;y;
   #endif
   
   #if defined(__ATARI__)

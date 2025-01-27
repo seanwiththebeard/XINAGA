@@ -47,6 +47,12 @@ void DiskSave(char filename[], int source, int length)
   source;
   length;
   #endif
+  
+  #if defined (__ATARI__)
+  filename;
+  source;
+  length;
+  #endif
 }
 
 void DiskLoad(char filename[], int dest)
@@ -77,6 +83,11 @@ void DiskLoad(char filename[], int dest)
   #endif
   
   #if defined(MSX)
+  filename;
+  dest;
+  #endif
+  
+  #if defined (__ATARI__)
   filename;
   dest;
   #endif
