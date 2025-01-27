@@ -30,8 +30,30 @@ typedef int8_t sbyte;	// 8-bit signed
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
 #define contextMenuHeight (2 * viewportHeight)
-
 #endif
+
+#if defined(__ATARI__)
+#define COLS 40
+#define ROWS 24
+#define consolePosX 1
+#define consolePosY 2 + 2*viewportHeight
+#define consoleWidth 38
+#define consoleHeight (ROWS - viewportHeight * 2 - 3)
+#define selectionPosX consoleWidth + 2
+#define selectionPosY consolePosY
+#define selectionWidth 6
+#define selectionHeight consoleHeight
+#define selectionCount 4
+#define viewportPosX 1
+#define viewportPosY 1
+#define viewportWidth 11
+#define viewportHeight 9
+#define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
+#define contextMenuPosY viewportPosY
+#define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
+#define contextMenuHeight (2 * viewportHeight)
+#endif
+
 #if defined(__C64__)
 #define COLS 40
 #define ROWS 25
