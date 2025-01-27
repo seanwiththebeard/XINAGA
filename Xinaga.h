@@ -163,7 +163,12 @@ extern unsigned int RowsHGR[192];
 #define MMC3_WRAM_DISABLE() POKE(0xA001, 0x40)
 #define MMC3_WRAM_ENABLE() POKE(0xA001, 0x80)
 #define MMC3_WRAM_READ_ONLY() POKE(0xA001, 0xC0)
+
+
 //#pragma bss-name ("XRAM")
+
+extern byte ScreenChars[ROWS*COLS];
+extern byte attributeset[256];
 #endif
 
 
