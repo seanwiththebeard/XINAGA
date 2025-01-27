@@ -278,8 +278,9 @@ void DrawCharStatus(byte characterIndex)
   DrawTileDirectXY(PlayerChar->CLASS, contextMenuPosX, statY);
   ConsoleBufferReset();
   ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
-  ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
   ConsoleBufferPrint(contextMenuPosX + 2, statY);
+  ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
+  ConsoleBufferPrint(contextMenuPosX + 2, statY+1);
   sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
   PrintString(strTemp, contextMenuPosX + 9, statY + 1, true, false);
   ConsoleBufferReset();
