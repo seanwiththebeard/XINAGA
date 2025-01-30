@@ -13,8 +13,12 @@
 void DebugGraphics()
 {
   InitializeGraphics();
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  SetLineMessageWindow("THE QUICK brown fox JUMPS over THE Lazy Dog@", 0);
+  ResizeMessageWindow(consolePosX, ROWS - 7, consoleWidth, 6);
+  WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
+  WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 0);
+  WriteLineMessageWindow("abdefghijklmnopqrstuvwxyz@", 0);
+  WriteLineMessageWindow("01234567890 !#$%^&*()-=[];':<>,./?@", 0);
+  
   DrawCharset();
   while(1);
 }
