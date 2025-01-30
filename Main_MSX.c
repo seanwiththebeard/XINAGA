@@ -173,7 +173,7 @@ void main(void)
   // Switches to SCREEN 3 (multi-color screen 64*48 pixels)
   //INIMLT();
   
-  
+  DebugGraphics();
   Demo();
   
   while(1);

@@ -1,5 +1,14 @@
 #include "Xinaga.h"
 
+//Charset Desciption (16x32 blocks)
+//Map Characters 		Row 0
+//Punctuation/Numbers		Row 1
+//Uppercase Alphabet		Row 2 (C64)
+//Lowercase Alphabet		Row 3 (C64)
+//Map Tiles			Row 4,5,6 (C64)
+//Interface/Minimap		Row 7
+
+
 #if defined(__APPLE2__)
 //#pragma code-name (push, "LOWCODE")
 #endif
