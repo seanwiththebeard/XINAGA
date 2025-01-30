@@ -21,6 +21,7 @@
 #define MapGen 5
 #define Scenario 2
 extern screenName currentScreen;
+void DebugGraphics();
 
 #define mapMatrixWidth 16
 #define mapMatrixHeight 16

@@ -19,11 +19,12 @@
 //#resource "c64charset.bin"
 //#resource "c64attributeset.bin"
 //#link "chr_c64.s"
-
+#include "C64Charmap.h"
 #define CFGFILE C64.cfg
 #endif
 
 void main(void)
 {
+  DebugGraphics();
   Demo();
 }

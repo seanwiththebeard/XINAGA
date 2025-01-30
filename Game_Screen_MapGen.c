@@ -520,16 +520,16 @@ void GenerateMap(byte seed)
   //WriteLineMessageWindow(strTemp, 0);
 }
 
-#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
-#define menuPosY consolePosY
+//#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
+//#define menuPosY consolePosY - 1
 #define menuWidth 5
-#define menuHeight consoleHeight
+//#define menuHeight consoleHeight
 #define menuCount 4
 void GetSeed()
 {
   byte seed  = 0;
   bool exit = false;
-  ResetMenu("Seed@", menuPosX, menuPosY, menuWidth, menuHeight, menuCount);
+  ResetMenu("Seed@", consoleWidth - 3 - consolePosX, consolePosY, menuWidth, menuCount, menuCount);
   SetMenuItem(0, "Next@");
   SetMenuItem(1, "Last@");
   SetMenuItem(2, "Go@");
@@ -560,10 +560,13 @@ void GetSeed()
 screenName Update_MapGen()
 {
   ClearScreen();
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  DrawMiniMap(false);
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth - menuWidth - 1, consoleHeight);
   //ClearMap();
   //DrawMapGenTiles();
-  DrawMiniMap(false);
+  //SetLineMessageWindow("THE QUICK brown fox JUMPS over THE Lazy Dog@", 0);
+  //DrawCharset();
+  //while(1);
   GetSeed();
   //StoreMap();
   //ClearMap();

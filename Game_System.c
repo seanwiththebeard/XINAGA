@@ -10,6 +10,14 @@
 //#pragma rodata-name (push, "STARTUP")
 #endif
 
+void DebugGraphics()
+{
+  InitializeGraphics();
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  SetLineMessageWindow("THE QUICK brown fox JUMPS over THE Lazy Dog@", 0);
+  DrawCharset();
+  while(1);
+}
 
 struct
 {
