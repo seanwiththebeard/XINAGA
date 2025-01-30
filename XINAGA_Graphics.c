@@ -3,9 +3,9 @@
 //Charset Desciption (16x32 blocks)
 //Map Characters 		Row 0
 //Punctuation/Numbers		Row 1
-//Uppercase Alphabet		Row 2 (MSX/Apple II), Row 7 (C64)
-//Lowercase Alphabet		Row 3 (MSX/Apple II), Row 2 (C64)
-//Map Tiles			Row 4,5,6 (MSX/Apple II), Row 3, 4, 5 (C64)
+//Uppercase Alphabet		Row 2 (NES/MSX/Apple II), Row 7 (C64)
+//Lowercase Alphabet		Row 3 (NES/MSX/Apple II), Row 2 (C64)
+//Map Tiles			Row 4,5,6 (NES/MSX/Apple II), Row 3, 4, 5 (C64)
 //Interface/Minimap		Row 7
 
 
