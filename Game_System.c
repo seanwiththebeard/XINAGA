@@ -18,7 +18,6 @@ void DebugGraphics()
   WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 0);
   WriteLineMessageWindow("abdefghijklmnopqrstuvwxyz@", 0);
   WriteLineMessageWindow("01234567890 !#$%^&*()-=[];':<>,./?@", 0);
-  
   DrawCharset();
   while(1);
 }
