@@ -89,6 +89,6 @@ void main(void)
     
     //vram_write(ATTRIBUTE_TABLE, sizeof(ATTRIBUTE_TABLE));
   }
-  //DebugGraphics();
+  DebugGraphics();
   Demo();
 }
