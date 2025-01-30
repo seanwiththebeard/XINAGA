@@ -441,7 +441,7 @@ void _SetChar(void)
   //ppu_wait_frame();
   // clear the buffer
   ++charsDrawn;
-  if (charsDrawn % 10 == 0)
+  if (charsDrawn % 21 == 0) // if (charsDrawn % 10 == 0)
     vrambuf_flush();
   //vram_put(SetCharIndex);
   //ppu_on_all();
