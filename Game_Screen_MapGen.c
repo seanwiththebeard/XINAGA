@@ -1,6 +1,13 @@
 #include "Xinaga.h"
 #include "GameData.h"
 
+//Overworld Tiles
+//Water
+//Grass
+//Forrest
+//Mountains
+//Swamp
+
 #if defined(__APPLE2__)
 #pragma code-name (push, "LC")
 #endif
