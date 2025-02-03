@@ -23,15 +23,7 @@
 #include "vrambuf.h"
 //#link "vrambuf.c"
 
-/*{pal:"c64",layout:"c64"}*/
-const char PALETTEC64[16] = { 
-  0x00,			// screen color
 
-  0x01,0x02,0x03,0x04,	// background palette 0
-  0x05,0x06,0x07,0x08,	// background palette 1
-  0x09,0x0a,0x0b,0x0c,	// background palette 2
-  0x0d,0x0e,0x0f        // background palette 3
-};
 #endif
 
 #if defined (MSX)
