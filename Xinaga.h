@@ -169,6 +169,9 @@ extern unsigned int RowsHGR[192];
 
 extern byte ScreenChars[ROWS*COLS];
 extern byte attributeset[256];
+
+extern const char ATTRIBUTE_TABLE[0x40];
+extern const char PALETTE[16];
 #endif
 
 
