@@ -188,7 +188,6 @@ extern const char PALETTE[16];
 
 extern uint16_t randseed;
 byte ReadBit(byte byteToRead, char bit);
-void LoadMap(void);
 
 #if defined (__C64__)
 //extern const byte const charset[2048];
@@ -259,7 +258,6 @@ void StoreBuffer(void);
 //extern void PlaySong(byte index);
 //extern void StopSong(void);
 //extern void PlaySound(int length, int freq);
-
 
 //File I/O
 void DiskSave(char filename[], int source, int length);

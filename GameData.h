@@ -32,6 +32,8 @@ extern byte followIndex;
 void Demo(void);
 void DrawMiniMap(bool highlightPlayer);
 void WaitForInput(void);
+void LoadMap(void);
+void DrawMap(void);
 
 extern byte MiniMapHighlightX;
 extern byte MiniMapHighlightY;

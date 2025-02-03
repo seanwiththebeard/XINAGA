@@ -23,9 +23,26 @@
 #define CFGFILE C64.cfg
 #endif
 
+void MapData()
+{
+  memset(&mapQuads[0], 0x01, mapMatrixHeight * mapMatrixWidth);
+}
+
+void DebugMap()
+{
+  InitializeGraphics();
+  LoadMap();
+  
+  MapData();
+  
+  DrawMap();
+  while(1);
+}
+
 void main(void)
 {
-  DebugGraphics();
+  //DebugGraphics();
+  DebugMap();
   Demo();
 }
 
