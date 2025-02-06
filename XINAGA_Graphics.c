@@ -299,7 +299,9 @@ void InitializeGraphics(void)
   set_vram_update(updbuf);
   //vrambuf_flush();
   
+  pal_bright(4);
   pal_clear();
+  oam_clear();
   pal_bg(PALETTE);
   ClearScreen();
   

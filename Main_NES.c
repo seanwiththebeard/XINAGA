@@ -22,7 +22,7 @@
 // bank-switching configuration
 #define NES_MAPPER 4		// Mapper 4 (MMC3)
 #define NES_PRG_BANKS 32	// # of 16KB PRG banks
-#define NES_CHR_BANKS 32	// # of 8KB CHR banks
+#define NES_CHR_BANKS 0	// # of 8KB CHR banks
 
 //#resource "nesbanked.cfg"
 #define CFGFILE nesbanked.cfg
@@ -52,6 +52,18 @@ const char PALETTE[16] = {
   0x30,0x30,0x30        // background palette 3
 };
 
+void UploadCharset()
+{
+  int x = 0;
+  unsigned char *chrdata = (unsigned char*)0xA000;  
+  MMC3_PRG_A000(31); //CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
+  vram_adr(0);
+  for (x = 0; x < 0x2000; ++x)
+  {
+    vram_put(chrdata[x]);
+  }
+}
+
 void main(void)
 {  
   #include <_heap.h>
@@ -65,16 +77,16 @@ void main(void)
   
   MMC3_WRAM_ENABLE();
   //Program Banks
-  MMC3_PRG_8000(1); //CPU $8000-$9FFF (or $C000-$DFFF): 8 KB switchable PRG ROM bank
-  MMC3_PRG_A000(31); //CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
+  MMC3_PRG_8000(0); //CPU $8000-$9FFF (or $C000-$DFFF): 8 KB switchable PRG ROM bank
+  MMC3_PRG_A000(0); //CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
   //Backgrounds
   MMC3_CHR_0000(0); 	//PPU $0000-$07FF (or $1000-$17FF): 2 KB switchable CHR bank
   MMC3_CHR_0800(2); 	//PPU $0800-$0FFF (or $1800-$1FFF): 2 KB switchable CHR bank
   //Sprites
-  MMC3_CHR_1000(0); 	//PPU $1000-$13FF (or $0000-$03FF): 1 KB switchable CHR bank
-  MMC3_CHR_1400(0); 	//PPU $1400-$17FF (or $0400-$07FF): 1 KB switchable CHR bank
-  MMC3_CHR_1800(0); 	//PPU $1800-$1BFF (or $0800-$0BFF): 1 KB switchable CHR bank
-  MMC3_CHR_1C00(0);	//PPU $1C00-$1FFF (or $0C00-$0FFF): 1 KB switchable CHR bank  
+  MMC3_CHR_1000(4); 	//PPU $1000-$13FF (or $0000-$03FF): 1 KB switchable CHR bank
+  MMC3_CHR_1400(5); 	//PPU $1400-$17FF (or $0400-$07FF): 1 KB switchable CHR bank
+  MMC3_CHR_1800(6); 	//PPU $1800-$1BFF (or $0800-$0BFF): 1 KB switchable CHR bank
+  MMC3_CHR_1C00(7);	//PPU $1C00-$1FFF (or $0C00-$0FFF): 1 KB switchable CHR bank  
   
   currentScreen = Map;
   //currentScreen = EditParty;
@@ -89,11 +101,11 @@ void main(void)
   // copy attribute table from PRG ROM to VRAM
   //vram_write(ATTRIBUTE_TABLE, sizeof(ATTRIBUTE_TABLE));
   // enable PPU rendering (turn on screen)
-  ppu_on_all();
+  //ppu_on_all();
   
   //InitializeGraphics();
-  //pal_clear();
-  //pal_bg(PALETTE);
+  pal_clear();
+  pal_bg(PALETTE);
   //DrawCharset();
   
   //while(1)
@@ -108,6 +120,7 @@ void main(void)
     
     //vram_write(ATTRIBUTE_TABLE, sizeof(ATTRIBUTE_TABLE));
   }
+  UploadCharset();
   DebugGraphics();
   Demo();
 }
