@@ -70,6 +70,8 @@ void UploadCharset()
   int *heapend = (int*)&_heapend;
 
 #pragma code-name (push, "STARTUP")
+#pragma rodata-name (push, "STARTUP")
+
 void main(void) //Must be in $E000-$FFFF??
 {
   /*
@@ -87,8 +89,9 @@ void main(void) //Must be in $E000-$FFFF??
   (-2) : the second last bank
   
   Because the values in R6, R7, and $8000 are unspecified at power on, 
-  the reset vector must point into $E000-$FFFF, 
+  the reset vector must point into $E000-$FFFF,
   and code must initialize these before jumping out of $E000-$FFFF.
+  
   */
   //Program Banks
   MMC3_PRG_8000(0); //CPU $8000-$9FFF (or $C000-$DFFF): 8 KB switchable PRG ROM bank
