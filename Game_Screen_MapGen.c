@@ -14,7 +14,7 @@
 
 #if defined (__NES__)
 #pragma code-name (push, "MAPGEN")
-//#pragma rodata-name (push, "MAPGEN")
+#pragma rodata-name (push, "MAPGEN")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #endif

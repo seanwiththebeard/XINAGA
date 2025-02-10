@@ -7,7 +7,7 @@
 
 #if defined (__NES__)
 #pragma code-name (push, "SCENARIO")
-//#pragma rodata-name (push, "SCENARIO")
+#pragma rodata-name (push, "SCENARIO")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #endif

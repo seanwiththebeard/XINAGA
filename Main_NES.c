@@ -64,18 +64,32 @@ void UploadCharset()
   }
 }
 
-void main(void)
-{  
-  #include <_heap.h>
+#include <_heap.h>
   int *heaporg = (int*)&_heaporg;
   int *heapptr = (int*)&_heapptr;
   int *heapend = (int*)&_heapend;
-  heaporg[0] = 0x7000; //heaporg
-  heapptr[0] = heaporg[0]; //heapptr
-  heapend[0] = 0x8000; //heapend
-  memset((int*)heaporg[0], 0, heapend[0] - heaporg[0]); 
+
+#pragma code-name (push, "STARTUP")
+void main(void) //Must be in $E000-$FFFF??
+{
+  /*
+  PRG Banks
+  Bit 6 of the last value written to $8000 swaps the PRG windows at $8000 and $C000. 
+  The MMC3 uses one map if bit 6 was cleared to 0 (value & $40 == $00) and another if set to 1 (value & $40 == $40).
   
-  MMC3_WRAM_ENABLE();
+  PRG map mode →	$8000.D6 = 0	$8000.D6 = 1
+  CPU Bank	Value of MMC3 register
+  $8000-$9FFF	R6	(-2)
+  $A000-$BFFF	R7	R7
+  $C000-$DFFF	(-2)	R6
+  $E000-$FFFF	(-1)	(-1)
+  (-1) : the last bank
+  (-2) : the second last bank
+  
+  Because the values in R6, R7, and $8000 are unspecified at power on, 
+  the reset vector must point into $E000-$FFFF, 
+  and code must initialize these before jumping out of $E000-$FFFF.
+  */
   //Program Banks
   MMC3_PRG_8000(0); //CPU $8000-$9FFF (or $C000-$DFFF): 8 KB switchable PRG ROM bank
   MMC3_PRG_A000(0); //CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
@@ -86,41 +100,21 @@ void main(void)
   MMC3_CHR_1000(4); 	//PPU $1000-$13FF (or $0000-$03FF): 1 KB switchable CHR bank
   MMC3_CHR_1400(5); 	//PPU $1400-$17FF (or $0400-$07FF): 1 KB switchable CHR bank
   MMC3_CHR_1800(6); 	//PPU $1800-$1BFF (or $0800-$0BFF): 1 KB switchable CHR bank
-  MMC3_CHR_1C00(7);	//PPU $1C00-$1FFF (or $0C00-$0FFF): 1 KB switchable CHR bank  
+  MMC3_CHR_1C00(7);	//PPU $1C00-$1FFF (or $0C00-$0FFF): 1 KB switchable CHR bank
+  
+  heaporg[0] = 0x7000; //heaporg
+  heapptr[0] = heaporg[0]; //heapptr
+  heapend[0] = 0x8000; //heapend
+  memset((int*)heaporg[0], 0, heapend[0] - heaporg[0]); 
+  
+  MMC3_WRAM_ENABLE();
+  
   
   currentScreen = Map;
-  //currentScreen = EditParty;
-  
-  
-  
-  // set background palette colors
-  //pal_bg(PALETTE);
-  // fill nametable with diamonds
-  //vram_adr(NAMETABLE_A);	// start address ($2000)
-  //vram_fill(' ', 32*30);	// fill nametable (960 bytes)
-  // copy attribute table from PRG ROM to VRAM
-  //vram_write(ATTRIBUTE_TABLE, sizeof(ATTRIBUTE_TABLE));
-  // enable PPU rendering (turn on screen)
-  //ppu_on_all();
-  
-  //InitializeGraphics();
   pal_clear();
   pal_bg(PALETTE);
-  //DrawCharset();
   
-  //while(1)
-  {
-    //vrambuf_put(NAMETABLE_A, &ScreenChars[0], sizeof(ATTRIBUTE_TABLE));
-    //vrambuf_put(NAMETABLE_A + 32*30, &ATTRIBUTE_TABLE[0], sizeof(ATTRIBUTE_TABLE));
-    //vrambuf_flush();
-    //vram_adr(NAMETABLE_A + 32*30);	// start address ($2000)
-    //ppu_wait_nmi();
-    //vram_fill(' ', 32*30);	// fill nametable (960 bytes)
-    //ppu_wait_nmi();
-    
-    //vram_write(ATTRIBUTE_TABLE, sizeof(ATTRIBUTE_TABLE));
-  }
   UploadCharset();
   DebugGraphics();
-  Demo();
+  //Demo();
 }
