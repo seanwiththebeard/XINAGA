@@ -92,7 +92,31 @@ void main(void) //Must be in $E000-$FFFF??
   the reset vector must point into $E000-$FFFF,
   and code must initialize these before jumping out of $E000-$FFFF.
   
+  
+  8001h, 8000h
+  Register 8000h is the "control" register, while 8001h is the "data" register.
+  First, a byte is written into 8000h to select the desired bank register(s).
+  Then, the desired bank number can be written into 8001h.
+  
+  8000h:
+  7  bit  0
+  ---------
+  CSxx xMMM
+  
+  //Select four 1k slots for background or sprites and two 2k slots for the other
+  C: CHR Address Invert.  When set, does an effective XOR of 1000h with the CHR addresses.
+  
+  //Select the position of the two selectable page windows (1 and 2 or 2 and 3)
+  //Bank 4 E000 will always be the last 8k of the ROM
+  //This register determines where the second to last 8k of the ROM will be placed
+  S: PRG ROM swapping control.
+  0 - 8000-9FFFh and A000-BFFFh can be swapped out while C000-FFFFh is fixed.
+  1 - A000-BFFFh and C000-DFFFh can be swapped out while 8000-9FFFh is fixed.
+  When S = 0, C000-DFFF will contain the second to last bank of ROM.
+  When S = 1, 8000-9FFF will contain the second to last bank of ROM.  
+  E000-FFFF is always fixed to the last bank of ROM.
   */
+  
   //Program Banks
   MMC3_PRG_8000(0); //CPU $8000-$9FFF (or $C000-$DFFF): 8 KB switchable PRG ROM bank
   MMC3_PRG_A000(0); //CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
