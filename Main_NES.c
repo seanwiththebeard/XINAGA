@@ -22,7 +22,7 @@
 // bank-switching configuration
 #define NES_MAPPER 4		// Mapper 4 (MMC3)
 #define NES_PRG_BANKS 32	// # of 16KB PRG banks
-#define NES_CHR_BANKS 0	// # of 8KB CHR banks
+#define NES_CHR_BANKS 32	// # of 8KB CHR banks
 
 //#resource "nesbanked.cfg"
 #define CFGFILE nesbanked.cfg
@@ -132,7 +132,7 @@ void main(void) //Must be in $E000-$FFFF??
   heaporg[0] = 0x7000; //heaporg
   heapptr[0] = heaporg[0]; //heapptr
   heapend[0] = 0x8000; //heapend
-  memset((int*)heaporg[0], 0, heapend[0] - heaporg[0]); 
+  //memset((int*)heaporg[0], 0, heapend[0] - heaporg[0]); 
   
   MMC3_WRAM_ENABLE();
   
@@ -142,6 +142,25 @@ void main(void) //Must be in $E000-$FFFF??
   pal_bg(PALETTE);
   
   UploadCharset();
+  
+  //void DebugGraphics()
+{
+  InitializeGraphics();
+  DrawCharset();
+  
+
+  ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
+
+  while(1)
+  {
+    WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 1);
+    WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 1);
+    WriteLineMessageWindow("abdefghijklmnopqrstuvwxyz@", 1);
+    WriteLineMessageWindow("01234567890 !#$%^&@", 1);
+    WriteLineMessageWindow("*()-=[];':<>,./?@", 1);
+  }
+}
+  
   DebugGraphics();
   //Demo();
 }

@@ -22,8 +22,6 @@ void DebugGraphics()
   WriteLineMessageWindow("01234567890 !#$%^&@", 0);
   WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
   
-
-
   while(1);
 }
 
