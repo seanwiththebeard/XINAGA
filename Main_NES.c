@@ -31,6 +31,9 @@
 //#resource "tileset.bin"
 //#resource "crt0.o"
 
+#pragma code-name (push, "STARTUP")
+#pragma rodata-name (push, "STARTUP")
+
 const char ATTRIBUTE_TABLE[0x40] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // rows 0-3
   0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, // rows 4-7
@@ -69,11 +72,11 @@ void UploadCharset()
   int *heapptr = (int*)&_heapptr;
   int *heapend = (int*)&_heapend;
 
-#pragma code-name (push, "STARTUP")
-#pragma rodata-name (push, "STARTUP")
-
 void main(void) //Must be in $E000-$FFFF??
 {
+  //Program Banks
+  MMC3_PRG_8000(0); //CPU $8000-$9FFF (or $C000-$DFFF): 8 KB switchable PRG ROM bank
+  MMC3_PRG_A000(0); //CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
   /*
   PRG Banks
   Bit 6 of the last value written to $8000 swaps the PRG windows at $8000 and $C000. 
@@ -117,9 +120,7 @@ void main(void) //Must be in $E000-$FFFF??
   E000-FFFF is always fixed to the last bank of ROM.
   */
   
-  //Program Banks
-  MMC3_PRG_8000(0); //CPU $8000-$9FFF (or $C000-$DFFF): 8 KB switchable PRG ROM bank
-  MMC3_PRG_A000(0); //CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
+  
   //Backgrounds
   MMC3_CHR_0000(0); 	//PPU $0000-$07FF (or $1000-$17FF): 2 KB switchable CHR bank
   MMC3_CHR_0800(2); 	//PPU $0800-$0FFF (or $1800-$1FFF): 2 KB switchable CHR bank
