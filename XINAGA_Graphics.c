@@ -303,9 +303,7 @@ void InitializeGraphics(void)
   pal_clear();
   oam_clear();
   pal_bg(PALETTE);
-  ClearScreen();
-  
-  
+  ClearScreen();  
   // enable PPU rendering (turn on screen)
   ppu_on_all();
   #endif
