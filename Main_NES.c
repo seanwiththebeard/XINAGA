@@ -29,7 +29,7 @@
 //#link "chr_generic.s"
 //#resource "neschars.bin"
 //#resource "tileset.bin"
-//#resource "crt0.o"
+////#resource "crt0.o"
 
 #pragma code-name (push, "STARTUP")
 #pragma rodata-name (push, "STARTUP")
