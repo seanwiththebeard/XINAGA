@@ -143,20 +143,22 @@ void main(void) //Must be in $E000-$FFFF??
   //memset((int*)heaporg[0], 0, heapend[0] - heaporg[0]); 
   
   InitializeGraphics();
-  UploadCharset();  
+  UploadCharset();
+  
+  currentScreen = Map;
+  Demo();
   
   DrawCharset();
   ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
-  while(1)
+  //while(1)
   {
-    WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 1);
-    WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 1);
-    WriteLineMessageWindow("abdefghijklmnopqrstuvwxyz@", 1);
-    WriteLineMessageWindow("01234567890 !#$%^&@", 1);
-    WriteLineMessageWindow("*()-=[];':<>,./?@", 1);
+    WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
+    WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 0);
+    WriteLineMessageWindow("abdefghijklmnopqrstuvwxyz@", 0);
+    WriteLineMessageWindow("01234567890 !#$%^&@", 0);
+    WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
   }
   
   //DebugGraphics();
-  currentScreen = Map;
-  //Demo();
+  
 }
