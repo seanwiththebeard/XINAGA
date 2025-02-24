@@ -6,8 +6,8 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "STARTUP")
-#pragma rodata-name (push, "STARTUP")
+//#pragma code-name (push, "CODE")
+//#pragma rodata-name (push, "CODE")
 #endif
 
 #define DefaultScreen EditParty

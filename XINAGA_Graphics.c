@@ -14,8 +14,8 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "STARTUP")
-#pragma rodata-name (push, "STARTUP")
+#pragma code-name (push, "XINAGA_GRAPHICS")
+#pragma rodata-name (push, "XINAGA_GRAPHICS")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #include "neslib.h"

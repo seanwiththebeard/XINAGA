@@ -31,8 +31,8 @@
 //#resource "tileset.bin"
 ////#resource "crt0.o"
 
-#pragma code-name (push, "STARTUP")
-#pragma rodata-name (push, "STARTUP")
+//#pragma code-name (push, "STARTUP")
+//#pragma rodata-name (push, "STARTUP")
 
 const char ATTRIBUTE_TABLE[0x40] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // rows 0-3
