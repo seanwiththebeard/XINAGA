@@ -190,7 +190,7 @@ extern uint16_t randseed;
 byte ReadBit(byte byteToRead, char bit);
 
 #if defined (__C64__)
-//extern const byte const charset[2048];
+extern byte characterset[2048];
 extern byte attributeset[256];
 extern byte* CharRam;
 #endif

@@ -238,7 +238,7 @@ void InitializeGraphics(void)
   int* regd018 = (int*)0xD018;
   int* regdd00 = (int*)0xDD00;
   
-  int* charfile = (int*)0x0840;
+  byte* charfile = &characterset[0];//(int*)0x0840;
   //int* attribfile = (int*)0x1040;
   
   byte* CharRam;  
