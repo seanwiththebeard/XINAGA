@@ -73,7 +73,7 @@ byte *ScreenColorBuffer = (byte *)0xF400;
 byte *ScreenChars = (byte *)0x0400;
 byte *ScreenColors = (byte *)0xD800;
 bool bufferselect = false;
-byte attributeset[256];
+//byte attributeset[256];
 #endif
 
 #if defined(__C64__)
@@ -239,7 +239,7 @@ void InitializeGraphics(void)
   int* regdd00 = (int*)0xDD00;
   
   int* charfile = (int*)0x0840;
-  int* attribfile = (int*)0x1040;
+  //int* attribfile = (int*)0x1040;
   
   byte* CharRam;  
   
@@ -260,7 +260,7 @@ void InitializeGraphics(void)
 
   //memcpy(&CharRam[0], &charset[0], 2048); // * 8
   memcpy(&CharRam[0], &charfile[0], 2048);
-  memcpy(&attributeset[0], &attribfile[0], 256);
+  //memcpy(&attributeset[0], &attribfile[0], 256);
   
 
   ScreenCharBuffer = 0;
