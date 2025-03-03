@@ -84,7 +84,7 @@ void GenerateContinent()
   QuestGiver = rand() % 4;
   QuestTarget = rand() % 4;
   QuestLocation = rand() % 4;
-  
+
   sprintf(strTemp, "In %s, the %s asks you to %s the %s at the %s@", questOrigin[QuestOrigin], questGiver[QuestOrigin][QuestGiver], questType[QuestType], questTarget[QuestType][QuestTarget], questLocation[QuestType][QuestLocation]);
   WriteLineMessageWindow(strTemp, 1);
   WriteLineMessageWindow("@", 0);
@@ -98,14 +98,37 @@ void GenerateContinent()
   //Random number 0-3 for additional dungeons/non-combat locations
 }
 
+const char* const Syllables[][] = { //Map Location
+  {"R", "S", "F Qw", "Tr"},
+  {"i", "iuo", "e", "o"},
+  {"-", "'", "ui", "rr"},
+  {"ma", "to", "wa", "po"},
+  {"q", "ag", "guer", "qui"},
+  {"mir", "fol", "ll", "lii"}
+};
+
+void GenerateName()
+{
+  byte x;
+  WriteLineMessageWindow("@", 0);
+  for (x = 0; x < 6; x++)
+  {
+    char *syl = (char*)Syllables[x][rand()%4];
+    ConsoleBufferAdd(syl);
+    ConsoleBufferBackspace();
+  }
+  WriteLineMessageWindow(strTemp, 1);
+  WriteLineMessageWindow("@", 0);
+}
+
 screenName Update_Scenario()
 {
   bool exit = false;
   uint16_t scenarioSeed = 0;
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   {
-    
-    ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, selectionCount);
+
+    ResetMenu("@", selectionPosX, selectionPosY, selectionWidth, selectionHeight, selectionCount);
     SetMenuItem(0, "Next@");
     SetMenuItem(1, "Last@");
     SetMenuItem(2, "Go@");
@@ -114,7 +137,9 @@ screenName Update_Scenario()
     {
       sprintf(strTemp, "Continent: %u @", scenarioSeed);
       SetLineMessageWindow(strTemp, 0);
-      
+
+      GenerateName();
+
       switch (GetMenuSelection())
       {
         case 0:

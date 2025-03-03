@@ -80,10 +80,10 @@ typedef int8_t sbyte;	// 8-bit signed
 #define COLS 32
 #define ROWS 30
 #define consolePosX 2
-#define consolePosY 3 + 2*viewportHeight
-#define consoleWidth 28
-#define consoleHeight (ROWS - viewportHeight * 2 - 6)
-#define selectionPosX COLS - selectionWidth
+#define consolePosY ROWS - consoleHeight - 3
+#define consoleWidth ROWS - selectionWidth - 3
+#define consoleHeight (ROWS - viewportHeight * 2 - 2)
+#define selectionPosX COLS - selectionWidth - 2
 #define selectionPosY consolePosY
 #define selectionWidth 6
 #define selectionHeight consoleHeight
@@ -285,6 +285,7 @@ void DrawCharStats(void);
 extern byte strTemp[ConsoleBufferLength];
 void ConsoleBufferReset(void);
 void ConsoleBufferAdd(char *message);
+void ConsoleBufferBackspace(void);
 void ConsoleBufferAddNumber(int value);
 void ConsoleBufferPrint(byte x, byte y);
 void ConsoleBufferPrintConsole(byte delay);
