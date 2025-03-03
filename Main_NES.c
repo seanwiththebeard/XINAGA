@@ -145,7 +145,7 @@ void main(void) //Must be in $E000-$FFFF??
   InitializeGraphics();
   UploadCharset();
   
-  currentScreen = Map;
+  currentScreen = Scenario;
   Demo();
   
   DrawCharset();

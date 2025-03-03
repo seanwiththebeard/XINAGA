@@ -99,7 +99,7 @@ void GenerateContinent()
 }
 
 const char* const Syllables[][] = { //Map Location
-  {"R", "S", "F Qw", "Tr"},
+  {"R", "S", "Qw", "Tr"},
   {"i", "iuo", "e", "o"},
   {"-", "'", "ui", "rr"},
   {"ma", "to", "wa", "po"},
@@ -110,7 +110,8 @@ const char* const Syllables[][] = { //Map Location
 void GenerateName()
 {
   byte x;
-  WriteLineMessageWindow("@", 0);
+  //WriteLineMessageWindow("@", 0);
+  ConsoleBufferReset();
   for (x = 0; x < 6; x++)
   {
     char *syl = (char*)Syllables[x][rand()%4];
@@ -118,7 +119,7 @@ void GenerateName()
     ConsoleBufferBackspace();
   }
   WriteLineMessageWindow(strTemp, 1);
-  WriteLineMessageWindow("@", 0);
+  //WriteLineMessageWindow("@", 0);
 }
 
 screenName Update_Scenario()
@@ -137,8 +138,12 @@ screenName Update_Scenario()
     {
       sprintf(strTemp, "Continent: %u @", scenarioSeed);
       SetLineMessageWindow(strTemp, 0);
-
-      GenerateName();
+      
+      while(1)
+      {
+        setSeed(++scenarioSeed);  
+        GenerateName();
+      }
 
       switch (GetMenuSelection())
       {
