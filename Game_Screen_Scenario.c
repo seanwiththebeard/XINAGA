@@ -12,6 +12,39 @@
 //#pragma bss-name (push, "XRAM")
 #endif
 
+
+/*
+World Structure
+	World Map - Surface
+        World Map - Sky (Floating Continents, Lunar Surface, , Dream Dimension)
+        World Map - Underworld (Magma Cave, Ancient Ruins, Ocean Floor, )
+        Orbiting Ship (Airship Dreadnaught, Alien Satellite, Flying Turtle, Floating Tower)
+        Town A
+        Town B
+        Town C
+        Town D
+        Dungeon A
+        Dungeon B
+        Dungeon C
+        Dungeon D
+        Landmark A
+        Landmark B
+        Landmark C
+        Landmark D
+*/
+
+/*
+Quest Structrue (sine wave going through diagram)
+
+							<-Sky-> (transition?)
+Start |		TownDungeonLandmark A	(transition) TownDungeonLandmark...D (transition?) | Endgame
+							<-Underworld-> (transition?)
+
+You might get to the endgame from the last continent, from the sky, or from the underworld
+
+*/
+
+
 byte QuestOrigin;
 byte QuestType;
 byte QuestGiver;
