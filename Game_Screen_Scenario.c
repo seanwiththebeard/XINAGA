@@ -41,6 +41,7 @@ Start |		TownDungeonLandmark A	(transition) TownDungeonLandmark...D (transition?
 							<-Underworld-> (transition?)
 
 You might get to the endgame from the last continent, from the sky, or from the underworld
+Transition types - Walk Overland, Boat (Given or Built), Through Dungeon
 
 */
 
