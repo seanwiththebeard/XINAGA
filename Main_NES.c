@@ -21,8 +21,8 @@
 
 // bank-switching configuration
 #define NES_MAPPER 4		// Mapper 4 (MMC3)
-#define NES_PRG_BANKS 32	// # of 16KB PRG banks
-#define NES_CHR_BANKS 32	// # of 8KB CHR banks
+#define NES_PRG_BANKS 16	// # of 16KB PRG banks
+#define NES_CHR_BANKS 1	// # of 8KB CHR banks
 
 //#resource "nesbanked.cfg"
 #define CFGFILE nesbanked.cfg
@@ -59,7 +59,7 @@ void UploadCharset()
 {
   int x = 0;
   unsigned char *chrdata = (unsigned char*)0xA000;
-  MMC3_PRG_A000(31); //CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
+  MMC3_PRG_A000(26); //CPU $A000-$BFFF: 8 KB switchable PRG ROM bank
   pal_col(0, 12);
   ppu_off();
   vram_adr(0);
