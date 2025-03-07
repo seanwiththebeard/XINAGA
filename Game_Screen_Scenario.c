@@ -8,6 +8,8 @@
 #if defined (__NES__)
 #pragma code-name (push, "SCENARIO")
 #pragma rodata-name (push, "SCENARIO")
+#include "neslib.h"
+
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #endif
@@ -174,9 +176,14 @@ screenName Update_Scenario()
       SetLineMessageWindow(strTemp, 0);
       
       while(1)
-      {
-        setSeed(++scenarioSeed);  
-        GenerateName();
+      {        
+        byte ppu = (byte)ppu_system();
+        setSeed(++scenarioSeed);
+        
+        sprintf(strTemp, "PPU_System %d @", ppu_system());
+  WriteLineMessageWindow(strTemp, 1);
+        
+        //GenerateName();
       }
 
       switch (GetMenuSelection())

@@ -22,7 +22,7 @@
 // bank-switching configuration
 #define NES_MAPPER 4		// Mapper 4 (MMC3)
 #define NES_PRG_BANKS 16	// # of 16KB PRG banks
-#define NES_CHR_BANKS 1	// # of 8KB CHR banks
+#define NES_CHR_BANKS 0	// # of 8KB CHR banks
 
 //#resource "nesbanked.cfg"
 #define CFGFILE nesbanked.cfg
@@ -33,6 +33,16 @@
 
 //#pragma code-name (push, "STARTUP")
 //#pragma rodata-name (push, "STARTUP")
+
+void PPU_Color(byte monochrome, byte red, byte green, byte blue)
+{
+  char value = 0b00011110;
+  value |= (monochrome);
+  value |= (red << 5);
+  value |= (green << 6);
+  value |= (blue << 7);
+  ppu_mask(value);
+}
 
 const char ATTRIBUTE_TABLE[0x40] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // rows 0-3
@@ -144,6 +154,8 @@ void main(void) //Must be in $E000-$FFFF??
   
   InitializeGraphics();
   UploadCharset();
+  
+  PPU_Color(0, 0, 1, 0);
   
   currentScreen = Scenario;
   Demo();
