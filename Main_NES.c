@@ -81,6 +81,24 @@ void UploadCharset()
   pal_col(0, 0x0f);
 }
 
+void SetAttrib(byte x, byte y, byte pal)
+{
+  byte offset = (x / 2)%8;
+  byte temp = pal;
+  temp = (temp << 2) | pal;
+  temp = (temp << 2) | pal;
+  temp = (temp << 2) | pal;
+  
+  x;y;
+  //vram_adr(NTADR_A(COLS, ROWS));
+  //vram_fill(0, 64);
+  temp = 0;
+  vrambuf_put(NTADR_A(1,1), 0, 1);
+  
+  vrambuf_put(NTADR_A(0,0)+(ROWS*COLS) + offset, 0, 1);
+  wait_vblank(1);
+}
+
 #include <_heap.h>
 int *heaporg = (int*)&_heaporg;
 int *heapptr = (int*)&_heapptr;
@@ -158,14 +176,17 @@ void main(void) //Must be in $E000-$FFFF??
   //PPU_Color(0, 0, 1, 0);
   
   currentScreen = MapGen;
-  Demo();
+  //Demo();
   
   DrawCharset();
   LoadMap();
   DrawMiniMap(false);
+  
   ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
   while(1)
   {
+  SetAttrib(0, 4, 1);
+    
     WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
     WriteLineMessageWindow("ABCDEFGHIJKL MNOPQRSTUVWXYZ@", 0);
     WriteLineMessageWindow("abdefghijklmnopqrstuvwxyz@", 0);

@@ -23,7 +23,6 @@
 #include "vrambuf.h"
 //#link "vrambuf.c"
 
-
 #endif
 
 #if defined (MSX)
@@ -118,6 +117,8 @@ void ClearScreen(void)
   vrambuf_flush();
   vram_adr(NTADR_A(0, 0));
   vram_fill(' ', ROWS*COLS);
+  vram_fill(0b10101010, 64);
+  
   
   //for (y = 0; y < ROWS; ++y)
     //for (x = 0; x < COLS; ++x)

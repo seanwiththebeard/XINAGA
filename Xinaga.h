@@ -96,6 +96,8 @@ typedef int8_t sbyte;	// 8-bit signed
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
 #define contextMenuHeight (2 * viewportHeight)
+
+void SetAttrib(byte x, byte y, byte pal);
 #endif
 
 #if defined(MSX)
