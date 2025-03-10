@@ -23,8 +23,8 @@
 #define continentsBase 4
 //#define grass 0x88
 //#define water 0x84
-#define grass 36
-#define water 34
+#define grass 0xE1
+#define water 0xE0
 //void DrawMapGenTiles(void);
 byte countContinents;
 //byte map[height][width] = {};
@@ -290,6 +290,7 @@ void addRandomPoints(byte count, int index)
     }
     createPoint(w, h);
     mapQuads[w+ (mapMatrixWidth * h)] = index;
+
     //SetChar(index, posX + w, posY + h);
     //SetColor(index + 2, posX + w, posY + h);
   }
@@ -298,7 +299,7 @@ void addRandomPoints(byte count, int index)
 void DrawPoint(byte x, byte y)
 {
   byte tile = mapQuads[x + (mapMatrixWidth * y)];
-  tile = (tile << 1) + ((tile >> 3) << 4);
+  //tile = (tile << 1) + ((tile >> 3) << 4);
   SetChar(tile, x + viewportPosX + 1, y + viewportPosY + 1);
 }
 
@@ -380,6 +381,7 @@ void attachRandomPoint(byte index)
   //DrawTileY = y;
   //DrawTileDirect();
   DrawPoint(x,y);
+  wait_vblank(1);
   //DrawMiniMap();
   //SetChar(index, posX + x, posY + y);
   //SetColor(index + 2, posX + x, posY + y);  
@@ -505,7 +507,7 @@ void ClearMap()
     for (x = 0; x < mapMatrixWidth; ++x)
     {
       mapQuads[x + (mapMatrixWidth * y)] = water;
-      DrawPoint(x, y);
+      //DrawPoint(x, y);
       //SetChar(map[y][x], posX + x, posY + y);
     }
 }
@@ -536,7 +538,7 @@ void GetSeed()
 {
   byte seed  = 0;
   bool exit = false;
-  ResetMenu("Seed@", consoleWidth - 3 - consolePosX, consolePosY, menuWidth, menuCount, menuCount);
+  ResetMenu("Seed@", COLS - menuWidth - 3, consolePosY, menuWidth, consoleHeight, menuCount);
   SetMenuItem(0, "Next@");
   SetMenuItem(1, "Last@");
   SetMenuItem(2, "Go@");
@@ -568,7 +570,8 @@ screenName Update_MapGen()
 {
   ClearScreen();
   DrawMiniMap(false);
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth - menuWidth - 1, consoleHeight);
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+
   //ClearMap();
   //DrawMapGenTiles();
   //SetLineMessageWindow("THE QUICK brown fox JUMPS over THE Lazy Dog@", 0);

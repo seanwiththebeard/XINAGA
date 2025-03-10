@@ -41,7 +41,7 @@ byte MiniMapHighlightY;
 void DrawMiniMap(bool highlightPlayer)
 {
   byte x, y, tile = 0;
-  DrawBorder("Minimap@", viewportPosX, viewportPosY, mapMatrixWidth + 2, mapMatrixHeight + 2, true);
+  DrawBorder("Minimap@", viewportPosX, viewportPosY, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
   for (y = 0; y < mapMatrixHeight; ++y)
   {
     for (x = 0; x < mapMatrixWidth; ++x)
