@@ -46,8 +46,8 @@ void DrawMiniMap(bool highlightPlayer)
   {
     for (x = 0; x < mapMatrixWidth; ++x)
     {
-      //tile = mapQuads[x + (y * mapMatrixWidth)];
-      tile = (tile << 1) + ((tile >> 3) << 4);
+      tile = mapQuads[x + (y * mapMatrixWidth)];
+      //tile = (tile << 1) + ((tile >> 3) << 4);
       SetChar(tile, x + viewportPosX + 1, y + viewportPosY + 1);
     }
   }
