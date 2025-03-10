@@ -83,7 +83,7 @@ void UploadCharset()
 
 void SetAttrib(byte x, byte y, byte pal)
 {
-  byte offset = (x / 2)%8;
+  byte offset = ((x / 2)%8) + ((y/2) * 8);
   byte temp = pal;
   temp = (temp << 2) | pal;
   temp = (temp << 2) | pal;
@@ -185,7 +185,7 @@ void main(void) //Must be in $E000-$FFFF??
   ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
   while(1)
   {
-  SetAttrib(0, 4, 1);
+  SetAttrib(11, 12, 1);
     
     WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
     WriteLineMessageWindow("ABCDEFGHIJKL MNOPQRSTUVWXYZ@", 0);
