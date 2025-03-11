@@ -44,15 +44,15 @@ void PPU_Color(byte monochrome, byte red, byte green, byte blue)
   ppu_mask(value);
 }
 
-const char ATTRIBUTE_TABLE[0x40] = {
+char ATTRIBUTE_TABLE[0x40] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // rows 0-3
-  0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, // rows 4-7
-  0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, // rows 8-11
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // rows 12-15
-  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, // rows 16-19
-  0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, // rows 20-23
-  0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, // rows 24-27
-  0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f  // rows 28-29
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // rows 4-7
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // rows 8-11
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // rows 12-15
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // rows 16-19
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // rows 20-23
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // rows 24-27
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  // rows 28-29
   };
 
 /*{pal:"nes",layout:"nes"}*/
@@ -83,19 +83,20 @@ void UploadCharset()
 
 void SetAttrib(byte x, byte y, byte pal)
 {
-  byte offset = ((x / 2)%8) + ((y/2) * 8);
-  byte temp = pal;
+  //byte offset = ((x /2)%16) ;//(y/2) * 8);
+  byte offset = (x/4) + ((y / 4)*8) ;//(y/2) * 8);
+  
+  byte temp = ATTRIBUTE_TABLE[offset] | pal;
   temp = (temp << 2) | pal;
   temp = (temp << 2) | pal;
   temp = (temp << 2) | pal;
   
-  x;y;
-  //vram_adr(NTADR_A(COLS, ROWS));
-  //vram_fill(0, 64);
-  temp = 0;
-  vrambuf_put(NTADR_A(1,1), 0, 1);
+  y;
   
-  vrambuf_put(NTADR_A(0,0)+(ROWS*COLS) + offset, 0, 1);
+  ATTRIBUTE_TABLE[offset] = temp;
+  
+  vrambuf_put(NTADR_A(0,0)+(ROWS*COLS), &ATTRIBUTE_TABLE[0], 64);
+  
   wait_vblank(1);
 }
 
@@ -169,31 +170,39 @@ void main(void) //Must be in $E000-$FFFF??
   heapptr[0] = heaporg[0]; //heapptr
   heapend[0] = 0x8000; //heapend
   //memset((int*)heaporg[0], 0, heapend[0] - heaporg[0]); 
-  
+
   InitializeGraphics();
   UploadCharset();
-  
+
   //PPU_Color(0, 0, 1, 0);
-  
+
   currentScreen = MapGen;
   //Demo();
-  
+
   DrawCharset();
   LoadMap();
-  DrawMiniMap(false);
-  
+  //DrawMiniMap(false);
+
   ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
+  vrambuf_put(NTADR_A(0,1), 0, 1);
+  vrambuf_put(NTADR_A(1,1), 0, 1);
+  vrambuf_put(NTADR_A(2,1), 0, 1);
+  vrambuf_put(NTADR_A(3,1), 0, 1);
+  SetAttrib(4, 8, 2);
+  SetAttrib(12, 0, 2);
+  SetAttrib(20, 0, 2);
+  SetAttrib(24, 0, 2);
   while(1)
   {
-  SetAttrib(11, 12, 1);
     
-    WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
-    WriteLineMessageWindow("ABCDEFGHIJKL MNOPQRSTUVWXYZ@", 0);
-    WriteLineMessageWindow("abdefghijklmnopqrstuvwxyz@", 0);
-    WriteLineMessageWindow("01234567890 !#$%^&@", 0);
-    WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
+
+    //WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
+    //WriteLineMessageWindow("ABCDEFGHIJKL MNOPQRSTUVWXYZ@", 0);
+    //WriteLineMessageWindow("abdefghijklmnopqrstuvwxyz@", 0);
+    //WriteLineMessageWindow("01234567890 !#$%^&@", 0);
+    //WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
   }
-  
+
   //DebugGraphics();
-  
+
 }
