@@ -41,7 +41,13 @@ byte MiniMapHighlightY;
 void DrawMiniMap(bool highlightPlayer)
 {
   byte x, y, tile = 0;
-  DrawBorder("Minimap@", viewportPosX, viewportPosY, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
+  DrawBorder("Minimap@", viewportPosX, viewportPosY, mapMatrixWidth + 2, mapMatrixHeight + 2, true);
+  
+  for (y = 0; y < mapMatrixHeight; y+=2)
+    for (x = 0; x < mapMatrixWidth; x+=2)
+      SetAttrib(x + viewportPosX + 1, y + viewportPosY + 1, 2);
+  UpdateAttributes();
+  
   for (y = 0; y < mapMatrixHeight; ++y)
   {
     for (x = 0; x < mapMatrixWidth; ++x)
@@ -50,15 +56,10 @@ void DrawMiniMap(bool highlightPlayer)
       //tile = (tile << 1) + ((tile >> 3) << 4);
       SetChar(tile, x + viewportPosX + 1, y + viewportPosY + 1);
     }
-  }
-  
-  for (y = 0; y < mapMatrixHeight; y+=2)
-    for (x = 0; x < mapMatrixWidth; x+=2)
-      SetAttrib(x + viewportPosX + 1, y + viewportPosY + 1, 2);
+  }  
   
   if(highlightPlayer)
     SetChar('X', viewportPosX + 1 + MiniMapHighlightX, viewportPosY + 1 + MiniMapHighlightY);
-  UpdateAttributes();
 }
 
 void DrawCharset()

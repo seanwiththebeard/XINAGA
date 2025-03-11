@@ -63,10 +63,17 @@ void SetAttrib(byte x, byte y, byte pal)
   byte pairX = 0;
   byte pairY = 0;
   
+  byte mask = 0b11;
+  
   if ((x % 4) > 1)
     pairX = 2;
   if ((y % 4) > 1)
     pairY = 4;
+  
+  mask = (0b11 << (pairX + pairY));
+  mask = ~mask;
+  
+  ATTRIBUTE_TABLE[offset] &= mask;
   
   ATTRIBUTE_TABLE[offset] |= (pal << (pairX + pairY));  
 }
@@ -117,10 +124,10 @@ void ClearScreen(void)
 {
 
   #if defined(__C64__)
-  memset(ScreenChars, ' ', ROWS * COLS); // Clear Chars
-  memset(ScreenCharBuffer, ' ', ROWS * COLS); // Clear Buffer
-  memset(ScreenColors, 1, ROWS * COLS); // clear Colors
-  memset(ScreenColorBuffer, 1, ROWS * COLS); // clear Color Buffer
+  memset(ScreenChars, ' ', ScreenCharSize); // Clear Chars
+  memset(ScreenCharBuffer, ' ', ScreenCharSize); // Clear Buffer
+  memset(ScreenColors, 1, ScreenCharSize); // clear Colors
+  memset(ScreenColorBuffer, 1, ScreenCharSize); // clear Color Buffer
   #endif
 
   #if defined(__APPLE2__)
@@ -132,21 +139,13 @@ void ClearScreen(void)
   #endif
   
   #if defined (__NES__)
-  //byte x, y;
   ppu_off();
   vrambuf_flush();
+  memset(ScreenChars, ' ', ScreenCharSize); // Clear Chars
   vram_adr(NTADR_A(0, 0));
-  vram_fill(' ', ROWS*COLS);
-  vram_fill(0, 64);
-  
-  
-  //for (y = 0; y < ROWS; ++y)
-    //for (x = 0; x < COLS; ++x)
-      //SetChar(' ', x, y);
-  //vram_adr(NTADR_A(0, 30));	// start address ($2000)
-  //vram_fill(0, 64);
-  //memset(ScreenChars, ' ', ROWS*COLS); // Clear Chars (text page 1 on Apple II)
-  
+  vram_write(&ScreenChars[0], ScreenCharSize);
+  memset(&ATTRIBUTE_TABLE[0], 0, 64);
+  vram_write(&ATTRIBUTE_TABLE[0], 64);
   ppu_on_all();
   #endif
   
@@ -309,24 +308,16 @@ void InitializeGraphics(void)
   #endif
   
   #if defined(__NES__)
-  getYCols();
-  
-  // set palette colors
-  pal_col(0,0x0f);
-  pal_col(1,0x10);
-  pal_col(2,0x10);
-  pal_col(3,0x10);
+  getYCols();  
   vrambuf_clear();
-  set_vram_update(updbuf);
-  //vrambuf_flush();
-  
+  set_vram_update(updbuf);  
   pal_bright(4);
   pal_clear();
   oam_clear();
   pal_bg(PALETTE);
   ClearScreen();  
   // enable PPU rendering (turn on screen)
-  ppu_on_all();
+  //ppu_on_all();
   #endif
 }
 

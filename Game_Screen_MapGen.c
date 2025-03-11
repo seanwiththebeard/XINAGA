@@ -580,5 +580,6 @@ screenName Update_MapGen()
   GetSeed();
   //StoreMap();
   //ClearMap();
+  ClearScreen();
   return Map;
 }
