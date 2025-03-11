@@ -88,8 +88,8 @@ typedef int8_t sbyte;	// 8-bit signed
 #define selectionWidth 6
 #define selectionHeight consoleHeight
 #define selectionCount 4
-#define viewportPosX 2
-#define viewportPosY 2
+#define viewportPosX 1
+#define viewportPosY 1
 #define viewportWidth 11
 #define viewportHeight 11
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
@@ -98,6 +98,7 @@ typedef int8_t sbyte;	// 8-bit signed
 #define contextMenuHeight (2 * viewportHeight)
 
 void SetAttrib(byte x, byte y, byte pal);
+void UpdateAttributes(void);
 #endif
 
 #if defined(MSX)
@@ -171,6 +172,7 @@ extern unsigned int RowsHGR[192];
 
 extern byte ScreenChars[ROWS*COLS];
 extern byte attributeset[256];
+extern const int ScreenCharSize;
 
 extern char ATTRIBUTE_TABLE[0x40];
 extern const char PALETTE[16];

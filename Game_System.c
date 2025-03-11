@@ -51,8 +51,14 @@ void DrawMiniMap(bool highlightPlayer)
       SetChar(tile, x + viewportPosX + 1, y + viewportPosY + 1);
     }
   }
+  
+  for (y = 0; y < mapMatrixHeight; y+=2)
+    for (x = 0; x < mapMatrixWidth; x+=2)
+      SetAttrib(x + viewportPosX + 1, y + viewportPosY + 1, 2);
+  
   if(highlightPlayer)
     SetChar('X', viewportPosX + 1 + MiniMapHighlightX, viewportPosY + 1 + MiniMapHighlightY);
+  UpdateAttributes();
 }
 
 void DrawCharset()

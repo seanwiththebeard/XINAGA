@@ -73,32 +73,19 @@ void UploadCharset()
   pal_col(0, 12);
   ppu_off();
   vram_adr(0);
-  for (x = 0; x < 0x2000; ++x)
-  {
-    vram_put(chrdata[x]);
-  }
+  vram_write(&chrdata[x], 0x2000);
+  //vram_adr(NTADR_A(0,0));
+  //vram_fill(0, ROWS*COLS);
+  
+
   ppu_on_all();
   pal_col(0, 0x0f);
+  
+  //vrambuf_put(NTADR_A(0,0)+(ROWS*COLS), &ATTRIBUTE_TABLE[0], 64);
+  wait_vblank(1);  
 }
 
-void SetAttrib(byte x, byte y, byte pal)
-{
-  //byte offset = ((x /2)%16) ;//(y/2) * 8);
-  byte offset = (x/4) + ((y / 4)*8) ;//(y/2) * 8);
-  
-  byte temp = ATTRIBUTE_TABLE[offset] | pal;
-  temp = (temp << 2) | pal;
-  temp = (temp << 2) | pal;
-  temp = (temp << 2) | pal;
-  
-  y;
-  
-  ATTRIBUTE_TABLE[offset] = temp;
-  
-  vrambuf_put(NTADR_A(0,0)+(ROWS*COLS), &ATTRIBUTE_TABLE[0], 64);
-  
-  wait_vblank(1);
-}
+
 
 #include <_heap.h>
 int *heaporg = (int*)&_heaporg;
@@ -177,21 +164,21 @@ void main(void) //Must be in $E000-$FFFF??
   //PPU_Color(0, 0, 1, 0);
 
   currentScreen = MapGen;
-  //Demo();
+  Demo();
 
-  DrawCharset();
+  //DrawCharset();
   LoadMap();
   //DrawMiniMap(false);
 
   ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
-  vrambuf_put(NTADR_A(0,1), 0, 1);
-  vrambuf_put(NTADR_A(1,1), 0, 1);
-  vrambuf_put(NTADR_A(2,1), 0, 1);
-  vrambuf_put(NTADR_A(3,1), 0, 1);
-  SetAttrib(4, 8, 2);
-  SetAttrib(12, 0, 2);
-  SetAttrib(20, 0, 2);
-  SetAttrib(24, 0, 2);
+
+  SetAttrib(0, 0, 2);  
+  SetAttrib(2, 2, 2);
+  SetAttrib(4, 4, 2);
+  
+  //SetAttrib(12, 0, 2);
+  //SetAttrib(20, 0, 2);
+  //SetAttrib(24, 0, 2);
   while(1)
   {
     

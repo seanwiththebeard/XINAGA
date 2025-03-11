@@ -54,7 +54,27 @@ unsigned int RowsHGR[192];
 //const byte const *charset = 0x0;
 //const byte const *attributeset = 0x0;
 byte ScreenChars[ROWS*COLS];
+const int ScreenCharSize = ROWS*COLS;
 byte attributeset[256];
+
+void SetAttrib(byte x, byte y, byte pal)
+{
+  byte offset = (x/4) + ((y / 4)*8); //Which byte of the attribute table?
+  byte pairX = 0;
+  byte pairY = 0;
+  
+  if ((x % 4) > 1)
+    pairX = 2;
+  if ((y % 4) > 1)
+    pairY = 4;
+  
+  ATTRIBUTE_TABLE[offset] |= (pal << (pairX + pairY));  
+}
+void UpdateAttributes(void)
+{
+  vrambuf_put(NTADR_A(0,0)+(ScreenCharSize), &ATTRIBUTE_TABLE[0], 64);
+  wait_vblank(1);
+}
 #endif
 
 #if defined (__ATARI__)
@@ -117,7 +137,7 @@ void ClearScreen(void)
   vrambuf_flush();
   vram_adr(NTADR_A(0, 0));
   vram_fill(' ', ROWS*COLS);
-  vram_fill(0b10101010, 64);
+  vram_fill(0, 64);
   
   
   //for (y = 0; y < ROWS; ++y)
@@ -438,7 +458,10 @@ void _SetChar(void)
   // clear the buffer
   ++charsDrawn;
   if (charsDrawn % 21 == 0) // if (charsDrawn % 10 == 0)
-    vrambuf_flush();
+  {
+    wait_vblank(1);
+    //vrambuf_flush();
+  }
   //vram_put(SetCharIndex);
   //ppu_on_all();
   #endif
