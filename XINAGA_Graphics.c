@@ -629,6 +629,7 @@ void SetTileOrigin(byte x, byte y)
 byte DrawTileX;
 byte DrawTileY;
 byte DrawTileIndex;
+byte DrawTilePalette;
 byte indexes[4];
 unsigned short offset1;
 #if defined(__C64__)
@@ -638,6 +639,7 @@ byte *destinationColor;
 
 void DrawTileSetup(void)
 {
+  
   DrawTileIndex = (DrawTileIndex << 1) + ((DrawTileIndex >> 3) << 4);
   indexes[0] = DrawTileIndex;
   indexes[1] = DrawTileIndex + 1;
@@ -647,15 +649,25 @@ void DrawTileSetup(void)
   DrawTileX = DrawTileX << 1;
   DrawTileY = DrawTileY << 1;
   
+  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette);  
+  
+  
   #if defined(__C64__)
   offset1 = YColumnIndex[DrawTileY] + DrawTileX + originOffset;
   #endif
+}
+
+void TileAttrib(byte pal)
+{
+  byte x = (DrawTileX << 1) + MapOriginX;
+  byte y = (DrawTileY << 1) + MapOriginY;
+  SetAttrib(x, y, pal);  
 }
 void DrawTile()
 {
   byte x = DrawTileX + MapOriginX;
   byte y = DrawTileY + MapOriginY;
-  
+    
   #if defined(__C64__)
   memcpy(destinationChar, &indexes[0], 2);
   memcpy(destinationColor, &attributeset[indexes[0]], 2);
@@ -674,6 +686,7 @@ void DrawTile()
   #endif
   
   #if defined(__NES__)
+  SetAttrib(x, y, DrawTilePalette);  
   SetChar(indexes[0], x, y);
   SetChar(indexes[1], x + 1, y);
   SetChar(indexes[2], x, y + 1);

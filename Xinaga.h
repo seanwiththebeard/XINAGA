@@ -82,7 +82,7 @@ typedef int8_t sbyte;	// 8-bit signed
 #define consolePosX 2
 #define consolePosY (viewportPosY + (viewportHeight * 2) + 1)
 #define consoleWidth ROWS - selectionWidth - 3
-#define consoleHeight (ROWS - (viewportHeight * 2 + 5))
+#define consoleHeight (ROWS - consolePosY - 3)
 #define selectionPosX COLS - selectionWidth - 2
 #define selectionPosY consolePosY
 #define selectionWidth 6
@@ -241,9 +241,12 @@ void SetTileOrigin(byte x, byte y);
 extern byte DrawTileX;
 extern byte DrawTileY;
 extern byte DrawTileIndex;
+extern byte DrawTilePalette;
+
 void DrawTileBuffer();
 void DrawTileDirect();
 void DrawTileDirectXY(byte index, byte x, byte y);
+void TileAttrib(byte pal);
 void ReadyArrow(byte x, byte y);
 void DrawArrow(byte x, byte y);
 void ClearArrow(void);

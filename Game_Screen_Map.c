@@ -131,6 +131,7 @@ struct
   #define TileCount 64
   byte blocked[TileCount];
   byte opaque[TileCount];
+  byte palette[TileCount];
 } tiles;
 
 struct
@@ -408,13 +409,22 @@ void InitializeMapData()
       mapQuads[byte_x + 16*byte_y] = byte_x + 16*byte_y;
     }
   
+  for (byte_x = 0; byte_x < TileCount; ++byte_x)
+  {
+      tiles.palette[byte_x] = 1;
+      tiles.blocked[byte_x] = 0;
+      tiles.opaque[byte_x] = 0;
+    if (byte_x < 8)
+      tiles.palette[byte_x] = 0;
+  }
+  
   //Quad definitions (64 tiles)
   for (byte_y = 0; byte_y < 8; ++byte_y)
     for (byte_x = 0; byte_x < 8; ++byte_x)
     {
       byte_index = byte_x + (16* byte_y);
       byte_offset = byte_x * 2 + 32*byte_y;
-      tiles.blocked[byte_index] = 0;
+      
       ScreenQuad.CharIndex[byte_index][0] = byte_offset; // Init screen quad prefabs for 8x8
       ScreenQuad.CharIndex[byte_index][1] = byte_offset + 1;
       ScreenQuad.CharIndex[byte_index][2] = byte_offset + 16;
@@ -427,6 +437,8 @@ void InitializeMapData()
       ;++byte_index;
     }
   tiles.opaque[44] = true; //Trees
+  tiles.palette[44] = 3; //Trees
+  
   //ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
   //ScreenQuad.Chars[2][1] = 44; // Set the wizard to trees on 1
   //Init Characters
@@ -672,7 +684,7 @@ void DrawEntireMap()
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
       wrapX(&int_a); //Wrap the map data X reference
-      viewportBuffer[byte_x + (viewportWidth * byte_y)] = mapData[int_a + (mapWidth * int_b)];
+      viewportBuffer[byte_x + (viewportWidth * byte_y)] = mapData[int_a + (mapWidth * int_b)];      
       int_a++;
     }
     int_a = offsetX;
@@ -688,13 +700,16 @@ void DrawEntireMap()
     { //Only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
       byte lastIndex = viewportBufferLast[byte_x + (viewportWidth * byte_y)];
       byte newIndex = viewportBuffer[byte_x + (viewportWidth * byte_y)];
+
       if (lastIndex!=newIndex)
       {
-        DrawTileIndex = newIndex;
         DrawTileX = byte_x;
         DrawTileY = byte_y;
+        DrawTileIndex = newIndex;
+        DrawTilePalette = tiles.palette[newIndex];
         DrawTileBuffer();
       }
+      
     }
   }
   #if defined(__C64__)
@@ -702,6 +717,7 @@ void DrawEntireMap()
   #endif
   memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);
   DrawCharacterCoordinates(followIndex);
+  UpdateAttributes();
 }
 
 void MoveCharacter(byte index, byte dir)
