@@ -80,9 +80,9 @@ typedef int8_t sbyte;	// 8-bit signed
 #define COLS 32
 #define ROWS 30
 #define consolePosX 2
-#define consolePosY ROWS - consoleHeight - 3
+#define consolePosY (viewportPosY + (viewportHeight * 2) + 1)
 #define consoleWidth ROWS - selectionWidth - 3
-#define consoleHeight (ROWS - viewportHeight * 2 - 2)
+#define consoleHeight (ROWS - (viewportHeight * 2 + 5))
 #define selectionPosX COLS - selectionWidth - 2
 #define selectionPosY consolePosY
 #define selectionWidth 6
@@ -90,8 +90,8 @@ typedef int8_t sbyte;	// 8-bit signed
 #define selectionCount 4
 #define viewportPosX 2
 #define viewportPosY 2
-#define viewportWidth 11
-#define viewportHeight 11
+#define viewportWidth 9
+#define viewportHeight 9
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 5)

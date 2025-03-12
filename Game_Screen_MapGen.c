@@ -300,7 +300,7 @@ void DrawPoint(byte x, byte y)
 {
   byte tile = mapQuads[x + (mapMatrixWidth * y)];
   //tile = (tile << 1) + ((tile >> 3) << 4);
-  SetChar(tile, x + viewportPosX + 1, y + viewportPosY + 1);
+  SetChar(tile, x + viewportPosX, y + viewportPosY);
 }
 
 void attachRandomPoint(byte index)
