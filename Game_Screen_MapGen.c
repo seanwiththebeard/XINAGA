@@ -507,7 +507,7 @@ void ClearMap()
     for (x = 0; x < mapMatrixWidth; ++x)
     {
       mapQuads[x + (mapMatrixWidth * y)] = water;
-      //DrawPoint(x, y);
+      DrawPoint(x, y);
       //SetChar(map[y][x], posX + x, posY + y);
     }
 }
@@ -516,7 +516,7 @@ void GenerateMap(byte seed)
 {
   byte y;
   ClearMap();
-  DrawMiniMap(false);
+  //DrawMiniMap(false);
   srand(seed);
   for ( y = continentsBase; y > 0; --y)
   {
