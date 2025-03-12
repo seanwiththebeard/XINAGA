@@ -134,7 +134,7 @@ void GenerateContinent()
   //Random number 0-3 for additional dungeons/non-combat locations
 }
 
-const char* const Syllables[][] = { //Map Location
+const char* const Syllables[6][8] = { //Map Location
   {"R", "S", "Qw", "Tr"},
   {"i", "iuo", "e", "o"},
   {"-", "'", "ui", "rr"},
