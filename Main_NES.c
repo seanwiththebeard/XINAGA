@@ -164,13 +164,13 @@ void main(void) //Must be in $E000-$FFFF??
   //PPU_Color(0, 0, 1, 0);
 
   currentScreen = MapGen;
-  Demo();
+  //Demo();
 
   //DrawCharset();
   LoadMap();
-  //DrawMiniMap(false);
+  DrawMiniMap(false);
 
-  ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
+  //ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
 
   SetAttrib(0, 0, 2);  
   SetAttrib(2, 2, 2);
@@ -181,6 +181,14 @@ void main(void) //Must be in $E000-$FFFF??
   //SetAttrib(24, 0, 2);
   while(1)
   {
+    byte x, y, z;
+    for (z = 0; z < 4; ++z)
+    {
+      for (y = viewportPosY; y < viewportPosY + 64; y+=2)
+        for (x = viewportPosX; x < viewportPosX + 64; x+=2)
+          SetAttrib(x, y, z);
+      UpdateAttributes();
+    }
     
 
     //WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
