@@ -54,7 +54,6 @@ unsigned int RowsHGR[192];
 
 void SetAttrib(byte x, byte y, byte pal)
 {
-  x;y;pal;
   #if defined (__NES__)
   byte offset = (x/4) + ((y / 4)*8); //Which byte of the attribute table?
   byte pairX = 0;
@@ -74,6 +73,8 @@ void SetAttrib(byte x, byte y, byte pal)
   
   ATTRIBUTE_TABLE[offset] |= (pal << (pairX + pairY));
   #endif
+  x;y;pal;
+  
 }
 void UpdateAttributes(void)
 {
