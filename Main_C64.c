@@ -42,7 +42,7 @@ void DebugMap()
 void main(void)
 {
   //DebugGraphics();
-  DebugMap();
+  //DebugMap();
   Demo();
 }
 

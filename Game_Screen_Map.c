@@ -414,6 +414,7 @@ void InitializeMapData()
       tiles.palette[byte_x] = 1;
       tiles.blocked[byte_x] = 0;
       tiles.opaque[byte_x] = 0;
+    
     if (byte_x < 8)
       tiles.palette[byte_x] = 0;
   }

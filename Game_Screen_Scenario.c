@@ -174,15 +174,12 @@ screenName Update_Scenario()
     {
       sprintf(strTemp, "Continent: %u @", scenarioSeed);
       SetLineMessageWindow(strTemp, 0);
-      
+
       while(1)
-      {        
-        byte ppu = (byte)ppu_system();
+      {
         setSeed(++scenarioSeed);
-        
-        sprintf(strTemp, "PPU_System %d @", ppu_system());
-  WriteLineMessageWindow(strTemp, 1);
-        
+        WriteLineMessageWindow(strTemp, 1);
+
         //GenerateName();
       }
 

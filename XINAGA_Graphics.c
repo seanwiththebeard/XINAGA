@@ -38,6 +38,8 @@ void getYCols()
     YColumnIndex[y] = y * COLS;
 }
 
+const int ScreenCharSize = ROWS*COLS;
+
 
 #if defined(__APPLE2__)
 byte* ScreenChars = (byte*)(0x0400);
@@ -50,15 +52,10 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
-#if defined (__NES__)
-//const byte const *charset = 0x0;
-//const byte const *attributeset = 0x0;
-byte ScreenChars[ROWS*COLS];
-const int ScreenCharSize = ROWS*COLS;
-byte attributeset[256];
-
 void SetAttrib(byte x, byte y, byte pal)
 {
+  x;y;pal;
+  #if defined (__NES__)
   byte offset = (x/4) + ((y / 4)*8); //Which byte of the attribute table?
   byte pairX = 0;
   byte pairY = 0;
@@ -75,13 +72,25 @@ void SetAttrib(byte x, byte y, byte pal)
   
   ATTRIBUTE_TABLE[offset] &= mask;
   
-  ATTRIBUTE_TABLE[offset] |= (pal << (pairX + pairY));  
+  ATTRIBUTE_TABLE[offset] |= (pal << (pairX + pairY));
+  #endif
 }
 void UpdateAttributes(void)
 {
+  #if defined (__NES__)
   vrambuf_put(NTADR_A(0,0)+(ScreenCharSize), &ATTRIBUTE_TABLE[0], 64);
   wait_vblank(1);
+  #endif
 }
+
+
+#if defined (__NES__)
+//const byte const *charset = 0x0;
+//const byte const *attributeset = 0x0;
+byte ScreenChars[ROWS*COLS];
+byte attributeset[256];
+
+
 #endif
 
 #if defined (__ATARI__)

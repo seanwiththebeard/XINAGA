@@ -68,7 +68,7 @@ typedef int8_t sbyte;	// 8-bit signed
 #define selectionCount 4
 #define viewportPosX 1
 #define viewportPosY 1
-#define viewportWidth 11
+#define viewportWidth 9
 #define viewportHeight 9
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
@@ -96,9 +96,6 @@ typedef int8_t sbyte;	// 8-bit signed
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
 #define contextMenuHeight (2 * viewportHeight)
-
-void SetAttrib(byte x, byte y, byte pal);
-void UpdateAttributes(void);
 #endif
 
 #if defined(MSX)
@@ -213,6 +210,10 @@ void A2Pixel(byte x, byte y, byte color);
 #define ColorText 1
 void InitializeGraphics(void);
 void wait_vblank(byte frames);
+
+void SetAttrib(byte x, byte y, byte pal);
+void UpdateAttributes(void);
+
 #if defined(__C64__)
 void raster_wait(byte line);
 void SetBorder(byte color);
