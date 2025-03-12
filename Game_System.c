@@ -45,7 +45,7 @@ void DrawMiniMap(bool highlightPlayer)
   
   for (y = 0; y < mapMatrixHeight; y+=2)
     for (x = 0; x < mapMatrixWidth; x+=2)
-      SetAttrib(x + viewportPosX, y + viewportPosY, 3);
+      SetAttrib(x + viewportPosX, y + viewportPosY, 3, false);
   UpdateAttributes();
   
   for (y = 0; y < mapMatrixHeight; ++y)

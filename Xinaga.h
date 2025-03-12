@@ -211,7 +211,7 @@ void A2Pixel(byte x, byte y, byte color);
 void InitializeGraphics(void);
 void wait_vblank(byte frames);
 
-void SetAttrib(byte x, byte y, byte pal);
+void SetAttrib(byte x, byte y, byte pal, bool direct);
 void UpdateAttributes(void);
 
 #if defined(__C64__)

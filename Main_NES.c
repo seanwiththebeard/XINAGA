@@ -186,8 +186,8 @@ void main(void) //Must be in $E000-$FFFF??
     {
       for (y = viewportPosY; y < viewportPosY + 16; y+=2)
         for (x = viewportPosX; x < viewportPosX + 16; x+=2)
-          SetAttrib(x, y, z);
-      UpdateAttributes();
+          SetAttrib(x, y, z, true);
+      //UpdateAttributes();
       wait_vblank(20);
     }
     

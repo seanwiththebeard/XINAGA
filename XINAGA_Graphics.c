@@ -52,7 +52,7 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
-void SetAttrib(byte x, byte y, byte pal)
+void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
   #if defined (__NES__)
   byte offset = (x/4) + ((y / 4)*8); //Which byte of the attribute table?
@@ -72,10 +72,16 @@ void SetAttrib(byte x, byte y, byte pal)
   ATTRIBUTE_TABLE[offset] &= mask;
   
   ATTRIBUTE_TABLE[offset] |= (pal << (pairX + pairY));
+  
+  if (direct)
+  {
+      vrambuf_put(NTADR_A(0,0)+(ScreenCharSize)+offset, &ATTRIBUTE_TABLE[offset], 1);
+    wait_vblank(1);
+  }
   #endif
   x;y;pal;
-  
 }
+
 void UpdateAttributes(void)
 {
   #if defined (__NES__)
@@ -659,7 +665,7 @@ void DrawTileSetup(void)
   DrawTileX = DrawTileX << 1;
   DrawTileY = DrawTileY << 1;
   
-  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette);  
+  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
   
   
   #if defined(__C64__)
@@ -667,12 +673,7 @@ void DrawTileSetup(void)
   #endif
 }
 
-void TileAttrib(byte pal)
-{
-  byte x = (DrawTileX << 1) + MapOriginX;
-  byte y = (DrawTileY << 1) + MapOriginY;
-  SetAttrib(x, y, pal);  
-}
+
 void DrawTile()
 {
   byte x = DrawTileX + MapOriginX;
@@ -695,8 +696,7 @@ void DrawTile()
   SetChar(indexes[3], x + 1, y + 1);
   #endif
   
-  #if defined(__NES__)
-  SetAttrib(x, y, DrawTilePalette);  
+  #if defined(__NES__) 
   SetChar(indexes[0], x, y);
   SetChar(indexes[1], x + 1, y);
   SetChar(indexes[2], x, y + 1);
@@ -741,6 +741,7 @@ void DrawTileDirectXY(byte index, byte x, byte y)
 {
   byte tempX = MapOriginX;
   byte tempY = MapOriginY;
+  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
   
   SetTileOrigin(x, y);
   DrawTileIndex = index;
