@@ -98,7 +98,7 @@ void SetAttrib(byte x, byte y, byte pal, bool direct)
     vrambuf_flush();
   }
   #endif
-  x;y;pal;
+  x;y;pal;direct;
 }
 
 void UpdateAttributes(void)
