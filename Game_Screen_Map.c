@@ -257,6 +257,7 @@ byte quadBuffer[4];
 struct
 {
   #define TileCount 64
+  #define TileSize 16
   byte blocked[TileCount];
   byte opaque[TileCount];
   byte palette[TileCount];
@@ -489,8 +490,8 @@ void QuadScroll(direction dir)
 
   relH = dir;
   relV = dir;
-  charPosX = (characters.posX[followIndex] % 16) < quadWidth;
-  charPosY = (characters.posY[followIndex] % 16) < quadHeight;
+  charPosX = (characters.posX[followIndex] % TileSize) < quadWidth;
+  charPosY = (characters.posY[followIndex] % TileSize) < quadHeight;
   compareQuad = GetPlayerQuad();
 
   if (!charPosX)
