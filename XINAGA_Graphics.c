@@ -84,7 +84,7 @@ const byte MOD_4[32] = { //Lookup tables for %4
 void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
   #if defined (__NES__)
-  byte offset = (x / 4) + ((y / 4) * 8); //Which byte of the attribute table?
+  byte offset = (y / 4) * 8 + (x / 4); //Which byte of the attribute table?
   byte pairX = (MOD_4[x]) > 1 ? 2 : 0;
   byte pairY = (MOD_4[y]) > 1 ? 4 : 0;
 
