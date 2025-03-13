@@ -7,8 +7,8 @@
 #if defined (__NES__)
 #pragma code-name (push, "MAP")
 #pragma rodata-name (push, "MAP")
-//#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
+#pragma data-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 #endif
 
 //Prototypes
