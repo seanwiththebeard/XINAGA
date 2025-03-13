@@ -346,16 +346,11 @@ void FillQuadBuffer()
   quadX = characters.quadPosX[followIndex];
   quadY = characters.quadPosY[followIndex];
 
-  if (quadX + 1 == quadWidth)
-    byte_x = 0;
-  else
-    byte_x = quadX + 1;
-
-  if (quadY + 1 == quadHeight)
-    byte_y = 0;
-  else
-    byte_y = quadY + 1;
-
+  //if (quadX + 1 == quadWidth) byte_x = 0; else byte_x = quadX + 1;
+  //if (quadY + 1 == quadHeight) byte_y = 0; else byte_y = quadY + 1;
+  byte_x = (quadX + 1) % quadWidth;
+  byte_y = (quadY + 1) % quadHeight;
+  
   quadBuffer[0] = mapQuads[quadX + (mapMatrixWidth * quadY)];
   quadBuffer[1] = mapQuads[byte_x + + (mapMatrixWidth * quadY)];
   quadBuffer[2] = mapQuads[quadX + (mapMatrixWidth * byte_y)];
