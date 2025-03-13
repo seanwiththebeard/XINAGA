@@ -60,9 +60,9 @@ const char PALETTE[16] = {
   0x0F,			// screen color
 
   0x26,0x1C,0x30,0x00,	// background palette 0
-  0x0C,0x09,0x2A,0x00,	// background palette 1
-  0x0C,0x1A,0x17,0x00,	// background palette 2
-  0x0C,0x1A,0x30        // background palette 3
+  0x0C,0x2B,0x09,0x00,	// background palette 1
+  0x30,0x17,0x2B,0x00,	// background palette 2
+  0x09,0x1B,0x2B        // background palette 3
   };
 
 void UploadCharset()
@@ -164,7 +164,7 @@ void main(void) //Must be in $E000-$FFFF??
   //PPU_Color(0, 0, 1, 0);
 
   currentScreen = Map;
-  //Demo();
+  Demo();
 
   //DrawCharset();
   LoadMap();
@@ -182,7 +182,7 @@ void main(void) //Must be in $E000-$FFFF??
   while(1)
   {
     byte x, y, z;
-    for (z = 0; z < 4; ++z)
+    for (z = 1; z < 4; ++z)
     {
       for (y = viewportPosY; y < viewportPosY + 16; y+=2)
         for (x = viewportPosX; x < viewportPosX + 16; x+=2)

@@ -567,6 +567,8 @@ void InitializeMapData()
     }
   tiles.opaque[44] = true; //Trees
   tiles.palette[44] = 3; //Trees
+  tiles.palette[35] = 2; //Sign
+  
   
   //ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
   //ScreenQuad.Chars[2][1] = 44; // Set the wizard to trees on 1
