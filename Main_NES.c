@@ -164,7 +164,7 @@ void main(void) //Must be in $E000-$FFFF??
   //PPU_Color(0, 0, 1, 0);
 
   currentScreen = Map;
-  Demo();
+  //Demo();
 
   //DrawCharset();
   LoadMap();
@@ -186,9 +186,9 @@ void main(void) //Must be in $E000-$FFFF??
     {
       for (y = viewportPosY; y < viewportPosY + 16; y+=2)
         for (x = viewportPosX; x < viewportPosX + 16; x+=2)
-          SetAttrib(x, y, z, true);
-      //UpdateAttributes();
-      wait_vblank(20);
+          SetAttrib(x, y, z, false);
+      UpdateAttributes();
+      wait_vblank(7);
     }
     
 

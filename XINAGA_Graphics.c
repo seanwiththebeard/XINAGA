@@ -55,28 +55,18 @@ unsigned int RowsHGR[192];
 void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
   #if defined (__NES__)
-  byte offset = (x/4) + ((y / 4)*8); //Which byte of the attribute table?
-  byte pairX = 0;
-  byte pairY = 0;
+  byte offset = (x / 4) + ((y / 4) * 8); //Which byte of the attribute table?
+  byte pairX = (x % 4) > 1 ? 2 : 0;
+  byte pairY = (y % 4) > 1 ? 4 : 0;
   
-  byte mask = 0b11;
+  byte shift = pairX + pairY;
+  byte mask = ~(0b11 << shift);
   
-  if ((x % 4) > 1)
-    pairX = 2;
-  if ((y % 4) > 1)
-    pairY = 4;
-  
-  mask = (0b11 << (pairX + pairY));
-  mask = ~mask;
-  
-  ATTRIBUTE_TABLE[offset] &= mask;
-  
-  ATTRIBUTE_TABLE[offset] |= (pal << (pairX + pairY));
-  
+  ATTRIBUTE_TABLE[offset] = (ATTRIBUTE_TABLE[offset] & mask) | (pal << shift);
   if (direct)
   {
-      vrambuf_put(NTADR_A(0,0)+(ScreenCharSize)+offset, &ATTRIBUTE_TABLE[offset], 1);
-    wait_vblank(1);
+    vrambuf_put(NTADR_A(0,0)+(ScreenCharSize)+offset, &ATTRIBUTE_TABLE[offset], 1);
+    vrambuf_flush();
   }
   #endif
   x;y;pal;
