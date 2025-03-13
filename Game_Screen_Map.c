@@ -612,7 +612,7 @@ void wrapX(sbyte *posX) //Used in map positions
 {
   if (*posX < 0)
     *posX = mapWidth - 1;
-  if (*posX >= mapWidth)
+  else if (*posX >= mapWidth)
     *posX = 0;
 }
 
@@ -620,7 +620,7 @@ void wrapY(sbyte *posY)
 {
   if (*posY < 0)
     *posY = mapHeight - 1;
-  if (*posY >= mapHeight)
+  else if (*posY >= mapHeight)
     *posY = 0;
 }
 
