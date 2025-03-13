@@ -52,22 +52,28 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
-#define fadeFrames 3
+#define fadeFrames 2
 void ScreenFadeOut(void)
 {
+  #if defined (__NES__)
   pal_bg(PALETTE_1);
   wait_vblank(fadeFrames);
   pal_bg(PALETTE_2);
   wait_vblank(fadeFrames);
   pal_bg(PALETTE_3);
+  #endif
+
 }
 void ScreenFadeIn(void)
 {
+  #if defined (__NES__)
   pal_bg(PALETTE_2);
   wait_vblank(fadeFrames);
   pal_bg(PALETTE_1);
   wait_vblank(fadeFrames);
   pal_bg(PALETTE_0);
+  #endif
+
 }
 
 void SetAttrib(byte x, byte y, byte pal, bool direct)
@@ -76,10 +82,10 @@ void SetAttrib(byte x, byte y, byte pal, bool direct)
   byte offset = (x / 4) + ((y / 4) * 8); //Which byte of the attribute table?
   byte pairX = (x % 4) > 1 ? 2 : 0;
   byte pairY = (y % 4) > 1 ? 4 : 0;
-  
+
   byte shift = pairX + pairY;
   byte mask = ~(0b11 << shift);
-  
+
   ATTRIBUTE_TABLE[offset] = (ATTRIBUTE_TABLE[offset] & mask) | (pal << shift);
   if (direct)
   {
@@ -161,7 +167,7 @@ void ClearScreen(void)
   memset(ScreenChars, ' ', 0x0400); // Clear Chars (text page 1 on Apple II)
   //memset(HGR, 0, 0x2000); // clear HGR page 1
   #endif
-  
+
   #if defined (__NES__)
   ppu_off();
   vrambuf_flush();
@@ -172,7 +178,7 @@ void ClearScreen(void)
   vram_write(&ATTRIBUTE_TABLE[0], 64);
   ppu_on_all();
   #endif
-  
+
   #if defined (MSX)
   FILVRM(0x1800, 768, ' ');
   #endif
@@ -186,22 +192,22 @@ void raster_wait(byte line)
   #if defined(__C64__)
   while ((RASTERCOUNT[0] < line)){}
   #endif
-  
+
   #if defined(__APPLE2__)
   int x = 0;
   while (x < 4096 * line)
     ++x;
   #endif
-  
+
   #if defined(__NES__)
   line;
   #endif
-  
+
   #if defined(MSX)
   __asm__("HALT");
   line;
   #endif
-  
+
   #if defined(__ATARI__)
   line;
   #endif
@@ -226,7 +232,7 @@ void wait_vblank(byte frames)
 
     #if defined (__NES__)
     vrambuf_flush();
-  #endif
+    #endif
   }
 }
 
@@ -281,12 +287,12 @@ void InitializeGraphics(void)
   int screenposition;
   int* regd018 = (int*)0xD018;
   int* regdd00 = (int*)0xDD00;
-  
+
   byte* charfile = &characterset[0];//(int*)0x0840;
   //int* attribfile = (int*)0x1040;
-  
+
   byte* CharRam;  
-  
+
   getYCols();
   CharRam = 0;
 
@@ -305,7 +311,7 @@ void InitializeGraphics(void)
   //memcpy(&CharRam[0], &charset[0], 2048); // * 8
   memcpy(&CharRam[0], &charfile[0], 2048);
   //memcpy(&attributeset[0], &attribfile[0], 256);
-  
+
 
   ScreenCharBuffer = 0;
   ScreenCharBuffer += screenposition;
@@ -330,7 +336,7 @@ void InitializeGraphics(void)
   ClearScreen();
   //SetMulticolors(11, 15);
   #endif
-  
+
   #if defined(__NES__)
   getYCols();  
   vrambuf_clear();
@@ -401,10 +407,10 @@ void A2Pixel(byte x, byte y, byte color)
   byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
   index  = index % 6;
   color = paletteTable[index];
-  
+
   HGR[offset] &= blanksA[xPixel]; //Blank Pixels
   HGR[offset] &= 0b01111111; //Clear Palette
-  
+
   if (xPixel == 3)
   { 
     //HGR[offset] |= ((color << 7) >> 1); //Last
@@ -414,7 +420,7 @@ void A2Pixel(byte x, byte y, byte color)
   }
   else
     HGR[offset] |= color << shiftTable[xPixel];
-  
+
   if (index > 3)
     HGR[offset] |= 0b10000000; //Set Palette  
 }
@@ -424,7 +430,7 @@ void DrawChar(int index, byte xpos, byte ypos)
   byte y;
   int offset;
   int i;
-  
+
   i = index << 3;
   ypos = ypos << 3;
   offset= RowsHGR[ypos] + xpos;
@@ -457,15 +463,15 @@ void _SetChar(void)
   ScreenChars[offset] = SetCharIndex;
   ScreenColors[offset] = attributeset[SetCharIndex];
   #endif
-  
+
   #if defined (__NES__)
   ScreenChars[offset] = SetCharIndex;
   //vram_adr(NTADR_A(SetCharX,SetCharY));		// set address
   vrambuf_put(NTADR_A(SetCharX,SetCharY), &SetCharIndex, 1);
   //vrambuf_put(NAMETABLE_A + 32*30 + (SetCharX / 2) + ((SetCharY / 2) * (COLS / 2)), &attributeset[SetCharIndex], 1);
 
-  
-  
+
+
   //vrambuf_end();
   // wait for next frame to flush update buffer
   // this will also set the scroll registers properly
@@ -480,7 +486,7 @@ void _SetChar(void)
   //vram_put(SetCharIndex);
   //ppu_on_all();
   #endif
-  
+
   #if defined(MSX)
   //POSIT(SetCharY+1+(SetCharX<<8));
   //CHPUT((int)SetCharIndex);
@@ -508,7 +514,7 @@ void SetColor(byte index, byte x, byte y)
   FORCLR = index;
   SetChar(x, y, index);
   #endif
-  
+
   #if defined(__ATARI__)
   index;x;y;
   #endif
@@ -532,7 +538,7 @@ void SetCharBuffer(byte index, byte x, byte y)
   ScreenChars[x + YColumnIndex[y]] = index;
   //index;x;y;
   #endif
-  
+
   #if defined(__ATARI__)
   ScreenChars[x + YColumnIndex[y]] = index;
   #endif
@@ -540,14 +546,14 @@ void SetCharBuffer(byte index, byte x, byte y)
 
 byte GetChar(byte x, byte y)
 {
- // #if defined (__C64__)
- // return ScreenChars[x + YColumnIndex[y]];
+  // #if defined (__C64__)
+  // return ScreenChars[x + YColumnIndex[y]];
   //#endif
- // #if defined (__APPLE2__)
+  // #if defined (__APPLE2__)
   return ScreenChars[x + YColumnIndex[y]];
- // #endif
- // #if defined (__NES__)
-  
+  // #endif
+  // #if defined (__NES__)
+
   //char value;
   //x;y;
   //ppu_off();
@@ -663,7 +669,7 @@ byte *destinationColor;
 
 void DrawTileSetup(void)
 {
-  
+
   DrawTileIndex = (DrawTileIndex << 1) + ((DrawTileIndex >> 3) << 4);
   indexes[0] = DrawTileIndex;
   indexes[1] = DrawTileIndex + 1;
@@ -672,9 +678,9 @@ void DrawTileSetup(void)
 
   DrawTileX = DrawTileX << 1;
   DrawTileY = DrawTileY << 1;
-  
+
   SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
-  
+
   #if defined(__C64__)
   offset1 = YColumnIndex[DrawTileY] + DrawTileX + originOffset;
   #endif
@@ -684,7 +690,7 @@ void DrawTile()
 {
   byte x = DrawTileX + MapOriginX;
   byte y = DrawTileY + MapOriginY;
-    
+
   #if defined(__C64__)
   memcpy(destinationChar, &indexes[0], 2);
   memcpy(destinationColor, &attributeset[indexes[0]], 2);
@@ -701,14 +707,14 @@ void DrawTile()
   SetChar(indexes[2], x, y + 1);
   SetChar(indexes[3], x + 1, y + 1);
   #endif
-  
+
   #if defined(__NES__) 
   SetChar(indexes[0], x, y);
   SetChar(indexes[1], x + 1, y);
   SetChar(indexes[2], x, y + 1);
   SetChar(indexes[3], x + 1, y + 1);
   #endif
-  
+
   #if defined(MSX)
   SetChar(indexes[0], x, y);
   SetChar(indexes[1], x + 1, y);
@@ -719,7 +725,7 @@ void DrawTile()
 void DrawTileBuffer(bool drawChars)
 {
   DrawTileSetup();
-  
+
   #if defined(__C64__)
   destinationChar = &ScreenCharBuffer[offset1];
   destinationColor = &ScreenColorBuffer[offset1];
@@ -730,12 +736,12 @@ void DrawTileBuffer(bool drawChars)
 void DrawTileDirect()
 {
   DrawTileSetup();
-  
+
   #if defined(__C64__)
   destinationChar = &ScreenChars[offset1];
   destinationColor = &ScreenColors[offset1];
   #endif
-  
+
   DrawTile();
   /*SetChar(indexes[0], DrawTileX + MapOriginX, DrawTileY + MapOriginY);
   SetChar(indexes[1], DrawTileX + MapOriginX + 1, DrawTileY + MapOriginY);
@@ -748,13 +754,13 @@ void DrawTileDirectXY(byte index, byte x, byte y)
   byte tempX = MapOriginX;
   byte tempY = MapOriginY;
   SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
-  
+
   SetTileOrigin(x, y);
   DrawTileIndex = index;
   DrawTileX = 0;
   DrawTileY = 0;
   DrawTileDirect();
-  
+
   SetTileOrigin(tempX, tempY);
 }
 
@@ -766,7 +772,7 @@ void ReadyArrow(byte x, byte y)
 {
   x = x << 1;
   y = y << 1;
-  
+
   arrowX = x + MapOriginX;
   arrowY = y + MapOriginY + 2;
   while (arrowX > COLS)
@@ -777,7 +783,7 @@ void ReadyArrow(byte x, byte y)
 void DrawArrow(byte x, byte y)
 {
   ReadyArrow(x, y);
-  
+
   SetChar('^', arrowX, arrowY);
   SetChar('^', arrowX + 1, arrowY);
   //wait_vblank(1);
@@ -809,7 +815,7 @@ void DrawLineV(byte index, byte x, byte y, byte length)
   byte count;
   byte tempIndex = index;
   if (x % 2 == 1)
-      ++tempIndex;
+    ++tempIndex;
   for (count = 0; count < length; ++count)
   {
     SetChar(tempIndex, x, y + count);
@@ -825,7 +831,7 @@ void DrawCorners(byte xPos, byte yPos, byte widthInside1, byte heightInside1)
   if (xPos % 2 == 1)
     ++corner1;
   if ((xPos + widthInside1) % 2 == 1)
-   ++corner2;
+    ++corner2;
   SetChar(corner1, xPos, yPos);
   SetChar(corner2, xPos + widthInside1, yPos);
   SetChar(corner1, xPos, yPos + heightInside1);
@@ -840,14 +846,14 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
   byte widthInside1 = width - 1;
   byte heightInside1 = height - 1;
   byte heightInside2 = height - 2;
-  
+
   byte yPos1 = yPos + 1;
   byte xPos1 = xPos + 1;
-  
-  
+
+
   //for (i = 0; text[i] != '@' && text[i] != '\n'; ++i)
-    //++offset;
-  
+  //++offset;
+
   if (fill)
   {
     for (x = 0; x < heightInside2; ++x)
@@ -856,7 +862,7 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
     }
     //wait_vblank(1);
   }
-  
+
 
   DrawLineH(0xEC, xPos1, yPos, widthInside2);
   DrawLineH(0xFC, xPos1, yPos + heightInside1, widthInside2);
@@ -864,33 +870,33 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
   DrawLineV(0xFE, xPos + widthInside1, yPos1, heightInside2);
   DrawCorners(xPos, yPos, widthInside1, heightInside1);
   PrintString(text, xPos1, yPos, true, false);
-  
+
   wait_vblank(1);
 }
 
 #if defined (__NES__)
 unsigned  char attributeset[256] = {
-	0x01, 0x01, 0x0A, 0x0A, 0x0C, 0x0C, 0x01, 0x01, 0x01, 0x01, 0x0C, 0x0C,
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x0A, 0x0A, 0x0C, 0x0C, 0x01, 0x01,
-	0x01, 0x01, 0x0B, 0x0B, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x0E, 0x01, 0x0E, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x04, 0x06,
-	0x01, 0x01, 0x08, 0x08, 0x05, 0x0D, 0x08, 0x08, 0x02, 0x08, 0x08, 0x0F,
-	0x01, 0x01, 0x06, 0x04, 0x01, 0x01, 0x09, 0x09, 0x0D, 0x05, 0x09, 0x09,
-	0x08, 0x02, 0x09, 0x09, 0x08, 0x08, 0x0B, 0x0B, 0x0C, 0x0C, 0x0C, 0x0C,
-	0x0D, 0x0D, 0x0F, 0x0B, 0x0B, 0x0B, 0x0C, 0x0C, 0x08, 0x08, 0x0A, 0x0B,
-	0x0B, 0x0B, 0x0B, 0x0B, 0x05, 0x05, 0x0C, 0x0B, 0x0B, 0x0B, 0x0B, 0x0B,
-	0x0C, 0x0C, 0x09, 0x09, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x01, 0x01, 0x01, 0x01, 0x0B, 0x0B, 0x0A, 0x0A, 0x06, 0x06, 0x06, 0x06,
-	0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
-	0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
-	0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
-	0x06, 0x06, 0x06, 0x06
-};
+  0x01, 0x01, 0x0A, 0x0A, 0x0C, 0x0C, 0x01, 0x01, 0x01, 0x01, 0x0C, 0x0C,
+  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x0A, 0x0A, 0x0C, 0x0C, 0x01, 0x01,
+  0x01, 0x01, 0x0B, 0x0B, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+  0x0E, 0x01, 0x0E, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x04, 0x06,
+  0x01, 0x01, 0x08, 0x08, 0x05, 0x0D, 0x08, 0x08, 0x02, 0x08, 0x08, 0x0F,
+  0x01, 0x01, 0x06, 0x04, 0x01, 0x01, 0x09, 0x09, 0x0D, 0x05, 0x09, 0x09,
+  0x08, 0x02, 0x09, 0x09, 0x08, 0x08, 0x0B, 0x0B, 0x0C, 0x0C, 0x0C, 0x0C,
+  0x0D, 0x0D, 0x0F, 0x0B, 0x0B, 0x0B, 0x0C, 0x0C, 0x08, 0x08, 0x0A, 0x0B,
+  0x0B, 0x0B, 0x0B, 0x0B, 0x05, 0x05, 0x0C, 0x0B, 0x0B, 0x0B, 0x0B, 0x0B,
+  0x0C, 0x0C, 0x09, 0x09, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+  0x01, 0x01, 0x01, 0x01, 0x0B, 0x0B, 0x0A, 0x0A, 0x06, 0x06, 0x06, 0x06,
+  0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
+  0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
+  0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
+  0x06, 0x06, 0x06, 0x06
+  };
 #endif
