@@ -52,12 +52,12 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
-#define fadeFrames 2
+#define fadeFrames 3
 void ScreenFadeOut(void)
 {
   #if defined (__NES__)
-  pal_bg(PALETTE_1);
-  wait_vblank(fadeFrames);
+  //pal_bg(PALETTE_1);
+  //wait_vblank(fadeFrames);
   pal_bg(PALETTE_2);
   wait_vblank(fadeFrames);
   pal_bg(PALETTE_3);
@@ -67,8 +67,8 @@ void ScreenFadeOut(void)
 void ScreenFadeIn(void)
 {
   #if defined (__NES__)
-  pal_bg(PALETTE_2);
-  wait_vblank(fadeFrames);
+  //pal_bg(PALETTE_2);
+  //wait_vblank(fadeFrames);
   pal_bg(PALETTE_1);
   wait_vblank(fadeFrames);
   pal_bg(PALETTE_0);
@@ -76,12 +76,17 @@ void ScreenFadeIn(void)
 
 }
 
+const byte MOD_4[32] = { //Lookup tables for %4
+    0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3,
+    0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3
+};
+
 void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
   #if defined (__NES__)
   byte offset = (x / 4) + ((y / 4) * 8); //Which byte of the attribute table?
-  byte pairX = (x % 4) > 1 ? 2 : 0;
-  byte pairY = (y % 4) > 1 ? 4 : 0;
+  byte pairX = (MOD_4[x]) > 1 ? 2 : 0;
+  byte pairY = (MOD_4[y]) > 1 ? 4 : 0;
 
   byte shift = pairX + pairY;
   byte mask = ~(0b11 << shift);
