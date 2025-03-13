@@ -56,7 +56,8 @@ char ATTRIBUTE_TABLE[0x40] = {
   };
 
 /*{pal:"nes",layout:"nes"}*/
-const char PALETTE[16] = { 
+const char PALETTE_0[16] = {
+  
   0x0F,			// screen color
 
   0x26,0x1C,0x30,0x00,	// background palette 0
@@ -64,6 +65,35 @@ const char PALETTE[16] = {
   0x30,0x17,0x2B,0x00,	// background palette 2
   0x09,0x1B,0x2B        // background palette 3
   };
+
+/*{pal:"nes",layout:"nes"}*/
+const char PALETTE_1[16] = {
+  0x0F,			// screen color
+  0x26,0x1C,0x30,0x00,	// background palette 0
+  0x0C,0x2B,0x0F,0x00,	// background palette 1
+  0x30,0x17,0x0F,0x00,	// background palette 2
+  0x09,0x1B,0x0F        // background palette 3
+   };
+
+/*{pal:"nes",layout:"nes"}*/
+const char PALETTE_2[16] = {
+0x0F,			// screen color
+
+  0x26,0x1C,0x30,0x00,	// background palette 0
+  0x0C,0x0F,0x0F,0x00,	// background palette 1
+  0x30,0x0F,0x0F,0x00,	// background palette 2
+  0x09,0x0F,0x0F        // background palette 3
+   };
+
+/*{pal:"nes",layout:"nes"}*/
+const char PALETTE_3[16] = {
+0x0F,			// screen color
+
+  0x26,0x1C,0x30,0x00,	// background palette 0
+  0x0F,0x0F,0x0F,0x00,	// background palette 1
+  0x0F,0x0F,0x0F,0x00,	// background palette 2
+  0x0F,0x0F,0x0F        // background palette 3
+   };
 
 void UploadCharset()
 {

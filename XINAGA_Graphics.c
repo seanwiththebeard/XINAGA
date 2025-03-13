@@ -52,6 +52,24 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
+#define fadeFrames 3
+void ScreenFadeOut(void)
+{
+  pal_bg(PALETTE_1);
+  wait_vblank(fadeFrames);
+  pal_bg(PALETTE_2);
+  wait_vblank(fadeFrames);
+  pal_bg(PALETTE_3);
+}
+void ScreenFadeIn(void)
+{
+  pal_bg(PALETTE_2);
+  wait_vblank(fadeFrames);
+  pal_bg(PALETTE_1);
+  wait_vblank(fadeFrames);
+  pal_bg(PALETTE_0);
+}
+
 void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
   #if defined (__NES__)
@@ -319,8 +337,8 @@ void InitializeGraphics(void)
   set_vram_update(updbuf);  
   pal_bright(4);
   pal_clear();
+  pal_bg(PALETTE_0);
   oam_clear();
-  pal_bg(PALETTE);
   ClearScreen();  
   // enable PPU rendering (turn on screen)
   //ppu_on_all();
@@ -657,12 +675,10 @@ void DrawTileSetup(void)
   
   SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
   
-  
   #if defined(__C64__)
   offset1 = YColumnIndex[DrawTileY] + DrawTileX + originOffset;
   #endif
 }
-
 
 void DrawTile()
 {
@@ -700,7 +716,7 @@ void DrawTile()
   SetChar(indexes[3], x + 1, y + 1);
   #endif
 }
-void DrawTileBuffer(void)
+void DrawTileBuffer(bool drawChars)
 {
   DrawTileSetup();
   
@@ -708,8 +724,8 @@ void DrawTileBuffer(void)
   destinationChar = &ScreenCharBuffer[offset1];
   destinationColor = &ScreenColorBuffer[offset1];
   #endif
-
-  DrawTile();
+  if (drawChars)
+    DrawTile();
 }
 void DrawTileDirect()
 {

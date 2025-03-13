@@ -172,7 +172,10 @@ extern byte attributeset[256];
 extern const int ScreenCharSize;
 
 extern char ATTRIBUTE_TABLE[0x40];
-extern const char PALETTE[16];
+extern const char PALETTE_0[16];
+extern const char PALETTE_1[16];
+extern const char PALETTE_2[16];
+extern const char PALETTE_3[16];
 #endif
 
 
@@ -213,6 +216,8 @@ void wait_vblank(byte frames);
 
 void SetAttrib(byte x, byte y, byte pal, bool direct);
 void UpdateAttributes(void);
+void ScreenFadeOut(void);
+void ScreenFadeIn(void);
 
 #if defined(__C64__)
 void raster_wait(byte line);
@@ -247,7 +252,6 @@ extern byte DrawTilePalette;
 void DrawTileBuffer();
 void DrawTileDirect();
 void DrawTileDirectXY(byte index, byte x, byte y);
-void TileAttrib(byte pal);
 void ReadyArrow(byte x, byte y);
 void DrawArrow(byte x, byte y);
 void ClearArrow(void);

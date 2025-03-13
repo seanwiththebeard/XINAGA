@@ -543,8 +543,8 @@ void InitializeMapData()
       tiles.blocked[byte_x] = 0;
       tiles.opaque[byte_x] = 0;
     
-    if (byte_x < 8)
-      tiles.palette[byte_x] = 0;
+    //if (byte_x < 8)
+      //tiles.palette[byte_x] = 0;
   }
   
   //Quad definitions (64 tiles)
@@ -824,6 +824,8 @@ void DrawEntireMap()
   BufferCharacters();
   if(LOSEnabled)
     ApplyLOS();
+  
+  ScreenFadeOut();
 
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {      
@@ -831,14 +833,14 @@ void DrawEntireMap()
     { //Only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
       byte lastIndex = viewportBufferLast[byte_x + (viewportWidth * byte_y)];
       byte newIndex = viewportBuffer[byte_x + (viewportWidth * byte_y)];
-
-      if (lastIndex!=newIndex)
+      DrawTileX = byte_x;
+      DrawTileY = byte_y;
+      DrawTileIndex = newIndex;
+      DrawTilePalette = tiles.palette[newIndex];
+      //if (lastIndex!=newIndex)
       {
-        DrawTileX = byte_x;
-        DrawTileY = byte_y;
-        DrawTileIndex = newIndex;
-        DrawTilePalette = tiles.palette[newIndex];
-        DrawTileBuffer();
+        
+        DrawTileBuffer(lastIndex!=newIndex);
       }
       
     }
@@ -849,6 +851,7 @@ void DrawEntireMap()
   memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);
   DrawCharacterCoordinates(followIndex);
   UpdateAttributes();
+  ScreenFadeIn();
 }
 
 void MoveCharacter(byte index, byte dir)
