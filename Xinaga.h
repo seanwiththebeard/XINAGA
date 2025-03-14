@@ -248,10 +248,16 @@ extern byte DrawTileX;
 extern byte DrawTileY;
 extern byte DrawTileIndex;
 extern byte DrawTilePalette;
+#define TileCount 64
+#define TileSize 16
+extern byte tilesBlocked[TileCount];
+extern byte tilesOpaque[TileCount];
+extern byte tilesPalette[TileCount];
 
 void DrawTileBuffer();
 void DrawTileDirect();
 void DrawTileDirectXY(byte index, byte x, byte y);
+void FillViewport(byte index, byte width, byte height);
 void ReadyArrow(byte x, byte y);
 void DrawArrow(byte x, byte y);
 void ClearArrow(void);

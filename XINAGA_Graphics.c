@@ -52,7 +52,7 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
-#define fadeFrames 3
+#define fadeFrames 5
 bool screenFaded;
 void ScreenFadeOut(void)
 {
@@ -774,6 +774,28 @@ void DrawTileDirectXY(byte index, byte x, byte y)
   DrawTileDirect();
 
   SetTileOrigin(tempX, tempY);
+}
+
+//Tile Data
+  #define TileCount 64
+  #define TileSize 16
+  byte tilesBlocked[TileCount];
+  byte tilesOpaque[TileCount];
+  byte tilesPalette[TileCount];
+
+void FillViewport(byte index, byte width, byte height)
+{
+  byte byte_x, byte_y;
+  for(byte_y = 0; byte_y < height; ++byte_y)
+    for(byte_x = 0; byte_x < width; ++byte_x)
+    {
+      DrawTileX = byte_x;
+      DrawTileY = byte_y;
+      DrawTileIndex = index;
+      DrawTilePalette = tilesPalette[index];
+      DrawTileBuffer(false);
+    }
+  UpdateAttributes();
 }
 
 byte arrowA;

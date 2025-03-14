@@ -41,12 +41,10 @@ byte MiniMapHighlightY;
 void DrawMiniMap(bool highlightPlayer)
 {
   byte x, y, tile = 0;
+  ClearScreen();
   DrawBorder("Minimap@", viewportPosX - 1, viewportPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, true);
-  
-  for (y = 0; y < mapMatrixHeight; y+=2)
-    for (x = 0; x < mapMatrixWidth; x+=2)
-      SetAttrib(x + viewportPosX, y + viewportPosY, 3, false);
-  UpdateAttributes();
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  FillViewport(32, 8, 8);
   
   for (y = 0; y < mapMatrixHeight; ++y)
   {
@@ -60,6 +58,7 @@ void DrawMiniMap(bool highlightPlayer)
   
   if(highlightPlayer)
     SetChar('X', viewportPosX + 1 + MiniMapHighlightX, viewportPosY + 1 + MiniMapHighlightY);
+  ScreenFadeIn();
 }
 
 void DrawCharset()

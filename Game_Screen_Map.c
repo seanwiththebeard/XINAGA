@@ -253,15 +253,7 @@ byte quadBuffer[4];
 #define quadHeightDouble (quadHeight << 1)
 //#define yQuadHeight quadHeight << 1
 
-//Tile Data
-struct
-{
-  #define TileCount 64
-  #define TileSize 16
-  byte blocked[TileCount];
-  byte opaque[TileCount];
-  byte palette[TileCount];
-} tiles;
+
 
 struct
 {
@@ -535,9 +527,9 @@ void InitializeMapData()
   
   for (byte_x = 0; byte_x < TileCount; ++byte_x)
   {
-      tiles.palette[byte_x] = 1;
-      tiles.blocked[byte_x] = 0;
-      tiles.opaque[byte_x] = 0;
+      tilesPalette[byte_x] = 1;
+      tilesBlocked[byte_x] = 0;
+      tilesOpaque[byte_x] = 0;
     
     //if (byte_x < 8)
       //tiles.palette[byte_x] = 0;
@@ -561,9 +553,9 @@ void InitializeMapData()
       ScreenQuad.ScatterIndex[byte_index] = 0;
       ;++byte_index;
     }
-  tiles.opaque[44] = true; //Trees
-  tiles.palette[44] = 3; //Trees
-  tiles.palette[35] = 2; //Sign
+  tilesOpaque[44] = true; //Trees
+  tilesPalette[44] = 3; //Trees
+  tilesPalette[35] = 2; //Sign
   
   
   //ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
@@ -627,7 +619,7 @@ bool CheckCollision(byte charIndex, direction dir)
   sbyte yPos = characters.posY[charIndex]; //These need to be signed because they can wrap around the map
 
   //Check the tile we're already standing on
-  if(ReadBit(tiles.blocked[mapData[xPos + (mapWidth * yPos)]], dir))
+  if(ReadBit(tilesBlocked[mapData[xPos + (mapWidth * yPos)]], dir))
   {
     //WriteLineMessageWindow("Standing on blocked@", 0);
     return true;
@@ -655,7 +647,7 @@ bool CheckCollision(byte charIndex, direction dir)
       return false;
   }
 
-  if(ReadBit(tiles.blocked[mapData[xPos + (mapWidth *yPos)]], dir))
+  if(ReadBit(tilesBlocked[mapData[xPos + (mapWidth *yPos)]], dir))
   {
     /*WriteLineMessageWindow("Entry blocked@", 1);
     sprintf(str, "Index: %d@", tiles[mapData[xPos][yPos]].index);
@@ -702,7 +694,7 @@ void ApplyLOS() //437bytes
 
   for (y = 0; y < viewportHeight; ++y)
     for (x = 0; x < viewportWidth; ++x)
-      if (tiles.opaque[viewportBuffer[x + (viewportWidth * y)]])
+      if (tilesOpaque[viewportBuffer[x + (viewportWidth * y)]])
       {
         byte xDist = viewportWidth - x - 1;
         byte yDist = viewportHeight - y - 1;
@@ -831,7 +823,7 @@ void DrawEntireMap()
       DrawTileX = byte_x;
       DrawTileY = byte_y;
       DrawTileIndex = newIndex;
-      DrawTilePalette = tiles.palette[newIndex];
+      DrawTilePalette = tilesPalette[newIndex];
       //if (lastIndex!=newIndex)
       {
         
@@ -1012,12 +1004,18 @@ void ActionMenu()
       break;
     case 3:
       UpdatePlayerOnMiniMap();
+      ScreenFadeOut();
+      ClearScreen();
       DrawMiniMap(true);
       WaitForInput();
-      DrawMapViewport();
+      ScreenFadeOut();
+      DrawMap();
+      ScreenFadeIn();
+      //DrawMapViewport();
       break;
     case 4:
       exitScreen = true;
+      ScreenFadeOut();
       break;
     case 5:
       DrawCharset();
@@ -1030,33 +1028,18 @@ void ActionMenu()
 
 void DrawMap()
 {
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
   DrawScreen();
 }
 
-void FillViewport(byte index)
-{
-  byte byte_x, byte_y;
-  for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
-    for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
-    {
-      DrawTileX = byte_x;
-      DrawTileY = byte_y;
-      DrawTileIndex = index;
-      DrawTilePalette = tiles.palette[index];
-      DrawTileBuffer(false);
-    }
-  UpdateAttributes();
-}
-
 screenName MapUpdate()
 {
   exitScreen = false;
   //ClearScreen();
-  FillViewport(32);
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  FillViewport(32, viewportWidth, viewportHeight);
   DrawMap();
   ScreenFadeIn();
   

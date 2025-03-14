@@ -569,6 +569,7 @@ void GetSeed()
 screenName Update_MapGen()
 {
   ClearScreen();
+  FillViewport(32, 8, 8);
   DrawMiniMap(false);
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   ScreenFadeIn();
