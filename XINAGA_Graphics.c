@@ -52,18 +52,43 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
-#define fadeFrames 5
+#define fadeFrames 4
+
+void FadePalette(byte pals)
+{
+  byte *tempPal = (byte*)malloc(16);
+  byte y;
+  pals;
+  
+  memcpy(&tempPal[0], &PALETTE_1[0], 16);
+  for (y = 0; y < 4; ++y)
+  {
+    //if (pals & 0b0001)
+      //tempPal[y] = 0x0f;
+    //pal_bg(tempPal);
+    //wait_vblank(1);
+  }
+  free(tempPal);
+}
+
 bool screenFaded;
+
+void MapFadeOut()
+{
+    //FadePalette(0b0110);
+  
+}
 void ScreenFadeOut(void)
 {
   #if defined (__NES__)
   if (!screenFaded)
   {
-    pal_bg(PALETTE_1);
-    wait_vblank(fadeFrames);
-    pal_bg(PALETTE_2);
-    wait_vblank(fadeFrames);
-    pal_bg(PALETTE_3);
+    FadePalette(0b0000);
+    //pal_bg(PALETTE_1);
+    //wait_vblank(fadeFrames);
+    //pal_bg(PALETTE_2);
+    //wait_vblank(fadeFrames);
+    //pal_bg(PALETTE_3);
   }
   #endif
   screenFaded = true;
@@ -73,11 +98,11 @@ void ScreenFadeIn(void)
   #if defined (__NES__)
   if (screenFaded)
   {
-    pal_bg(PALETTE_2);
-    wait_vblank(fadeFrames);
-    pal_bg(PALETTE_1);
-    wait_vblank(fadeFrames);
-    pal_bg(PALETTE_0);
+    //pal_bg(PALETTE_2);
+    //wait_vblank(fadeFrames);
+    //pal_bg(PALETTE_1);
+    //wait_vblank(fadeFrames);
+    //pal_bg(PALETTE_0);
   }
   #endif
   screenFaded = false;

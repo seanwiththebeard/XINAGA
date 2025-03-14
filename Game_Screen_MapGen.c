@@ -582,6 +582,7 @@ screenName Update_MapGen()
   GetSeed();
   //StoreMap();
   //ClearMap();
+  ScreenFadeOut();
   ClearScreen();
   return Map;
 }

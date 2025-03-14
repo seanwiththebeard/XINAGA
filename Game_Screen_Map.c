@@ -99,7 +99,7 @@ byte CoordPosY;
 
 //Map Data
 bool LOSEnabled;
-#define EmptyTile 7
+#define EmptyTile 32
 #define mapHeight 32
 #define mapWidth 32
 byte mapData[mapWidth * mapHeight];
@@ -531,8 +531,8 @@ void InitializeMapData()
       tilesBlocked[byte_x] = 0;
       tilesOpaque[byte_x] = 0;
     
-    //if (byte_x < 8)
-      //tiles.palette[byte_x] = 0;
+    if (byte_x < 8)
+      tilesPalette[byte_x] = 0;
   }
   
   //Quad definitions (64 tiles)
