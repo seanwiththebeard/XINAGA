@@ -87,6 +87,7 @@ void SwitchScreen(screenName screen)
   }
   
   SwitchScreen(currentScreen);
+  ScreenFadeOut();
 }
 
 void Demo()

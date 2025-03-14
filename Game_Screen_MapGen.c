@@ -571,7 +571,8 @@ screenName Update_MapGen()
   ClearScreen();
   DrawMiniMap(false);
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-
+  ScreenFadeIn();
+  
   //ClearMap();
   //DrawMapGenTiles();
   //SetLineMessageWindow("THE QUICK brown fox JUMPS over THE Lazy Dog@", 0);

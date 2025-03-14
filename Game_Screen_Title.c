@@ -19,6 +19,8 @@ screenName Update_Title()
   DrawBorder("@", 12, 19, 16, 5, true);
   PrintString("Press Space@", 14, 21, true, false);
   
+  ScreenFadeIn();
+  
   while (1)
   {
     UpdateInput();

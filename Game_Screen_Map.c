@@ -1055,10 +1055,11 @@ screenName MapUpdate()
 {
   exitScreen = false;
   //ClearScreen();
-  ScreenFadeOut();
   FillViewport(32);
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   DrawMap();
+  ScreenFadeIn();
+  
   while (!exitScreen)
   {
     UpdateInput();

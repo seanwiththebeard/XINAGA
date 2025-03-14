@@ -163,45 +163,47 @@ screenName Update_Scenario()
   bool exit = false;
   uint16_t scenarioSeed = 0;
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+
+
+  ResetMenu("@", selectionPosX, selectionPosY, selectionWidth, selectionHeight, selectionCount);
+  SetMenuItem(0, "Next@");
+  SetMenuItem(1, "Last@");
+  SetMenuItem(2, "Go@");
+  SetMenuItem(3, "End@");
+  ScreenFadeIn();
+
+
+  while (!exit)
   {
+    sprintf(strTemp, "Continent: %u @", scenarioSeed);
+    SetLineMessageWindow(strTemp, 0);
 
-    ResetMenu("@", selectionPosX, selectionPosY, selectionWidth, selectionHeight, selectionCount);
-    SetMenuItem(0, "Next@");
-    SetMenuItem(1, "Last@");
-    SetMenuItem(2, "Go@");
-    SetMenuItem(3, "End@");
-    while (!exit)
+    while(1)
     {
-      sprintf(strTemp, "Continent: %u @", scenarioSeed);
-      SetLineMessageWindow(strTemp, 0);
+      setSeed(++scenarioSeed);
+      WriteLineMessageWindow(strTemp, 1);
 
-      while(1)
-      {
-        setSeed(++scenarioSeed);
-        WriteLineMessageWindow(strTemp, 1);
+      //GenerateName();
+    }
 
-        //GenerateName();
-      }
-
-      switch (GetMenuSelection())
-      {
-        case 0:
-          ++scenarioSeed;
-          break;
-        case 1:
-          --scenarioSeed;
-          break;
-        case 2:
-          setSeed(scenarioSeed);
-          GenerateContinent();
-          ++randseed;
-          break;
-        case 3:
-          exit = true;
-          break;
-        default:
-          break;
-      }
+    switch (GetMenuSelection())
+    {
+      case 0:
+        ++scenarioSeed;
+        break;
+      case 1:
+        --scenarioSeed;
+        break;
+      case 2:
+        setSeed(scenarioSeed);
+        GenerateContinent();
+        ++randseed;
+        break;
+      case 3:
+        exit = true;
+        break;
+      default:
+        break;
     }
   }
   return EditParty;

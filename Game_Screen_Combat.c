@@ -606,6 +606,8 @@ screenName Update_Combat(void)
   Initialize();
   //randseed = 0;
   //srand(randseed);
+  ScreenFadeIn();
+  
 
   while (!exitCombat)
   {

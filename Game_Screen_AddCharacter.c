@@ -318,6 +318,7 @@ screenName DrawAddCharacterScreen()
   CurrentCharacter = 0;
   srand(randseed);
   ClearScreen();
+  ScreenFadeIn();
   
   while (!exitWindow)
   {  

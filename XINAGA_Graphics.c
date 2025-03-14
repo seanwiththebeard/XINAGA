@@ -53,26 +53,34 @@ unsigned int RowsHGR[192];
 #endif
 
 #define fadeFrames 3
+bool screenFaded;
 void ScreenFadeOut(void)
 {
   #if defined (__NES__)
-  //pal_bg(PALETTE_1);
-  //wait_vblank(fadeFrames);
-  //pal_bg(PALETTE_2);
-  //wait_vblank(fadeFrames);
-  pal_bg(PALETTE_3);
+  if (!screenFaded)
+  {
+    //pal_bg(PALETTE_1);
+    //wait_vblank(fadeFrames);
+    //pal_bg(PALETTE_2);
+    //wait_vblank(fadeFrames);
+    pal_bg(PALETTE_3);
+  }
   #endif
+  screenFaded = true;
 }
 void ScreenFadeIn(void)
 {
   #if defined (__NES__)
-  pal_bg(PALETTE_2);
-  wait_vblank(fadeFrames);
-  pal_bg(PALETTE_1);
-  wait_vblank(fadeFrames);
-  pal_bg(PALETTE_0);
+  if (screenFaded)
+  {
+    pal_bg(PALETTE_2);
+    wait_vblank(fadeFrames);
+    pal_bg(PALETTE_1);
+    wait_vblank(fadeFrames);
+    pal_bg(PALETTE_0);
+  }
   #endif
-
+  screenFaded = false;
 }
 
 const byte MOD_4[32] = { //Lookup tables for %4
