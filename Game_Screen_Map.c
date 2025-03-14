@@ -813,7 +813,7 @@ void DrawEntireMap()
   if(LOSEnabled)
     ApplyLOS();
   
-  ScreenFadeOut();
+  MapFadeOut();
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {      
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
@@ -838,7 +838,7 @@ void DrawEntireMap()
   memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);
   DrawCharacterCoordinates(followIndex);
   UpdateAttributes();
-  ScreenFadeIn();
+  MapFadeIn();
 }
 
 void MoveCharacter(byte index, byte dir)
@@ -1041,6 +1041,7 @@ screenName MapUpdate()
   //ClearScreen();
   FillViewport(32, viewportWidth, viewportHeight);
   DrawMap();
+  MapFadeIn();
   ScreenFadeIn();
   
   while (!exitScreen)

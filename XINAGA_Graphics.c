@@ -52,31 +52,49 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
-#define fadeFrames 4
+#define fadeFrames 10
+#define mapFadeFrames 3
 
-void FadePalette(byte pals)
+
+void FadePalette(byte pals, byte delay)
 {
   byte *tempPal = (byte*)malloc(16);
-  byte y;
-  pals;
-  
+  byte y, z;
+
   memcpy(&tempPal[0], &PALETTE_0[0], 16);
-  for (y = 1; y < 4; ++y)
+  for (y = 3; y > 0; --y)
   {
-    if (pals & 0b00000001)
-      tempPal[y] = 0x0f;
-    
-    if (pals & 0b00000010)
-      tempPal[y+4] = 0x0f;
-    
-    if (pals & 0b00000100)
-      tempPal[y+8] = 0x0f;
-    
-    if (pals & 0b00001000)
-      tempPal[y+12] = 0x0f;
-    
+    for (z = 0; z < 4; ++z)
+    {
+      if (pals & (0b1 << z))
+        tempPal[y + (z*4)] = 0x0f;
+    }
+
     pal_bg(tempPal);
-    wait_vblank(fadeFrames);
+    wait_vblank(delay);
+  }
+  free(tempPal);
+}
+
+void UnFadePalette(byte pals, byte delay)
+{
+  byte *tempPal = (byte*)malloc(16);
+  byte y, z;
+
+  memcpy(&tempPal[0], &PALETTE_0[0], 16);
+  for (y = 0; y < 4; ++y)
+  {
+    for (z = 4; z > 0; --z)
+    {
+      if (pals & (0b1 << z))
+        tempPal[y + (4*z)] = PALETTE_0[y + (4*z)];
+      
+      pal_bg(tempPal);
+      wait_vblank(delay);
+    }
+
+    //pal_bg(tempPal);
+    //wait_vblank(delay);
   }
   free(tempPal);
 }
@@ -85,15 +103,18 @@ bool screenFaded;
 
 void MapFadeOut()
 {
-    //FadePalette(0b0110);
-  
+  FadePalette(0b1110, mapFadeFrames);
+}
+void MapFadeIn()
+{
+  UnFadePalette(0b1110, mapFadeFrames);
 }
 void ScreenFadeOut(void)
 {
   #if defined (__NES__)
   if (!screenFaded)
   {
-    FadePalette(0b1110);
+    FadePalette(0b1111, fadeFrames);
     //pal_bg(PALETTE_1);
     //wait_vblank(fadeFrames);
     //pal_bg(PALETTE_2);
@@ -108,20 +129,22 @@ void ScreenFadeIn(void)
   #if defined (__NES__)
   if (screenFaded)
   {
+    UnFadePalette(0b1111, fadeFrames);
+
     //pal_bg(PALETTE_2);
     //wait_vblank(fadeFrames);
     //pal_bg(PALETTE_1);
     //wait_vblank(fadeFrames);
-    pal_bg(PALETTE_0);
+    //pal_bg(PALETTE_0);
   }
   #endif
   screenFaded = false;
 }
 
 const byte MOD_4[32] = { //Lookup tables for %4
-    0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3,
-    0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3
-};
+  0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3,
+  0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3
+  };
 
 void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
@@ -780,7 +803,7 @@ void DrawTileBuffer(bool drawChars)
   if (drawChars)
     DrawTile();
 }
-void DrawTileDirect()
+void DrawTileDirect(void)
 {
   DrawTileSetup();
 
@@ -812,11 +835,11 @@ void DrawTileDirectXY(byte index, byte x, byte y)
 }
 
 //Tile Data
-  #define TileCount 64
-  #define TileSize 16
-  byte tilesBlocked[TileCount];
-  byte tilesOpaque[TileCount];
-  byte tilesPalette[TileCount];
+#define TileCount 64
+#define TileSize 16
+byte tilesBlocked[TileCount];
+byte tilesOpaque[TileCount];
+byte tilesPalette[TileCount];
 
 void FillViewport(byte index, byte width, byte height)
 {

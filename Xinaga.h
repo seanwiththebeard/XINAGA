@@ -254,9 +254,11 @@ extern byte tilesBlocked[TileCount];
 extern byte tilesOpaque[TileCount];
 extern byte tilesPalette[TileCount];
 
-void DrawTileBuffer();
-void DrawTileDirect();
+void DrawTileBuffer(bool drawChars);
+void DrawTileDirect(void);
 void DrawTileDirectXY(byte index, byte x, byte y);
+void MapFadeOut(void);
+void MapFadeIn();
 void FillViewport(byte index, byte width, byte height);
 void ReadyArrow(byte x, byte y);
 void DrawArrow(byte x, byte y);
