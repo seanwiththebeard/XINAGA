@@ -607,7 +607,6 @@ screenName Update_Combat(void)
   //randseed = 0;
   //srand(randseed);
   ScreenFadeIn();
-  
 
   while (!exitCombat)
   {
@@ -621,5 +620,6 @@ screenName Update_Combat(void)
   }
 
   //Malloc free combat data
+  ScreenFadeOut();
   return Map;
 }

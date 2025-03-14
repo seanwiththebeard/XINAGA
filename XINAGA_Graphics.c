@@ -59,10 +59,10 @@ void ScreenFadeOut(void)
   #if defined (__NES__)
   if (!screenFaded)
   {
-    //pal_bg(PALETTE_1);
-    //wait_vblank(fadeFrames);
-    //pal_bg(PALETTE_2);
-    //wait_vblank(fadeFrames);
+    pal_bg(PALETTE_1);
+    wait_vblank(fadeFrames);
+    pal_bg(PALETTE_2);
+    wait_vblank(fadeFrames);
     pal_bg(PALETTE_3);
   }
   #endif

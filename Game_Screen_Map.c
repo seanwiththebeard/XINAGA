@@ -1081,5 +1081,6 @@ screenName MapUpdate()
         MoveCharacter(followIndex, Dir);        
     }
   }
+  ScreenFadeOut();
   return EditParty;
 }

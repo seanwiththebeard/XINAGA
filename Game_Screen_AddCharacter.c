@@ -236,6 +236,7 @@ void MenuEditParty()
   SetMenuItem(8, "Scenario@");
   
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  ScreenFadeIn();
   
   //sprintf(strTemp, "Address %4x %s@", &RaceDescription[0], &RaceDescription[0]);
     //WriteLineMessageWindow(strTemp, 0);
@@ -312,18 +313,20 @@ void MenuEditParty()
 }
 
 screenName DrawAddCharacterScreen()
-{  
+{
+  ScreenFadeOut();
   nextScreen = EditParty;
   exitWindow = false;
   CurrentCharacter = 0;
   srand(randseed);
   ClearScreen();
-  ScreenFadeIn();
   
   while (!exitWindow)
   {  
     MenuEditParty();
+    ScreenFadeOut();
     ClearScreen();
   }
+  ScreenFadeOut();
   return nextScreen;
 }

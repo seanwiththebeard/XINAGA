@@ -162,6 +162,7 @@ screenName Update_Scenario()
 {
   bool exit = false;
   uint16_t scenarioSeed = 0;
+  ScreenFadeOut();
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
 
 
@@ -178,10 +179,10 @@ screenName Update_Scenario()
     sprintf(strTemp, "Continent: %u @", scenarioSeed);
     SetLineMessageWindow(strTemp, 0);
 
-    while(1)
+    //while(1)
     {
-      setSeed(++scenarioSeed);
-      WriteLineMessageWindow(strTemp, 1);
+     // setSeed(++scenarioSeed);
+      //WriteLineMessageWindow(strTemp, 1);
 
       //GenerateName();
     }
@@ -206,5 +207,6 @@ screenName Update_Scenario()
         break;
     }
   }
+  ScreenFadeOut();
   return EditParty;
 }

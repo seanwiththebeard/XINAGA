@@ -87,7 +87,6 @@ void SwitchScreen(screenName screen)
   }
   
   SwitchScreen(currentScreen);
-  ScreenFadeOut();
 }
 
 void Demo()
@@ -95,6 +94,7 @@ void Demo()
   InitializeInput();
   InitializeGraphics();
   ClearScreen();
+  ScreenFadeOut();
   
   #if defined(__NES__)
   MMC3_PRG_8000(0);
@@ -104,6 +104,6 @@ void Demo()
   
   while(1)
   {
-    SwitchScreen(currentScreen);
+    SwitchScreen(currentScreen);    
   }
 }
