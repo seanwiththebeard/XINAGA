@@ -822,7 +822,6 @@ void DrawEntireMap()
     ApplyLOS();
   
   ScreenFadeOut();
-
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {      
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
@@ -1037,14 +1036,29 @@ void DrawMap()
   DrawScreen();
 }
 
+void FillViewport(byte index)
+{
+  byte byte_x, byte_y;
+  for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
+    for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
+    {
+      DrawTileX = byte_x;
+      DrawTileY = byte_y;
+      DrawTileIndex = index;
+      DrawTilePalette = tiles.palette[index];
+      DrawTileBuffer(false);
+    }
+  UpdateAttributes();
+}
+
 screenName MapUpdate()
 {
   exitScreen = false;
-
-  DrawMap();
-  
+  //ClearScreen();
+  ScreenFadeOut();
+  FillViewport(32);
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  
+  DrawMap();
   while (!exitScreen)
   {
     UpdateInput();
