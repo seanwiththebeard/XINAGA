@@ -53,7 +53,7 @@ unsigned int RowsHGR[192];
 #endif
 
 #define fadeFrames 10
-#define mapFadeFrames 3
+#define mapFadeFrames 10
 
 
 void FadePalette(byte pals, byte delay)
@@ -66,7 +66,7 @@ void FadePalette(byte pals, byte delay)
   {
     for (z = 0; z < 4; ++z)
     {
-      if (pals & (0b1 << z))
+      if (pals & (1 << z))
         tempPal[y + (z*4)] = 0x0f;
     }
 
@@ -80,21 +80,28 @@ void UnFadePalette(byte pals, byte delay)
 {
   byte *tempPal = (byte*)malloc(16);
   byte y, z;
+  //memcpy(&tempPal[0], &PALETTE_0[0], 16);
 
-  memcpy(&tempPal[0], &PALETTE_0[0], 16);
+  for (z = 0; z < 4; ++z)
+  {
+    if (pals & (1 << z))
+    {
+      memset(&tempPal[(z*4)], 0x0f, 3);
+    }
+  }
+
   for (y = 0; y < 4; ++y)
   {
-    for (z = 4; z > 0; --z)
+    for (z = 0; z < 4; ++z)
     {
-      if (pals & (0b1 << z))
-        tempPal[y + (4*z)] = PALETTE_0[y + (4*z)];
-      
-      pal_bg(tempPal);
-      wait_vblank(delay);
+      if (pals & (1 << z))
+      {
+        tempPal[y + (z*4)] = PALETTE_0[y+(z*4)];
+      }
     }
 
-    //pal_bg(tempPal);
-    //wait_vblank(delay);
+    pal_bg(tempPal);
+    wait_vblank(delay);
   }
   free(tempPal);
 }

@@ -1040,9 +1040,8 @@ screenName MapUpdate()
   exitScreen = false;
   //ClearScreen();
   FillViewport(32, viewportWidth, viewportHeight);
-  DrawMap();
-  MapFadeIn();
   ScreenFadeIn();
+  DrawMap();
   
   while (!exitScreen)
   {
