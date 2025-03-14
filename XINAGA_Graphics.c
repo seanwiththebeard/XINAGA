@@ -60,13 +60,23 @@ void FadePalette(byte pals)
   byte y;
   pals;
   
-  memcpy(&tempPal[0], &PALETTE_1[0], 16);
-  for (y = 0; y < 4; ++y)
+  memcpy(&tempPal[0], &PALETTE_0[0], 16);
+  for (y = 1; y < 4; ++y)
   {
-    //if (pals & 0b0001)
-      //tempPal[y] = 0x0f;
-    //pal_bg(tempPal);
-    //wait_vblank(1);
+    if (pals & 0b00000001)
+      tempPal[y] = 0x0f;
+    
+    if (pals & 0b00000010)
+      tempPal[y+4] = 0x0f;
+    
+    if (pals & 0b00000100)
+      tempPal[y+8] = 0x0f;
+    
+    if (pals & 0b00001000)
+      tempPal[y+12] = 0x0f;
+    
+    pal_bg(tempPal);
+    wait_vblank(fadeFrames);
   }
   free(tempPal);
 }
@@ -83,7 +93,7 @@ void ScreenFadeOut(void)
   #if defined (__NES__)
   if (!screenFaded)
   {
-    FadePalette(0b0000);
+    FadePalette(0b1110);
     //pal_bg(PALETTE_1);
     //wait_vblank(fadeFrames);
     //pal_bg(PALETTE_2);
@@ -102,7 +112,7 @@ void ScreenFadeIn(void)
     //wait_vblank(fadeFrames);
     //pal_bg(PALETTE_1);
     //wait_vblank(fadeFrames);
-    //pal_bg(PALETTE_0);
+    pal_bg(PALETTE_0);
   }
   #endif
   screenFaded = false;
