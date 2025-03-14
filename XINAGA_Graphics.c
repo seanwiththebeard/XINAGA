@@ -62,7 +62,6 @@ void ScreenFadeOut(void)
   //wait_vblank(fadeFrames);
   pal_bg(PALETTE_3);
   #endif
-
 }
 void ScreenFadeIn(void)
 {
