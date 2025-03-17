@@ -529,6 +529,52 @@ void GenerateMap(byte seed)
   //WriteLineMessageWindow(strTemp, 0);
 }
 
+void CreateRoom(byte size)
+{
+  
+  byte x,y;
+  //for (x = 0; x < count; ++x)
+  {
+    byte h = rand() % (mapMatrixHeight - size);
+    byte w = rand() % (mapMatrixWidth - size);
+
+    //while (mapQuads[w + (mapMatrixWidth * h)] != water)
+    {
+      //h = rand() % (mapMatrixHeight - size);
+      //w = rand() % (mapMatrixWidth - size);
+    }
+    for (y = 0; y < size; ++y)
+      for (x = 0; x < size; ++x)
+      {
+        createPoint(w + x, h + y);
+        mapQuads[w + x + (mapMatrixWidth * (h + y))] = grass;
+        DrawPoint(w+x, h+y);
+        
+      }
+
+    //SetChar(index, posX + w, posY + h);
+    //SetColor(index + 2, posX + w, posY + h);
+  }
+  
+}
+
+void GenerateDungeon(byte seed)
+{
+  byte y;
+  ClearMap();
+  //DrawMiniMap(false);
+  srand(seed);
+  for ( y = continentsBase; y > 0; --y)
+  {
+    CreateRoom(4);
+  }
+  //DrawMiniMap();
+  //DrawMapGenTiles();
+  //RotateAround();
+  //sprintf(strTemp, "Done@");
+  //WriteLineMessageWindow(strTemp, 0);
+}
+
 //#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
 //#define menuPosY consolePosY - 1
 #define menuWidth 5
@@ -557,7 +603,8 @@ void GetSeed()
         --seed;
         break;
       case 2:
-        GenerateMap(seed);
+        //GenerateMap(seed);
+        GenerateDungeon(seed);
         break;
       case 3:
         exit = true;
