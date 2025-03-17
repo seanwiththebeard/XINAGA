@@ -44,7 +44,11 @@ void DrawMiniMap(bool highlightPlayer)
   ClearScreen();
   DrawBorder("Minimap@", viewportPosX - 1, viewportPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, true);
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  //FillViewport(32, viewportWidth, viewportHeight);
+  
+  
   FillViewport(32, 8, 8);
+  UpdateAttributes();
   
   for (y = 0; y < mapMatrixHeight; ++y)
   {
