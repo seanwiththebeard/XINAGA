@@ -1028,20 +1028,24 @@ void ActionMenu()
 
 void DrawMap()
 {
+  
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
-  SetTileOrigin(viewportPosX, viewportPosY);
-  LoadMapQuads();
   DrawScreen();
 }
 
 screenName MapUpdate()
 {
   exitScreen = false;
-  //ClearScreen();
+  
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+  DrawCharStats();
+  SetTileOrigin(viewportPosX, viewportPosY);
+  LoadMapQuads();
   FillViewport(32, viewportWidth, viewportHeight);
   ScreenFadeIn();
-  DrawMap();
+  DrawMapViewport();
   
   while (!exitScreen)
   {

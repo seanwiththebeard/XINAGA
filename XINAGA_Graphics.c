@@ -52,8 +52,8 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
-#define fadeFrames 10
-#define mapFadeFrames 10
+#define fadeFrames 5
+#define mapFadeFrames 2
 
 
 void FadePalette(byte pals, byte delay)
