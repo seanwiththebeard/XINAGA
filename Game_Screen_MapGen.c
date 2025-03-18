@@ -531,6 +531,47 @@ void GenerateMap(byte seed)
 
 byte LastRoomOriginX;
 byte LastRoomOriginY;
+byte DestinationX;
+byte DestinationY;
+#define hallway '?'
+void ConnectHallway()
+{
+  byte x, y;
+  
+  if (LastRoomOriginY < DestinationY)
+    for (y = LastRoomOriginY; y < DestinationY; ++y)
+    {
+      createPoint(x,y);
+      mapQuads[x + (mapMatrixWidth *y)] = hallway;
+      DrawPoint(x, y);
+    }
+  else
+    for (y = DestinationY; y < LastRoomOriginY; ++y)
+    {
+      createPoint(x,y);
+      mapQuads[x + (mapMatrixWidth *y)] = hallway;
+      DrawPoint(x, y);
+    }
+  
+  if (LastRoomOriginX < DestinationX)
+    for (x = LastRoomOriginX; x < DestinationX; ++x)
+    {
+      createPoint(x,y);
+      mapQuads[x + (mapMatrixWidth *y)] = hallway;
+      DrawPoint(x, y);
+    }
+  else
+    for (x = DestinationX; x < LastRoomOriginX; ++x)
+    {
+      createPoint(x,y);
+      mapQuads[x + (mapMatrixWidth *y)] = hallway;
+      DrawPoint(x, y);
+    }
+  
+  LastRoomOriginX = DestinationX;
+  LastRoomOriginY = DestinationY;
+}
+
 void CreateRoom(byte size)
 {
   
@@ -539,8 +580,8 @@ void CreateRoom(byte size)
   {
     byte h = rand() % (mapMatrixHeight - size);
     byte w = rand() % (mapMatrixWidth - size);
-    LastRoomOriginX = h + (size / 2);
-    LastRoomOriginY = w + (size / 2);
+    DestinationX = h;
+    DestinationY = w;    
     
 
     //while (mapQuads[w + (mapMatrixWidth * h)] != water)
@@ -563,9 +604,7 @@ void CreateRoom(byte size)
   
 }
 
-void ConnectHallway()
-{
-}
+
 
 void GenerateDungeon(byte seed)
 {
@@ -575,7 +614,11 @@ void GenerateDungeon(byte seed)
   srand(seed);
   for ( y = continentsBase; y > 0; --y)
   {
-    CreateRoom(4);
+    
+    CreateRoom(2);
+    ConnectHallway();
+    
+    
   }
   //DrawMiniMap();
   //DrawMapGenTiles();
