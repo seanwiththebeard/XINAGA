@@ -529,6 +529,8 @@ void GenerateMap(byte seed)
   //WriteLineMessageWindow(strTemp, 0);
 }
 
+byte LastRoomOriginX;
+byte LastRoomOriginY;
 void CreateRoom(byte size)
 {
   
@@ -537,6 +539,9 @@ void CreateRoom(byte size)
   {
     byte h = rand() % (mapMatrixHeight - size);
     byte w = rand() % (mapMatrixWidth - size);
+    LastRoomOriginX = h + (size / 2);
+    LastRoomOriginY = w + (size / 2);
+    
 
     //while (mapQuads[w + (mapMatrixWidth * h)] != water)
     {
@@ -556,6 +561,10 @@ void CreateRoom(byte size)
     //SetColor(index + 2, posX + w, posY + h);
   }
   
+}
+
+void ConnectHallway()
+{
 }
 
 void GenerateDungeon(byte seed)
