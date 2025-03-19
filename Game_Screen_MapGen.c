@@ -8,6 +8,19 @@
 //Mountains
 //Swamp
 
+
+/*
+Dungeon Geomorphs
+One byte describes 16x16 region
+0b76543210
+	0 - North Exit
+        1 - South Exit
+        2 - East Exit
+        3 - West Exit
+        45 - Treasure
+        67 - Encounter/Obstacle
+*/
+
 #if defined(__APPLE2__)
 #pragma code-name (push, "LC")
 #endif
