@@ -193,7 +193,7 @@ void main(void) //Must be in $E000-$FFFF??
 
   //PPU_Color(0, 0, 1, 0);
 
-  currentScreen = MapGen;
+  currentScreen = Title;
   Demo();
 
   //DrawCharset();
