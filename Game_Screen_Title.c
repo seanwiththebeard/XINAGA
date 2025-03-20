@@ -8,22 +8,28 @@
 #if defined (__NES__)
 #pragma code-name (push, "TITLE")
 #pragma rodata-name (push, "TITLE")
-#pragma data-name (push, "TITLE")
+//#pragma data-name (push, "TITLE")
 //#pragma bss-name (push, "TITLE")
 #endif
-int tetrismap();
+int tetrismap(byte seed);
+byte seed = 57;
+
 screenName Update_Title()
 {
   ClearScreen();
 
   ScreenFadeIn();
+  
+  while(1)
+  {
+    tetrismap(seed);
+    ++seed;
+  }
 
-  tetrismap();
-
-  DrawBorder("@",12, 5, 16, 5, true);
-  PrintString("Title Screen@", 14, 7, true, false);
-  DrawBorder("@", 12, 19, 16, 5, true);
-  PrintString("Press Space@", 14, 21, true, false);
+  //DrawBorder("@",12, 5, 16, 5, true);
+  //PrintString("Title Screen@", 14, 7, true, false);
+  //DrawBorder("@", 12, 19, 16, 5, true);
+  //PrintString("Press Space@", 14, 21, true, false);
 
   while (1)
   {
@@ -39,7 +45,7 @@ screenName Update_Title()
 #include <stdlib.h>
 #include <time.h>
 
-#define MAP_SIZE 16
+#define MAP_SIZE 24
 #define TARGET_POINTS ((MAP_SIZE * MAP_SIZE) * (2 / 3))
 #define empty ' '
 #define point 'q'
@@ -48,6 +54,7 @@ typedef struct {
   int x, y;
 } Point;
 
+int total_points = 0;
 byte map[MAP_SIZE][MAP_SIZE];
 
 // All Tetris blocks with their rotations
@@ -74,25 +81,45 @@ byte num_blocks = sizeof(tetris_blocks) / sizeof(tetris_blocks[0]);
 void place_tetris_block(int x, int y, int block_index) {
   int i;
   for (i = 0; i < 4; i++) {
-    int px, py;
+    byte px, py;
     px = x + tetris_blocks[block_index][i].x;
     py = y + tetris_blocks[block_index][i].y;
-    if (px >= 0 && px < MAP_SIZE && py >= 0 && py < MAP_SIZE) 
+    
+    while(map[py][px] == point)
     {
+      px++;
+      if (px >= MAP_SIZE)
+      {
+        px = 0;
+        ++py;
+      }
+      if (py >= MAP_SIZE)
+        py = 0;
+      //SetChar('X', x, y);
+      //wait_vblank(1);
+      //SetChar(map[y][x], x, y);
+      //wait_vblank(1);
+    }
+    px = px % MAP_SIZE;
+    py = py % MAP_SIZE;
+    
+    
+    //if (px >= 0 && px < MAP_SIZE && py >= 0 && py < MAP_SIZE) 
+    {
+      if (map[py][px] != point)
+        ++total_points;
       map[py][px] = point;
-      //++total_points;
+      SetChar(map[py][px], px, py);
+
     }
   }
-  for ( y = 0; y < MAP_SIZE; y++)
-    for ( x = 0; x < MAP_SIZE; x++)
-      SetChar(map[y][x], x, y);
 }
 
 void expand_continent() {
   byte i;
   {
-    int x = rand() % MAP_SIZE;
-    int y = rand() % MAP_SIZE;
+    byte x = rand() % MAP_SIZE;
+    byte y = rand() % MAP_SIZE;
 
     while(map[y][x] != point)
     {
@@ -104,18 +131,18 @@ void expand_continent() {
       }
       if (y >= MAP_SIZE)
         y = 0;
-      SetChar('X', x, y);
-      wait_vblank(1);
-      SetChar(map[y][x], x, y);
-      wait_vblank(1);
+      //SetChar('X', x, y);
+      //wait_vblank(1);
+      //SetChar(map[y][x], x, y);
+      //wait_vblank(1);
 
     }
     //if (map[y][x] == point) 
     {
       byte block_index = rand() % num_blocks;
       for (i = 0; i < 4; i++) {
-        int nx = x + tetris_blocks[block_index][i].x;
-        int ny = y + tetris_blocks[block_index][i].y;
+        //byte nx = x + tetris_blocks[block_index][i].x;
+        //byte ny = y + tetris_blocks[block_index][i].y;
         //if (nx >= 0 && nx < MAP_SIZE && ny >= 0 && ny < MAP_SIZE && map[ny][nx] == 0) 
         {
           place_tetris_block(x, y, block_index);
@@ -126,29 +153,39 @@ void expand_continent() {
   }
 }   
 
-int tetrismap() {
-  byte x, y;
-  byte total_points = 0;
-  srand(56); // Fixed seed for reproducibility
+int tetrismap(byte seed) {
+  byte x, y, block_index;
+  total_points = 0;
+  srand(seed); // Fixed seed for reproducibility
 
   for ( y = 0; y < MAP_SIZE; y++)
     for ( x = 0; x < MAP_SIZE; x++)
+    {
       map[y][x] = ' ';
+      SetChar(map[y][x], x, y);
+    }
 
   // Place Tetris blocks randomly
   while (total_points < 16) {
-    byte x = rand() % (MAP_SIZE - 3);
-    byte y = rand() % (MAP_SIZE - 3);
-    byte block_index = rand() % num_blocks;
+    x = rand() % (MAP_SIZE - 3);
+    y = rand() % (MAP_SIZE - 3);
+    block_index = rand() % num_blocks;
     place_tetris_block(x, y, block_index);
-    total_points += 4;
+    
+    //for ( y = 0; y < MAP_SIZE; y++)
+        //for ( x = 0; x < MAP_SIZE; x++)
+          //SetChar(map[y][x], x, y);
   }
 
   // Expand continents with Tetris blocks
-  while (total_points < 128)
+  while (total_points < 256)
   {
     expand_continent();
-    total_points += 4;
+    
+    //if (total_points % 32 == 0)
+      //for ( y = 0; y < MAP_SIZE; y++)
+        //for ( x = 0; x < MAP_SIZE; x++)
+          //SetChar(map[y][x], x, y);
   }
 
   return 0;
