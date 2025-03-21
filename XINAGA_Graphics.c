@@ -58,6 +58,9 @@ unsigned int RowsHGR[192];
 
 void FadePalette(byte pals, byte delay)
 {
+  pals;delay;
+  #if defined(__NES__)
+
   byte *tempPal = (byte*)malloc(16);
   byte y, z;
 
@@ -74,10 +77,13 @@ void FadePalette(byte pals, byte delay)
     wait_vblank(delay);
   }
   free(tempPal);
+  #endif
 }
 
 void UnFadePalette(byte pals, byte delay)
 {
+  pals;delay;
+  #if defined(__NES__)
   byte *tempPal = (byte*)malloc(16);
   byte y, z;
   //memcpy(&tempPal[0], &PALETTE_0[0], 16);
@@ -104,6 +110,7 @@ void UnFadePalette(byte pals, byte delay)
     wait_vblank(delay);
   }
   free(tempPal);
+  #endif
 }
 
 bool screenFaded;

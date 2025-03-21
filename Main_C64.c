@@ -39,11 +39,105 @@ void DebugMap()
   while(1);
 }
 
+
+
+void filesave(char *filename, byte *source, int size)
+{
+  #include <stdio.h>
+  #include <conio.h>
+  #include <stdlib.h>
+  FILE *fp;
+  char data_out[] = "This is my data to save.@";
+  
+  //Saving
+  _filetype = 's';
+  if ((fp = fopen (filename, "w")) == 0) {
+    WriteLineMessageWindow("File could not be opened\n\r@", 0);
+    exit (1);
+  }
+  fwrite (source, 1, size, fp);
+  fclose (fp);
+}
+
+void fileload(char *filename, byte *dest, int size)
+{
+  
+  #include <stdio.h>
+  #include <conio.h>
+  #include <stdlib.h>
+  FILE *fp;
+  int x = 0;
+
+  //Reading
+  _filetype = 's';
+  if ((fp = fopen (filename, "r")) == 0) {
+    WriteLineMessageWindow ("File could not be opened\n\r@",0);
+    exit (1);
+  }
+
+  while (x < size) {
+    dest[x] = fgetc (fp);
+    ++x;
+    if (feof (fp)) {
+      break;
+    }
+  }
+  fclose (fp);
+}
+void filedemo()
+{
+  #include <stdio.h>
+  #include <conio.h>
+  #include <stdlib.h>
+  FILE *fp;
+  char data_out[] = "This is my data to save.@";
+  char c;
+  
+  //Saving
+  _filetype = 's';
+  if ((fp = fopen ("filename", "w")) == 0) {
+    WriteLineMessageWindow("File could not be opened\n\r@", 0);
+    exit (1);
+  }
+  fwrite (data_out, 1, sizeof (data_out), fp);
+  fclose (fp);
+
+  //Reading
+  _filetype = 's';
+  if ((fp = fopen ("filename", "r")) == 0) {
+    WriteLineMessageWindow ("File could not be opened\n\r@",0);
+    exit (1);
+  }
+
+  while (1) {
+    c = fgetc (fp);
+    if (feof (fp)) {
+      break;
+    }
+    ConsoleBufferAdd(&c);
+  }
+  fclose (fp);
+  ConsoleBufferPrintConsole(0);
+}
+
+char testdata[] = "This is the test data@";
+char loaddata[32] = "@";
+
 void main(void)
 {
-  //DebugGraphics();
+  DebugGraphics();
+  
+  while(1)
+  {
+    DiskSave("savedata", testdata, 32);
+    fileload("savedata", loaddata, 32);
+    WriteLineMessageWindow(loaddata, 0);
+    fileload("savedata.bin", loaddata, 32);
+    WriteLineMessageWindow(loaddata, 0);
+    
+  }
   //DebugMap();
-  Demo();
+  //Demo();
 }
 
 /*{pal:"c64",layout:"c64"}*/
@@ -259,3 +353,6 @@ byte characterset[2048] =
 	0x22, 0xFF, 0x00, 0x00, 0x34, 0x2C, 0x24, 0x24, 0x34, 0x2C, 0x24, 0x24,
 	0x34, 0x2C, 0x24, 0x24, 0x34, 0x2C, 0x24, 0x24
 };
+
+#pragma data-name (push, "BANK0")
+char data1[] = "this is bank0@";

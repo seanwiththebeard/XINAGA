@@ -16,9 +16,10 @@
 //#pragma bss-name (push, "XRAM")
 #endif
 
-void DiskSave(char filename[], int source, int length)
+void DiskSave(char *filename, byte *source, int size)
 {
   #if defined (__C64__)
+  /*
   //Append the save and replace prefix
   char name[16];
   sprintf(name, "@0:%s", filename);
@@ -26,44 +27,83 @@ void DiskSave(char filename[], int source, int length)
   cbm_k_setlfs(0, 8, 0);
   cbm_k_setnam(name);
   cbm_k_open();
-  cbm_k_save(source, source + length - 1);
+  cbm_k_save(source, source + size - 1);
   cbm_k_close(0);
   //cbm_k_clall;
+  */
+  #include <stdio.h>
+  #include <conio.h>
+  #include <stdlib.h>
+  FILE *fp;
+  char data_out[] = "This is my data to save.@";
+  
+  //Saving
+  _filetype = 's';
+  if ((fp = fopen (filename, "w")) == 0) {
+    WriteLineMessageWindow("File could not be opened\n\r@", 0);
+    exit (1);
+  }
+  fwrite (source, 1, size, fp);
+  fclose (fp);
   #endif
   
   #if defined(__APPLE2__)
   FILE* filepointer = fopen(filename, "wb"); //Write Binary
-  fwrite((int*)source, length, 1, filepointer);
+  fwrite((int*)source, size, 1, filepointer);
   fclose(filepointer);
   #endif
   #if defined(__NES__)
   filename;
   source;
-  length;
+  size;
   #endif
   
   #if defined (MSX)
   filename;
   source;
-  length;
+  size;
   #endif
   
   #if defined (__ATARI__)
   filename;
   source;
-  length;
+  size;
   #endif
 }
 
-void DiskLoad(char filename[], int dest)
+void DiskLoad(char *filename, byte *dest, int size)
 {
   #if defined(__C64__)
+  /*
   cbm_k_setlfs(0, 8, 0);
   cbm_k_setnam(filename);
   cbm_k_open();
   cbm_k_load(0, dest);
   cbm_k_close(0);
-  //cbm_k_clall;
+  cbm_k_clall;
+  */
+  
+  #include <stdio.h>
+  #include <conio.h>
+  #include <stdlib.h>
+  FILE *fp;
+  int x = 0;
+
+  //Reading
+  _filetype = 's';
+  if ((fp = fopen (filename, "r")) == 0) {
+    WriteLineMessageWindow ("File could not be opened\n\r@",0);
+    exit (1);
+  }
+
+  while (x < size) {
+    dest[x] = fgetc (fp);
+    ++x;
+    if (feof (fp)) {
+      break;
+    }
+  }
+  fclose (fp);
   #endif
 
   #if defined(__APPLE2__)

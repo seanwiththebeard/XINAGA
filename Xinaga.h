@@ -280,8 +280,8 @@ void StoreBuffer(void);
 //extern void PlaySound(int length, int freq);
 
 //File I/O
-void DiskSave(char filename[], int source, int length);
-void DiskLoad(char filename[], int dest);
+void DiskSave(char *filename, byte *source, int size);
+void DiskLoad(char *filename, byte *dest, int size);
 
 //Input
 void InitializeInput(void);
