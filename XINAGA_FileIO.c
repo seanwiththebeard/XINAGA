@@ -1,7 +1,10 @@
 #include "Xinaga.h"
 
 #if defined(__C64__)
-#include <cbm.h>
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+//#include <cbm.h>
 #endif
 
 #if defined(__APPLE2__)
@@ -31,9 +34,8 @@ void DiskSave(char *filename, byte *source, int size)
   cbm_k_close(0);
   //cbm_k_clall;
   */
-  #include <stdio.h>
-  #include <conio.h>
-  #include <stdlib.h>
+  
+  //https://retrocomputing.stackexchange.com/questions/25240/how-do-i-save-data-from-a-program-with-cc65
   FILE *fp;
   char data_out[] = "This is my data to save.@";
   
@@ -83,9 +85,7 @@ void DiskLoad(char *filename, byte *dest, int size)
   cbm_k_clall;
   */
   
-  #include <stdio.h>
-  #include <conio.h>
-  #include <stdlib.h>
+  //https://retrocomputing.stackexchange.com/questions/25240/how-do-i-save-data-from-a-program-with-cc65
   FILE *fp;
   int x = 0;
 
