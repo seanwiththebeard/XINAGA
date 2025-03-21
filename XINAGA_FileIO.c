@@ -120,16 +120,19 @@ void DiskLoad(char *filename, byte *dest, int size)
   #if defined(__NES__)
   filename;
   dest;
+  size;
   #endif
   
   #if defined(MSX)
   filename;
   dest;
+  size;
   #endif
   
   #if defined (__ATARI__)
   filename;
   dest;
+  size;
   #endif
 }
 
