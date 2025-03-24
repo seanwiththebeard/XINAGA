@@ -21,9 +21,9 @@ screenName Update_Title()
   ClearScreen();
 
   ScreenFadeIn();
-  
+
   NoDiskAssemble();
-  
+
   while(1)
   {
     tetrismap(seed);
@@ -88,7 +88,7 @@ void place_tetris_block(int x, int y, int block_index) {
     byte px, py;
     px = x + tetris_blocks[block_index][i].x;
     py = y + tetris_blocks[block_index][i].y;
-    
+
     while(map[py][px] == point)
     {
       px++;
@@ -106,8 +106,8 @@ void place_tetris_block(int x, int y, int block_index) {
     }
     px = px % MAP_SIZE;
     py = py % MAP_SIZE;
-    
-    
+
+
     //if (px >= 0 && px < MAP_SIZE && py >= 0 && py < MAP_SIZE) 
     {
       if (map[py][px] != point)
@@ -175,21 +175,21 @@ int tetrismap(byte seed) {
     y = rand() % (MAP_SIZE - 3);
     block_index = rand() % num_blocks;
     place_tetris_block(x, y, block_index);
-    
+
     //for ( y = 0; y < MAP_SIZE; y++)
-        //for ( x = 0; x < MAP_SIZE; x++)
-          //SetChar(map[y][x], x, y);
+    //for ( x = 0; x < MAP_SIZE; x++)
+    //SetChar(map[y][x], x, y);
   }
 
   // Expand continents with Tetris blocks
   while (total_points < 256)
   {
     expand_continent();
-    
+
     //if (total_points % 32 == 0)
-      //for ( y = 0; y < MAP_SIZE; y++)
-        //for ( x = 0; x < MAP_SIZE; x++)
-          //SetChar(map[y][x], x, y);
+    //for ( y = 0; y < MAP_SIZE; y++)
+    //for ( x = 0; x < MAP_SIZE; x++)
+    //SetChar(map[y][x], x, y);
   }
 
   return 0;
@@ -197,12 +197,17 @@ int tetrismap(byte seed) {
 
 byte OpCode[16];
 int Address[16];
-byte select;
+byte selectLine;
+byte selectOp;
+byte selectAddr;
 
 void WriteLine()
 {
-  sprintf(strTemp, "$%02x 0x%0004x @", OpCode[select], Address[select]);
+  sprintf(strTemp, "%d $%02x 0x%0004x @", selectLine, OpCode[selectOp], Address[selectAddr]);
   WriteLineMessageWindow(strTemp, 0);
+}
+void RunCode()
+{
 }
 
 void NoDiskAssemble()
@@ -213,29 +218,38 @@ void NoDiskAssemble()
     OpCode[x] = x;
     Address[x] = x;
   }
-  select = 0;
+  selectLine = 0;
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth-8, consoleHeight);
-  ResetMenu("@", selectionPosX - 8, selectionPosY, selectionWidth + 8, selectionHeight, selectionCount);
-  SetMenuItem(0, "NextOpcode@");
-  SetMenuItem(1, "NextAdddress@");
-  SetMenuItem(2, "Go@");
-  SetMenuItem(3, "End@");
+  ResetMenu("@", selectionPosX - 8, selectionPosY, selectionWidth + 8, selectionHeight, 5);
+  SetMenuItem(0, "NextLine@");
+  SetMenuItem(1, "LastLine@");
+  SetMenuItem(2, "Edit Op");
+  SetMenuItem(3, "Edit Addr@");
+  SetMenuItem(4, "Run@");
+
   WriteLine();
-  
+
   while(1)
   {
     switch (GetMenuSelection())
     {
       case 0:
+        ++selectLine;
         break;
       case 1:
+        --selectLine;
         break;
       case 2:
         break;
       case 3:
         break;
+      case 4:
+        RunCode();
+        break;
       default:
         break;
     }
+    WriteLine();
+
   }
 }
