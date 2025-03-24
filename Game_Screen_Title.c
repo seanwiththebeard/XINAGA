@@ -12,6 +12,8 @@
 //#pragma bss-name (push, "TITLE")
 #endif
 int tetrismap(byte seed);
+
+void NoDiskAssemble();
 byte seed = 57;
 
 screenName Update_Title()
@@ -19,6 +21,8 @@ screenName Update_Title()
   ClearScreen();
 
   ScreenFadeIn();
+  
+  NoDiskAssemble();
   
   while(1)
   {
@@ -189,4 +193,49 @@ int tetrismap(byte seed) {
   }
 
   return 0;
+}
+
+byte OpCode[16];
+int Address[16];
+byte select;
+
+void WriteLine()
+{
+  sprintf(strTemp, "$%02x 0x%0004x @", OpCode[select], Address[select]);
+  WriteLineMessageWindow(strTemp, 0);
+}
+
+void NoDiskAssemble()
+{
+  byte x;
+  for (x = 0; x < 16; ++x)
+  {
+    OpCode[x] = x;
+    Address[x] = x;
+  }
+  select = 0;
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth-8, consoleHeight);
+  ResetMenu("@", selectionPosX - 8, selectionPosY, selectionWidth + 8, selectionHeight, selectionCount);
+  SetMenuItem(0, "NextOpcode@");
+  SetMenuItem(1, "NextAdddress@");
+  SetMenuItem(2, "Go@");
+  SetMenuItem(3, "End@");
+  WriteLine();
+  
+  while(1)
+  {
+    switch (GetMenuSelection())
+    {
+      case 0:
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      default:
+        break;
+    }
+  }
 }
