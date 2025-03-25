@@ -33,6 +33,8 @@ void DiskSave(char *filename, byte *source, int size)
   cbm_k_save(source, source + size - 1);
   cbm_k_close(0);
   //cbm_k_clall;
+  
+  Commodore 64 file system records 2 bytes start adress header at the beginning of the files, but PC recorded .BIN files do not have these 2 Bytes, this difference can cause problems.
   */
   
   //https://retrocomputing.stackexchange.com/questions/25240/how-do-i-save-data-from-a-program-with-cc65
