@@ -369,7 +369,7 @@ void attachRandomPoint(byte index)
     ++failure;
     if (failure == 48)
     {
-      sprintf(strTemp, "Removing point (%D), continent %D can't add@", i, countContinents);
+      sprintf(strTemp, "Removing point (%d), continent %d can't add@", i, countContinents);
       WriteLineMessageWindow(strTemp, 0);
       deletePoint(i);
       if (totalPoints >= 1)
@@ -657,7 +657,7 @@ void GetSeed()
 
   while (!exit)
   {
-    sprintf(strTemp, "Seed (%D)@", seed);
+    sprintf(strTemp, "Seed (%d)@", seed);
     SetLineMessageWindow(strTemp, 0);
     switch (GetMenuSelection())
     {

@@ -4,8 +4,10 @@
 #if defined(__C64__)
 #include "c64.h"
 //#include "C64Charmap.h"
+//#include <cbm_petscii_charmap.h>
 //#include <cbm_screen_charmap.h>
-#pragma local-strings(true)
+//#include <ascii_charmap.h>
+//#pragma local-strings(false)
 #endif
 
 
