@@ -44,7 +44,7 @@ void DiskSave(char *filename, byte *source, int size)
   //Saving
   _filetype = 's';
   if ((fp = fopen (filename, "w")) == 0) {
-    WriteLineMessageWindow("File could not be opened\n\r@", 0);
+    WriteLineMessageWindow("File could not be opened@", 0);
     exit (1);
   }
   fwrite (source, 1, size, fp);
@@ -94,7 +94,7 @@ void DiskLoad(char *filename, byte *dest, int size)
   //Reading
   _filetype = 's';
   if ((fp = fopen (filename, "r")) == 0) {
-    WriteLineMessageWindow ("File could not be opened\n\r@",0);
+    WriteLineMessageWindow ("File could not be opened@",0);
     exit (1);
   }
 

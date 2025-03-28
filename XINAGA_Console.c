@@ -42,7 +42,7 @@ void ConsoleBufferAdd(char *message)
 void ConsoleBufferAddNumber(int value)
 {
   char string[8];
-  sprintf(string, "%d", value);
+  sprintf(string, "%D", value);
   ConsoleBufferAdd(string);
 }
 
