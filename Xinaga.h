@@ -77,6 +77,7 @@ typedef int8_t sbyte;	// 8-bit signed
 #endif
 
 #if defined(__NES__)
+#include "ascii_charmap.h"
 #define COLS 32
 #define ROWS 30
 #define consolePosX 2
