@@ -2,7 +2,10 @@
 #define _XINAGA_H
 
 #if defined(__C64__)
-#include "C64Charmap.h"
+#include "c64.h"
+//#include "C64Charmap.h"
+//#include <cbm_screen_charmap.h>
+#pragma local-strings(true)
 #endif
 
 
@@ -231,7 +234,7 @@ extern int YColumnIndex[ROWS];
 //	Drawing
 void ClearScreen(void);
 //void SetChar();
-extern char SetCharIndex;
+extern byte SetCharIndex;
 extern byte SetCharX;
 extern byte SetCharY;
 void _SetChar(void);

@@ -2,7 +2,8 @@
 //#resource "c64charset.bin"
 //#resource "c64attributeset.bin"
 //#link "chr_c64.s"
-#include "C64Charmap.h"
+//#include "C64Charmap.h"
+//#include <cbm_screen_charmap.h>
 #define CFGFILE C64.cfg
 
 #include "Xinaga.h"
@@ -59,7 +60,7 @@ void main(void)
     
   }
   //DebugMap();
-  currentScreen = Scenario;
+  currentScreen = Map;
   Demo();
 }
 

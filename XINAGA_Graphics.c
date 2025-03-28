@@ -526,7 +526,7 @@ void DrawChar(int index, byte xpos, byte ypos)
 }
 #endif
 
-char SetCharIndex;
+byte SetCharIndex;
 byte SetCharX;
 byte SetCharY;
 int charsDrawn;
