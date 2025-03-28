@@ -1,6 +1,11 @@
 #ifndef _XINAGA_H
 #define _XINAGA_H
 
+#if defined(__C64__)
+#include "C64Charmap.h"
+#endif
+
+
 #include <string.h> //For memcpy
 #include <stdint.h> //For byte and sbyte
 #include <stdio.h> //For sprintf
@@ -77,7 +82,6 @@ typedef int8_t sbyte;	// 8-bit signed
 #endif
 
 #if defined(__NES__)
-#include "ascii_charmap.h"
 #define COLS 32
 #define ROWS 30
 #define consolePosX 2
@@ -131,10 +135,6 @@ typedef int8_t sbyte;	// 8-bit signed
 
 extern char HGR[0x2000];
 extern unsigned int RowsHGR[192];
-#endif
-
-#if defined(__C64__)
-#include "C64Charmap.h"
 #endif
 
 #if defined (__NES__)

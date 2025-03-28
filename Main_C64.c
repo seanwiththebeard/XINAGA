@@ -1,3 +1,10 @@
+//#resource "C64.cfg"
+//#resource "c64charset.bin"
+//#resource "c64attributeset.bin"
+//#link "chr_c64.s"
+#include "C64Charmap.h"
+#define CFGFILE C64.cfg
+
 #include "Xinaga.h"
 #include "GameData.h"
 //#link "XINAGA_Graphics.c"
@@ -13,15 +20,6 @@
 //#link "Game_Screen_Combat.c"
 //#link "Game_Screen_MapGen.c"
 //#link "Game_Screen_Scenario.c"
-
-#if defined(__C64__)
-//#resource "C64.cfg"
-//#resource "c64charset.bin"
-//#resource "c64attributeset.bin"
-//#link "chr_c64.s"
-#include "C64Charmap.h"
-#define CFGFILE C64.cfg
-#endif
 
 void MapData()
 {
