@@ -133,7 +133,7 @@
 //Lowercase
 #pragma charmap (0x61, 0x61) //a
 #pragma charmap (0x62, 0x62) //b
-#pragma charmap (0x63, 0x63) //c
+#pragma charmap ('c', 0x63) //c
 #pragma charmap (0x64, 0x64) //d
 #pragma charmap (0x65, 0x65) //e
 #pragma charmap (0x66, 0x66) //f
@@ -151,7 +151,7 @@
 #pragma charmap (0x72, 0x72) //r
 #pragma charmap (0x73, 0x73) //s
 #pragma charmap (0x74, 0x74) //t
-#pragma charmap (0x75, 0x75) //u
+#pragma charmap ('u', 0x75) //u
 #pragma charmap (0x76, 0x76) //v
 #pragma charmap (0x77, 0x77) //w
 #pragma charmap (0x78, 0x78) //x
