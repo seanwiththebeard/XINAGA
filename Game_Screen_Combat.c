@@ -173,7 +173,7 @@ void WriteRemainingMovement()
 {
   if (MovementRemaining > 0)
   {
-    sprintf(strTemp, "Movement Left:%dof%d@", MovementRemaining, combatParticipant.movement[SelectedCharacter]);
+    sprintf(strTemp, "Movement Left:%Dof%D@", MovementRemaining, combatParticipant.movement[SelectedCharacter]);
     SetLineMessageWindow(strTemp, 0);
   }
   else
@@ -370,7 +370,7 @@ void MonsterWander()
     if (failedWander >= 3)
     {
       MovementRemaining = 0;
-      sprintf(strTemp, "Wander Failed M#%d@", SelectedCharacter);
+      sprintf(strTemp, "Wander Failed M#%D@", SelectedCharacter);
       SetLineMessageWindow(strTemp, 0);
     }
   }

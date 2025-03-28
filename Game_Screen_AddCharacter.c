@@ -89,7 +89,7 @@ void RollStats()
   CHR = RollDice(3, 6);
 
   WriteLineMessageWindow("Rolled Stats:@", 0);
-  sprintf(strTemp, "STR:%2d CON:%2d DEX:%2d WIS:%2d INT:%2d CHR:%2d@", STR, CON, DEX, WIS, INT, CHR);
+  sprintf(strTemp, "STR:%2D CON:%2D DEX:%2D WIS:%2D INT:%2D CHR:%2D@", STR, CON, DEX, WIS, INT, CHR);
   WriteLineMessageWindow(strTemp, 0);
   //sprintf(strTemp, "(WIS: %2d) (INT: %2d) (CHR: %2d)@", WIS, INT, CHR);
   //WriteLineMessageWindow(strTemp, 0);
@@ -151,9 +151,9 @@ void MenuGetClass()
       HITDICE = ClassDescription[CLASS].HITDICE;
 
     hitdice = RollDice(1, HITDICE);
-    sprintf(strTemp, "Hit Dice: 1d%d@", HITDICE);
+    sprintf(strTemp, "Hit Dice: 1d%D@", HITDICE);
     WriteLineMessageWindow(strTemp, 0);
-    sprintf(strTemp, "Roll: %d + MOD %d@", hitdice, AbilityModifier[CON]);
+    sprintf(strTemp, "Roll: %D + MOD %D@", hitdice, AbilityModifier[CON]);
     WriteLineMessageWindow(strTemp, 0);
     if (hitdice + AbilityModifier[CON] < 1)
     {

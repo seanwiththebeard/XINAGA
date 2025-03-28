@@ -121,7 +121,7 @@ void GenerateContinent()
   QuestTarget = rand() % 4;
   QuestLocation = rand() % 4;
 
-  sprintf(strTemp, "In %s, the %s asks you to %s the %s at the %s@", questOrigin[QuestOrigin], questGiver[QuestOrigin][QuestGiver], questType[QuestType], questTarget[QuestType][QuestTarget], questLocation[QuestType][QuestLocation]);
+  sprintf(strTemp, "In %S, the %S asks you to %S the %S at the %S@", questOrigin[QuestOrigin], questGiver[QuestOrigin][QuestGiver], questType[QuestType], questTarget[QuestType][QuestTarget], questLocation[QuestType][QuestLocation]);
   WriteLineMessageWindow(strTemp, 1);
   WriteLineMessageWindow("@", 0);
 
@@ -176,7 +176,7 @@ screenName Update_Scenario()
 
   while (!exit)
   {
-    sprintf(strTemp, "Continent: %u @", scenarioSeed);
+    sprintf(strTemp, "Continent: %U @", scenarioSeed);
     SetLineMessageWindow(strTemp, 0);
 
     //while(1)

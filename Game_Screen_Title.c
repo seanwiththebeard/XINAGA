@@ -203,7 +203,7 @@ byte selectAddr;
 
 void WriteLine()
 {
-  sprintf(strTemp, "%d $%02x 0x%0004x @", selectLine, OpCode[selectOp], Address[selectAddr]);
+  sprintf(strTemp, "%D $%02X 0x%0004X @", selectLine, OpCode[selectOp], Address[selectAddr]);
   WriteLineMessageWindow(strTemp, 0);
 }
 void RunCode()
@@ -240,8 +240,10 @@ void NoDiskAssemble()
         --selectLine;
         break;
       case 2:
+        ++selectOp;
         break;
       case 3:
+        ++selectAddr;
         break;
       case 4:
         RunCode();

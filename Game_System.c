@@ -305,7 +305,7 @@ void DrawCharStatus(byte characterIndex)
   ConsoleBufferPrint(contextMenuPosX + 2, statY);
   ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
   ConsoleBufferPrint(contextMenuPosX + 2, statY+1);
-  sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
+  sprintf(strTemp, "HP:%D/%D@", PlayerChar->HP, PlayerChar->HPMAX);  
   PrintString(strTemp, contextMenuPosX + 9, statY + 1, true, false);
   ConsoleBufferReset();
   
@@ -323,7 +323,7 @@ byte moonTick;
 void DrawMoonPhase()
 {
   ConsoleBufferReset();
-  sprintf(strTemp, "<%c><%c>@", phaseChar[moonA], phaseChar[moonB]);
+  sprintf(strTemp, "<%C><%C>@", phaseChar[moonA], phaseChar[moonB]);
   PrintString(strTemp, viewportPosX + (viewportWidth / 2) + 2, viewportPosY -1, true, false);
   ConsoleBufferReset();
 }
