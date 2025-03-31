@@ -18,7 +18,7 @@ void DebugGraphics()
   ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
   WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
   WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 0);
-  WriteLineMessageWindow("abdefghijklmnopqrstuvwxyz@", 0);
+  WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz@", 0);
   WriteLineMessageWindow("01234567890 !#$%^&@", 0);
   WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
   
