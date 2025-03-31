@@ -2,18 +2,75 @@
 #define _XINAGA_H
 
 #if defined(__C64__)
-#include <c64.h>
-#include "C64Charmap.h"
-//#include <cbm_petscii_charmap.h>
-//#include <cbm_screen_charmap.h>
+#include <cbm_petscii_charmap.h>
 //#include <ascii_charmap.h>
-//#pragma local-strings(true)
+
+#pragma charmap('A', 0x41)
+#pragma charmap('B', 0x42)
+#pragma charmap('C', 0x43)
+#pragma charmap('D', 0x44)
+#pragma charmap('E', 0x45)
+#pragma charmap('F', 0x46)
+#pragma charmap('G', 0x47)
+#pragma charmap('H', 0x48)
+#pragma charmap('I', 0x49)
+#pragma charmap('J', 0x4a)
+#pragma charmap('K', 0x4b)
+#pragma charmap('L', 0x4c)
+#pragma charmap('M', 0x4d)
+#pragma charmap('N', 0x4e)
+#pragma charmap('O', 0x4f)
+#pragma charmap('P', 0x50)
+#pragma charmap('Q', 0x51)
+#pragma charmap('R', 0x52)
+#pragma charmap('S', 0x53)
+#pragma charmap('T', 0x54)
+#pragma charmap('U', 0x55)
+#pragma charmap('V', 0x56)
+#pragma charmap('W', 0x57)
+#pragma charmap('X', 0x58)
+#pragma charmap('Y', 0x59)
+#pragma charmap('Z', 0x5a)
+
+#pragma charmap('a', 0x61)
+#pragma charmap('b', 0x62)
+#pragma charmap('c', 0x63)
+#pragma charmap('d', 0x64)
+#pragma charmap('e', 0x65)
+#pragma charmap('f', 0x66)
+#pragma charmap('g', 0x67)
+#pragma charmap('h', 0x68)
+#pragma charmap('i', 0x69)
+#pragma charmap('j', 0x6a)
+#pragma charmap('k', 0x6b)
+#pragma charmap('l', 0x6c)
+#pragma charmap('m', 0x6d)
+#pragma charmap('n', 0x6e)
+#pragma charmap('o', 0x6f)
+#pragma charmap('p', 0x70)
+#pragma charmap('q', 0x71)
+#pragma charmap('r', 0x72)
+#pragma charmap('s', 0x73)
+#pragma charmap('t', 0x74)
+#pragma charmap('u', 0x75)
+#pragma charmap('v', 0x76)
+#pragma charmap('w', 0x77)
+#pragma charmap('x', 0x78)
+#pragma charmap('y', 0x79)
+#pragma charmap('z', 0x7a)
+
+
+//#include <c64.h>
+//#include "C64Charmap.h"
+//#include <cbm_screen_charmap.h>
+//#pragma local-strings(push, on)
 #endif
 
 
 #include <string.h> //For memcpy
 #include <stdint.h> //For byte and sbyte
-#include <stdio.h> //For sprintf
+int sprintf (char* buf, const char* format, ...);
+//#include <stdio.h> //For sprintf
 #include <stdlib.h> //For srand
 typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
