@@ -116,7 +116,7 @@ void GFX_DEMO()
 }
 void main()
 {
-  DebugGraphics();
+  //DebugGraphics();
   //GFX_DEMO();
   Demo();
 }

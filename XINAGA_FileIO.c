@@ -117,6 +117,7 @@ void DiskLoad(char *filename, byte *dest, int size)
   fseek(filepointer, 0, SEEK_SET); //Move the pointer back to the beginning
   fread((int*)dest, length, 1, filepointer); //Copy the entire length to our destination
   fclose(filepointer);
+  size;
   #endif
   
   #if defined(__NES__)
