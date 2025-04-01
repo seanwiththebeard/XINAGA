@@ -542,6 +542,7 @@ void GenerateMap(byte seed)
   //WriteLineMessageWindow(strTemp, 0);
 }
 
+/*
 byte LastRoomOriginX;
 byte LastRoomOriginY;
 byte DestinationX;
@@ -550,6 +551,7 @@ byte DestinationY;
 void ConnectHallway()
 {
   byte x, y;
+  x = 0;
   
   if (LastRoomOriginY < DestinationY)
     for (y = LastRoomOriginY; y < DestinationY; ++y)
@@ -639,6 +641,7 @@ void GenerateDungeon(byte seed)
   //sprintf(strTemp, "Done@");
   //WriteLineMessageWindow(strTemp, 0);
 }
+*/
 
 //#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
 //#define menuPosY consolePosY - 1
@@ -668,8 +671,8 @@ void GetSeed()
         --seed;
         break;
       case 2:
-        //GenerateMap(seed);
-        GenerateDungeon(seed);
+        GenerateMap(seed);
+        //GenerateDungeon(seed);
         break;
       case 3:
         exit = true;

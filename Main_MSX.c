@@ -173,7 +173,9 @@ void main(void)
   // Switches to SCREEN 3 (multi-color screen 64*48 pixels)
   //INIMLT();
   
-  DebugGraphics();
+  //DebugGraphics();
+  //while(1);
+  currentScreen = Map;
   Demo();
   
   while(1);

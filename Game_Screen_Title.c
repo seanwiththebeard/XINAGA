@@ -22,11 +22,11 @@ screenName Update_Title()
 
   ScreenFadeIn();
 
-  NoDiskAssemble();
+  //NoDiskAssemble();
 
   while(1)
   {
-    tetrismap(seed);
+    //tetrismap(seed);
     ++seed;
   }
 
@@ -44,6 +44,7 @@ screenName Update_Title()
   }  
 }
 
+/*
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -255,3 +256,4 @@ void NoDiskAssemble()
 
   }
 }
+*/

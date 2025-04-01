@@ -1,9 +1,9 @@
 #include "Xinaga.h"
+
+#if defined(__C64__)
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
-#if defined(__C64__)
-
 //#include <cbm.h>
 #endif
 
