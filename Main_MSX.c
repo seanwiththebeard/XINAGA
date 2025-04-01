@@ -2,18 +2,18 @@
 #include "GameData.h"
 
 //#link "XINAGA_Graphics.c"
-//#link "XINAGA_Input.c"
-//#link "XINAGA_FileIO.c"
-//#link "XINAGA_Audio.c"
-//#link "XINAGA_Console.c"
-//#link "Game_Demo.c"
-//#link "Game_System.c"
-//#link "Game_Screen_Title.c"
-//#link "Game_Screen_AddCharacter.c"
-//#link "Game_Screen_Map.c"
-//#link "Game_Screen_Combat.c"
-//#link "Game_Screen_MapGen.c"
-//#link "Game_Screen_Scenario.c"
+////#link "XINAGA_Input.c"
+////#link "XINAGA_FileIO.c"
+////#link "XINAGA_Audio.c"
+////#link "XINAGA_Console.c"
+////#link "Game_Demo.c"
+////#link "Game_System.c"
+////#link "Game_Screen_Title.c"
+////#link "Game_Screen_AddCharacter.c"
+////#link "Game_Screen_Map.c"
+////#link "Game_Screen_Combat.c"
+////#link "Game_Screen_MapGen.c"
+////#link "Game_Screen_Scenario.c"
 
 #include "msxbios.h"
 //#link "msxbios.c"
@@ -62,7 +62,7 @@ void SetupGraphics()
   BAKCLR = 1;
   BDRCLR = 1;
   CHGCLR();
-  ClearScreen();
+  //ClearScreen();
   LDIRVM(0, &MSX_CharSet[0], 2048);
   LDIRVM(2048, &MSX_CharSet[0], 2048);
   LDIRVM(4096, &MSX_CharSet[0], 2048);
@@ -73,6 +73,7 @@ void SetupGraphics()
       for (z = 0; z < 8; ++z)
       {
         byte color = colorTable[attributes[x]] << 4;
+        //color = 0x0c;
         WRTVRM(0x2000 + x*8 + z + (2048*y), color);
       }
       
@@ -150,6 +151,29 @@ unsigned char find_rom_page_2() __naked
     ;------------------------------------------------
   __endasm;
 }
+void DrawCharset()
+{
+  byte x, y;
+  //DrawBorder("Charset@", viewportPosX - 1, viewportPosY - 1, 16+ 2, 16 + 2, true);
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 16; ++x)
+      SetChar(x + y*16, x + viewportPosX, y + viewportPosY);
+}
+void DebugGraphics()
+{
+  InitializeGraphics();
+  DrawCharset();
+  
+  //ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
+  //WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
+  //WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 0);
+  //WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz@", 0);
+  //WriteLineMessageWindow("01234567890 !#$%^&@", 0);
+  //WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
+  
+  //while(1);
+}
+
 void main(void)
 {
   find_rom_page_2();
@@ -173,10 +197,10 @@ void main(void)
   // Switches to SCREEN 3 (multi-color screen 64*48 pixels)
   //INIMLT();
   
-  //DebugGraphics();
-  //while(1);
+  DebugGraphics();
+  while(1);
   currentScreen = Map;
-  Demo();
+  //Demo();
   
   while(1);
 }
