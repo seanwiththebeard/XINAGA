@@ -91,7 +91,7 @@ typedef int8_t sbyte;	// 8-bit signed
 #define selectionCount 4
 #define viewportPosX 1
 #define viewportPosY 1
-#define viewportWidth 11
+#define viewportWidth 9
 #define viewportHeight 9
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
