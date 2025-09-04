@@ -34,6 +34,11 @@
 #include <atari.h>
 #endif
 
+#if defined(__C64__)
+#include <conio.h>
+#endif
+
+
 int YColumnIndex[ROWS];
 
 void getYCols()
@@ -558,6 +563,9 @@ void _SetChar(void)
   #endif
   #if defined(__C64__)
   ScreenChars[offset] = SetCharIndex;
+  //gotoxy(SetCharX,SetCharY);
+  //cputc(SetCharIndex);
+  
   ScreenColors[offset] = attributeset[SetCharIndex];
   #endif
 

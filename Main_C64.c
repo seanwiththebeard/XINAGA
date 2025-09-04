@@ -59,9 +59,9 @@ void main(void)
     //WriteLineMessageWindow(loaddata, 0);
     
   }
-  //DebugMap();
+  DebugMap();
   //currentScreen = Map;
-  Demo();
+  //Demo();
 }
 
 /*{pal:"c64",layout:"c64"}*/
