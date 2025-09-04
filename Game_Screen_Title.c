@@ -24,16 +24,16 @@ screenName Update_Title()
 
   //NoDiskAssemble();
 
-  while(1)
+  //while(1)
   {
     //tetrismap(seed);
-    ++seed;
+    //++seed;
   }
 
-  //DrawBorder("@",12, 5, 16, 5, true);
-  //PrintString("Title Screen@", 14, 7, true, false);
-  //DrawBorder("@", 12, 19, 16, 5, true);
-  //PrintString("Press Space@", 14, 21, true, false);
+  DrawBorder("@",12, 5, 16, 5, true);
+  PrintString("Title Screen@", 14, 7, true, false);
+  DrawBorder("@", 12, 19, 16, 5, true);
+  PrintString("Press Space@", 14, 21, true, false);
 
   while (1)
   {
