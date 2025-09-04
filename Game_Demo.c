@@ -102,7 +102,7 @@ void Demo()
   MMC3_PRG_8000(0);
   #endif
   LoadMap();
-  //currentScreen = DefaultScreen;
+  currentScreen = DefaultScreen;
   
   while(1)
   {

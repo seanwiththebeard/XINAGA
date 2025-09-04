@@ -60,7 +60,7 @@ void main(void)
     
   }
   //DebugMap();
-  currentScreen = Map;
+  //currentScreen = Map;
   Demo();
 }
 
