@@ -77,7 +77,9 @@ void SwitchScreen(screenName screen)
       currentScreen = Update_Combat();
       break;
     case MapGen:
+      #if !MSX
       currentScreen = Update_MapGen();
+      #endif
       break;
     case Scenario:
       currentScreen = Update_Scenario();

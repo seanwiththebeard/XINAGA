@@ -2,18 +2,18 @@
 #include "GameData.h"
 
 //#link "XINAGA_Graphics.c"
-////#link "XINAGA_Input.c"
-////#link "XINAGA_FileIO.c"
-////#link "XINAGA_Audio.c"
-////#link "XINAGA_Console.c"
-////#link "Game_Demo.c"
-////#link "Game_System.c"
-////#link "Game_Screen_Title.c"
-////#link "Game_Screen_AddCharacter.c"
-////#link "Game_Screen_Map.c"
-////#link "Game_Screen_Combat.c"
+//#link "XINAGA_Input.c"
+//#link "XINAGA_FileIO.c"
+//#link "XINAGA_Audio.c"
+//#link "XINAGA_Console.c"
+//#link "Game_Demo.c"
+//#link "Game_System.c"
+//#link "Game_Screen_Title.c"
+//#link "Game_Screen_AddCharacter.c"
+//#link "Game_Screen_Map.c"
+//#link "Game_Screen_Combat.c"
 ////#link "Game_Screen_MapGen.c"
-////#link "Game_Screen_Scenario.c"
+//#link "Game_Screen_Scenario.c"
 
 #include "msxbios.h"
 //#link "msxbios.c"
@@ -62,7 +62,7 @@ void SetupGraphics()
   BAKCLR = 1;
   BDRCLR = 1;
   CHGCLR();
-  //ClearScreen();
+  ClearScreen();
   LDIRVM(0, &MSX_CharSet[0], 2048);
   LDIRVM(2048, &MSX_CharSet[0], 2048);
   LDIRVM(4096, &MSX_CharSet[0], 2048);
@@ -197,10 +197,10 @@ void main(void)
   // Switches to SCREEN 3 (multi-color screen 64*48 pixels)
   //INIMLT();
   
-  DebugGraphics();
-  while(1);
+  //DebugGraphics();
+  //while(1);
   currentScreen = Map;
-  //Demo();
+  Demo();
   
   while(1);
 }

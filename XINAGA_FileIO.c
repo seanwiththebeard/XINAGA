@@ -9,6 +9,9 @@
 
 #if defined(__APPLE2__)
 #include <apple2.h>
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
 //#pragma code-name (push, "LOWCODE")
 #endif
 
