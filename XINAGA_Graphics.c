@@ -29,6 +29,11 @@
 #include "msxbios.h"
 #endif
 
+#if defined(__ATARI__)
+#include <conio.h>
+#include <atari.h>
+#endif
+
 int YColumnIndex[ROWS];
 
 void getYCols()
@@ -265,6 +270,10 @@ void ClearScreen(void)
   #if defined (MSX)
   FILVRM(0x1800, 768, ' ');
   #endif
+  
+  #if defined (__ATARI__)
+  clrscr();
+  #endif
 }
 
 #if defined(__C64__)
@@ -432,6 +441,11 @@ void InitializeGraphics(void)
   // enable PPU rendering (turn on screen)
   //ppu_on_all();
   #endif
+  
+  #if defined(__ATARI__)
+  getYCols();  
+  ClearScreen();
+  #endif
 }
 
 void SwapBuffer(void)
@@ -575,6 +589,11 @@ void _SetChar(void)
   //CHPUT((int)SetCharIndex);
   SETWRT();
   WRTVRM(0x1800 + SetCharX +(SetCharY*32), SetCharIndex);
+  #endif
+  
+  #if defined(__ATARI__)
+  gotoxy(SetCharX,SetCharY);
+  cputc(SetCharIndex);
   #endif
 }
 
