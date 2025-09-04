@@ -44,7 +44,7 @@ char loaddata[32] = "@";
 void main(void)
 {
   //InitializeGraphics();
-  DebugGraphics();
+  //DebugGraphics();
   
   //while(1)
   {
