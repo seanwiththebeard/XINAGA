@@ -2,6 +2,10 @@
 
 [Open this project in 8bitworkshop (Commodore 64)](https://8bitworkshop.com/v3.10.0/?repo=seanwiththebeard%2FXINAGA&platform=c64&file=Main_C64.c).
 
+[Open this project in 8bitworkshop (NES)](https://8bitworkshop.com/v3.10.0/?repo=seanwiththebeard%2FXINAGA&platform=NES&file=Main_NES.c).
+
+[Open this project in 8bitworkshop (MSX)](https://8bitworkshop.com/v3.10.0/?repo=seanwiththebeard%2FXINAGA&platform=MSX&file=Main_MSX.c).
+
 # XINAGA
 XINAGA is a cross-platform library for graphics/audio/IO on retro platforms (Commodore 64, Apple II...) with an Ultima clone in mind, originating from my C64 RPG project and the experience of adding Apple II as an additional target. The goals are to provide character-based graphics, tilemap engine, input handling, sound playback, and disk file saving/loading. 
 
