@@ -29,7 +29,7 @@
 //#link "chr_generic.s"
 //#resource "neschars.bin"
 //#resource "tileset.bin"
-////#resource "crt0.o"
+//#resource "crt0.o"
 
 //#pragma code-name (push, "STARTUP")
 //#pragma rodata-name (push, "STARTUP")
@@ -199,8 +199,8 @@ void main(void) //Must be in $E000-$FFFF??
   //DebugGraphics();
 
   //DrawCharset();
-  LoadMap();
-  DrawMiniMap(false);
+  //LoadMap();
+  //DrawMiniMap(false);
 
   //ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
 
@@ -211,6 +211,7 @@ void main(void) //Must be in $E000-$FFFF??
   //SetAttrib(12, 0, 2);
   //SetAttrib(20, 0, 2);
   //SetAttrib(24, 0, 2);
+  /*
   while(1)
   {
     byte x, y, z;
@@ -230,7 +231,7 @@ void main(void) //Must be in $E000-$FFFF??
     //WriteLineMessageWindow("01234567890 !#$%^&@", 0);
     //WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
   }
-
+  */
   //DebugGraphics();
 
 }
