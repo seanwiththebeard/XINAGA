@@ -8,8 +8,8 @@
 #if defined (__NES__)
 #pragma code-name (push, "ADDCHAR")
 #pragma rodata-name (push, "ADDCHAR")
-//#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
+#pragma data-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 #endif
 
 screenName nextScreen;
@@ -89,7 +89,7 @@ void RollStats()
   CHR = RollDice(3, 6);
 
   WriteLineMessageWindow("Rolled Stats:@", 0);
-  sprintf(strTemp, "STR:%2D CON:%2D DEX:%2D WIS:%2D INT:%2D CHR:%2D@", STR, CON, DEX, WIS, INT, CHR);
+  sprintf(strTemp, "STR:%2i CON:%2i DEX:%2i WIS:%2i INT:%2i CHR:%2i@", STR, CON, DEX, WIS, INT, CHR);
   WriteLineMessageWindow(strTemp, 0);
   //sprintf(strTemp, "(WIS: %2d) (INT: %2d) (CHR: %2d)@", WIS, INT, CHR);
   //WriteLineMessageWindow(strTemp, 0);
