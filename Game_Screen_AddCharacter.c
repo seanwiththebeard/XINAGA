@@ -151,9 +151,9 @@ void MenuGetClass()
       HITDICE = ClassDescription[CLASS].HITDICE;
 
     hitdice = RollDice(1, HITDICE);
-    sprintf(strTemp, "Hit Dice: 1d%D@", HITDICE);
+    sprintf(strTemp, "Hit Dice: 1d%i@", HITDICE);
     WriteLineMessageWindow(strTemp, 0);
-    sprintf(strTemp, "Roll: %D + MOD %D@", hitdice, AbilityModifier[CON]);
+    sprintf(strTemp, "Roll: %i + MOD %i@", hitdice, AbilityModifier[CON]);
     WriteLineMessageWindow(strTemp, 0);
     if (hitdice + AbilityModifier[CON] < 1)
     {
