@@ -49,7 +49,7 @@ void AddToRoster()
   
   
   ConsoleBufferReset();
-  sprintf(strTemp, "NAME%X@", &PlayerChar[0]);
+  sprintf(strTemp, "NAME%x@", &PlayerChar[0]);
   //ConsoleBufferAdd("Hello @");
   //ConsoleBufferAdd(strTemp);
   //ConsoleBufferAddNumber(CountRoster());
