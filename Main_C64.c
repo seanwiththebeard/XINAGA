@@ -20,46 +20,14 @@
 //#link "Game_Screen_MapGen.c"
 //#link "Game_Screen_Scenario.c"
 
-void MapData()
-{
-  memset(&mapQuads[0], 0x01, mapMatrixHeight * mapMatrixWidth);
-}
-
-void DebugMap()
-{
-  InitializeGraphics();
-  LoadMap();
-  
-  MapData();
-  
-  DrawMap();
-  while(1);
-}
-
-char testdata[] = "This is the test data@";
-char loaddata[32] = "@";
 
 void main(void)
 {
   //InitializeGraphics();
   //DebugGraphics();
+  //DebugMap();
   
-  //while(1)
-  {
-    
-    //sprintf(strTemp, "%0004x@", 0x0f);
-    //WriteLineMessageWindow(strTemp, 0);
-    
-    //DiskSave("savedata", testdata, 32);
-    //DiskLoad("savedata", loaddata, 32);
-    //WriteLineMessageWindow(loaddata, 0);
-    //DiskLoad("savedata.bin", loaddata, 32);
-    //WriteLineMessageWindow(loaddata, 0);
-    
-  }
-  DebugMap();
-  //currentScreen = Map;
-  //Demo();
+  Demo();
 }
 
 /*{pal:"c64",layout:"c64"}*/
@@ -275,6 +243,3 @@ byte characterset[2048] =
 	0x22, 0xFF, 0x00, 0x00, 0x34, 0x2C, 0x24, 0x24, 0x34, 0x2C, 0x24, 0x24,
 	0x34, 0x2C, 0x24, 0x24, 0x34, 0x2C, 0x24, 0x24
 };
-
-#pragma data-name (push, "BANK0")
-char data1[] = "this is bank0@";

@@ -17,6 +17,9 @@
 #define MapGen 5
 #define Scenario 2
 extern screenName currentScreen;
+
+//Debug Functions
+void DebugMap();
 void DebugGraphics();
 
 #define mapMatrixWidth 16
@@ -42,6 +45,7 @@ screenName DrawAddCharacterScreen(void);
 
 //Map
 screenName MapUpdate(void);
+void LoadMapQuads();
 
 //Combat
 screenName Update_Combat(void);

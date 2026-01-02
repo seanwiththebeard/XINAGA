@@ -12,7 +12,6 @@
 
 void DebugGraphics()
 {
-  InitializeGraphics();
   DrawCharset();
   
   ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
@@ -23,6 +22,18 @@ void DebugGraphics()
   WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
   
   //while(1);
+}
+
+void DebugMap()
+{
+  
+  LoadMap();
+  memset(&mapQuads[0], 0x02, mapMatrixHeight * mapMatrixWidth);
+  SetTileOrigin(viewportPosX, viewportPosY);
+  LoadMapQuads();
+  DrawMap();
+  DrawCharStats();
+  while(1);
 }
 
 struct
