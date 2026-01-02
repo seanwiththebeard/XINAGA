@@ -17,7 +17,6 @@
 
 #include "msxbios.h"
 //#link "msxbios.c"
-////#link "MSX_CharSet.C"
 
 void SetCharPalette(byte index, byte fgColor, byte bgColor)
 {
@@ -29,6 +28,7 @@ void SetCharPalette(byte index, byte fgColor, byte bgColor)
     WRTVRM(0x2000 + x, 11);
   
 }
+
 unsigned char MSX_CharSet[];
 unsigned char attributes[];
 
@@ -53,6 +53,7 @@ byte colorTable[] = {
 
 uint8_t __at(0xf3e2) VDP3;
 uint8_t __at(0xf3e3) VDP4;
+
 void SetupGraphics() 
 {
   int x;
@@ -151,28 +152,6 @@ unsigned char find_rom_page_2() __naked
     ;------------------------------------------------
   __endasm;
 }
-void DrawCharset()
-{
-  byte x, y;
-  //DrawBorder("Charset@", viewportPosX - 1, viewportPosY - 1, 16+ 2, 16 + 2, true);
-  for (y = 0; y < 16; ++y)
-    for (x = 0; x < 16; ++x)
-      SetChar(x + y*16, x + viewportPosX, y + viewportPosY);
-}
-void DebugGraphics()
-{
-  InitializeGraphics();
-  DrawCharset();
-  
-  //ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
-  //WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
-  //WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 0);
-  //WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz@", 0);
-  //WriteLineMessageWindow("01234567890 !#$%^&@", 0);
-  //WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
-  
-  //while(1);
-}
 
 void main(void)
 {
@@ -198,8 +177,6 @@ void main(void)
   //INIMLT();
   
   //DebugGraphics();
-  //while(1);
-  currentScreen = Map;
   Demo();
   
   while(1);
@@ -403,7 +380,4 @@ unsigned char MSX_CharSet[2048] = {
 	0x00, 0x00, 0xFF, 0x44, 0x22, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x44,
 	0x22, 0xFF, 0x00, 0x00, 0x34, 0x2C, 0x24, 0x24, 0x34, 0x2C, 0x24, 0x24,
 	0x34, 0x2C, 0x24, 0x24, 0x34, 0x2C, 0x24, 0x24
-
-
 };
-

@@ -92,7 +92,8 @@ void SwitchScreen(screenName screen)
 }
 
 void Demo()
-{  
+{
+  srand(0);
   InitializeInput();
   InitializeGraphics();
   ClearScreen();
