@@ -47,8 +47,8 @@ unsigned int RowsHGR[192];
 //int* RowsHGR = (int*)0xD400;
 #endif
 
-#define fadeFrames 5
-#define mapFadeFrames 2
+#define fadeFrames 2
+#define mapFadeFrames 1
 
 
 void FadePalette(byte pals, byte delay)
@@ -64,7 +64,7 @@ void FadePalette(byte pals, byte delay)
     for (z = 0; z < 4; ++z)
     {
       if (pals & (1 << z))
-        tempPal[y + (z*4)] = 0x0f;
+        tempPal[y + (z<<2)] = 0x0f;
     }
 
     pal_bg(tempPal);
@@ -88,7 +88,7 @@ void UnFadePalette(byte pals, byte delay)
   {
     if (pals & (1 << z))
     {
-      memset(&tempPal[(z*4)], 0x0f, 3);
+      memset(&tempPal[(z<<2)], 0x0f, 3);
     }
   }
 
@@ -98,7 +98,8 @@ void UnFadePalette(byte pals, byte delay)
     {
       if (pals & (1 << z))
       {
-        tempPal[y + (z*4)] = PALETTE_0[y+(z*4)];
+        byte tY = y + (z<<2);
+        tempPal[tY] = PALETTE_0[tY];
       }
     }
 
@@ -160,7 +161,7 @@ const byte MOD_4[32] = { //Lookup tables for %4
 void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
   #if defined (__NES__)
-  byte offset = (y / 4) * 8 + (x / 4); //Which byte of the attribute table?
+  byte offset = ((y >>2 ) << 3) + (x >> 2); //(y / 4) * 8 + (x / 4); //Which byte of the attribute table?
   byte pairX = (MOD_4[x]) > 1 ? 2 : 0;
   byte pairY = (MOD_4[y]) > 1 ? 4 : 0;
 
@@ -468,7 +469,7 @@ void _SetChar(void)
   //POSIT(SetCharY+1+(SetCharX<<8));
   //CHPUT((int)SetCharIndex);
   SETWRT();
-  WRTVRM(0x1800 + SetCharX +(SetCharY*32), SetCharIndex);
+  WRTVRM(0x1800 + SetCharX +(SetCharY << 5), SetCharIndex);
   #endif
   
   #if defined(__ATARI__)

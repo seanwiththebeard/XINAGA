@@ -543,7 +543,7 @@ static void InitializeMapData()
     for (byte_x = 0; byte_x < 8; ++byte_x)
     {
       byte_index = byte_x + (16* byte_y);
-      byte_offset = byte_x * 2 + 32*byte_y;
+      byte_offset = (byte_x << 1) + (byte_y << 5);
       
       ScreenQuad.CharIndex[byte_index][0] = byte_offset; // Init screen quad prefabs for 8x8
       ScreenQuad.CharIndex[byte_index][1] = byte_offset + 1;
@@ -934,7 +934,7 @@ static void DrawCharacterCoordinates(byte index)
   CoordPosY += quadHeight*2*characters.quadPosY[index];  
 
   sprintf(strTemp,"<%3i><%3i>@", CoordPosX, CoordPosY);
-  PrintString(strTemp, viewportPosX + viewportWidth / 2, viewportPosY + viewportHeight * 2, true);
+  PrintString(strTemp, viewportPosX + (viewportWidth >> 1), viewportPosY + (viewportHeight << 1), true);
 }
 
 void LoadMap()

@@ -63,9 +63,10 @@ void DrawMiniMap(bool highlightPlayer)
   
   for (y = 0; y < mapMatrixHeight; ++y)
   {
+    byte tY = (y * mapMatrixWidth);
     for (x = 0; x < mapMatrixWidth; ++x)
     {
-      tile = mapQuads[x + (y * mapMatrixWidth)];
+      tile = mapQuads[x + tY];
       //tile = (tile << 1) + ((tile >> 3) << 4);
       SetChar(tile, x + viewportPosX, y + viewportPosY);
     }
@@ -82,7 +83,7 @@ void DrawCharset()
   //DrawBorder("Charset@", viewportPosX - 1, viewportPosY - 1, 16+ 2, 16 + 2, true);
   for (y = 0; y < 16; ++y)
     for (x = 0; x < 16; ++x)
-      SetChar(x + y*16, x + viewportPosX, y + viewportPosY);
+      SetChar(x + (y<<4), x + viewportPosX, y + viewportPosY);
 }
 
 byte RollDice(byte count, byte diceSize)
@@ -369,7 +370,7 @@ void DrawCharStats()
   byte i;
   //DrawBorder("Moon Phases@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, 3, true);
   DrawMoonPhase();
-  DrawBorder("Party@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, viewportHeight*2 + 2, true);
+  DrawBorder("Party@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, (viewportHeight << 1) + 2, true);
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
 }
