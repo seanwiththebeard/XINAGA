@@ -253,16 +253,18 @@ void CameraFollow()
 {
   byte byte_x;
   byte byte_y;
+  byte pX = playerX;
+  byte pY = playerY;
   offsetX = characters.posX[followIndex];
   offsetY = characters.posY[followIndex];
 
-  for(byte_x = 0; byte_x < playerX; ++byte_x)
+  for(byte_x = 0; byte_x < pX; ++byte_x)
   {
     --offsetX;
     wrapX(offsetX);
   }
 
-  for(byte_y = 0; byte_y < playerY; ++byte_y)
+  for(byte_y = 0; byte_y < pY; ++byte_y)
   {
     --offsetY;
     wrapY(offsetY);
