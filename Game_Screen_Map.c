@@ -20,9 +20,11 @@ void InitializeMapData(void);
 void LoadMap(void);
 void DrawMapViewport(void);
 void DrawEntireMap(void);
-void wrapX(sbyte *posX); //Used in map positions
-void wrapY(sbyte *posY);
-void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
+//void wrapX(sbyte *posX); //Used in map positions
+//void wrapY(sbyte *posY);
+#define wrapX(v) do { if ((v) < 0) (v) = mapWidth - 1; else if ((v) >= mapWidth) (v) = 0; } while(0)
+#define wrapY(v) do { if ((v) < 0) (v) = mapHeight - 1; else if ((v) >= mapHeight) (v) = 0; } while(0)
+//void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
 void ApplyLOS(void);
 void CameraFollow(void);
 void BufferCharacters(void);
@@ -257,13 +259,13 @@ void CameraFollow()
   for(byte_x = 0; byte_x < playerX; ++byte_x)
   {
     --offsetX;
-    wrapX(&offsetX);
+    wrapX(offsetX);
   }
 
   for(byte_y = 0; byte_y < playerY; ++byte_y)
   {
     --offsetY;
-    wrapY(&offsetY);
+    wrapY(offsetY);
   }
 }
 
@@ -604,22 +606,6 @@ void InitializeMapData()
   LOSEnabled = true;
 }
 
-void wrapX(sbyte *posX) //Used in map positions
-{
-  if (*posX < 0)
-    *posX = mapWidth - 1;
-  else if (*posX >= mapWidth)
-    *posX = 0;
-}
-
-void wrapY(sbyte *posY)
-{
-  if (*posY < 0)
-    *posY = mapHeight - 1;
-  else if (*posY >= mapHeight)
-    *posY = 0;
-}
-
 bool CheckCollision(byte charIndex, direction dir)
 {
   byte byte_i;
@@ -637,19 +623,19 @@ bool CheckCollision(byte charIndex, direction dir)
   {
     case up:
       --yPos;
-      wrapY(&yPos);
+      wrapY(yPos);
       break;
     case down:
       ++yPos;
-      wrapY(&yPos);
+      wrapY(yPos);
       break;
     case left:
       --xPos;
-      wrapX(&xPos);
+      wrapX(xPos);
       break;
     case right:
       ++xPos;
-      wrapX(&xPos);
+      wrapX(xPos);
       break;
     default:
       return false;
@@ -803,10 +789,10 @@ void DrawEntireMap()
   int_b = offsetY;
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {
-    wrapY(&int_b); //Wrap the map data y reference
+    wrapY(int_b); //Wrap the map data y reference
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
-      wrapX(&int_a); //Wrap the map data X reference
+      wrapX(int_a); //Wrap the map data X reference
       viewportBuffer[byte_x + (viewportWidth * byte_y)] = mapData[int_a + (mapWidth * int_b)];      
       int_a++;
     }
