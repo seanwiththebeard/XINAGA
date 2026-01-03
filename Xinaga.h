@@ -60,9 +60,11 @@ void A2Pixel(byte x, byte y, byte color);
 #define consolePosY 2 + 2*viewportHeight
 #define consoleWidth 38
 #define consoleHeight (ROWS - viewportHeight * 2 - 3)
-#define selectionPosX consoleWidth + 2
-#define selectionPosY consolePosY
+
 #define selectionWidth 6
+#define selectionPosX consoleWidth - selectionWidth + 1
+#define selectionPosY consolePosY
+
 #define selectionHeight consoleHeight
 #define selectionCount 4
 #define viewportPosX 1

@@ -152,7 +152,6 @@ void GenerateName()
   {
     char *syl = (char*)Syllables[x][rand()%4];
     ConsoleBufferAdd(syl);
-    ConsoleBufferBackspace();
   }
   WriteLineMessageWindow(strTemp, 1);
   //WriteLineMessageWindow("@", 0);
@@ -163,7 +162,7 @@ screenName Update_Scenario()
   bool exit = false;
   uint16_t scenarioSeed = 0;
   ScreenFadeOut();
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  ResizeMessageWindow(consolePosX, ROWS - 16, consoleWidth, 6);
 
 
   ResetMenu("@", selectionPosX, selectionPosY, selectionWidth, selectionHeight, selectionCount);

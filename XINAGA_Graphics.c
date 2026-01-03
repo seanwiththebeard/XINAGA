@@ -336,10 +336,6 @@ void wait_vblank(byte frames)
 }
 
 #if defined(__C64__)
-void SelectBank(byte bank)
-{
-  bank;
-}
 void SelectScreenPos(byte pos)
 {
   int* regd018 = (int*)0xD018;
@@ -348,18 +344,7 @@ void SelectScreenPos(byte pos)
   regd018[0] = (regd018[0] & 15) | a;
   //POKE (0xD018,(PEEK(0xD018) & 15) | a);
 }
-void SelectCharPos(byte charpos)
-{
-  charpos;
-}
-void SetMulticolors(byte color1, byte color2)
-{
-  byte *colorReg = (byte*)0xD022;
-  byte *vicReg = (byte*)0xD016;
-  colorReg[0] = color1;
-  colorReg[1] = color2;
-  vicReg[0] = vicReg[0] | 16;
-}
+
 #endif
 
 void InitializeGraphics(void)
@@ -477,58 +462,6 @@ void SwapBuffer(void)
 }
 
 #if defined(__APPLE2__)
-const byte blanksA[7] = 
-{
-  0b11111100,
-  0b11110011,
-  0b11001111,
-  0b10111111,
-  0b11111001,
-  0b11100111,
-  0b10011111,
-};
-const byte paletteTable[6] = {
-  0b00,
-  0b11,
-  0b01,
-  0b10,
-  0b01,
-  0b10,
-};
-const byte shiftTable[7] = {
-  0,
-  2,
-  4,
-  0,
-  1,
-  3,
-  5,
-};
-void A2Pixel(byte x, byte y, byte color)
-{
-  int offset = RowsHGR[y] + (x<<1) / 7;
-  byte index = color;
-  byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
-  index  = index % 6;
-  color = paletteTable[index];
-
-  HGR[offset] &= blanksA[xPixel]; //Blank Pixels
-  HGR[offset] &= 0b01111111; //Clear Palette
-
-  if (xPixel == 3)
-  { 
-    //HGR[offset] |= ((color << 7) >> 1); //Last
-    HGR[offset] |= ((color << 6) & 0b01000000); //Last
-    HGR[offset + 1] &= 0b11111110;
-    HGR[offset + 1] |= (color >> 1); //First
-  }
-  else
-    HGR[offset] |= color << shiftTable[xPixel];
-
-  if (index > 3)
-    HGR[offset] |= 0b10000000; //Set Palette  
-}
-
 void DrawChar(int index, byte xpos, byte ypos)
 {
   byte y;
