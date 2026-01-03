@@ -453,7 +453,7 @@ byte GetQuadInRelation(sbyte v, sbyte h)
     if (int_x == mapMatrixWidth)
       int_x = 0;
   }
-  return (mapQuads[int_x +  + (mapMatrixWidth * int_y)]);  
+  return (mapQuads[int_x  + (mapMatrixWidth * int_y)]);  
 }
 
 //Directional data for finding a relative quad
