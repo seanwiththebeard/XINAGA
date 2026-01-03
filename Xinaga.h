@@ -55,7 +55,6 @@ void SetBG(byte color);
 extern char HGR[0x2000];
 extern unsigned int RowsHGR[192];
 extern const byte const charset[2048];
-extern const byte const attributeset[256];
 extern byte* CharRam;
 void A2Pixel(byte x, byte y, byte color);
 #endif

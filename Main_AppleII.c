@@ -17,6 +17,60 @@
 //#resource "apple2-xinaga.cfg"
 //#resource "apple2.rom"
 #define CFGFILE apple2-xinaga.cfg
+
+const byte blanksA[7] = 
+{
+  0b11111100,
+  0b11110011,
+  0b11001111,
+  0b10111111,
+  0b11111001,
+  0b11100111,
+  0b10011111,
+};
+const byte paletteTable[6] = {
+  0b00,
+  0b11,
+  0b01,
+  0b10,
+  0b01,
+  0b10,
+};
+const byte shiftTable[7] = {
+  0,
+  2,
+  4,
+  0,
+  1,
+  3,
+  5,
+};
+
+void A2Pixel(byte x, byte y, byte color)
+{
+  int offset = RowsHGR[y] + (x<<1) / 7;
+  byte index = color;
+  byte xPixel = x % 7; //Which pixel of 7 in a 2-byte pair;
+  index  = index % 6;
+  color = paletteTable[index];
+
+  HGR[offset] &= blanksA[xPixel]; //Blank Pixels
+  HGR[offset] &= 0b01111111; //Clear Palette
+
+  if (xPixel == 3)
+  { 
+    //HGR[offset] |= ((color << 7) >> 1); //Last
+    HGR[offset] |= ((color << 6) & 0b01000000); //Last
+    HGR[offset + 1] &= 0b11111110;
+    HGR[offset + 1] |= (color >> 1); //First
+  }
+  else
+    HGR[offset] |= color << shiftTable[xPixel];
+
+  if (index > 3)
+    HGR[offset] |= 0b10000000; //Set Palette  
+}
+
 void DrawCharPixel(byte index, byte color, byte x, byte y)
 {
   #define charWidth 7
