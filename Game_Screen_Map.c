@@ -453,7 +453,7 @@ byte GetQuadInRelation(sbyte v, sbyte h)
     if (int_x == mapMatrixWidth)
       int_x = 0;
   }
-  return (mapQuads[int_x  + (mapMatrixWidth * int_y)]);  
+  return (mapQuads[int_x + (mapMatrixWidth * int_y)]);  
 }
 
 //Directional data for finding a relative quad
@@ -815,23 +815,19 @@ void DrawEntireMap()
   
   MapFadeOut();
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
-  {      
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     { //Only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
       byte lastIndex = viewportBufferLast[byte_x + (viewportWidth * byte_y)];
       byte newIndex = viewportBuffer[byte_x + (viewportWidth * byte_y)];
-      DrawTileX = byte_x;
-      DrawTileY = byte_y;
-      DrawTileIndex = newIndex;
-      DrawTilePalette = tilesPalette[newIndex];
-      //if (lastIndex!=newIndex)
+      if (lastIndex != newIndex)
       {
-        
-        DrawTileBuffer(lastIndex!=newIndex);
+        DrawTileX = byte_x;
+        DrawTileY = byte_y;
+        DrawTileIndex = newIndex;
+        DrawTilePalette = tilesPalette[newIndex];
+        DrawTileBuffer(true);
       }
-      
     }
-  }
   #if defined(__C64__)
   SwapBuffer();
   #endif
