@@ -427,8 +427,8 @@ void DrawChar(int index, byte xpos, byte ypos)
     *dst = src[6];  dst += 0x400;
     *dst = src[7];
 }
-#endif
 
+#endif
 
 byte SetCharIndex;
 byte SetCharX;
