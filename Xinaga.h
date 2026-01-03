@@ -16,7 +16,8 @@ typedef int8_t sbyte;	// 8-bit signed
 #define right 3
 
 extern uint16_t randseed;
-byte ReadBit(byte byteToRead, char bit);
+//byte ReadBit(byte byteToRead, char bit);
+#define ReadBit(b, n) (((b) >> (n)) & 1)
 
 extern byte characterset[2048];
 extern byte attributeset[256];
@@ -219,7 +220,7 @@ extern const char PALETTE_3[16];
 #define ColorText 1
 void InitializeGraphics(void);
 void wait_vblank(byte frames);
-void SetAttrib(byte x, byte y, byte pal, bool direct);
+//void SetAttrib(byte x, byte y, byte pal, bool direct);
 void UpdateAttributes(void);
 void ScreenFadeOut(void);
 void ScreenFadeIn(void);
@@ -233,12 +234,12 @@ extern byte SetCharY;
 void _SetChar(void);
 #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void ClearScreen(void);
-void SetColor(byte x, byte y, byte index);
+//void SetColor(byte x, byte y, byte index);
 void DrawLineH(byte index, byte x, byte y, byte length);
 void DrawLineV(byte index, byte x, byte y, byte length);
 void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool fill);
 void DrawCharset(void);
-byte GetChar(byte x, byte y);
+//byte GetChar(byte x, byte y);
 
 //	Tiles
 #define TileCount 64
@@ -300,11 +301,11 @@ void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
 void ConsoleBufferReset(void);
 void ConsoleBufferAdd(char *message);
-void ConsoleBufferBackspace(void);
-void ConsoleBufferAddNumber(int value);
+//void ConsoleBufferBackspace(void);
+//void ConsoleBufferAddNumber(int value);
 void ConsoleBufferPrint(byte x, byte y);
-void ConsoleBufferPrintConsole(byte delay);
-void DrawConsoleContent(void);
+//void ConsoleBufferPrintConsole(byte delay);
+//void DrawConsoleContent(void);
 void DrawCharStats(void);
 
 //Selection Menu

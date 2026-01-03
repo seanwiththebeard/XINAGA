@@ -174,6 +174,7 @@ void SetAttrib(byte x, byte y, byte pal, bool direct)
     vrambuf_flush();
   }
   #endif
+  return;
   x;y;pal;direct;
 }
 
@@ -221,11 +222,7 @@ void SetBG(byte color)
 }
 #endif
 
-byte ReadBit(byte byteToRead, char bit)
-{
-  bit = 1 << bit;
-  return(bit & byteToRead);
-}
+
 
 void ClearScreen(void)
 {
@@ -556,8 +553,9 @@ void DrawTileSetup(void)
 
   DrawTileX = DrawTileX << 1;
   DrawTileY = DrawTileY << 1;
-
+  #if defined(__NES__)
   SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
+  #endif
 }
 
 void DrawTile()
@@ -581,7 +579,9 @@ void DrawTileDirectXY(byte index, byte x, byte y)
 {
   byte tempX = MapOriginX;
   byte tempY = MapOriginY;
-  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
+  #if defined(__NES__)
+  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);
+  #endif
 
   SetTileOrigin(x, y);
   DrawTileIndex = index;

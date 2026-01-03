@@ -100,14 +100,6 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
 void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();
 
-void ClearLine()
-{
-  byte x;
-  for (x = 0; x < MenuWidth; ++x)
-  {
-    SetChar(' ', MenuPosX + x, MenuPosY + MenuSelection);    
-  }
-}
 void ClearItem(byte index)
 {
   byte x;
@@ -299,7 +291,7 @@ void SetLineMessageWindow(char *message, byte delay)
   ++length;
   
   for (x = 0; x < Width; ++x)
-    if (GetChar(PosX + x, PosY + Height - 1) != message[x])
+    //if (GetChar(PosX + x, PosY + Height - 1) != message[x])
     {
       SetChar(' ', PosX + x, PosY + Height - 1);
       consoleContents[contentOffset + x] = ' ';

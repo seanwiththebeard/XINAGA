@@ -36,8 +36,8 @@ One byte describes 16x16 region
 #define continentsBase 4
 //#define grass 0x88
 //#define water 0x84
-#define grass 0xE1
 #define water 0xE0
+#define grass 0xF0
 //void DrawMapGenTiles(void);
 byte countContinents;
 //byte map[height][width] = {};
@@ -313,6 +313,15 @@ void DrawPoint(byte x, byte y)
 {
   byte tile = mapQuads[x + (mapMatrixWidth * y)];
   //tile = (tile << 1) + ((tile >> 3) << 4);
+  #if defined(__APPLE2__)
+  if (x % 2)
+  {
+    SetChar(tile + 1, x + viewportPosX, y + viewportPosY);
+    return;
+  }
+  SetChar(tile, x + viewportPosX, y + viewportPosY);
+  return;
+  #endif
   SetChar(tile, x + viewportPosX, y + viewportPosY);
 }
 
