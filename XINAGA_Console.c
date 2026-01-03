@@ -239,21 +239,26 @@ byte GetMenuSelection()
 
 void ClearConsoleContent()
 {
-  free(consoleContents);
+  /*free(consoleContents);
   consoleContents = malloc(Width * Height);
-  memset(&consoleContents[0], ' ', Width*Height);
+  memset(&consoleContents[0], ' ', Width*Height);*/
+  
+  int size = Width * Height;
+  if (consoleContents == NULL)
+    consoleContents = (byte*)malloc(size);
+  else
+    consoleContents = (byte*)realloc(consoleContents, size);
+
+  if (consoleContents)
+    memset(&consoleContents[0], ' ', size);
 }
 
 void DrawConsoleContent()
 {
   byte x, y;
   for (y = 0; y < Height; ++y)
-  {
     for (x = 0; x < Width; ++x)
-    {
       SetChar(consoleContents[x + y*Width], PosX + x, PosY + y);
-    }
-  }
 }
 
 void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
@@ -278,15 +283,11 @@ void ScrollMessageWindowUp()
   int y;
   
   for (y = 0; y < contentOffset; ++y)
-  {
     consoleContents[y] = consoleContents[y + Width];
-  }
   
   for (x = 0; x < (Width); ++x)
-  {
-    //SetChar(' ', PosX + x, PosY + Height - 1);
     consoleContents[contentOffset + x] = ' ';
-  }
+  
   DrawConsoleContent();
 }
 
@@ -303,13 +304,11 @@ void SetLineMessageWindow(char *message, byte delay)
     ++length;
   
   for (x = 0; x < Width; ++x)
-  {
     if (GetChar(PosX + x, PosY + Height - 1) != message[x])
     {
       SetChar(' ', PosX + x, PosY + Height - 1);
       consoleContents[contentOffset + x] = ' ';
     }
-  }
   
   for(x = 0; x < length; ++x)
   {
@@ -369,6 +368,5 @@ void WriteLineMessageWindow(char *message, byte delay)
 {
   ScrollMessageWindowUp();
   SetLineMessageWindow(message, delay);
-  //wait_vblank(1);
 }
 
