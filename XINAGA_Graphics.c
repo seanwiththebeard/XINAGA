@@ -439,11 +439,12 @@ void _SetChar(void)
   ScreenChars[offset] = SetCharIndex;
   vrambuf_put(NTADR_A(SetCharX,SetCharY), &SetCharIndex, 1);
 
-  ++charsDrawn;
-  if (charsDrawn % 21 == 0) // if (charsDrawn % 10 == 0)
+  if (++charsDrawn >=21) 
   {
     wait_vblank(1);
+    charsDrawn = 0;
   }
+
   #endif
 
   #if defined(MSX)
