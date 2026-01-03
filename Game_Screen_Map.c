@@ -787,7 +787,7 @@ void DrawEntireMap()
   byte byte_x;
   byte byte_y;
   #if defined(__C64__)
-  StoreBuffer();
+  //StoreBuffer();
   #endif
   
   //memset(&viewportBuffer, EmptyTile, viewportSize);

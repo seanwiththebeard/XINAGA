@@ -629,15 +629,7 @@ byte GetChar(byte x, byte y)
   #endif
 }*/
 
-void StoreBuffer(void)
-{
-  #if defined(__APPLE2__)
-  #endif
-  #if defined(__C64__)
-  memcpy(&ScreenCharBuffer[0], &ScreenChars[0], 0x400);
-  memcpy(&ScreenColorBuffer[0], &ScreenColors[0], 0x400);
-  #endif
-}
+
 /*
 void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
 {
