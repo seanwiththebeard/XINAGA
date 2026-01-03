@@ -345,7 +345,7 @@ void FillQuadBuffer()
   byte_y = (quadY + 1) % quadHeight;
   
   quadBuffer[0] = mapQuads[quadX + (mapMatrixWidth * quadY)];
-  quadBuffer[1] = mapQuads[byte_x + + (mapMatrixWidth * quadY)];
+  quadBuffer[1] = mapQuads[byte_x + (mapMatrixWidth * quadY)];
   quadBuffer[2] = mapQuads[quadX + (mapMatrixWidth * byte_y)];
   quadBuffer[3] = mapQuads[byte_x + (mapMatrixWidth * byte_y)];
 }
