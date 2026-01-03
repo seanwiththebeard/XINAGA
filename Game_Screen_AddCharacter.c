@@ -181,10 +181,13 @@ void MenuGetRace()
     ClearMenu();
   else
   {
-    ConsoleBufferReset();
-    ConsoleBufferAdd("Race Confirmed:@");
-    ConsoleBufferAdd(RaceDescription[RACE].NAME);
-    ConsoleBufferPrintConsole(0);
+    //ConsoleBufferReset();
+    //ConsoleBufferAdd("Race Confirmed: %s@");
+    //ConsoleBufferAdd(RaceDescription[RACE].NAME);
+    //ConsoleBufferPrintConsole(0);
+    
+    sprintf(strTemp, "Race Confirmed: %s@", RaceDescription[RACE].NAME);
+    WriteLineMessageWindow(strTemp, 0);
     MenuGetClass();
   }
 }

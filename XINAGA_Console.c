@@ -58,14 +58,14 @@ void ConsoleBufferEndline()
   strTemp[StringLength - 1] = '@';
 }
   
-void ConsoleBufferPrint(byte x, byte y)
+void ConsoleBufferPrint(byte x, byte y) //Prints the contents of the buffer to a screen position
 {
   ConsoleBufferEndline();
   PrintString(strTemp, x, y, true);
   ConsoleBufferReset();
 }
 
-void ConsoleBufferPrintConsole(byte delay)
+void ConsoleBufferPrintConsole(byte delay) //Prints the contents of the buffer to the console
 {
   ConsoleBufferEndline();
   WriteLineMessageWindow(strTemp, delay);

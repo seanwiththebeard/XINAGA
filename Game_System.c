@@ -311,6 +311,7 @@ void DrawCharStatus(byte characterIndex)
 
   DrawBorder(PlayerChar->NAME, contextMenuPosX - 1, statY - 1, contextMenuWidth, 4, true);
   DrawTileDirectXY(PlayerChar->CLASS, contextMenuPosX, statY);
+  
   ConsoleBufferReset();
   ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
   ConsoleBufferPrint(contextMenuPosX + 2, statY);
