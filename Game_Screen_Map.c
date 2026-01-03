@@ -14,32 +14,32 @@
 //Prototypes
 //      Map Functions
 screenName MapUpdate(void);
-void DrawScreen(void);
-void ActionMenu(void);
-void InitializeMapData(void);
+static void DrawScreen(void);
+static void ActionMenu(void);
+static void InitializeMapData(void);
 void LoadMap(void);
-void DrawMapViewport(void);
-void DrawEntireMap(void);
+static void DrawMapViewport(void);
+static void DrawEntireMap(void);
 //void wrapX(sbyte *posX); //Used in map positions
 //void wrapY(sbyte *posY);
 #define wrapX(v) do { if ((v) < 0) (v) = mapWidth - 1; else if ((v) >= mapWidth) (v) = 0; } while(0)
 #define wrapY(v) do { if ((v) < 0) (v) = mapHeight - 1; else if ((v) >= mapHeight) (v) = 0; } while(0)
 //void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
-void ApplyLOS(void);
-void CameraFollow(void);
-void BufferCharacters(void);
-void MoveCharacter(byte index, byte dir);
-bool CheckCollision(byte charIndex, byte Direction);
-void DrawCharacterCoordinates(byte index);
-void UpdatePlayerOnMiniMap(void);
+static void ApplyLOS(void);
+static void CameraFollow(void);
+static void BufferCharacters(void);
+static void MoveCharacter(byte index, byte dir);
+static bool CheckCollision(byte charIndex, byte Direction);
+static void DrawCharacterCoordinates(byte index);
+static void UpdatePlayerOnMiniMap(void);
 
 //      Quad Functions
-void FillQuadBuffer(void);
-void LoadQuadrant(byte quadIndex, byte quad);
+static void FillQuadBuffer(void);
+static void LoadQuadrant(byte quadIndex, byte quad);
 void LoadMapQuads(void);
-byte GetPlayerQuad(void); //Returns the viewport quadrant of the player character
-byte GetQuadInRelation(sbyte v, sbyte h);
-void QuadScroll(byte direction);
+static byte GetPlayerQuad(void); //Returns the viewport quadrant of the player character
+static byte GetQuadInRelation(sbyte v, sbyte h);
+static void QuadScroll(byte direction);
 
 
 //Charset Layout C64
@@ -88,23 +88,23 @@ void QuadScroll(byte direction);
 #define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define viewportSize viewportHeight * viewportWidth
-byte viewportBuffer[viewportSize];
-byte viewportBufferLast[viewportSize];
+static byte viewportBuffer[viewportSize];
+static byte viewportBufferLast[viewportSize];
 byte followIndex;
 
 //Camera Position
-sbyte offsetX;
-sbyte offsetY;
+static sbyte offsetX;
+static sbyte offsetY;
 
-byte CoordPosX;
-byte CoordPosY;
+static byte CoordPosX;
+static byte CoordPosY;
 
 //Map Data
-bool LOSEnabled;
+static bool LOSEnabled;
 #define EmptyTile 32
 #define mapHeight 32
 #define mapWidth 32
-byte mapData[mapWidth * mapHeight];
+static byte mapData[mapWidth * mapHeight];
 static const byte MapSet[] = { /*{w:8,h:8,bpp:1,count:256,brev:1,pal:"c64",np:1}*/
   0x00,0x3C,0x60,0x40,0x40,0x40,0x00,0x00,0x00,0x3C,0x06,0x02,0x02,0x02,0x00,0x00
     ,0xE7,0x81,0x81,0x00,0x00,0x81,0x81,0xE7,0xC3,0xC3,0xC3,0x00,0x00,0xC3,0xC3,0xC3
@@ -235,7 +235,7 @@ static const byte MapSet[] = { /*{w:8,h:8,bpp:1,count:256,brev:1,pal:"c64",np:1}
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
 
-struct
+static struct
 {
   #define charactersCount 8
   byte tile[charactersCount];
@@ -249,7 +249,7 @@ struct
   sbyte quadPosY[charactersCount];
 }characters;
 
-void CameraFollow()
+static void CameraFollow()
 {
   byte byte_x;
   byte byte_y;
@@ -271,7 +271,7 @@ void CameraFollow()
   }
 }
 
-void BufferCharacters()
+static void BufferCharacters()
 {
   byte byte_x;
   byte byte_y;
@@ -300,7 +300,7 @@ void BufferCharacters()
   }
 }
 
-void UpdatePlayerOnMiniMap(void)
+static void UpdatePlayerOnMiniMap(void)
 {
   //MiniMapHighlightX = characters.quadPosX[followIndex];
   //MiniMapHighlightY = characters.quadPosY[followIndex];
@@ -312,7 +312,7 @@ void UpdatePlayerOnMiniMap(void)
 //Quad Data
 byte mapQuads[mapMatrixHeight * mapMatrixWidth] = {0};  //These are the quad-tile references that make up the map
 
-struct
+static struct
 { //These are the quad indexes referenced in mapQuads[y][x]
   #define ScreenQuadCount 256
   byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
@@ -327,7 +327,7 @@ byte quadBuffer[4];
 #define quadHeightDouble (quadHeight << 1)
 //#define yQuadHeight quadHeight << 1
 
-void FillQuadBuffer()
+static void FillQuadBuffer()
 {
   byte row0, row1;
   byte quadX = characters.quadPosX[followIndex];
@@ -352,11 +352,11 @@ void FillQuadBuffer()
   //quadBuffer[3] = mapQuads[byte_x + (mapMatrixWidth * byte_y)];
 }
 
-const byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
-const byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
-const byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
-const byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
-void LoadQuadrant(byte quadIndex, byte quad)
+static const byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
+static const byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
+static const byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
+static const byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
+static void LoadQuadrant(byte quadIndex, byte quad)
 {
   byte byte_y, byte_z;
   byte QuadOriginX, QuadOriginY;
@@ -400,7 +400,7 @@ void LoadMapQuads()
     LoadQuadrant(quadBuffer[x], x);  
 }
 
-byte GetPlayerQuad() //Returns the viewport quadrant of the player character
+static byte GetPlayerQuad() //Returns the viewport quadrant of the player character
 {
   if (characters.posX[followIndex] < quadWidthDouble)
   {
@@ -418,7 +418,7 @@ byte GetPlayerQuad() //Returns the viewport quadrant of the player character
   }
 }
 
-byte GetQuadInRelation(sbyte v, sbyte h)
+static byte GetQuadInRelation(sbyte v, sbyte h)
 {
   //#pragma bss-name (push, "ZEROPAGE")
   sbyte int_x;
@@ -456,15 +456,15 @@ byte GetQuadInRelation(sbyte v, sbyte h)
 
 //Directional data for finding a relative quad
 //left -UP DOWN LEFT RIGHT right UP DOWN LEFT RIGHT
-const sbyte quadRelationAV[8] = {-1,  1,  0,  0, -1, 1,  0, 0}; //vA
-const sbyte quadRelationBV[8] = {-1,  1, -1, -1, -1, 1,  1, 1}; //vB
-const sbyte quadRelationAH[8] = { 0,  0, -1,  1,  0, 0, -1, 1}; //hA
-const sbyte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
+static const sbyte quadRelationAV[8] = {-1,  1,  0,  0, -1, 1,  0, 0}; //vA
+static const sbyte quadRelationBV[8] = {-1,  1, -1, -1, -1, 1,  1, 1}; //vB
+static const sbyte quadRelationAH[8] = { 0,  0, -1,  1,  0, 0, -1, 1}; //hA
+static const sbyte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
 //Quad positions in the matrix for which way we're moving
-const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
-const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
+static const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
+static const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
 
-void QuadScroll(direction dir)
+static void QuadScroll(direction dir)
 {
   //#pragma bss-name (push, "ZEROPAGE")
   byte quadA; //Entering quad
@@ -510,7 +510,7 @@ void QuadScroll(direction dir)
     LoadQuadrant(indexB, quadB);
 }
 
-void InitializeMapData()
+static void InitializeMapData()
 {
   #define grass 36
   #define water 34
@@ -599,7 +599,7 @@ void InitializeMapData()
   LOSEnabled = true;
 }
 
-bool CheckCollision(byte charIndex, direction dir)
+static bool CheckCollision(byte charIndex, direction dir)
 {
   byte byte_i;
   sbyte xPos = characters.posX[charIndex];
@@ -659,7 +659,7 @@ bool CheckCollision(byte charIndex, direction dir)
   return false;
 }
 
-void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Blocking
+static void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Blocking
 {
   byte _ds_y; \
   for (_ds_y = (yOrigin); _ds_y < (yOrigin) + (ySize); ++_ds_y) 
@@ -669,7 +669,7 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Bl
   }
 }
 
-void ApplyLOS() //437bytes
+static void ApplyLOS() //437bytes
 {
   byte x;
   byte y;
@@ -769,7 +769,7 @@ void ApplyLOS() //437bytes
         DrawSquare(x, y + 1, 1, viewportHeight - y);*/
 }
 
-void DrawEntireMap()
+static void DrawEntireMap()
 {
   sbyte int_a;
   sbyte int_b;
@@ -818,7 +818,7 @@ void DrawEntireMap()
   MapFadeIn();
 }
 
-void MoveCharacter(byte index, byte dir)
+static void MoveCharacter(byte index, byte dir)
 {
   bool scrollQuads = false;
   bool changedQuads = false;
@@ -909,14 +909,18 @@ void MoveCharacter(byte index, byte dir)
       }
       if (scrollQuads)
       {
+        //SetBG(0x0b);
+        //SetBorder(0x0b);
         QuadScroll(dir);
+        //SetBG(0);
+        //SetBorder(0);
       }
     }
     DrawEntireMap();
   }
 }
 
-void DrawCharacterCoordinates(byte index)
+static void DrawCharacterCoordinates(byte index)
 {
   CoordPosX = characters.posX[index];
   CoordPosY = characters.posY[index];
@@ -945,20 +949,20 @@ void LoadMap()
 #define menuCount 6
 #define menuHeight menuCount
 
-void DrawMapViewport(void)
+static void DrawMapViewport(void)
 {
   memset(&viewportBufferLast, 255, viewportSize);
   DrawEntireMap();
   //DrawCharacterCoordinates(followIndex);
 }
-void DrawScreen(void)
+static void DrawScreen(void)
 {
   DrawMapViewport();
   DrawCharStats();
 }
 
-bool exitScreen;
-void ActionMenu()
+static bool exitScreen;
+static void ActionMenu()
 {
   byte action;
   ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, menuCount);

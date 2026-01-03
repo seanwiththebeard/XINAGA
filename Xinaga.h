@@ -30,19 +30,23 @@ void SetBG(byte color);
 #if defined(__APPLE2__)
 #define COLS 40
 #define ROWS 24
+
+#define viewportPosX 1
+#define viewportPosY 1
+#define viewportWidth 9
+#define viewportHeight 9
+
 #define consolePosX 1
 #define consolePosY 2 + 2*viewportHeight
 #define consoleWidth 38
 #define consoleHeight (ROWS - viewportHeight * 2 - 3)
+
 #define selectionPosX consoleWidth + 2
 #define selectionPosY consolePosY
 #define selectionWidth 6
 #define selectionHeight consoleHeight
 #define selectionCount 4
-#define viewportPosX 1
-#define viewportPosY 1
-#define viewportWidth 9
-#define viewportHeight 9
+
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
@@ -63,25 +67,28 @@ void A2Pixel(byte x, byte y, byte color);
 #if defined(__C64__)
 #define COLS 40
 #define ROWS 25
-#define consolePosX 1
-#define consolePosY 2 + 2*viewportHeight
-#define consoleWidth 38
-#define consoleHeight (ROWS - viewportHeight * 2 - 3)
 
-#define selectionWidth 6
-#define selectionPosX consoleWidth - selectionWidth + 1
-#define selectionPosY consolePosY
-
-#define selectionHeight consoleHeight
-#define selectionCount 4
 #define viewportPosX 1
 #define viewportPosY 1
 #define viewportWidth 9
 #define viewportHeight 9
-#define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
+
+#define consolePosX 1
+#define consolePosY 20 //2 + 2*viewportHeight
+#define consoleWidth 38
+#define consoleHeight 4//(ROWS - viewportHeight * 2 - 3)
+
+#define selectionWidth 6
+#define selectionPosX 33//consoleWidth - selectionWidth + 1
+#define selectionPosY consolePosY
+
+#define selectionHeight consoleHeight
+#define selectionCount 4
+
+#define contextMenuPosX 20//viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
-#define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
-#define contextMenuHeight (2 * viewportHeight)
+#define contextMenuWidth 19//(COLS - (viewportWidth * 2) - 3)
+#define contextMenuHeight 18//(2 * viewportHeight)
 
 #include <cbm_petscii_charmap.h>
 #pragma charmap(0x41, 0x61)

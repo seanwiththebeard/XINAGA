@@ -26,7 +26,7 @@
 
 int YColumnIndex[ROWS];
 
-void getYCols()
+static void getYCols()
 {
   byte y;
   for (y = 0; y < ROWS; ++y)
@@ -529,13 +529,13 @@ void PrintString(char *text, byte posx, byte posy, bool fast)
   wait_vblank(1);
 }
 
-int originOffset;
+//int originOffset;
 byte MapOriginX;
 byte MapOriginY;
 
 void SetTileOrigin(byte x, byte y)
 {
-  originOffset = YColumnIndex[y] + x;
+  //originOffset = YColumnIndex[y] + x;
   MapOriginX = x;
   MapOriginY = y;
 }
@@ -611,14 +611,15 @@ byte tilesPalette[TileCount];
 void FillViewport(byte index, byte width, byte height)
 {
   byte byte_x, byte_y;
+  byte palette = tilesPalette[index];
   for(byte_y = 0; byte_y < height; ++byte_y)
     for(byte_x = 0; byte_x < width; ++byte_x)
     {
       DrawTileX = byte_x;
       DrawTileY = byte_y;
       DrawTileIndex = index;
-      DrawTilePalette = tilesPalette[index];
-      DrawTileDirect;
+      DrawTilePalette = palette;
+      DrawTileDirect();
     }
   UpdateAttributes();
 }
