@@ -395,7 +395,7 @@ void InitializeGraphics(void)
 }
 
 #if defined(__APPLE2__)
-void DrawChar(int index, byte xpos, byte ypos)
+/*void DrawChar(int index, byte xpos, byte ypos)
 {
   byte y;
   int offset;
@@ -410,8 +410,25 @@ void DrawChar(int index, byte xpos, byte ypos)
     offset += 0x400;
     ++i;
   }
+}*/
+
+void DrawChar(int index, byte xpos, byte ypos)
+{
+    int offset = RowsHGR[ypos << 3] + xpos;
+    const byte* src = &charset[index << 3];
+    byte* dst = &HGR[offset];
+
+    *dst = src[0];  dst += 0x400;
+    *dst = src[1];  dst += 0x400;
+    *dst = src[2];  dst += 0x400;
+    *dst = src[3];  dst += 0x400;
+    *dst = src[4];  dst += 0x400;
+    *dst = src[5];  dst += 0x400;
+    *dst = src[6];  dst += 0x400;
+    *dst = src[7];
 }
 #endif
+
 
 byte SetCharIndex;
 byte SetCharX;
