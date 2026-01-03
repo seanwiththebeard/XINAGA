@@ -294,11 +294,13 @@ void SetLineMessageWindow(char *message, byte delay)
 {
   byte x;
   byte length = 0;
-  for (x = 0; x < ConsoleBufferLength; ++x)
+  /*for (x = 0; x < ConsoleBufferLength; ++x)
   {
     if (message[x] != '@')
       ++length;
-  }
+  }*/
+  while (length < ConsoleBufferLength && message[length] != '@' && message[length] != 0)
+    ++length;
   
   for (x = 0; x < Width; ++x)
   {
