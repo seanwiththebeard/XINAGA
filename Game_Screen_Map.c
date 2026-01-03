@@ -829,7 +829,7 @@ void DrawEntireMap()
       }
     }
   #if defined(__C64__)
-  SwapBuffer();
+  //SwapBuffer();
   #endif
   memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);
   DrawCharacterCoordinates(followIndex);

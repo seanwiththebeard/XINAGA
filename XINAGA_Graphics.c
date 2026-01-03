@@ -804,13 +804,21 @@ void DrawTile()
   byte y = DrawTileY + MapOriginY;
 
   #if defined(__C64__)
-  memcpy(destinationChar, &indexes[0], 2);
-  memcpy(destinationColor, &attributeset[indexes[0]], 2);
+  SetChar(indexes[0], x, y);
+  SetChar(indexes[1], x + 1, y);
+  SetChar(indexes[2], x, y + 1);
+  SetChar(indexes[3], x + 1, y + 1);
+  
+  /*destinationChar[0] = indexes[0];
+  destinationChar[1] = indexes[1];
+  destinationColor[0] = attributeset[indexes[0]];
+  destinationColor[1] = attributeset[indexes[1]];
   destinationChar += COLS;
   destinationColor += COLS;
-  //offset1 += COLS;
-  memcpy(destinationChar, &indexes[2], 2);
-  memcpy(destinationColor, &attributeset[indexes[2]], 2);
+  destinationChar[0] = indexes[2];
+  destinationChar[1] = indexes[3];
+  destinationColor[0] = attributeset[indexes[2]];
+  destinationColor[1] = attributeset[indexes[3]];*/
   #endif
 
   #if defined(__APPLE2__)
