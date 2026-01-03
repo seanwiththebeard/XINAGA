@@ -69,7 +69,8 @@ unsigned int RowsHGR[192];
 void FadePalette(byte pals, byte delay)
 {
   #if defined(__NES__)
-  byte *tempPal = (byte*)malloc(16);
+  //byte *tempPal = (byte*)malloc(16);
+  byte tempPal[16];
   byte y, z;
 
   memcpy(&tempPal[0], &PALETTE_0[0], 16);
@@ -84,7 +85,7 @@ void FadePalette(byte pals, byte delay)
     pal_bg(tempPal);
     wait_vblank(delay);
   }
-  free(tempPal);
+  //free(tempPal);
   #endif
   pals;delay;
 }
@@ -92,7 +93,8 @@ void FadePalette(byte pals, byte delay)
 void UnFadePalette(byte pals, byte delay)
 {
   #if defined(__NES__)
-  byte *tempPal = (byte*)malloc(16);
+  byte tempPal[16];
+  //byte *tempPal = (byte*)malloc(16);
   byte y, z;
   //memcpy(&tempPal[0], &PALETTE_0[0], 16);
 
@@ -117,7 +119,7 @@ void UnFadePalette(byte pals, byte delay)
     pal_bg(tempPal);
     wait_vblank(delay);
   }
-  free(tempPal);
+  //free(tempPal);
   #endif
   pals;delay;
 }
