@@ -233,28 +233,6 @@ static const byte MapSet[] = { /*{w:8,h:8,bpp:1,count:256,brev:1,pal:"c64",np:1}
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
 
-//Quad Data
-//#define mapQuadWidth 8
-//#define mapQuadHeight 8
-byte mapQuads[mapMatrixHeight * mapMatrixWidth] = {0};  //These are the quad-tile references that make up the map
-
-struct
-{ //These are the quad indexes referenced in mapQuads[y][x]
-  #define ScreenQuadCount 256
-  byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
-  byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
-  byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
-}ScreenQuad;
-byte quadBuffer[4];
-
-#define quadWidth 8
-#define quadHeight 8
-#define quadWidthDouble (quadWidth << 1)
-#define quadHeightDouble (quadHeight << 1)
-//#define yQuadHeight quadHeight << 1
-
-
-
 struct
 {
   #define charactersCount 8
@@ -327,27 +305,47 @@ void UpdatePlayerOnMiniMap(void)
   MiniMapHighlightY = CoordPosY >> 4;
 }
 
+//Quad Data
+byte mapQuads[mapMatrixHeight * mapMatrixWidth] = {0};  //These are the quad-tile references that make up the map
+
+struct
+{ //These are the quad indexes referenced in mapQuads[y][x]
+  #define ScreenQuadCount 256
+  byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
+  byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
+  byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
+}ScreenQuad;
+byte quadBuffer[4];
+
+#define quadWidth 8
+#define quadHeight 8
+#define quadWidthDouble (quadWidth << 1)
+#define quadHeightDouble (quadHeight << 1)
+//#define yQuadHeight quadHeight << 1
 
 void FillQuadBuffer()
 {
-  //#pragma bss-name (push, "ZEROPAGE")
-  byte byte_x;
-  byte byte_y;
-  byte quadX;
-  byte quadY;
-  //#pragma bss-name (pop)
-  quadX = characters.quadPosX[followIndex];
-  quadY = characters.quadPosY[followIndex];
-
-  //if (quadX + 1 == quadWidth) byte_x = 0; else byte_x = quadX + 1;
-  //if (quadY + 1 == quadHeight) byte_y = 0; else byte_y = quadY + 1;
-  byte_x = (quadX + 1) % quadWidth;
-  byte_y = (quadY + 1) % quadHeight;
+  byte row0, row1;
+  byte quadX = characters.quadPosX[followIndex];
+  byte quadY = characters.quadPosY[followIndex];
+  byte byte_x = quadX + 1;
+  byte byte_y = quadY + 1;
+  //byte_x = (quadX + 1) % quadWidth;
+  //byte_y = (quadY + 1) % quadHeight;
+  if (byte_x == quadWidth) byte_x = 0;
+  if (byte_y == quadHeight) byte_y = 0;
   
-  quadBuffer[0] = mapQuads[quadX + (mapMatrixWidth * quadY)];
-  quadBuffer[1] = mapQuads[byte_x + (mapMatrixWidth * quadY)];
-  quadBuffer[2] = mapQuads[quadX + (mapMatrixWidth * byte_y)];
-  quadBuffer[3] = mapQuads[byte_x + (mapMatrixWidth * byte_y)];
+  row0 = mapMatrixWidth * quadY;
+  row1 = mapMatrixWidth * byte_y; 
+  
+  quadBuffer[0] = mapQuads[quadX + row0]; 
+  quadBuffer[1] = mapQuads[byte_x + row0]; 
+  quadBuffer[2] = mapQuads[quadX + row1]; 
+  quadBuffer[3] = mapQuads[byte_x + row1];
+  //quadBuffer[0] = mapQuads[quadX + (mapMatrixWidth * quadY)];
+  //quadBuffer[1] = mapQuads[byte_x + (mapMatrixWidth * quadY)];
+  //quadBuffer[2] = mapQuads[quadX + (mapMatrixWidth * byte_y)];
+  //quadBuffer[3] = mapQuads[byte_x + (mapMatrixWidth * byte_y)];
 }
 
 const byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
@@ -358,6 +356,7 @@ void LoadQuadrant(byte quadIndex, byte quad)
 {  
   //#pragma bss-name (push, "ZEROPAGE")
   byte* charByteData = 0;
+  byte mask;
   byte byte_x;
   byte byte_y;
   byte byte_z;
@@ -379,12 +378,16 @@ void LoadQuadrant(byte quadIndex, byte quad)
     //charByteData = &MapSet[8*ScreenQuad.CharIndex[quadIndex][byte_z]];
     for (byte_y = 0; byte_y < quadHeight; ++byte_y)
     {
-      charByte = MapSet[byte_y + 8*ScreenQuad.CharIndex[quadIndex][byte_z]];//charByteData[byte_y];
+      charByte = MapSet[byte_y + (ScreenQuad.CharIndex[quadIndex][byte_z]<<3)]; //*8
+      //charByte = MapSet[byte_y + 8*ScreenQuad.CharIndex[quadIndex][byte_z]];//charByteData[byte_y];
       yPos = byte_y + QuadOriginY;
       for (byte_x = 0; byte_x < quadWidth; ++byte_x)
       {
         xPos = byte_x + QuadOriginX;
-        if (ReadBit(charByte, 7 - byte_x) > 0)
+        
+        mask = 0x80 >> byte_x;
+	if (charByte & mask)
+        //if (ReadBit(charByte, 7 - byte_x) > 0)
           charIndex = 1;
         else
           charIndex = 0;
@@ -471,6 +474,7 @@ void QuadScroll(direction dir)
   //#pragma bss-name (push, "ZEROPAGE")
   byte quadA; //Entering quad
   byte quadB; //Diagonal quad
+  byte localX, localY;
   byte indexA;
   byte indexB;
   byte relH;
@@ -482,8 +486,12 @@ void QuadScroll(direction dir)
 
   relH = dir;
   relV = dir;
-  charPosX = (characters.posX[followIndex] % TileSize) < quadWidth;
-  charPosY = (characters.posY[followIndex] % TileSize) < quadHeight;
+  localX = characters.posX[followIndex] & (TileSize - 1);
+  localY = characters.posY[followIndex] & (TileSize - 1);
+  charPosX = localX < quadWidth;
+  charPosY = localY < quadHeight;
+  //charPosX = (characters.posX[followIndex] % TileSize) < quadWidth;
+  //charPosY = (characters.posY[followIndex] % TileSize) < quadHeight;
   compareQuad = GetPlayerQuad();
 
   if (!charPosX)

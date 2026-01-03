@@ -1,7 +1,3 @@
-////#resource "c64charset.bin"
-////#resource "c64attributeset.bin"
-////#link "chr_c64.s"
-#include <ascii_charmap.h>
 //#resource "C64.cfg"
 #define CFGFILE C64.cfg
 #include "Xinaga.h"

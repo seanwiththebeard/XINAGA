@@ -10,7 +10,7 @@
 //#pragma rodata-name (push, "CODE")
 #endif
 
-#define DefaultScreen EditParty
+#define DefaultScreen Map
 screenName currentScreen;
 byte strTemp[ConsoleBufferLength];
 
