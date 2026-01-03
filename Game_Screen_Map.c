@@ -786,12 +786,6 @@ void DrawEntireMap()
   sbyte int_b;
   byte byte_x;
   byte byte_y;
-  #if defined(__C64__)
-  //StoreBuffer();
-  #endif
-  
-  //memset(&viewportBuffer, EmptyTile, viewportSize);
-  //memset(&viewportBufferLast, EmptyTile, viewportSize);
   
   //Buffer the matrix of tiles for our viewport
   CameraFollow();
@@ -825,12 +819,10 @@ void DrawEntireMap()
         DrawTileY = byte_y;
         DrawTileIndex = newIndex;
         DrawTilePalette = tilesPalette[newIndex];
-        DrawTileBuffer(true);
+        DrawTileDirect();
       }
     }
-  #if defined(__C64__)
-  //SwapBuffer();
-  #endif
+
   memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);
   DrawCharacterCoordinates(followIndex);
   UpdateAttributes();

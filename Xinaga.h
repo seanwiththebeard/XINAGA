@@ -250,7 +250,7 @@ extern byte tilesBlocked[TileCount];
 extern byte tilesOpaque[TileCount];
 extern byte tilesPalette[TileCount];
 void SetTileOrigin(byte x, byte y);
-void DrawTileBuffer(bool drawChars);
+//void DrawTileBuffer(bool drawChars);
 void DrawTileDirect(void);
 void DrawTileDirectXY(byte index, byte x, byte y);
 void MapFadeOut(void);
@@ -261,11 +261,10 @@ void DrawArrow(byte x, byte y);
 void ClearArrow(void);
 
 //	Buffer
-void SetBuffer(bool value);
-void SwapBuffer(void);
-void UpdateColors(void);
-void CopyBuffer(void);
-void StoreBuffer(void);
+//void SetBuffer(bool value);
+//void SwapBuffer(void);
+//void UpdateColors(void);
+//void StoreBuffer(void);
 
 //Audio
 //extern void PlaySong(byte index);

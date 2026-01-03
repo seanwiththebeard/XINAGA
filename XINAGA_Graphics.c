@@ -440,27 +440,6 @@ void InitializeGraphics(void)
   #endif
 }
 
-void SwapBuffer(void)
-{
-  #if defined(__C64__)
-  if (bufferselect)
-  {
-    bufferselect = false;
-    SelectScreenPos(2);
-    ScreenChars -= 0x400;
-    ScreenCharBuffer += 0x400;
-  }
-  else
-  {
-    bufferselect = true;
-    SelectScreenPos(3);
-    ScreenChars += 0x400;
-    ScreenCharBuffer -= 0x400;    
-  }
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
-  #endif
-}
-
 #if defined(__APPLE2__)
 void DrawChar(int index, byte xpos, byte ypos)
 {
@@ -608,11 +587,6 @@ byte DrawTileY;
 byte DrawTileIndex;
 byte DrawTilePalette;
 byte indexes[4];
-unsigned short offset1;
-#if defined(__C64__)
-byte *destinationChar;
-byte *destinationColor;
-#endif
 
 void DrawTileSetup(void)
 {
@@ -627,10 +601,6 @@ void DrawTileSetup(void)
   DrawTileY = DrawTileY << 1;
 
   SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
-
-  #if defined(__C64__)
-  offset1 = YColumnIndex[DrawTileY] + DrawTileX + originOffset;
-  #endif
 }
 
 void DrawTile()
@@ -638,70 +608,16 @@ void DrawTile()
   byte x = DrawTileX + MapOriginX;
   byte y = DrawTileY + MapOriginY;
 
-  #if defined(__C64__)
   SetChar(indexes[0], x, y);
   SetChar(indexes[1], x + 1, y);
   SetChar(indexes[2], x, y + 1);
   SetChar(indexes[3], x + 1, y + 1);
-  
-  /*destinationChar[0] = indexes[0];
-  destinationChar[1] = indexes[1];
-  destinationColor[0] = attributeset[indexes[0]];
-  destinationColor[1] = attributeset[indexes[1]];
-  destinationChar += COLS;
-  destinationColor += COLS;
-  destinationChar[0] = indexes[2];
-  destinationChar[1] = indexes[3];
-  destinationColor[0] = attributeset[indexes[2]];
-  destinationColor[1] = attributeset[indexes[3]];*/
-  #endif
-
-  #if defined(__APPLE2__)
-  SetChar(indexes[0], x, y);
-  SetChar(indexes[1], x + 1, y);
-  SetChar(indexes[2], x, y + 1);
-  SetChar(indexes[3], x + 1, y + 1);
-  #endif
-
-  #if defined(__NES__) 
-  SetChar(indexes[0], x, y);
-  SetChar(indexes[1], x + 1, y);
-  SetChar(indexes[2], x, y + 1);
-  SetChar(indexes[3], x + 1, y + 1);
-  #endif
-
-  #if defined(MSX)
-  SetChar(indexes[0], x, y);
-  SetChar(indexes[1], x + 1, y);
-  SetChar(indexes[2], x, y + 1);
-  SetChar(indexes[3], x + 1, y + 1);
-  #endif
 }
-void DrawTileBuffer(bool drawChars)
-{
-  DrawTileSetup();
 
-  #if defined(__C64__)
-  destinationChar = &ScreenCharBuffer[offset1];
-  destinationColor = &ScreenColorBuffer[offset1];
-  #endif
-  if (drawChars)
-    DrawTile();
-}
 void DrawTileDirect(void)
 {
   DrawTileSetup();
-
-  #if defined(__C64__)
-  destinationChar = &ScreenChars[offset1];
-  destinationColor = &ScreenColors[offset1];
-  #endif
-
   DrawTile();
-  /*SetChar(indexes[0], DrawTileX + MapOriginX, DrawTileY + MapOriginY);
-  SetChar(indexes[1], DrawTileX + MapOriginX + 1, DrawTileY + MapOriginY);
-  SetChar(indexes[2], DrawTileX + MapOriginX, DrawTileY + 1 + MapOriginY);
-  SetChar(indexes[3], DrawTileX + MapOriginX + 1, DrawTileY + 1 + MapOriginY);*/
 }
 
 void DrawTileDirectXY(byte index, byte x, byte y)
@@ -736,7 +652,7 @@ void FillViewport(byte index, byte width, byte height)
       DrawTileY = byte_y;
       DrawTileIndex = index;
       DrawTilePalette = tilesPalette[index];
-      DrawTileBuffer(false);
+      DrawTileDirect;
     }
   UpdateAttributes();
 }
