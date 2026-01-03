@@ -294,12 +294,9 @@ void ScrollMessageWindowUp()
 void SetLineMessageWindow(char *message, byte delay)
 {
   byte x;
-  byte length = 0;
-  for (x = 0; x < ConsoleBufferLength; ++x)
-  {
-    if (message[x] != '@')
-      ++length;
-  }
+  byte length = 0; 
+  for (;message[length] != '@' && length < ConsoleBufferLength; ++length);
+  ++length;
   
   for (x = 0; x < Width; ++x)
     if (GetChar(PosX + x, PosY + Height - 1) != message[x])
