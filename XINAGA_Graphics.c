@@ -24,7 +24,6 @@
 //#link "vrambuf.c"
 #endif
 
-
 int YColumnIndex[ROWS];
 
 void getYCols()
@@ -423,42 +422,28 @@ void _SetChar(void)
 {
   int offset = SetCharX + YColumnIndex[SetCharY];
   #if defined(__APPLE2__)
-  bool draw = false;
-  if (ScreenChars[offset] != SetCharIndex)
-    draw = true;
-  ScreenChars[offset] = SetCharIndex;
-  if (draw)
+  if (ScreenChars[offset] != SetCharIndex) 
+  {
+    ScreenChars[offset] = SetCharIndex;
     DrawChar(SetCharIndex, SetCharX, SetCharY);
+  }
   #endif
   #if defined(__C64__)
   ScreenChars[offset] = SetCharIndex;
   //gotoxy(SetCharX,SetCharY);
   //cputc(SetCharIndex);
-  
   ScreenColors[offset] = attributeset[SetCharIndex];
   #endif
 
   #if defined (__NES__)
   ScreenChars[offset] = SetCharIndex;
-  //vram_adr(NTADR_A(SetCharX,SetCharY));		// set address
   vrambuf_put(NTADR_A(SetCharX,SetCharY), &SetCharIndex, 1);
-  //vrambuf_put(NAMETABLE_A + 32*30 + (SetCharX / 2) + ((SetCharY / 2) * (COLS / 2)), &attributeset[SetCharIndex], 1);
 
-
-
-  //vrambuf_end();
-  // wait for next frame to flush update buffer
-  // this will also set the scroll registers properly
-  //ppu_wait_frame();
-  // clear the buffer
   ++charsDrawn;
   if (charsDrawn % 21 == 0) // if (charsDrawn % 10 == 0)
   {
     wait_vblank(1);
-    //vrambuf_flush();
   }
-  //vram_put(SetCharIndex);
-  //ppu_on_all();
   #endif
 
   #if defined(MSX)

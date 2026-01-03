@@ -357,46 +357,37 @@ const byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
 const byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
 const byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
 void LoadQuadrant(byte quadIndex, byte quad)
-{  
-  //#pragma bss-name (push, "ZEROPAGE")
-  byte* charByteData = 0;
-  byte mask;
-  byte byte_x;
-  byte byte_y;
-  byte byte_z;
-  byte charIndex;
-  byte xPos;
-  byte yPos;
-  byte QuadOriginX;
-  byte QuadOriginY;
+{
+  byte byte_y, byte_z;
+  byte QuadOriginX, QuadOriginY;
   byte charByte;
-  //#pragma bss-name (pop)
+  int rowStart;
+  byte *out;
+  const byte *tilePtr;
+  byte mask;
 
   quadBuffer[quad] = quadIndex;
 
   for (byte_z = 0; byte_z < 4; ++byte_z)
-  {    
+  {
     QuadOriginX = quadOriginsX[quad] + quadOffsetX[byte_z];
     QuadOriginY = quadOriginsY[quad] + quadOffsetY[byte_z];
-
-    //charByteData = &MapSet[8*ScreenQuad.CharIndex[quadIndex][byte_z]];
+    // Precompute tile base pointer once per tile
+    tilePtr = &MapSet[ScreenQuad.CharIndex[quadIndex][byte_z] << 3];
     for (byte_y = 0; byte_y < quadHeight; ++byte_y)
     {
-      charByte = MapSet[byte_y + (ScreenQuad.CharIndex[quadIndex][byte_z]<<3)]; //*8
-      //charByte = MapSet[byte_y + 8*ScreenQuad.CharIndex[quadIndex][byte_z]];//charByteData[byte_y];
-      yPos = byte_y + QuadOriginY;
-      for (byte_x = 0; byte_x < quadWidth; ++byte_x)
-      {
-        xPos = byte_x + QuadOriginX;
-        
-        mask = 0x80 >> byte_x;
-	if (charByte & mask)
-        //if (ReadBit(charByte, 7 - byte_x) > 0)
-          charIndex = 1;
-        else
-          charIndex = 0;
-        mapData[xPos + (mapWidth *yPos)] = ScreenQuad.Chars[quadIndex][charIndex];
-      }
+      charByte = tilePtr[byte_y];
+      rowStart = mapWidth * (byte_y + QuadOriginY);
+      out = &mapData[QuadOriginX + rowStart];
+      mask = 0x80;
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0];
     }
   }
 }
