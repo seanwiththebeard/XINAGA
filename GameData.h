@@ -3,10 +3,6 @@
 
 #include "Xinaga.h"
 
-
-#if defined (__NES__)
-#endif
-
 #define screenName byte //Corresponds to NES banks at 0x8000
 #define Title 3
 #define EditParty 4

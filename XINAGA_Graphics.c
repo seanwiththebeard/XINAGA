@@ -24,19 +24,6 @@
 //#link "vrambuf.c"
 #endif
 
-#if defined (MSX)
-#include "msxbios.h"
-#endif
-
-#if defined(__ATARI__)
-#include <conio.h>
-#include <atari.h>
-#endif
-
-#if defined(__C64__)
-#include <conio.h>
-#endif
-
 
 int YColumnIndex[ROWS];
 
@@ -208,10 +195,6 @@ byte attributeset[256];
 
 #endif
 
-#if defined (__ATARI__)
-byte ScreenChars[ROWS*COLS];
-#endif
-
 #if defined (MSX)
 byte ScreenChars[ROWS*COLS];
 #endif
@@ -276,10 +259,6 @@ void ClearScreen(void)
   #if defined (MSX)
   FILVRM(0x1800, 768, ' ');
   #endif
-  
-  #if defined (__ATARI__)
-  clrscr();
-  #endif
 }
 
 #if defined(__C64__)
@@ -303,10 +282,6 @@ void raster_wait(byte line)
 
   #if defined(MSX)
   __asm__("HALT");
-  line;
-  #endif
-
-  #if defined(__ATARI__)
   line;
   #endif
 }
@@ -334,20 +309,8 @@ void wait_vblank(byte frames)
   }
 }
 
-#if defined(__C64__)
-void SelectScreenPos(byte pos)
-{
-  int* regd018 = (int*)0xD018;
-  byte a = pos * 16;
-  raster_wait(255);
-  regd018[0] = (regd018[0] & 15) | a;
-  //POKE (0xD018,(PEEK(0xD018) & 15) | a);
-}
-
-#endif
-
 void InitializeGraphics(void)
-{
+{  
   #if defined(__APPLE2__)
   byte y = 0;
   getYCols();
@@ -431,11 +394,6 @@ void InitializeGraphics(void)
   ClearScreen();  
   // enable PPU rendering (turn on screen)
   //ppu_on_all();
-  #endif
-  
-  #if defined(__ATARI__)
-  getYCols();  
-  ClearScreen();
   #endif
 }
 

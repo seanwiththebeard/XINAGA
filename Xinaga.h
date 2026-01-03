@@ -18,6 +18,13 @@ typedef int8_t sbyte;	// 8-bit signed
 extern uint16_t randseed;
 byte ReadBit(byte byteToRead, char bit);
 
+extern byte characterset[2048];
+extern byte attributeset[256];
+extern byte* CharRam;
+void raster_wait(byte line);
+void SetBorder(byte color);
+void SetBG(byte color);
+
 //Screen Layout
 #if defined(__APPLE2__)
 #define COLS 40
@@ -131,12 +138,6 @@ void A2Pixel(byte x, byte y, byte color);
 #pragma charmap(0x79, 0x59)
 #pragma charmap(0x7a, 0x5a)
 
-extern byte characterset[2048];
-extern byte attributeset[256];
-extern byte* CharRam;
-void raster_wait(byte line);
-void SetBorder(byte color);
-void SetBG(byte color);
 #endif
 
 #if defined(__NES__)
@@ -190,6 +191,7 @@ extern const char PALETTE_3[16];
 #endif
 
 #if defined(MSX)
+#include "msxbios.h"
 #define COLS 32
 #define ROWS 24
 #define consolePosX 2
