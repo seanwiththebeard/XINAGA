@@ -31,9 +31,9 @@ screenName Update_Title()
   }
 
   DrawBorder("@",12, 5, 16, 5, true);
-  PrintString("Title Screen@", 14, 7, true, false);
+  PrintString("Title Screen@", 14, 7, true);
   DrawBorder("@", 12, 19, 16, 5, true);
-  PrintString("Press Space@", 14, 21, true, false);
+  PrintString("Press Space@", 14, 21, true);
 
   while (1)
   {

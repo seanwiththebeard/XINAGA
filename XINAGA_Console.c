@@ -61,7 +61,7 @@ void ConsoleBufferEndline()
 void ConsoleBufferPrint(byte x, byte y)
 {
   ConsoleBufferEndline();
-  PrintString(strTemp, x, y, true, false);
+  PrintString(strTemp, x, y, true);
   ConsoleBufferReset();
 }
 

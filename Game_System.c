@@ -317,7 +317,7 @@ void DrawCharStatus(byte characterIndex)
   ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
   ConsoleBufferPrint(contextMenuPosX + 2, statY+1);
   sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
-  PrintString(strTemp, contextMenuPosX + 9, statY + 1, true, false);
+  PrintString(strTemp, contextMenuPosX + 9, statY + 1, true);
   ConsoleBufferReset();
   
   //sprintf(strTemp, "%s@", ClassDescriptions[PlayerChar->CLASS].NAME);
@@ -335,7 +335,7 @@ void DrawMoonPhase()
 {
   ConsoleBufferReset();  
   sprintf(strTemp, "<%c><%c>@", phaseChar[moonA], phaseChar[moonB]);
-  PrintString(strTemp, viewportPosX + (viewportWidth / 2) + 2, viewportPosY -1, true, false);
+  PrintString(strTemp, viewportPosX + (viewportWidth / 2) + 2, viewportPosY -1, true);
   ConsoleBufferReset();
 }
 void TickMoonPhase()

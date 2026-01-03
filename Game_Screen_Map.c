@@ -949,7 +949,7 @@ void DrawCharacterCoordinates(byte index)
   CoordPosY += quadHeight*2*characters.quadPosY[index];  
 
   sprintf(strTemp,"<%3i><%3i>@", CoordPosX, CoordPosY);
-  PrintString(strTemp, viewportPosX + viewportWidth / 2, viewportPosY + viewportHeight * 2, true, false);
+  PrintString(strTemp, viewportPosX + viewportWidth / 2, viewportPosY + viewportHeight * 2, true);
 }
 
 void LoadMap()

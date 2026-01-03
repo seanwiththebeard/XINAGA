@@ -565,102 +565,12 @@ void SetColor(byte index, byte x, byte y)
   #endif
 }
 
-void SetCharBuffer(byte index, byte x, byte y)
-{
-  #if defined(__APPLE2__)
-  ScreenChars[x + YColumnIndex[y]] = index;
-  #endif
-  #if defined(__C64__)
-  int offset = x + YColumnIndex[y];
-  ScreenCharBuffer[offset] = index;
-  ScreenColorBuffer[offset] = attributeset[index];
-  #endif
-  #if defined(__NES__)
-  ScreenChars[x + YColumnIndex[y]] = index;
-  //index;x;y;
-  #endif
-  #if defined(MSX)
-  ScreenChars[x + YColumnIndex[y]] = index;
-  //index;x;y;
-  #endif
-
-  #if defined(__ATARI__)
-  ScreenChars[x + YColumnIndex[y]] = index;
-  #endif
-}
-
 byte GetChar(byte x, byte y)
 {
-  // #if defined (__C64__)
-  // return ScreenChars[x + YColumnIndex[y]];
-  //#endif
-  // #if defined (__APPLE2__)
   return ScreenChars[x + YColumnIndex[y]];
-  // #endif
-  // #if defined (__NES__)
-
-  //char value;
-  //x;y;
-  //ppu_off();
-  //vram_adr(NTADR_A(x,y));
-  //vram_read(&value, 1);
-  //ppu_on_all();
-  //return value;
-  //#endif
 }
 
-//Buffer
-/*void CopyBuffer(void)
-{
-  #if defined(__APPLE2__)
-  int i = 0;
-  byte x = 0;
-  byte y = 0;
-  for (y = 0; y < ROWS; ++y)
-    for (x = 0; x < COLS; ++x)
-    {
-      DrawChar(ScreenChars[i],x, y);
-      ++i;
-    }
-  #endif
-  #if defined(__C64__)
-  memcpy(&ScreenChars[0], &ScreenCharBuffer[0], 0x400);
-  memcpy(&ScreenColors[0], &ScreenColorBuffer[0], 0x400);
-  #endif
-}*/
-
-
-/*
-void CopyBufferArea(byte origin_x, byte origin_y, byte width, byte height)
-{
-  #if defined(__APPLE2__)
-  byte x = 0;
-  byte y = 0;
-  int i = x + y * COLS;
-  for (y = origin_y; y < origin_y + height; ++y)
-  {
-    i = y * COLS;
-    for (x = origin_x; x < origin_x + width; ++x)
-    {
-      DrawChar(ScreenChars[i],x, y);
-      ++i;
-    }
-  }
-  #endif
-
-  #if defined(__C64__)
-  int offset = origin_x + YColumnIndex[origin_y];
-  byte column;
-  for (column = 0; column < height; ++column)
-  {
-    memcpy(&ScreenChars[offset], &ScreenCharBuffer[offset], width);
-    memcpy(&ScreenColors[offset], &ScreenColorBuffer[offset], width);
-    offset += COLS;
-  }
-  #endif
-}*/
-
-void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer)
+void PrintString(char *text, byte posx, byte posy, bool fast)
 {
   byte i;
   while (posy > ROWS - 1)
@@ -671,8 +581,8 @@ void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer)
       break;
     if (!fast)
       wait_vblank(1);
-    if (buffer)
-      SetCharBuffer(text[i], posx + i, posy);
+    //if (buffer)
+      //SetCharBuffer(text[i], posx + i, posy);
     else
       SetChar(text[i], posx + i, posy);
     #if defined(__C64__)
@@ -936,7 +846,7 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
   DrawLineV(0xEE, xPos, yPos1, heightInside1);
   DrawLineV(0xFE, xPos + widthInside1, yPos1, heightInside2);
   DrawCorners(xPos, yPos, widthInside1, heightInside1);
-  PrintString(text, xPos1, yPos, true, false);
+  PrintString(text, xPos1, yPos, true);
 
   wait_vblank(1);
 }

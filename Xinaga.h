@@ -289,7 +289,7 @@ bool InputFire(void);
 
 //	Text
 int sprintf (char* buf, const char* format, ...);
-void PrintString(char *text, byte posx, byte posy, bool fast, bool buffer);
+void PrintString(char *text, byte posx, byte posy, bool fast);
 
 //Console
 #define ConsoleBufferLength 128
