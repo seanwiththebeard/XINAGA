@@ -72,6 +72,7 @@ void FadePalette(byte pals, byte delay)
     wait_vblank(delay);
   }
   //free(tempPal);
+  UpdateAttributes();
   #endif
   pals;delay;
 }
@@ -83,7 +84,7 @@ void UnFadePalette(byte pals, byte delay)
   //byte *tempPal = (byte*)malloc(16);
   byte y, z;
   //memcpy(&tempPal[0], &PALETTE_0[0], 16);
-
+  UpdateAttributes();
   for (z = 0; z < 4; ++z)
   {
     if (pals & (1 << z))
@@ -542,7 +543,7 @@ byte DrawTileIndex;
 byte DrawTilePalette;
 byte indexes[4];
 
-void DrawTileSetup(void)
+/*void DrawTileSetup(void)
 {
 
   DrawTileIndex = (DrawTileIndex << 1) + ((DrawTileIndex >> 3) << 4);
@@ -553,10 +554,14 @@ void DrawTileSetup(void)
 
   DrawTileX = DrawTileX << 1;
   DrawTileY = DrawTileY << 1;
-  #if defined(__NES__)
-  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
-  #endif
-}
+}*/
+
+// Inline tile setup macro: computes tile indexes and converts tile coords to char coords
+#define DrawTileSetup() do { \
+  DrawTileIndex = (DrawTileIndex << 1) + ((DrawTileIndex >> 3) << 4); \
+  indexes[0] = DrawTileIndex; indexes[1] = DrawTileIndex + 1; indexes[2] = DrawTileIndex + 16; indexes[3] = DrawTileIndex + 17; \
+  DrawTileX = DrawTileX << 1; DrawTileY = DrawTileY << 1; \
+  } while(0)
 
 void DrawTile()
 {
@@ -572,6 +577,10 @@ void DrawTile()
 void DrawTileDirect(void)
 {
   DrawTileSetup();
+  #if defined(__NES__)
+  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
+  //UpdateAttributes();
+  #endif
   DrawTile();
 }
 
@@ -579,9 +588,6 @@ void DrawTileDirectXY(byte index, byte x, byte y)
 {
   byte tempX = MapOriginX;
   byte tempY = MapOriginY;
-  #if defined(__NES__)
-  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);
-  #endif
 
   SetTileOrigin(x, y);
   DrawTileIndex = index;

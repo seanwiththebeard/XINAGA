@@ -20,8 +20,11 @@ void InitializeMapData(void);
 void LoadMap(void);
 void DrawMapViewport(void);
 void DrawEntireMap(void);
-void wrapX(sbyte *posX); //Used in map positions
-void wrapY(sbyte *posY);
+//void wrapX(sbyte *posX); //Used in map positions
+//void wrapY(sbyte *posY);
+// wrapX/wrapY: converted to inline macros for 6502 performance
+#define wrapX(v) do { if ((v) < 0) (v) = mapWidth - 1; else if ((v) >= mapWidth) (v) = 0; } while(0)
+#define wrapY(v) do { if ((v) < 0) (v) = mapHeight - 1; else if ((v) >= mapHeight) (v) = 0; } while(0)
 void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
 void ApplyLOS(void);
 void CameraFollow(void);
@@ -251,19 +254,22 @@ void CameraFollow()
 {
   byte byte_x;
   byte byte_y;
+  byte pX = playerX;
+  byte pY = playerY;
+  
   offsetX = characters.posX[followIndex];
   offsetY = characters.posY[followIndex];
 
-  for(byte_x = 0; byte_x < playerX; ++byte_x)
+  for(byte_x = 0; byte_x < pX; ++byte_x)
   {
     --offsetX;
-    wrapX(&offsetX);
+    wrapX(offsetX);
   }
 
-  for(byte_y = 0; byte_y < playerY; ++byte_y)
+  for(byte_y = 0; byte_y < pY; ++byte_y)
   {
     --offsetY;
-    wrapY(&offsetY);
+    wrapY(offsetY);
   }
 }
 
@@ -604,7 +610,7 @@ void InitializeMapData()
   LOSEnabled = true;
 }
 
-void wrapX(sbyte *posX) //Used in map positions
+/*void wrapX(sbyte *posX) //Used in map positions
 {
   if (*posX < 0)
     *posX = mapWidth - 1;
@@ -618,7 +624,7 @@ void wrapY(sbyte *posY)
     *posY = mapHeight - 1;
   else if (*posY >= mapHeight)
     *posY = 0;
-}
+}*/
 
 bool CheckCollision(byte charIndex, direction dir)
 {
@@ -637,19 +643,19 @@ bool CheckCollision(byte charIndex, direction dir)
   {
     case up:
       --yPos;
-      wrapY(&yPos);
+      wrapY(yPos);
       break;
     case down:
       ++yPos;
-      wrapY(&yPos);
+      wrapY(yPos);
       break;
     case left:
       --xPos;
-      wrapX(&xPos);
+      wrapX(xPos);
       break;
     case right:
       ++xPos;
-      wrapX(&xPos);
+      wrapX(xPos);
       break;
     default:
       return false;
@@ -680,7 +686,7 @@ bool CheckCollision(byte charIndex, direction dir)
   return false;
 }
 
-void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Blocking
+/*void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Blocking
 {
   byte x;
   byte y;
@@ -693,42 +699,57 @@ void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Bl
   for(y = yOrigin; y < ySize + yOrigin; ++y)
     for(x = xOrigin; x < xSize + xOrigin; ++x)
       viewportBuffer[x + (viewportWidth * y)] = EmptyTile;
-}
+}*/
+
+#define DrawSquare(xOrigin, yOrigin, xSize, ySize) do { \
+  byte _ds_y; \
+  for (_ds_y = (yOrigin); _ds_y < (yOrigin) + (ySize); ++_ds_y) { \
+    int _ds_base = (viewportWidth * _ds_y) + (xOrigin); \
+    memset(&viewportBuffer[_ds_base], EmptyTile, (xSize)); \
+  } \
+} while(0)
 
 void ApplyLOS() //437bytes
 {
   byte x;
   byte y;
+  byte pX = playerX;
+  byte pY = playerY;
 
   for (y = 0; y < viewportHeight; ++y)
+  {
+    int rowBase = viewportWidth * y;
     for (x = 0; x < viewportWidth; ++x)
-      if (tilesOpaque[viewportBuffer[x + (viewportWidth * y)]])
+    {
+      if (tilesOpaque[viewportBuffer[x + rowBase]])
       {
         byte xDist = viewportWidth - x - 1;
         byte yDist = viewportHeight - y - 1;
-        if (x < playerX)
+        if (x < pX)
         {
-          if (y <= playerY)
+          if (y <= pY)
             DrawSquare(0, 0, x, y); //Upper Left
-          if (y >= playerY)
+          if (y >= pY)
             DrawSquare(0, y + 1, x, yDist); //Lower Left
-          if (y == playerY)
+          if (y == pY)
             DrawSquare(0, y, x, 1); //Left
         }
-        if (x > playerX)
+        if (x > pX)
         {
-          if (y <= playerY)
+          if (y <= pY)
             DrawSquare(x + 1, 0, xDist, y); //Upper Right
-          if (y >= playerY)
+          if (y >= pY)
             DrawSquare(x + 1, y + 1, xDist, yDist); //Lower Right
-          if (y == playerY)
+          if (y == pY)
             DrawSquare(x + 1, y, xDist, 1); //Right
         }
-        if (y < playerY)
+        if (y < pY)
           DrawSquare(x, 0, 1, y); //Up
-        if (y > playerY)
+        if (y > pY)
           DrawSquare(x, y + 1, 1, yDist); //Down
       }
+    }
+  }
 
   //Quadrant Layout:
   //        ^
@@ -801,10 +822,10 @@ void DrawEntireMap()
   int_b = offsetY;
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {
-    wrapY(&int_b); //Wrap the map data y reference
+    wrapY(int_b); //Wrap the map data y reference
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
-      wrapX(&int_a); //Wrap the map data X reference
+      wrapX(int_a); //Wrap the map data X reference
       viewportBuffer[byte_x + (viewportWidth * byte_y)] = mapData[int_a + (mapWidth * int_b)];      
       int_a++;
     }
