@@ -22,7 +22,6 @@
 // VRAM buffer module
 #include "vrambuf.h"
 //#link "vrambuf.c"
-
 #endif
 
 #if defined (MSX)
