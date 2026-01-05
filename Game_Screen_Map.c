@@ -115,7 +115,7 @@ static const byte MapSet[] = { /*{w:8,h:8,bpp:1,count:256,brev:1,pal:"c64",np:1}
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x00,0x01
     ,0x00,0x00,0x40,0x40,0x40,0x60,0x3C,0x00,0x00,0x00,0x02,0x02,0x02,0x02,0x3C,0x00
-    ,0xE7,0x81,0x81,0x00,0x00,0x81,0x81,0xE7,0xC3,0xC3,0xC3,0xC3,0xC3,0xC3,0xC3,0xC3
+    ,0xE7,0x81,0x81,0x00,0x00,0x81,0x81,0xE7,0xFF,0x81,0x81,0x81,0x81,0x81,0x81,0xFF
     ,0x00,0x00,0x3F,0x20,0x20,0x27,0x24,0x24,0x00,0x00,0xFF,0x00,0x00,0xE7,0x24,0x24
     ,0x00,0x00,0xFC,0x04,0x04,0xE4,0x24,0x24,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
@@ -661,7 +661,9 @@ static bool CheckCollision(byte charIndex, direction dir)
 
 static void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Blocking
 {
-  byte _ds_y; \
+  byte _ds_y;
+  if ( (xSize <1) || (ySize < 1) )
+    return;
   for (_ds_y = (yOrigin); _ds_y < (yOrigin) + (ySize); ++_ds_y) 
   { 
     int _ds_base = (viewportWidth * _ds_y) + (xOrigin); 
@@ -675,17 +677,17 @@ static void ApplyLOS() //437bytes
   byte y;
   byte pX = playerX;
   byte pY = playerY;
-
+  int rowBase = 0;
   for (y = 0; y < viewportHeight; ++y)
   {
-    int rowBase = viewportWidth * y;
+    //rowBase += viewportWidth;
     for (x = 0; x < viewportWidth; ++x)
     {
       if (tilesOpaque[viewportBuffer[x + rowBase]])
       {
         byte xDist = viewportWidth - x - 1;
         byte yDist = viewportHeight - y - 1;
-        if (x < pX)
+        if (x <= pX)
         {
           if (y <= pY)
             DrawSquare(0, 0, x, y); //Upper Left
@@ -693,8 +695,9 @@ static void ApplyLOS() //437bytes
             DrawSquare(0, y + 1, x, yDist); //Lower Left
           if (y == pY)
             DrawSquare(0, y, x, 1); //Left
+          continue;
         }
-        if (x > pX)
+        if (x >= pX)
         {
           if (y <= pY)
             DrawSquare(x + 1, 0, xDist, y); //Upper Right
@@ -702,6 +705,7 @@ static void ApplyLOS() //437bytes
             DrawSquare(x + 1, y + 1, xDist, yDist); //Lower Right
           if (y == pY)
             DrawSquare(x + 1, y, xDist, 1); //Right
+          continue;
         }
         if (y < pY)
           DrawSquare(x, 0, 1, y); //Up
@@ -709,6 +713,8 @@ static void ApplyLOS() //437bytes
           DrawSquare(x, y + 1, 1, yDist); //Down
       }
     }
+    rowBase += viewportWidth;
+    
   }
 
   //Quadrant Layout:
