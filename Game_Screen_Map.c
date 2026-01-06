@@ -661,14 +661,14 @@ static bool CheckCollision(byte charIndex, direction dir)
 
 static void DrawSquare(byte xOrigin, byte yOrigin, byte xSize, byte ySize) //LOS Blocking
 {
-  byte _ds_y;
-  if ( (xSize <1) || (ySize < 1) )
+  byte yEnd, row;
+  int offset;
+  if ( !xSize || !ySize )
     return;
-  for (_ds_y = (yOrigin); _ds_y < (yOrigin) + (ySize); ++_ds_y) 
-  { 
-    byte _ds_base = (viewportWidth * _ds_y) + (xOrigin); 
-    memset(&viewportBuffer[_ds_base], EmptyTile, (xSize));
-  }
+  yEnd = yOrigin + ySize; 
+  row = yOrigin;
+  offset = (row * viewportWidth) + xOrigin;
+  do { memset(&viewportBuffer[offset], EmptyTile, xSize); ++row; offset += viewportWidth; } while (row < yEnd);
 }
 
 static void ApplyLOS() //437bytes
