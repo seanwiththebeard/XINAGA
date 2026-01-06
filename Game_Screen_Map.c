@@ -661,8 +661,7 @@ static bool CheckCollision(byte charIndex, direction dir)
 
 static void DrawSquare(byte xOrigin, byte yOrigin, byte xSize, byte ySize) //LOS Blocking
 {
-  byte yEnd, row;
-  int offset;
+  byte yEnd, row, offset;
   if ( !xSize || !ySize )
     return;
   yEnd = yOrigin + ySize; 
@@ -671,82 +670,50 @@ static void DrawSquare(byte xOrigin, byte yOrigin, byte xSize, byte ySize) //LOS
   do { memset(&viewportBuffer[offset], EmptyTile, xSize); ++row; offset += viewportWidth; } while (row < yEnd);
 }
 
-static void ApplyLOS() //437bytes
+static void ApplyLOS()
 {
-  byte x = 0;
-  byte y = 0;
   byte pX = playerX;
   byte pY = playerY;
   byte rowBase = 0;
-  byte rowBaseX = 0;
-  byte yDist = viewportHeight - y - 1;
+  byte x, y, xDist, yDist, tile;
 
   for (y = 0; y < viewportHeight; ++y)
   {
-    byte yDist = viewportHeight - y - 1;
+    yDist = viewportHeight - y - 1;
+
     for (x = 0; x < viewportWidth; ++x)
     {
-      rowBaseX = x+ rowBase;
-      if (viewportBuffer[rowBaseX] != EmptyTile)
-        if (tilesOpaque[viewportBuffer[rowBaseX]])
-        {
-          byte xDist = viewportWidth - x - 1;
-          
-          if (x < pX)
-          {
-            if (y == pY)
-            {
-              DrawSquare(0, y-1, x, 3); //Left
-              continue;
-            }
-            if (y < pY)
-            {
-              DrawSquare(0, 0, x, y); //Upper Left
-              continue;
-            }
-            if (y > pY)
-            {
-              DrawSquare(0, y + 1, x, yDist); //Lower Left
-              continue;
-            }
-          }
-          if (x > pX)
-          {
-            if (y == pY)
-            {
-              DrawSquare(x + 1, y-1, xDist, 3); //Right
-              continue;
-            }
-            if (y < pY)
-            {
-              DrawSquare(x + 1, 0, xDist, y); //Upper Right
-              continue;
-            }
-            if (y > pY)
-            {
-              DrawSquare(x + 1, y + 1, xDist, yDist); //Lower Right
-              continue;
-            }
-          }
-          
-          if (x == pX)
-          {
-            if (y < pY )
-            {
-              DrawSquare(x-1, 0, 3, y); //Up
-              continue;
-            }
-            if (y > pY)
-            {
-              DrawSquare(x-1, y + 1, 3, yDist); //Down
-              continue;
-            }
-          }
-        }
+      tile = viewportBuffer[rowBase + x];
+      if (tile == EmptyTile || !tilesOpaque[tile])
+        continue;
+
+      xDist = viewportWidth - x - 1;
+      if (!xDist)
+        continue;
+
+      if (x < pX)
+      {
+        if (y == pY) { DrawSquare(0, y - 1, x, 3); continue; }
+        if (y < pY)  { DrawSquare(0, 0, x, y); continue; }
+        /* y > pY */ DrawSquare(0, y + 1, x, yDist); continue;
+      }
+
+      if (x > pX)
+      {
+        if (y == pY) { DrawSquare(x + 1, y - 1, xDist, 3); continue; }
+        if (y < pY)  { DrawSquare(x + 1, 0, xDist, y); continue; }
+        /* y > pY */ DrawSquare(x + 1, y + 1, xDist, yDist); continue;
+      }
+
+      // x == pX
+      if (y < pY)  { DrawSquare(x - 1, 0, 3, y); continue; }
+      if (y > pY)  { DrawSquare(x - 1, y + 1, 3, yDist); continue; }
     }
+
     rowBase += viewportWidth;
   }
 }
+
 
 static void DrawEntireMap()
 {
