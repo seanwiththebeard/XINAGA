@@ -338,10 +338,10 @@ static void FillQuadBuffer()
   //byte_y = (quadY + 1) % quadHeight;
   if (byte_x == quadWidth) byte_x = 0;
   if (byte_y == quadHeight) byte_y = 0;
-  
+
   row0 = mapMatrixWidth * quadY;
   row1 = mapMatrixWidth * byte_y; 
-  
+
   quadBuffer[0] = mapQuads[quadX + row0]; 
   quadBuffer[1] = mapQuads[byte_x + row0]; 
   quadBuffer[2] = mapQuads[quadX + row1]; 
@@ -527,24 +527,24 @@ static void InitializeMapData()
     {
       mapQuads[byte_x + 16*byte_y] = byte_x + 16*byte_y;
     }
-  
+
   for (byte_x = 0; byte_x < TileCount; ++byte_x)
   {
-      tilesPalette[byte_x] = 1;
-      tilesBlocked[byte_x] = 0;
-      tilesOpaque[byte_x] = 0;
-    
+    tilesPalette[byte_x] = 1;
+    tilesBlocked[byte_x] = 0;
+    tilesOpaque[byte_x] = 0;
+
     if (byte_x < 8)
       tilesPalette[byte_x] = 0;
   }
-  
+
   //Quad definitions (64 tiles)
   for (byte_y = 0; byte_y < 8; ++byte_y)
     for (byte_x = 0; byte_x < 8; ++byte_x)
     {
       byte_index = byte_x + (16* byte_y);
       byte_offset = (byte_x << 1) + (byte_y << 5);
-      
+
       ScreenQuad.CharIndex[byte_index][0] = byte_offset; // Init screen quad prefabs for 8x8
       ScreenQuad.CharIndex[byte_index][1] = byte_offset + 1;
       ScreenQuad.CharIndex[byte_index][2] = byte_offset + 16;
@@ -559,8 +559,8 @@ static void InitializeMapData()
   tilesOpaque[44] = true; //Trees
   tilesPalette[44] = 3; //Trees
   tilesPalette[35] = 2; //Sign
-  
-  
+
+
   //ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
   //ScreenQuad.Chars[2][1] = 44; // Set the wizard to trees on 1
   //Init Characters
@@ -659,120 +659,93 @@ static bool CheckCollision(byte charIndex, direction dir)
   return false;
 }
 
-static void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize) //LOS Blocking
+static void DrawSquare(byte xOrigin, byte yOrigin, byte xSize, byte ySize) //LOS Blocking
 {
   byte _ds_y;
   if ( (xSize <1) || (ySize < 1) )
     return;
   for (_ds_y = (yOrigin); _ds_y < (yOrigin) + (ySize); ++_ds_y) 
   { 
-    int _ds_base = (viewportWidth * _ds_y) + (xOrigin); 
+    byte _ds_base = (viewportWidth * _ds_y) + (xOrigin); 
     memset(&viewportBuffer[_ds_base], EmptyTile, (xSize));
   }
 }
 
 static void ApplyLOS() //437bytes
 {
-  byte x;
-  byte y;
+  byte x = 0;
+  byte y = 0;
   byte pX = playerX;
   byte pY = playerY;
-  int rowBase = 0;
+  byte rowBase = 0;
+  byte rowBaseX = 0;
+  byte yDist = viewportHeight - y - 1;
+
   for (y = 0; y < viewportHeight; ++y)
   {
-    //rowBase += viewportWidth;
+    byte yDist = viewportHeight - y - 1;
     for (x = 0; x < viewportWidth; ++x)
     {
-      if (tilesOpaque[viewportBuffer[x + rowBase]])
-      {
-        byte xDist = viewportWidth - x - 1;
-        byte yDist = viewportHeight - y - 1;
-        if (x <= pX)
+      rowBaseX = x+ rowBase;
+      if (viewportBuffer[rowBaseX] != EmptyTile)
+        if (tilesOpaque[viewportBuffer[rowBaseX]])
         {
-          if (y <= pY)
-            DrawSquare(0, 0, x, y); //Upper Left
-          if (y >= pY)
-            DrawSquare(0, y + 1, x, yDist); //Lower Left
-          if (y == pY)
-            DrawSquare(0, y, x, 1); //Left
-          continue;
+          byte xDist = viewportWidth - x - 1;
+          
+          if (x < pX)
+          {
+            if (y == pY)
+            {
+              DrawSquare(0, y-1, x, 3); //Left
+              continue;
+            }
+            if (y < pY)
+            {
+              DrawSquare(0, 0, x, y); //Upper Left
+              continue;
+            }
+            if (y > pY)
+            {
+              DrawSquare(0, y + 1, x, yDist); //Lower Left
+              continue;
+            }
+          }
+          if (x > pX)
+          {
+            if (y == pY)
+            {
+              DrawSquare(x + 1, y-1, xDist, 3); //Right
+              continue;
+            }
+            if (y < pY)
+            {
+              DrawSquare(x + 1, 0, xDist, y); //Upper Right
+              continue;
+            }
+            if (y > pY)
+            {
+              DrawSquare(x + 1, y + 1, xDist, yDist); //Lower Right
+              continue;
+            }
+          }
+          
+          if (x == pX)
+          {
+            if (y < pY )
+            {
+              DrawSquare(x-1, 0, 3, y); //Up
+              continue;
+            }
+            if (y > pY)
+            {
+              DrawSquare(x-1, y + 1, 3, yDist); //Down
+              continue;
+            }
+          }
         }
-        if (x >= pX)
-        {
-          if (y <= pY)
-            DrawSquare(x + 1, 0, xDist, y); //Upper Right
-          if (y >= pY)
-            DrawSquare(x + 1, y + 1, xDist, yDist); //Lower Right
-          if (y == pY)
-            DrawSquare(x + 1, y, xDist, 1); //Right
-          continue;
-        }
-        if (y < pY)
-          DrawSquare(x, 0, 1, y); //Up
-        if (y > pY)
-          DrawSquare(x, y + 1, 1, yDist); //Down
-      }
     }
     rowBase += viewportWidth;
-    
   }
-
-  //Quadrant Layout:
-  //        ^
-  //        |       ^
-  //  000  666  111 |
-  //  000  666  111  ->
-  //  000  666  111
-  //
-  //  444  XXX  555
-  //  444  XPX  555 ->
-  //  444  XXX  555
-  //
-  //  333  777  222
-  //  333  777  222
-  //  333  777  222
-  //
-  //Center adjacent X always visible
-  //Diagonal quadrants 0-3 block everything behind the tile
-  //Cardinal quadrants 4-7 block only the tiles directly behind them
-  //Quad 0
-  /*for(y = playerY - 1; y > 0; --y)
-    for(x = playerX - 1; x > 0; --x)
-      if (tiles.opaque[viewportBuffer[x][y]])
-        DrawSquare(0, 0, x, y);
-  //Quad 1
-  for(y = playerY - 1; y > 0; --y)
-    for(x = playerX + 1; x < viewportWidth; ++x)
-      if (tiles.opaque[viewportBuffer[x][y]])
-        DrawSquare(x, 0, viewportWidth - x, y);
-  //Quad 2
-  for(y = playerY + 1; y < viewportHeight; ++y)
-    for(x = playerX + 1; x < viewportWidth; ++x)
-      if (tiles.opaque[viewportBuffer[x][y]])
-        DrawSquare(x + 1, y + 1, viewportWidth - x, viewportHeight - y);
-  //Quad 3
-  for(y = playerY + 1; y < viewportHeight; ++y)
-    for(x = playerX - 1; x > 0; --x)
-      if (tiles.opaque[viewportBuffer[x][y]])
-        DrawSquare(0, y + 1, x, viewportHeight - y);
-  //Horizontal
-  for(x = playerX - 1; x > 0; --x)
-    for(y = playerY - 1; y <= playerY + 1; ++y)
-      if (tiles.opaque[viewportBuffer[x][y]])
-        DrawSquare(0, y, x, 1);
-  for(x = playerX + 1; x < viewportWidth; ++x)
-    for(y = playerY - 1; y <= playerY + 1; ++y)
-      if (tiles.opaque[viewportBuffer[x][y]])
-        DrawSquare(x + 1, y, viewportWidth - x - 1, 1);
-  //Vertical
-  for(y = playerY - 1; y > 0; --y)
-    for(x = playerX -1 ; x <= playerX + 1; ++x)
-      if (tiles.opaque[viewportBuffer[x][y]])
-        DrawSquare(x, 0, 1, y);
-  for(y = playerY + 1; y < viewportHeight; ++y)
-    for(x = playerX -1 ; x <= playerX + 1; ++x)
-      if (tiles.opaque[viewportBuffer[x][y]])
-        DrawSquare(x, y + 1, 1, viewportHeight - y);*/
 }
 
 static void DrawEntireMap()
@@ -781,7 +754,7 @@ static void DrawEntireMap()
   sbyte int_b;
   byte byte_x;
   byte byte_y;
-  
+
   //Buffer the matrix of tiles for our viewport
   CameraFollow();
   int_a = offsetX;
@@ -801,7 +774,7 @@ static void DrawEntireMap()
   BufferCharacters();
   if(LOSEnabled)
     ApplyLOS();
-  
+
   MapFadeOut();
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
@@ -1015,7 +988,7 @@ static void ActionMenu()
 
 void DrawMap()
 {
-  
+
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawScreen();
@@ -1024,7 +997,7 @@ void DrawMap()
 screenName MapUpdate()
 {
   exitScreen = false;
-  
+
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawCharStats();
@@ -1033,7 +1006,7 @@ screenName MapUpdate()
   FillViewport(32, viewportWidth, viewportHeight);
   ScreenFadeIn();
   DrawMapViewport();
-  
+
   while (!exitScreen)
   {
     UpdateInput();
