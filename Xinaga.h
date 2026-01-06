@@ -4,6 +4,7 @@
 #include <string.h> //For memcpy
 #include <stdint.h> //For byte and sbyte
 #include <stdlib.h> //For srand
+
 typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
 #define bool byte
@@ -16,15 +17,10 @@ typedef int8_t sbyte;	// 8-bit signed
 #define right 3
 
 extern uint16_t randseed;
-//byte ReadBit(byte byteToRead, char bit);
 #define ReadBit(b, n) (((b) >> (n)) & 1)
 
 extern byte characterset[2048];
 extern byte attributeset[256];
-extern byte* CharRam;
-void raster_wait(byte line);
-void SetBorder(byte color);
-void SetBG(byte color);
 
 //Screen Layout
 #if defined(__APPLE2__)
@@ -149,25 +145,31 @@ void A2Pixel(byte x, byte y, byte color);
 
 #if defined(__NES__)
 #include <peekpoke.h>
+
 #define COLS 32
 #define ROWS 30
+
 #define consolePosX 2
 #define consolePosY (viewportPosY + (viewportHeight * 2) + 1)
 #define consoleWidth ROWS - selectionWidth - 3
 #define consoleHeight (ROWS - consolePosY - 3)
+
 #define selectionPosX COLS - selectionWidth - 2
 #define selectionPosY consolePosY
 #define selectionWidth 6
 #define selectionHeight consoleHeight
 #define selectionCount 4
+
 #define viewportPosX 2
 #define viewportPosY 2
 #define viewportWidth 9
 #define viewportHeight 9
+
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
 #define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
 #define contextMenuHeight (2 * viewportHeight)
+
 #define MMC_MODE 0x00
 #define MMC3_SET_REG(r,n)\
 	POKE(0x8000, MMC_MODE|(r));\
@@ -227,7 +229,6 @@ extern const char PALETTE_3[16];
 #define ColorText 1
 void InitializeGraphics(void);
 void wait_vblank(byte frames);
-//void SetAttrib(byte x, byte y, byte pal, bool direct);
 void UpdateAttributes(void);
 void ScreenFadeOut(void);
 void ScreenFadeIn(void);
@@ -241,12 +242,10 @@ extern byte SetCharY;
 void _SetChar(void);
 #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void ClearScreen(void);
-//void SetColor(byte x, byte y, byte index);
 void DrawLineH(byte index, byte x, byte y, byte length);
 void DrawLineV(byte index, byte x, byte y, byte length);
 void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool fill);
 void DrawCharset(void);
-//byte GetChar(byte x, byte y);
 
 //	Tiles
 #define TileCount 64

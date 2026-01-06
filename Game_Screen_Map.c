@@ -721,6 +721,7 @@ static void DrawEntireMap()
   sbyte int_b;
   byte byte_x;
   byte byte_y;
+  int offset;
 
   //Buffer the matrix of tiles for our viewport
   CameraFollow();
@@ -743,11 +744,14 @@ static void DrawEntireMap()
     ApplyLOS();
 
   MapFadeOut();
+  offset = 0;
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
+  {
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     { //Only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
-      byte lastIndex = viewportBufferLast[byte_x + (viewportWidth * byte_y)];
-      byte newIndex = viewportBuffer[byte_x + (viewportWidth * byte_y)];
+      byte lastIndex = viewportBufferLast[offset];
+      byte newIndex = viewportBuffer[offset];
+
       if (lastIndex != newIndex)
       {
         DrawTileX = byte_x;
@@ -756,7 +760,9 @@ static void DrawEntireMap()
         DrawTilePalette = tilesPalette[newIndex];
         DrawTileDirect();
       }
+      ++offset;
     }
+  }
 
   memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);
   DrawCharacterCoordinates(followIndex);

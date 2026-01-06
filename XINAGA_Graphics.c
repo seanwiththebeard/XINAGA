@@ -578,6 +578,33 @@ void DrawTile()
   SetChar(indexes[3], x + 1, y + 1);
 }
 
+void DrawTileSeq(byte index)
+{
+  byte x, y;
+  index = (index << 1) + ((index >> 3) << 4);
+  
+  indexes[0] = index;
+  indexes[1] = index + 1;
+  indexes[2] = index + 16;
+  indexes[3] = index + 17;
+  
+  DrawTileX = DrawTileX << 1;
+  DrawTileY = DrawTileY << 1;
+  
+  #if defined(__NES__)
+  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
+  //UpdateAttributes();
+  #endif
+  
+  x = DrawTileX + MapOriginX;
+  y = DrawTileY + MapOriginY;
+
+  SetChar(indexes[0], x, y);
+  SetChar(indexes[1], x + 1, y);
+  SetChar(indexes[2], x, y + 1);
+  SetChar(indexes[3], x + 1, y + 1);
+}
+
 void DrawTileDirect(void)
 {
   DrawTileSetup();
