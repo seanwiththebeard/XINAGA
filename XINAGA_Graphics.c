@@ -410,15 +410,15 @@ void InitializeGraphics(void)
 }*/
 
 #pragma bss-name (push, "ZEROPAGE")
-unsigned int base;
 const byte* src;
 byte* dest;
 #pragma bss-name (pop)
 void DrawChar(byte index, byte xpos, byte ypos)
 {
   //base = RowsHGR[ypos << 3] + xpos;
-  src = &charset[index << 3];
-  dest = (byte*)0x2000 + (RowsHGR[ypos << 3] + xpos);
+  //src = &charset[index << 3];
+  src = charset + (index << 3);
+  dest = (byte*)HGR + RowsHGR[ypos << 3] + xpos;
   
   //HGR[base + 0x0000] = src[0];
   //HGR[base + 0x0400] = src[1];
@@ -429,14 +429,14 @@ void DrawChar(byte index, byte xpos, byte ypos)
   //HGR[base + 0x1800] = src[6];
   //HGR[base + 0x1C00] = src[7];
   
-  dest[0] = src[0];
-  dest[0x400] = src[1];
+  dest[0x0000] = src[0];
+  dest[0x0400] = src[1];
   dest[0x0800] = src[2];
   dest[0x0C00] = src[3];
   dest[0x1000] = src[4];
   dest[0x1400] = src[5];
   dest[0x1800] = src[6];
-  dest[0x1C00] = src[7];  
+  dest[0x1C00] = src[7];
 }
 #endif
 
