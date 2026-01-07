@@ -721,6 +721,8 @@ static void DrawEntireMap()
   sbyte int_b;
   byte byte_x;
   byte byte_y;
+  int viewportOffset;
+  int mapOffset;
   int offset;
 
   //Buffer the matrix of tiles for our viewport
@@ -730,10 +732,13 @@ static void DrawEntireMap()
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {
     wrapY(int_b); //Wrap the map data y reference
+    viewportOffset = (viewportWidth * byte_y);
+    mapOffset = (mapWidth * int_b);
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
       wrapX(int_a); //Wrap the map data X reference
-      viewportBuffer[byte_x + (viewportWidth * byte_y)] = mapData[int_a + (mapWidth * int_b)];      
+      
+      viewportBuffer[byte_x + viewportOffset] = mapData[int_a + mapOffset];      
       int_a++;
     }
     int_a = offsetX;
@@ -745,23 +750,29 @@ static void DrawEntireMap()
 
   MapFadeOut();
   offset = 0;
+  tilePosY = 0;
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {
+    tilePosX = 0;
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     { //Only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
-      byte lastIndex = viewportBufferLast[offset];
+      //byte lastIndex = viewportBufferLast[offset];
       byte newIndex = viewportBuffer[offset];
 
-      if (lastIndex != newIndex)
+      if (viewportBufferLast[offset] != newIndex)
       {
-        DrawTileX = byte_x;
-        DrawTileY = byte_y;
-        DrawTileIndex = newIndex;
+        //DrawTileX = byte_x;
+        //DrawTileY = byte_y;
+        //DrawTileIndex = newIndex;
         DrawTilePalette = tilesPalette[newIndex];
-        DrawTileDirect();
+        //DrawTileDirect();
+        DrawTileSeq(newIndex);
+        viewportBufferLast[offset] = newIndex;
       }
+      ++tilePosX;
       ++offset;
     }
+    ++tilePosY;
   }
 
   memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);

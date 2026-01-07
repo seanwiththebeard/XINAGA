@@ -578,31 +578,31 @@ void DrawTile()
   SetChar(indexes[3], x + 1, y + 1);
 }
 
+byte tilePosX;
+byte tilePosY;
 void DrawTileSeq(byte index)
 {
-  byte x, y;
-  index = (index << 1) + ((index >> 3) << 4);
-  
-  indexes[0] = index;
-  indexes[1] = index + 1;
-  indexes[2] = index + 16;
-  indexes[3] = index + 17;
-  
-  DrawTileX = DrawTileX << 1;
-  DrawTileY = DrawTileY << 1;
+  byte xA, yA, xB, yB;
+
+  byte posX = tilePosX << 1; 
+  byte posY = tilePosY << 1;
+  xA = posX + MapOriginX;
+  yA = posY + MapOriginY;
+  xB = xA + 1;
+  yB = yA + 1;
   
   #if defined(__NES__)
-  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
+  SetAttrib(posX + viewportPosX, posY + viewportPosY, tilesPalette[index], false);  
   //UpdateAttributes();
   #endif
   
-  x = DrawTileX + MapOriginX;
-  y = DrawTileY + MapOriginY;
+  //index = (index << 1) + ((index >> 3) << 4);
+  index = (index << 1) + ((index & 0xF8) << 1);  
 
-  SetChar(indexes[0], x, y);
-  SetChar(indexes[1], x + 1, y);
-  SetChar(indexes[2], x, y + 1);
-  SetChar(indexes[3], x + 1, y + 1);
+  SetChar(index, 	xA, yA);
+  SetChar(index + 1, 	xB, yA);
+  SetChar(index + 16, 	xA, yB);
+  SetChar(index + 17, 	xB, yB);
 }
 
 void DrawTileDirect(void)
