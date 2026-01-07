@@ -764,7 +764,7 @@ static void DrawEntireMap()
         //DrawTileX = byte_x;
         //DrawTileY = byte_y;
         //DrawTileIndex = newIndex;
-        DrawTilePalette = tilesPalette[newIndex];
+        //DrawTilePalette = tilesPalette[newIndex];
         //DrawTileDirect();
         DrawTileSeq(newIndex);
         viewportBufferLast[offset] = newIndex;
@@ -775,7 +775,7 @@ static void DrawEntireMap()
     ++tilePosY;
   }
 
-  memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);
+  //memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);
   DrawCharacterCoordinates(followIndex);
   UpdateAttributes();
   MapFadeIn();
