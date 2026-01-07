@@ -34,15 +34,14 @@ static void getYCols()
     YColumnIndex[y] = y * COLS;
   for (y = 0; y < 64; ++y)
     tileIndexes[y] = (y << 1) + ((y & 0xF8) << 1);
-  
+
   #if defined(__APPLE2__)
-  for (y = 0; y < 192; ++y)
-    RowsHGR[y] = (y/64)*0x28 + (y%8)*0x400 + ((y/8)&7)*0x80;
+  for (y = 0; y != 192; ++y)
+    RowsHGR[y] = (y>>6)*0x28 + (y&7)*0x400 + ((y>>3)&7)*0x80;
   #endif
 }
 
 const int ScreenCharSize = ROWS*COLS;
-
 
 #if defined(__APPLE2__)
 byte* ScreenChars = (byte*)(0x0400);
@@ -161,14 +160,15 @@ void ScreenFadeIn(void)
   screenFaded = false;
 }
 
-const byte MOD_4[32] = { //Lookup tables for %4
-  0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3,
-  0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3
-  };
+
 
 void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
   #if defined (__NES__)
+  const byte MOD_4[32] = { //Lookup tables for %4
+    0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3,
+    0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3
+    };
   byte offset = ((y >>2 ) << 3) + (x >> 2); //(y / 4) * 8 + (x / 4); //Which byte of the attribute table?
   byte pairX = (MOD_4[x]) > 1 ? 2 : 0;
   byte pairY = (MOD_4[y]) > 1 ? 4 : 0;
@@ -201,8 +201,6 @@ void UpdateAttributes(void)
 //const byte const *attributeset = 0x0;
 byte ScreenChars[ROWS*COLS];
 byte attributeset[256];
-
-
 #endif
 
 #if defined (MSX)
@@ -211,11 +209,10 @@ byte ScreenChars[ROWS*COLS];
 
 #if defined(__C64__)
 const byte const charset[2048];
-byte *ScreenCharBuffer = (byte *)0x0400;
-byte *ScreenColorBuffer = (byte *)0xF400;
+//byte *ScreenCharBuffer = (byte *)0x0400;
 byte *ScreenChars = (byte *)0x0400;
 byte *ScreenColors = (byte *)0xD800;
-bool bufferselect = false;
+//bool bufferselect = false;
 //byte attributeset[256];
 #endif
 
@@ -231,16 +228,14 @@ void SetBG(byte color)
 }
 #endif
 
-
-
 void ClearScreen(void)
 {
 
   #if defined(__C64__)
   memset(ScreenChars, ' ', ScreenCharSize); // Clear Chars
-  memset(ScreenCharBuffer, ' ', ScreenCharSize); // Clear Buffer
+  //memset(ScreenCharBuffer, ' ', ScreenCharSize); // Clear Buffer
   memset(ScreenColors, 1, ScreenCharSize); // clear Colors
-  memset(ScreenColorBuffer, 1, ScreenCharSize); // clear Color Buffer
+  //memset(ScreenColorBuffer, 1, ScreenCharSize); // clear Color Buffer
   #endif
 
   #if defined(__APPLE2__)
@@ -326,11 +321,11 @@ void InitializeGraphics(void)
 
   #if defined(__C64__)
   #define bank 3
-  #define CharacterRom 0xD000
-  #define ColorRam 0xD800
+  //#define CharacterRom 0xD000
+  //#define ColorRam 0xD800
   #define charpos 7
   byte screenpos = 2;
-  byte vicreg = 0x00;
+  //byte vicreg = 0x00;
   int screenposition;
   int* regd018 = (int*)0xD018;
   int* regdd00 = (int*)0xDD00;
@@ -338,48 +333,32 @@ void InitializeGraphics(void)
   byte* charfile = &characterset[0];//(int*)0x0840;
   //int* attribfile = (int*)0x1040;
   byte* CharRam = (byte*)(bank * (16<<10) + (charpos <<11));
-  //byte* CharRam = (byte*)(0xC000 + 0x3800); // for bank 3, charpos 7
   //byte* CharRam;
   //CharRam = 0;
   //CharRam += (bank * (16<<10) + (charpos <<11)); // *1024, *2048
 
-  if (bufferselect)
-    ++screenpos;
+  //if (bufferselect)
+  //++screenpos;
 
   SetBG(ColorBG);
   SetBorder(ColorBorder);
 
   screenposition = (bank * (16<<10) + (screenpos <<10)); // *1024
-  ScreenChars = 0;
-  ScreenChars += screenposition;
-  
-
-  //memcpy(&CharRam[0], &charset[0], 2048); // * 8
+  ScreenChars = (byte*)screenposition;
   memcpy(&CharRam[0], &charfile[0], 2048);
-  //memcpy(&attributeset[0], &attribfile[0], 256);
 
+  //ScreenCharBuffer = (byte*)screenposition;
 
-  ScreenCharBuffer = 0;
-  ScreenCharBuffer += screenposition;
+  //if (bufferselect)
+  //ScreenCharBuffer -= 0x0400; // Buffer location 1024b before the screen position
+  //else
+  //ScreenCharBuffer += 0x0400; // Buffer location 1024b after the screen position
 
-  if (bufferselect)
-    ScreenCharBuffer -= 0x0400; // Buffer location 1024b before the screen position
-  else
-    ScreenCharBuffer += 0x0400; // Buffer location 1024b after the screen position
-
-  ScreenColorBuffer = 0;
-  ScreenColorBuffer += 0x0400; // Use the default screen character space for color buffer
+  //ScreenColorBuffer = (byte*) 0x0400; // Use the default screen character space for color buffer
   //Select Bank
-  //POKE (0xDD00, (PEEK(0XDD00)&(255 - bank)));
   regdd00[0] = (regdd00[0]&(255 - bank));
   //Set Screen and Character Ram Position
-  //screenpos = screenpos << 4;
-  //charpos = charpos << 1;
-  vicreg = (screenpos << 4) + (charpos << 1);
-  regd018[0] = vicreg;
-  //Cursor Position
-  //POKE (0x0288, screenposition / 256);
-  //SetMulticolors(11, 15);
+  regd018[0] = (screenpos << 4) + (charpos << 1);
   #endif
 
   #if defined(__NES__)
@@ -414,7 +393,7 @@ void InitializeGraphics(void)
   }
 }*/
 
-void DrawChar(int index, byte xpos, byte ypos)
+/*void DrawChar(int index, byte xpos, byte ypos)
 {
     int offset = RowsHGR[ypos << 3] + xpos;
     const byte* src = &charset[index << 3];
@@ -428,8 +407,37 @@ void DrawChar(int index, byte xpos, byte ypos)
     *dst = src[5];  dst += 0x400;
     *dst = src[6];  dst += 0x400;
     *dst = src[7];
-}
+}*/
 
+#pragma bss-name (push, "ZEROPAGE")
+unsigned int base;
+const byte* src;
+byte* dest;
+#pragma bss-name (pop)
+void DrawChar(byte index, byte xpos, byte ypos)
+{
+  //base = RowsHGR[ypos << 3] + xpos;
+  src = &charset[index << 3];
+  dest = (byte*)0x2000 + (RowsHGR[ypos << 3] + xpos);
+  
+  //HGR[base + 0x0000] = src[0];
+  //HGR[base + 0x0400] = src[1];
+  //HGR[base + 0x0800] = src[2];
+  //HGR[base + 0x0C00] = src[3];
+  //HGR[base + 0x1000] = src[4];
+  //HGR[base + 0x1400] = src[5];
+  //HGR[base + 0x1800] = src[6];
+  //HGR[base + 0x1C00] = src[7];
+  
+  dest[0] = src[0];
+  dest[0x400] = src[1];
+  dest[0x0800] = src[2];
+  dest[0x0C00] = src[3];
+  dest[0x1000] = src[4];
+  dest[0x1400] = src[5];
+  dest[0x1800] = src[6];
+  dest[0x1C00] = src[7];  
+}
 #endif
 
 byte SetCharIndex;
@@ -472,7 +480,7 @@ void _SetChar(void)
   SETWRT();
   WRTVRM(0x1800 + SetCharX +(SetCharY << 5), SetCharIndex);
   #endif
-  
+
   #if defined(__ATARI__)
   gotoxy(SetCharX,SetCharY);
   cputc(SetCharIndex);
@@ -521,7 +529,7 @@ void PrintString(char *text, byte posx, byte posy, bool fast)
     if (!fast)
       wait_vblank(1);
     //if (buffer)
-      //SetCharBuffer(text[i], posx + i, posy);
+    //SetCharBuffer(text[i], posx + i, posy);
     else
       SetChar(text[i], posx + i, posy);
     #if defined(__C64__)
@@ -591,12 +599,12 @@ void DrawTileSeq(byte index)
   yA = posY + MapOriginY;
   xB = xA + 1;
   yB = yA + 1;
-  
+
   #if defined(__NES__)
   SetAttrib(posX + viewportPosX, posY + viewportPosY, tilesPalette[index], false);  
   //UpdateAttributes();
   #endif
-  
+
   //index = (index << 1) + ((index >> 3) << 4);
   index = tileIndexes[index]; //(index << 1) + ((index & 0xF8) << 1);  
 
