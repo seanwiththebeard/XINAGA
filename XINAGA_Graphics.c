@@ -328,7 +328,7 @@ void InitializeGraphics(void)
   #define bank 3
   #define CharacterRom 0xD000
   #define ColorRam 0xD800
-  byte charpos = 7;
+  #define charpos 7
   byte screenpos = 2;
   byte vicreg = 0x00;
   int screenposition;
@@ -337,9 +337,11 @@ void InitializeGraphics(void)
 
   byte* charfile = &characterset[0];//(int*)0x0840;
   //int* attribfile = (int*)0x1040;
-
-  byte* CharRam;
-  CharRam = 0;
+  byte* CharRam = (byte*)(bank * (16<<10) + (charpos <<11));
+  //byte* CharRam = (byte*)(0xC000 + 0x3800); // for bank 3, charpos 7
+  //byte* CharRam;
+  //CharRam = 0;
+  //CharRam += (bank * (16<<10) + (charpos <<11)); // *1024, *2048
 
   if (bufferselect)
     ++screenpos;
@@ -350,8 +352,7 @@ void InitializeGraphics(void)
   screenposition = (bank * (16<<10) + (screenpos <<10)); // *1024
   ScreenChars = 0;
   ScreenChars += screenposition;
-  //CharRam += 2;
-  CharRam += (bank * (16<<10) + (charpos <<11)); // *1024, *2048
+  
 
   //memcpy(&CharRam[0], &charset[0], 2048); // * 8
   memcpy(&CharRam[0], &charfile[0], 2048);
@@ -372,9 +373,9 @@ void InitializeGraphics(void)
   //POKE (0xDD00, (PEEK(0XDD00)&(255 - bank)));
   regdd00[0] = (regdd00[0]&(255 - bank));
   //Set Screen and Character Ram Position
-  screenpos = screenpos << 4;
-  charpos = charpos << 1;
-  vicreg = screenpos + charpos;
+  //screenpos = screenpos << 4;
+  //charpos = charpos << 1;
+  vicreg = (screenpos << 4) + (charpos << 1);
   regd018[0] = vicreg;
   //Cursor Position
   //POKE (0x0288, screenposition / 256);
