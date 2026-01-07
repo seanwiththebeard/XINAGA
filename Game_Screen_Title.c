@@ -11,6 +11,11 @@
 //#pragma data-name (push, "TITLE")
 //#pragma bss-name (push, "TITLE")
 #endif
+
+#if defined (__C64__)
+#pragma code-name (push, "SCREEN_TITLE")
+#pragma rodata-name (push, "SCREEN_TITLE")
+#endif
 int tetrismap(byte seed);
 
 void NoDiskAssemble();

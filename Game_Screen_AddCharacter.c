@@ -12,6 +12,11 @@
 //#pragma bss-name (push, "XRAM")
 #endif
 
+#if defined (__C64__)
+#pragma code-name (push, "SCREEN_ADDCHAR")
+#pragma rodata-name (push, "SCREEN_ADDCHAR")
+#endif
+
 screenName nextScreen;
 
 bool AreYouSure();

@@ -14,6 +14,10 @@
 //#pragma bss-name (push, "XRAM")
 #endif
 
+#if defined (__C64__)
+#pragma code-name (push, "SCREEN_SCENARIO")
+#pragma rodata-name (push, "SCREEN_SCENARIO")
+#endif
 
 /*
 World Structure

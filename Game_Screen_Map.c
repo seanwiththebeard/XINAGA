@@ -13,6 +13,7 @@
 
 #if defined (__C64__)
 #pragma code-name (push, "SCREEN_MAP")
+#pragma rodata-name (push, "SCREEN_MAP")
 #endif
 
 //Prototypes

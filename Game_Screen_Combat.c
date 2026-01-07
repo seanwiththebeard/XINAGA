@@ -12,6 +12,11 @@
 //#pragma bss-name (push, "XRAM")
 #endif
 
+#if defined (__C64__)
+#pragma code-name (push, "SCREEN_COMBAT")
+#pragma rodata-name (push, "SCREEN_COMBAT")
+#endif
+
 #define fillTile 36
 
 sbyte SelectedCharacter;

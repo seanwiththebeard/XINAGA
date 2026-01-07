@@ -32,6 +32,11 @@ One byte describes 16x16 region
 //#pragma bss-name (push, "XRAM")
 #endif
 
+#if defined (__C64__)
+#pragma code-name (push, "SCREEN_MAPGEN")
+#pragma rodata-name (push, "SCREEN_MAPGEN")
+#endif
+
 #define pointsBase 48
 #define continentsBase 4
 //#define grass 0x88

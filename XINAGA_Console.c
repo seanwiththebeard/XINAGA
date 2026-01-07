@@ -11,6 +11,11 @@
 //#pragma bss-name (push, "XRAM")
 #endif
 
+#if defined (__C64__)
+#pragma code-name (push, "XINAGA")
+#pragma rodata-name (push, "XINAGA_RODATA")
+#endif
+
 //Console Buffer
 byte* consoleContents;
 int contentOffset; //Offset of Last Line
