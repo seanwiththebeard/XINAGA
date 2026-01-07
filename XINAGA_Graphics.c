@@ -25,12 +25,20 @@
 #endif
 
 int YColumnIndex[ROWS];
+byte tileIndexes[64];
 
 static void getYCols()
 {
   byte y;
   for (y = 0; y < ROWS; ++y)
     YColumnIndex[y] = y * COLS;
+  for (y = 0; y < 64; ++y)
+    tileIndexes[y] = (y << 1) + ((y & 0xF8) << 1);
+  
+  #if defined(__APPLE2__)
+  for (y = 0; y < 192; ++y)
+    RowsHGR[y] = (y/64)*0x28 + (y%8)*0x400 + ((y/8)&7)*0x80;
+  #endif
 }
 
 const int ScreenCharSize = ROWS*COLS;
@@ -308,17 +316,12 @@ void wait_vblank(byte frames)
 }
 
 void InitializeGraphics(void)
-{  
+{
   #if defined(__APPLE2__)
-  byte y = 0;
-  getYCols();
-  ClearScreen();  
   STROBE(0xc052); // turn off mixed-mode
   STROBE(0xc054); // page 1
   STROBE(0xc057); // hi-res
   STROBE(0xc050); // set graphics mode
-  for (y = 0; y < 192; ++y)
-    RowsHGR[y] = (y/64)*0x28 + (y%8)*0x400 + ((y/8)&7)*0x80;
   #endif
 
   #if defined(__C64__)
@@ -335,9 +338,7 @@ void InitializeGraphics(void)
   byte* charfile = &characterset[0];//(int*)0x0840;
   //int* attribfile = (int*)0x1040;
 
-  byte* CharRam;  
-
-  getYCols();
+  byte* CharRam;
   CharRam = 0;
 
   if (bufferselect)
@@ -377,22 +378,21 @@ void InitializeGraphics(void)
   regd018[0] = vicreg;
   //Cursor Position
   //POKE (0x0288, screenposition / 256);
-  ClearScreen();
   //SetMulticolors(11, 15);
   #endif
 
   #if defined(__NES__)
-  getYCols();  
   vrambuf_clear();
   set_vram_update(updbuf);  
   pal_bright(4);
   pal_clear();
   pal_bg(PALETTE_0);
   oam_clear();
-  ClearScreen();  
   // enable PPU rendering (turn on screen)
   //ppu_on_all();
   #endif
+  getYCols();
+  ClearScreen();
 }
 
 #if defined(__APPLE2__)
@@ -597,7 +597,7 @@ void DrawTileSeq(byte index)
   #endif
   
   //index = (index << 1) + ((index >> 3) << 4);
-  index = (index << 1) + ((index & 0xF8) << 1);  
+  index = tileIndexes[index]; //(index << 1) + ((index & 0xF8) << 1);  
 
   SetChar(index, 	xA, yA);
   SetChar(index + 1, 	xB, yA);
