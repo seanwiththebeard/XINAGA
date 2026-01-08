@@ -191,7 +191,7 @@ void A2Pixel(byte x, byte y, byte color);
 #define MMC3_WRAM_READ_ONLY() POKE(0xA001, 0xC0)
 extern byte ScreenChars[ROWS*COLS];
 extern byte attributeset[256];
-extern const int ScreenCharSize;
+//extern const int ScreenCharSize;
 extern char ATTRIBUTE_TABLE[0x40];
 extern const char PALETTE_0[16];
 extern const char PALETTE_1[16];

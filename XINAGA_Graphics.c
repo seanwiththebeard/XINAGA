@@ -31,6 +31,7 @@
 
 int YColumnIndex[ROWS];
 byte tileIndexes[64];
+int ScreenCharSize;
 
 static void getYCols()
 {
@@ -44,12 +45,14 @@ static void getYCols()
   for (y = 0; y != 192; ++y)
     RowsHGR[y] = (y>>6)*0x28 + (y&7)*0x400 + ((y>>3)&7)*0x80;
   #endif
+  
+  ScreenCharSize = ROWS*COLS;
 }
 
-const int ScreenCharSize = ROWS*COLS;
+//const int ScreenCharSize = ROWS*COLS;
 
 #if defined(__APPLE2__)
-byte* ScreenChars = (byte*)(0x0400);
+byte* ScreenChars;// = (byte*)(0x0400);
 #pragma data-name (push, "HGR")
 char HGR[0x2000] = {};
 #pragma data-name (pop)
@@ -170,15 +173,9 @@ void ScreenFadeIn(void)
 void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
   #if defined (__NES__)
-  const byte MOD_4[32] = { //Lookup tables for %4
-    0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3,
-    0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3
-    };
   byte offset = ((y >>2 ) << 3) + (x >> 2); //(y / 4) * 8 + (x / 4); //Which byte of the attribute table?
-  byte pairX = (MOD_4[x]) > 1 ? 2 : 0;
-  byte pairY = (MOD_4[y]) > 1 ? 4 : 0;
-
-  byte shift = pairX + pairY;
+  
+  byte shift = ((x & 3) > 1 ? 2 : 0) + ((y & 3) > 1 ? 4 : 0);
   byte mask = ~(0b11 << shift);
 
   ATTRIBUTE_TABLE[offset] = (ATTRIBUTE_TABLE[offset] & mask) | (pal << shift);
@@ -215,14 +212,13 @@ byte ScreenChars[ROWS*COLS];
 #if defined(__C64__)
 const byte const charset[2048];
 //byte *ScreenCharBuffer = (byte *)0x0400;
-byte *ScreenChars = (byte *)0x0400;
-byte *ScreenColors = (byte *)0xD800;
+byte *ScreenChars;// = (byte *)0x0400;
+byte *ScreenColors;// = (byte *)0xD800;
+byte* RASTERCOUNT;// = (byte*)0xD012;
 //bool bufferselect = false;
 //byte attributeset[256];
-#endif
 
-#if defined(__C64__)
-byte *bgReg = (byte*)0xD020;
+byte *bgReg;// = (byte*)0xD020;
 void SetBorder(byte color)
 {
   bgReg[0] = color;
@@ -267,9 +263,6 @@ void ClearScreen(void)
   #endif
 }
 
-#if defined(__C64__)
-byte* RASTERCOUNT = (byte*)0xD012;
-#endif
 void raster_wait(byte line)
 {
   #if defined(__C64__)
@@ -318,6 +311,7 @@ void wait_vblank(byte frames)
 void InitializeGraphics(void)
 {
   #if defined(__APPLE2__)
+  ScreenChars = (byte*)(0x0400);
   STROBE(0xc052); // turn off mixed-mode
   STROBE(0xc054); // page 1
   STROBE(0xc057); // hi-res
@@ -329,7 +323,7 @@ void InitializeGraphics(void)
   //#define CharacterRom 0xD000
   //#define ColorRam 0xD800
   #define charpos 7
-  byte screenpos = 2;
+  #define screenpos 2
   //byte vicreg = 0x00;
   int screenposition;
   int* regd018 = (int*)0xD018;
@@ -344,7 +338,10 @@ void InitializeGraphics(void)
 
   //if (bufferselect)
   //++screenpos;
-
+  RASTERCOUNT = (byte*)0xD012;
+  bgReg = (byte*)0xD020;
+  ScreenColors = (byte *)0xD800;
+  
   SetBG(ColorBG);
   SetBorder(ColorBorder);
 
@@ -727,13 +724,15 @@ void DrawLineV(byte index, byte x, byte y, byte length)
 
 void DrawCorners(byte xPos, byte yPos, byte widthInside1, byte heightInside1)
 {
-  char corner = 0xEA;
+  #define corner  0xEA
   char corner1 = corner;
   char corner2 = corner;
+  #if defined (__APPLE2__)
   if (xPos % 2 == 1)
     ++corner1;
   if ((xPos + widthInside1) % 2 == 1)
     ++corner2;
+  #endif
   SetChar(corner1, xPos, yPos);
   SetChar(corner2, xPos + widthInside1, yPos);
   SetChar(corner1, xPos, yPos + heightInside1);
@@ -764,7 +763,6 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
     }
     //wait_vblank(1);
   }
-
 
   DrawLineH(0xEC, xPos1, yPos, widthInside2);
   DrawLineH(0xFC, xPos1, yPos + heightInside1, widthInside2);
