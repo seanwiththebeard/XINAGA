@@ -16,7 +16,6 @@
 //#link "Game_Screen_MapGen.c"
 //#link "Game_Screen_Scenario.c"
 
-
 void main(void)
 {
   //InitializeGraphics();
