@@ -177,7 +177,7 @@ void main(void)
   //INIMLT();
   
   //DebugGraphics();
-  Demo();
+  Demo(Map);
   
   while(1);
 }
