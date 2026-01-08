@@ -175,7 +175,7 @@ void main()
   //DebugGraphics();
   //while(1);
   //GFX_DEMO();
-  Demo();
+  Demo(Map);
 }
 
 const byte const charset[2048] = {/*{w:8,h:8,count:256, bpp:1}*/
