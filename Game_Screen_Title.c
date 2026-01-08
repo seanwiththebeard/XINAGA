@@ -16,10 +16,10 @@
 #pragma code-name (push, "SCREEN_TITLE")
 #pragma rodata-name (push, "SCREEN_TITLE")
 #endif
-int tetrismap(byte seed);
+//int tetrismap(byte seed);
 
 void NoDiskAssemble();
-byte seed = 57;
+//byte seed = 57;
 
 screenName Update_Title()
 {

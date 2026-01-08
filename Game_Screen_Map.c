@@ -315,7 +315,7 @@ static void UpdatePlayerOnMiniMap(void)
 }
 
 //Quad Data
-byte mapQuads[mapMatrixHeight * mapMatrixWidth] = {0};  //These are the quad-tile references that make up the map
+byte mapQuads[mapMatrixHeight * mapMatrixWidth];  //These are the quad-tile references that make up the map
 
 static struct
 { //These are the quad indexes referenced in mapQuads[y][x]
@@ -369,7 +369,7 @@ static void LoadQuadrant(byte quadIndex, byte quad)
   int rowStart;
   byte *out;
   const byte *tilePtr;
-  byte mask;
+  //byte mask;
 
   quadBuffer[quad] = quadIndex;
 
@@ -384,15 +384,15 @@ static void LoadQuadrant(byte quadIndex, byte quad)
       charByte = tilePtr[byte_y];
       rowStart = mapWidth * (byte_y + QuadOriginY);
       out = &mapData[QuadOriginX + rowStart];
-      mask = 0x80;
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0]; mask >>= 1;
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte & mask) != 0];
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 7) & 1];
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 6) & 1];
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 5) & 1];
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 4) & 1];
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 3) & 1];
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 2) & 1];
+      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 1) & 1];
+      *out++ = ScreenQuad.Chars[quadIndex][ charByte       & 1];
+
     }
   }
 }
@@ -426,13 +426,11 @@ static byte GetPlayerQuad() //Returns the viewport quadrant of the player charac
 static byte GetQuadInRelation(sbyte v, sbyte h)
 {
   //#pragma bss-name (push, "ZEROPAGE")
-  sbyte int_x;
-  sbyte int_y;
+  sbyte int_x = characters.quadPosX[followIndex];
+  sbyte int_y = characters.quadPosY[followIndex];
   //#pragma bss-name (pop)
-  int_x = characters.quadPosX[followIndex];
-  int_y = characters.quadPosY[followIndex];
 
-  if (v < 0)
+  /*if (v < 0)
   {
     --int_y;
     if (int_y < 0)
@@ -455,16 +453,34 @@ static byte GetQuadInRelation(sbyte v, sbyte h)
     ++int_x;
     if (int_x == mapMatrixWidth)
       int_x = 0;
-  }
+  }*/
+
+  int_y = (int_y + v + mapMatrixHeight) % mapMatrixHeight;
+  int_x = (int_x + h + mapMatrixWidth) % mapMatrixWidth;
+  
   return (mapQuads[int_x + (mapMatrixWidth * int_y)]);  
 }
 
 //Directional data for finding a relative quad
 //left -UP DOWN LEFT RIGHT right UP DOWN LEFT RIGHT
-static const sbyte quadRelationAV[8] = {-1,  1,  0,  0, -1, 1,  0, 0}; //vA
-static const sbyte quadRelationBV[8] = {-1,  1, -1, -1, -1, 1,  1, 1}; //vB
-static const sbyte quadRelationAH[8] = { 0,  0, -1,  1,  0, 0, -1, 1}; //hA
-static const sbyte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
+//static const sbyte quadRelationAV[8] = {-1,  1,  0,  0, -1, 1,  0, 0}; //vA
+//static const sbyte quadRelationBV[8] = {-1,  1, -1, -1, -1, 1,  1, 1}; //vB
+//static const sbyte quadRelationAH[8] = { 0,  0, -1,  1,  0, 0, -1, 1}; //hA
+//static const sbyte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
+
+typedef struct { sbyte vA, vB, hA, hB; } QuadRel;
+static const QuadRel quadRel[8] = {
+    {-1, -1,  0, -1},
+    { 1,  1,  0, -1},
+    { 0, -1, -1, -1},
+    { 0, -1,  1,  1},
+    {-1, -1,  0,  1},
+    { 1,  1,  0,  1},
+    { 0,  1, -1, -1},
+    { 0,  1,  1,  1}
+};
+
+
 //Quad positions in the matrix for which way we're moving
 static const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
 static const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
@@ -474,7 +490,7 @@ static void QuadScroll(direction dir)
   //#pragma bss-name (push, "ZEROPAGE")
   byte quadA; //Entering quad
   byte quadB; //Diagonal quad
-  byte localX, localY;
+  //byte localX, localY;
   byte indexA;
   byte indexB;
   byte relH;
@@ -486,12 +502,14 @@ static void QuadScroll(direction dir)
 
   relH = dir;
   relV = dir;
-  localX = characters.posX[followIndex] & (TileSize - 1);
-  localY = characters.posY[followIndex] & (TileSize - 1);
-  charPosX = localX < quadWidth;
-  charPosY = localY < quadHeight;
-  //charPosX = (characters.posX[followIndex] % TileSize) < quadWidth;
-  //charPosY = (characters.posY[followIndex] % TileSize) < quadHeight;
+  //localX = characters.posX[followIndex] & (TileSize - 1);
+  //localY = characters.posY[followIndex] & (TileSize - 1);
+  
+  //charPosX = localX < quadWidth;
+  //charPosY = localY < quadHeight;
+  
+  charPosX = (characters.posX[followIndex] & (TileSize - 1)) < quadWidth;
+  charPosY = (characters.posY[followIndex] & (TileSize - 1)) < quadHeight;
   compareQuad = GetPlayerQuad();
 
   if (!charPosX)
@@ -499,8 +517,11 @@ static void QuadScroll(direction dir)
   if (!charPosY)
     relV += 4;
 
-  indexA = GetQuadInRelation(quadRelationAV[relV], quadRelationAH[relH]);
-  indexB = GetQuadInRelation(quadRelationBV[relV], quadRelationBH[relH]);
+  //indexA = GetQuadInRelation(quadRelationAV[relV], quadRelationAH[relH]);
+  //indexB = GetQuadInRelation(quadRelationBV[relV], quadRelationBH[relH]);
+  
+  indexA = GetQuadInRelation(quadRel[relV].vA, quadRel[relH].hA);
+  indexB = GetQuadInRelation(quadRel[relV].vB, quadRel[relH].hB);
 
   if (dir > 1) //Is Horizontal?
     compareQuad += 4;
@@ -515,12 +536,13 @@ static void QuadScroll(direction dir)
     LoadQuadrant(indexB, quadB);
 }
 
+#define grass 36
+#define water 34
+#define signpost 35
+#define tree 44
 static void InitializeMapData()
 {
-  #define grass 36
-  #define water 34
-  #define signpost 35
-  #define tree 44
+  
   byte byte_x;
   byte byte_y;
   byte byte_i;
