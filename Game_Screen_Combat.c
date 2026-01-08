@@ -116,7 +116,7 @@ void Initialize(void)
   DrawCombatMap();
 
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-}
+  }
 
 
 void GetCharacters(void)
@@ -567,13 +567,15 @@ void DrawCombatMap(void)
   for (y = 0; y < CombatMapHeight; ++y)
     for (x = 0; x < CombatMapWidth; ++x)
     {
-      DrawTileIndex = fillTile;
-      DrawTileX = x;
-      DrawTileY = y;
-      DrawTileDirect();
+      //DrawTileIndex = fillTile;
+      //DrawTileX = x;
+      //DrawTileY = y;
+      tilePosX = x;
+      tilePosY = y;
+      DrawTileSeq(fillTile);
     }
   DrawCharacters();
-  wait_vblank(1);
+  //wait_vblank(1);
   //SwapBuffer();
 }
 
@@ -581,11 +583,15 @@ void DrawOneCharacter()
 {
   if (combatParticipant.active[SelectedCharacter])
   {
-    wait_vblank(1); //Reduces flicker
-    DrawTileIndex = combatParticipant.tileIndex[SelectedCharacter];
-    DrawTileX = combatParticipant.posX[SelectedCharacter];
-    DrawTileY = combatParticipant.posY[SelectedCharacter];
-    DrawTileDirect();
+    //wait_vblank(1); //Reduces flicker
+    //DrawTileIndex = combatParticipant.tileIndex[SelectedCharacter];
+    //DrawTileX = combatParticipant.posX[SelectedCharacter];
+    //DrawTileY = combatParticipant.posY[SelectedCharacter];
+    //DrawTileDirect();
+    
+    tilePosX = combatParticipant.posX[SelectedCharacter];
+    tilePosY = combatParticipant.posY[SelectedCharacter];
+    DrawTileSeq(combatParticipant.tileIndex[SelectedCharacter]);
   }
 }
 
@@ -597,11 +603,15 @@ void DrawCharacters(void)
   {
     if (combatParticipant.active[i])
     {
-      DrawTileIndex = combatParticipant.tileIndex[i];
-      DrawTileX = combatParticipant.posX[i];
-      DrawTileY = combatParticipant.posY[i];
-      DrawTileDirect();
-      wait_vblank(1);
+      //DrawTileIndex = combatParticipant.tileIndex[i];
+      //DrawTileX = combatParticipant.posX[i];
+      //DrawTileY = combatParticipant.posY[i];
+      //DrawTileDirect();
+      
+      tilePosX = combatParticipant.posX[i];
+      tilePosY = combatParticipant.posY[i];
+      DrawTileSeq(combatParticipant.tileIndex[i]);
+      //wait_vblank(1);
     }
   }
 }

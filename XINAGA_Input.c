@@ -93,10 +93,16 @@ void UpdateInput(void)
   #endif
 
   #if defined(__APPLE2__)
-  cgetc();
-  while(keycode[0] & 128){}
+  if(kbhit())
+    cgetc();
+  else
+  {
+    key = 255;
+    return;
+  }
+  //while(keycode[0] & 128){}
   key = keycode[0];
-  SetChar(key, COLS - 1, 1);
+  //SetChar(key, COLS - 1, 1);
   #endif
   
   #if (__NES__)

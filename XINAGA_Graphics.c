@@ -611,10 +611,11 @@ void DrawTileDirectXY(byte index, byte x, byte y)
   byte tempY = MapOriginY;
 
   SetTileOrigin(x, y);
-  DrawTileIndex = index;
+  //DrawTileIndex = index;
   DrawTileX = 0;
   DrawTileY = 0;
-  DrawTileDirect();
+  //DrawTileDirect();
+  DrawTileSeq(index);
 
   SetTileOrigin(tempX, tempY);
 }
