@@ -255,13 +255,17 @@ void DrawCharset(void);
 extern byte DrawTileX;
 extern byte DrawTileY;
 extern byte DrawTileIndex;
-extern byte DrawTilePalette;
+//extern byte DrawTilePalette;
 extern byte tilesBlocked[TileCount];
 extern byte tilesOpaque[TileCount];
 extern byte tilesPalette[TileCount];
 void SetTileOrigin(byte x, byte y);
 extern byte tilePosX;
 extern byte tilePosY;
+#if defined(__C64__) || (__APPLE2__) || (__NES__)
+#pragma zpsym ("tilePosX")
+#pragma zpsym ("tilePosY")
+#endif
 //void DrawTileBuffer(bool drawChars);
 void DrawTileDirect(void);
 void DrawTileDirectXY(byte index, byte x, byte y);

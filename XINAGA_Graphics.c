@@ -589,14 +589,21 @@ void DrawTile()
   SetChar(indexes[3], x + 1, y + 1);
 }
 
+#if defined(__C64__) || (__APPLE2__) || (__NES__)
+#pragma bss-name (push, "ZEROPAGE")
+#endif
 byte tilePosX;
 byte tilePosY;
+byte xA, yA, xB, yB, posX, posY;
+#if defined(__C64__) || (__APPLE2__) || (__NES__)
+#pragma bss-name (pop)
+#endif
+
 void DrawTileSeq(byte index)
 {
-  byte xA, yA, xB, yB;
 
-  byte posX = tilePosX << 1; 
-  byte posY = tilePosY << 1;
+  posX = tilePosX << 1; 
+  posY = tilePosY << 1;
   xA = posX + MapOriginX;
   yA = posY + MapOriginY;
   xB = xA + 1;
