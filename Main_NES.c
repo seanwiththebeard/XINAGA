@@ -191,8 +191,8 @@ void main(void) //Must be in $E000-$FFFF??
   InitializeGraphics();
   UploadCharset();
   
-  currentScreen = EditParty;
-  Demo();
+  //currentScreen = EditParty;
+  Demo(Map);
 
   //PPU_Color(0, 0, 1, 0);
   
