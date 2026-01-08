@@ -9,7 +9,7 @@
 //Interface/Minimap		Row 7
 
 
-#if defined(__APPLE2__)
+#if defined (__APPLE2__)
 //#pragma code-name (push, "LOWCODE")
 #endif
 
@@ -31,8 +31,18 @@
 
 int YColumnIndex[ROWS];
 byte tileIndexes[64];
-int ScreenCharSize;
 bool screenFaded;
+
+#define ScreenCharSize ROWS*COLS
+
+#if defined (__C64__) || (__NES__) || (__APPLE2__)
+#pragma bss-name (push, "ZEROPAGE")
+#endif
+byte MapOriginX;
+byte MapOriginY;
+#if defined (__C64__) || (__NES__) || (__APPLE2__)
+#pragma bss-name (pop)
+#endif
 
 static void getYCols()
 {
@@ -45,12 +55,8 @@ static void getYCols()
   #if defined(__APPLE2__)
   for (y = 0; y != 192; ++y)
     RowsHGR[y] = (y>>6)*0x28 + (y&7)*0x400 + ((y>>3)&7)*0x80;
-  #endif
-  
-  ScreenCharSize = ROWS*COLS;
+  #endif  
 }
-
-//const int ScreenCharSize = ROWS*COLS;
 
 #if defined(__APPLE2__)
 byte* ScreenChars;// = (byte*)(0x0400);
@@ -65,7 +71,6 @@ unsigned int RowsHGR[192];
 
 #define fadeFrames 2
 #define mapFadeFrames 1
-
 
 void FadePalette(byte pals, byte delay)
 {
@@ -199,7 +204,7 @@ void UpdateAttributes(void)
 
 #if defined (__NES__)
 byte ScreenChars[ROWS*COLS];
-byte attributeset[256];
+const byte attributeset[256];
 #endif
 
 #if defined (MSX)
@@ -210,9 +215,9 @@ byte ScreenChars[ROWS*COLS];
 const byte const charset[2048];
 byte *ScreenChars;// = (byte *)0x0400;
 byte *ScreenColors;// = (byte *)0xD800;
-byte* RASTERCOUNT;// = (byte*)0xD012;
-#define BORDER_REG ((byte*)0xD020)
-#define BG_REG ((byte*)0xD021)
+#define RASTERCOUNT (byte*)0xD012
+#define BORDER_REG (byte*)0xD020
+#define BG_REG (byte*)0xD021
 #endif
 
 #if defined(__C64__)
@@ -263,7 +268,7 @@ void ClearScreen(void)
 void raster_wait(byte line)
 {
   #if defined(__C64__)
-  while ((RASTERCOUNT[0] < line)){}
+  while ((*RASTERCOUNT < line)){}
   #endif
 
   #if defined(__APPLE2__)
@@ -322,18 +327,14 @@ void InitializeGraphics(void)
   
   #define regd018 (int*)0xD018
   #define regdd00 (int*)0xDD00
-
-  byte* charfile = (byte*)&characterset[0];
-  byte* CharRam = (byte*)(bank * (16<<10) + (charpos <<11));
-
-  RASTERCOUNT = (byte*)0xD012;
+  
   ScreenColors = (byte *)0xD800;
   
   SetBG(ColorBG);
   SetBorder(ColorBorder);
 
   ScreenChars = (byte*)(bank * (16<<10) + (screenpos <<10));
-  memcpy(&CharRam[0], &charfile[0], 2048);
+  memcpy((byte*)(bank * (16<<10) + (charpos <<11)), (byte*)&characterset[0], 2048);
 
   //Select Bank
   *regdd00 = (*regdd00 & (255 - bank));
@@ -515,13 +516,6 @@ void PrintString(char *text, byte posx, byte posy, bool fast)
   }
   wait_vblank(1);
 }
-
-//int originOffset;
-
-#pragma bss-name (push, "ZEROPAGE")
-byte MapOriginX;
-byte MapOriginY;
-#pragma bss-name (pop)
 
 void SetTileOrigin(byte x, byte y)
 {
@@ -760,7 +754,7 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
 }
 
 #if defined (__NES__)
-unsigned  char attributeset[256] = {
+const unsigned char attributeset[256] = {
   0x01, 0x01, 0x0A, 0x0A, 0x0C, 0x0C, 0x01, 0x01, 0x01, 0x01, 0x0C, 0x0C,
   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x0A, 0x0A, 0x0C, 0x0C, 0x01, 0x01,
   0x01, 0x01, 0x0B, 0x0B, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
