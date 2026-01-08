@@ -229,6 +229,8 @@ extern const char PALETTE_3[16];
 #define ColorText 1
 void InitializeGraphics(void);
 void wait_vblank(byte frames);
+void SetBorder(byte color);
+void SetBG(byte color);
 void UpdateAttributes(void);
 void ScreenFadeOut(void);
 void ScreenFadeIn(void);

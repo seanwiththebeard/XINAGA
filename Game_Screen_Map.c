@@ -256,54 +256,34 @@ static struct
 
 static void CameraFollow()
 {
-  byte byte_x;
-  byte byte_y;
-  byte pX = playerX;
-  byte pY = playerY;
-  offsetX = characters.posX[followIndex];
-  offsetY = characters.posY[followIndex];
+  offsetX = characters.posX[followIndex] - playerX;
+  if (offsetX < 0) offsetX += mapWidth;
 
-  for(byte_x = 0; byte_x < pX; ++byte_x)
-  {
-    --offsetX;
-    wrapX(offsetX);
-  }
-
-  for(byte_y = 0; byte_y < pY; ++byte_y)
-  {
-    --offsetY;
-    wrapY(offsetY);
-  }
+  offsetY = characters.posY[followIndex] - playerY;
+  if (offsetY < 0) offsetY += mapHeight;
 }
+
 
 static void BufferCharacters()
 {
-  byte byte_x;
-  byte byte_y;
-  byte byte_i;
-  for(byte_i = 0; byte_i < charactersCount; ++byte_i)
+  byte i;
+  sbyte rx, ry;
+  for (i = 0; i < charactersCount; ++i)
   {
-    if(characters.visible[byte_i])
-    {
-      byte_x = characters.posX[byte_i];
-      if(byte_x < offsetX)
-        byte_x = (byte_x - offsetX + mapWidth);
-      else
-        byte_x = byte_x - offsetX;
+    if (!characters.visible[i]) continue;
 
-      if (byte_x < viewportWidth)
-      {
-        byte_y = characters.posY[byte_i];
-        if (byte_y < offsetY)
-          byte_y = byte_y - offsetY + mapHeight;
-        else
-          byte_y = byte_y - offsetY;
-        if (byte_y < viewportHeight)
-          viewportBuffer[byte_x + (viewportWidth * byte_y)] = characters.tile[byte_i];
-      }
-    }
+    rx = characters.posX[i] - offsetX;
+    if (rx < 0) rx += mapWidth;
+    if (rx >= viewportWidth) continue;
+
+    ry = characters.posY[i] - offsetY;
+    if (ry < 0) ry += mapHeight;
+    if (ry >= viewportHeight) continue;
+
+    viewportBuffer[rx + ry * viewportWidth] = characters.tile[i];
   }
 }
+
 
 static void UpdatePlayerOnMiniMap(void)
 {
@@ -334,27 +314,16 @@ byte quadBuffer[4];
 
 static void FillQuadBuffer()
 {
-  byte row0, row1;
   byte quadX = characters.quadPosX[followIndex];
-  byte quadY = characters.quadPosY[followIndex];
-  byte byte_x = quadX + 1;
-  byte byte_y = quadY + 1;
-  //byte_x = (quadX + 1) % quadWidth;
-  //byte_y = (quadY + 1) % quadHeight;
-  if (byte_x == quadWidth) byte_x = 0;
-  if (byte_y == quadHeight) byte_y = 0;
-
-  row0 = mapMatrixWidth * quadY;
-  row1 = mapMatrixWidth * byte_y; 
-
+  byte quadY = characters.quadPosY[followIndex];  
+  byte byte_x = (quadX + 1) & (quadWidth - 1);
+  byte byte_y = (quadY + 1) & (quadHeight - 1);
+  byte row0 = mapMatrixWidth * quadY;
+  byte row1 = mapMatrixWidth * byte_y; 
   quadBuffer[0] = mapQuads[quadX + row0]; 
   quadBuffer[1] = mapQuads[byte_x + row0]; 
   quadBuffer[2] = mapQuads[quadX + row1]; 
   quadBuffer[3] = mapQuads[byte_x + row1];
-  //quadBuffer[0] = mapQuads[quadX + (mapMatrixWidth * quadY)];
-  //quadBuffer[1] = mapQuads[byte_x + (mapMatrixWidth * quadY)];
-  //quadBuffer[2] = mapQuads[quadX + (mapMatrixWidth * byte_y)];
-  //quadBuffer[3] = mapQuads[byte_x + (mapMatrixWidth * byte_y)];
 }
 
 static const byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
@@ -363,13 +332,11 @@ static const byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subch
 static const byte quadOffsetY[4] = 	{0, 0, 				quadHeight, 		quadHeight};
 static void LoadQuadrant(byte quadIndex, byte quad)
 {
-  byte byte_y, byte_z;
-  byte QuadOriginX, QuadOriginY;
-  byte charByte;
-  int rowStart;
+  byte byte_y, byte_z, QuadOriginX, QuadOriginY, charByte;
   byte *out;
   const byte *tilePtr;
-  //byte mask;
+  const byte *chars = ScreenQuad.Chars[quadIndex];
+  int rowStart;
 
   quadBuffer[quad] = quadIndex;
 
@@ -379,105 +346,44 @@ static void LoadQuadrant(byte quadIndex, byte quad)
     QuadOriginY = quadOriginsY[quad] + quadOffsetY[byte_z];
     // Precompute tile base pointer once per tile
     tilePtr = &MapSet[ScreenQuad.CharIndex[quadIndex][byte_z] << 3];
+    rowStart = mapWidth * (QuadOriginY);
     for (byte_y = 0; byte_y < quadHeight; ++byte_y)
     {
       charByte = tilePtr[byte_y];
-      rowStart = mapWidth * (byte_y + QuadOriginY);
       out = &mapData[QuadOriginX + rowStart];
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 7) & 1];
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 6) & 1];
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 5) & 1];
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 4) & 1];
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 3) & 1];
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 2) & 1];
-      *out++ = ScreenQuad.Chars[quadIndex][(charByte >> 1) & 1];
-      *out++ = ScreenQuad.Chars[quadIndex][ charByte       & 1];
-
+      *out++ = chars[(charByte >> 7) & 1];
+      *out++ = chars[(charByte >> 6) & 1];
+      *out++ = chars[(charByte >> 5) & 1];
+      *out++ = chars[(charByte >> 4) & 1];
+      *out++ = chars[(charByte >> 3) & 1];
+      *out++ = chars[(charByte >> 2) & 1];
+      *out++ = chars[(charByte >> 1) & 1];
+      *out++ = chars[ charByte	     & 1];
+      rowStart += mapWidth;
     }
   }
 }
 
 void LoadMapQuads()
 {
-  byte x;
+  //byte x;
   FillQuadBuffer();
-  for (x = 0; x < 4; ++x)
-    LoadQuadrant(quadBuffer[x], x);  
+  LoadQuadrant(quadBuffer[0], 0);
+  LoadQuadrant(quadBuffer[1], 1);
+  LoadQuadrant(quadBuffer[2], 2);
+  LoadQuadrant(quadBuffer[3], 3);
 }
-
-static byte GetPlayerQuad() //Returns the viewport quadrant of the player character
-{
-  if (characters.posX[followIndex] < quadWidthDouble)
-  {
-    if (characters.posY[followIndex] < quadHeightDouble)
-      return 0;
-    else
-      return 2;
-  }
-  else
-  {
-    if (characters.posY[followIndex] < quadHeightDouble)
-      return 1;
-    else
-      return 3;
-  }
-}
-
-static byte GetQuadInRelation(sbyte v, sbyte h)
-{
-  //#pragma bss-name (push, "ZEROPAGE")
-  sbyte int_x = characters.quadPosX[followIndex];
-  sbyte int_y = characters.quadPosY[followIndex];
-  //#pragma bss-name (pop)
-
-  /*if (v < 0)
-  {
-    --int_y;
-    if (int_y < 0)
-      int_y = mapMatrixHeight - 1;
-  }
-  if (v > 0)
-  {
-    int_y++;
-    if (int_y == mapMatrixHeight)
-      int_y = 0;
-  }
-  if (h < 0)
-  {
-    int_x--;
-    if (int_x < 0)
-      int_x = mapMatrixWidth - 1;
-  }
-  if (h > 0)
-  {
-    ++int_x;
-    if (int_x == mapMatrixWidth)
-      int_x = 0;
-  }*/
-
-  int_y = (int_y + v + mapMatrixHeight) % mapMatrixHeight;
-  int_x = (int_x + h + mapMatrixWidth) % mapMatrixWidth;
-  
-  return (mapQuads[int_x + (mapMatrixWidth * int_y)]);  
-}
-
-//Directional data for finding a relative quad
-//left -UP DOWN LEFT RIGHT right UP DOWN LEFT RIGHT
-//static const sbyte quadRelationAV[8] = {-1,  1,  0,  0, -1, 1,  0, 0}; //vA
-//static const sbyte quadRelationBV[8] = {-1,  1, -1, -1, -1, 1,  1, 1}; //vB
-//static const sbyte quadRelationAH[8] = { 0,  0, -1,  1,  0, 0, -1, 1}; //hA
-//static const sbyte quadRelationBH[8] = {-1, -1, -1,  1,  1, 1, -1, 1}; //hB
 
 typedef struct { sbyte vA, vB, hA, hB; } QuadRel;
 static const QuadRel quadRel[8] = {
-    {-1, -1,  0, -1},
-    { 1,  1,  0, -1},
-    { 0, -1, -1, -1},
-    { 0, -1,  1,  1},
-    {-1, -1,  0,  1},
-    { 1,  1,  0,  1},
-    { 0,  1, -1, -1},
-    { 0,  1,  1,  1}
+  {-1, -1,  0, -1},
+  { 1,  1,  0, -1},
+  { 0, -1, -1, -1},
+  { 0, -1,  1,  1},
+  {-1, -1,  0,  1},
+  { 1,  1,  0,  1},
+  { 0,  1, -1, -1},
+  { 0,  1,  1,  1}
 };
 
 
@@ -487,44 +393,35 @@ static const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
 
 static void QuadScroll(direction dir)
 {
-  //#pragma bss-name (push, "ZEROPAGE")
-  byte quadA; //Entering quad
-  byte quadB; //Diagonal quad
-  //byte localX, localY;
-  byte indexA;
-  byte indexB;
-  byte relH;
-  byte relV;
-  bool charPosX;
-  bool charPosY;
-  byte compareQuad;
-  //#pragma bss-name (pop)
+  byte quadA, quadB;
+  byte indexA, indexB;
 
-  relH = dir;
-  relV = dir;
-  //localX = characters.posX[followIndex] & (TileSize - 1);
-  //localY = characters.posY[followIndex] & (TileSize - 1);
-  
-  //charPosX = localX < quadWidth;
-  //charPosY = localY < quadHeight;
-  
-  charPosX = (characters.posX[followIndex] & (TileSize - 1)) < quadWidth;
-  charPosY = (characters.posY[followIndex] & (TileSize - 1)) < quadHeight;
-  compareQuad = GetPlayerQuad();
+  // Fast bit tests: (pos & 8) == 0 means "in left/top half of tile"
+  byte posX = characters.posX[followIndex];
+  byte posY = characters.posY[followIndex];
 
-  if (!charPosX)
-    relH += 4;
-  if (!charPosY)
-    relV += 4;
+  bool charPosX = !(posX & 8);
+  bool charPosY = !(posY & 8);
 
-  //indexA = GetQuadInRelation(quadRelationAV[relV], quadRelationAH[relH]);
-  //indexB = GetQuadInRelation(quadRelationBV[relV], quadRelationBH[relH]);
-  
-  indexA = GetQuadInRelation(quadRel[relV].vA, quadRel[relH].hA);
-  indexB = GetQuadInRelation(quadRel[relV].vB, quadRel[relH].hB);
+  // relH / relV selection
+  byte relH = dir | (charPosX ? 0 : 4);
+  byte relV = dir | (charPosY ? 0 : 4);
 
-  if (dir > 1) //Is Horizontal?
-    compareQuad += 4;
+  // Compute compareQuad without branches
+  byte compareQuad =
+    ((posX >> 4) & 1) |
+    (((posY >> 4) & 1) << 1) |
+    ((dir > 1) << 2);
+
+  // Inline GetQuadInRelation() using bitmask wrap (matrix is 16×16)
+  byte qx = characters.quadPosX[followIndex];
+  byte qy = characters.quadPosY[followIndex];
+
+  indexA = mapQuads[((qx + quadRel[relH].hA) & 15)
+                    + (((qy + quadRel[relV].vA) & 15) << 4)];
+
+  indexB = mapQuads[((qx + quadRel[relH].hB) & 15)
+                    + (((qy + quadRel[relV].vB) & 15) << 4)];
 
   quadA = CompareQuadValueA[compareQuad];
   quadB = CompareQuadValueB[compareQuad];
@@ -536,13 +433,14 @@ static void QuadScroll(direction dir)
     LoadQuadrant(indexB, quadB);
 }
 
+
 #define grass 36
 #define water 34
 #define signpost 35
 #define tree 44
 static void InitializeMapData()
 {
-  
+
   byte byte_x;
   byte byte_y;
   byte byte_i;
@@ -581,7 +479,7 @@ static void InitializeMapData()
       ScreenQuad.Chars[byte_index][0] = grass;
       ScreenQuad.Chars[byte_index][1] = tree;
       ScreenQuad.ScatterIndex[byte_index] = 0;
-      ;++byte_index;
+      //++byte_index;
     }
   tilesOpaque[44] = true; //Trees
   tilesPalette[44] = 3; //Trees
@@ -744,37 +642,24 @@ static void ApplyLOS()
 
 static void DrawEntireMap()
 {
-  sbyte int_a;
-  sbyte int_b;
   byte byte_x;
   byte byte_y;
-  int viewportOffset;
+  byte viewportOffset = 0;
+  byte offset;
   int mapOffset;
-  int offset;
-
-  //Buffer the matrix of tiles for our viewport
   CameraFollow();
-  int_a = offsetX;
-  int_b = offsetY;
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {
-    wrapY(int_b); //Wrap the map data y reference
-    viewportOffset = (viewportWidth * byte_y);
-    mapOffset = (mapWidth * int_b);
+    mapOffset = (mapWidth * ((offsetY + byte_y) & 31));
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
-      wrapX(int_a); //Wrap the map data X reference
-      
-      viewportBuffer[byte_x + viewportOffset] = mapData[int_a + mapOffset];      
-      int_a++;
+      viewportBuffer[byte_x + viewportOffset] = mapData[((offsetX + byte_x) & 31) + mapOffset];      
     }
-    int_a = offsetX;
-    ++int_b;
+    viewportOffset += viewportWidth;
   }
   BufferCharacters();
   if(LOSEnabled)
     ApplyLOS();
-
   MapFadeOut();
   offset = 0;
   tilePosY = 0;
@@ -782,17 +667,10 @@ static void DrawEntireMap()
   {
     tilePosX = 0;
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
-    { //Only draw tiles that are different from the last draw; minimal effect on smaller screen sizes
-      //byte lastIndex = viewportBufferLast[offset];
+    { 
       byte newIndex = viewportBuffer[offset];
-
       if (viewportBufferLast[offset] != newIndex)
       {
-        //DrawTileX = byte_x;
-        //DrawTileY = byte_y;
-        //DrawTileIndex = newIndex;
-        //DrawTilePalette = tilesPalette[newIndex];
-        //DrawTileDirect();
         DrawTileSeq(newIndex);
         viewportBufferLast[offset] = newIndex;
       }
@@ -801,8 +679,6 @@ static void DrawEntireMap()
     }
     ++tilePosY;
   }
-
-  //memcpy(&viewportBufferLast[0], &viewportBuffer[0], viewportSize);
   DrawCharacterCoordinates(followIndex);
   UpdateAttributes();
   MapFadeIn();
