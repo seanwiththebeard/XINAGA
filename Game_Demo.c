@@ -91,7 +91,7 @@ void SwitchScreen(screenName screen)
   SwitchScreen(currentScreen);
 }
 
-void Demo()
+void Demo(screenName startingScreen)
 {
   srand(0);
   InitializeInput();
@@ -103,10 +103,21 @@ void Demo()
   MMC3_PRG_8000(0);
   #endif
   LoadMap();
-  currentScreen = DefaultScreen;
+  currentScreen = startingScreen;
   
   while(1)
   {
-    SwitchScreen(currentScreen);    
+    SwitchScreen(currentScreen);
+    
+    DrawBorder("@", 12, 19, 16, 5, true);
+  PrintString("Press Space@", 14, 21, true);
+
+  while (1)
+  {
+    UpdateInput();
+    if (InputChanged())
+      if (InputFire())
+        break;
+  }  
   }
 }

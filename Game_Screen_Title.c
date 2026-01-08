@@ -18,7 +18,7 @@
 #endif
 //int tetrismap(byte seed);
 
-void NoDiskAssemble();
+//void NoDiskAssemble();
 //byte seed = 57;
 
 screenName Update_Title()

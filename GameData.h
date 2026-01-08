@@ -12,7 +12,8 @@
 //#define SaveLoad 5
 #define MapGen 5
 #define Scenario 2
-extern screenName currentScreen;
+//extern screenName currentScreen;
+//extern screenName nextScreen;
 
 //Debug Functions
 void DebugMap();
@@ -24,7 +25,7 @@ extern byte mapQuads[mapMatrixHeight * mapMatrixWidth];
 
 extern byte followIndex;
 
-void Demo(void);
+void Demo(screenName startingScreen);
 void DrawMiniMap(bool highlightPlayer);
 void WaitForInput(void);
 void LoadMap(void);

@@ -19,8 +19,8 @@ typedef int8_t sbyte;	// 8-bit signed
 extern uint16_t randseed;
 #define ReadBit(b, n) (((b) >> (n)) & 1)
 
-extern byte characterset[2048];
-extern byte attributeset[256];
+extern const byte characterset[2048];
+extern const byte attributeset[256];
 
 //Screen Layout
 #if defined(__APPLE2__)
@@ -190,8 +190,6 @@ void A2Pixel(byte x, byte y, byte color);
 #define MMC3_WRAM_ENABLE() POKE(0xA001, 0x80)
 #define MMC3_WRAM_READ_ONLY() POKE(0xA001, 0xC0)
 extern byte ScreenChars[ROWS*COLS];
-extern byte attributeset[256];
-//extern const int ScreenCharSize;
 extern char ATTRIBUTE_TABLE[0x40];
 extern const char PALETTE_0[16];
 extern const char PALETTE_1[16];

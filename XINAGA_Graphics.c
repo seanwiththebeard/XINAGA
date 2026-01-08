@@ -32,6 +32,7 @@
 int YColumnIndex[ROWS];
 byte tileIndexes[64];
 int ScreenCharSize;
+bool screenFaded;
 
 static void getYCols()
 {
@@ -126,16 +127,16 @@ void UnFadePalette(byte pals, byte delay)
   pals;delay;
 }
 
-bool screenFaded;
-
 void MapFadeOut()
 {
   FadePalette(0b1110, mapFadeFrames);
 }
+
 void MapFadeIn()
 {
   UnFadePalette(0b1110, mapFadeFrames);
 }
+
 void ScreenFadeOut(void)
 {
   #if defined (__NES__)
@@ -151,6 +152,7 @@ void ScreenFadeOut(void)
   #endif
   screenFaded = true;
 }
+
 void ScreenFadeIn(void)
 {
   #if defined (__NES__)
@@ -167,8 +169,6 @@ void ScreenFadeIn(void)
   #endif
   screenFaded = false;
 }
-
-
 
 void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
@@ -197,10 +197,7 @@ void UpdateAttributes(void)
   #endif
 }
 
-
 #if defined (__NES__)
-//const byte const *charset = 0x0;
-//const byte const *attributeset = 0x0;
 byte ScreenChars[ROWS*COLS];
 byte attributeset[256];
 #endif
@@ -211,21 +208,21 @@ byte ScreenChars[ROWS*COLS];
 
 #if defined(__C64__)
 const byte const charset[2048];
-//byte *ScreenCharBuffer = (byte *)0x0400;
 byte *ScreenChars;// = (byte *)0x0400;
 byte *ScreenColors;// = (byte *)0xD800;
 byte* RASTERCOUNT;// = (byte*)0xD012;
-//bool bufferselect = false;
-//byte attributeset[256];
+#define BORDER_REG ((byte*)0xD020)
+#define BG_REG ((byte*)0xD021)
+#endif
 
-byte *bgReg;// = (byte*)0xD020;
+#if defined(__C64__)
 void SetBorder(byte color)
 {
-  bgReg[0] = color;
+  *BORDER_REG = color;
 }
 void SetBG(byte color)
 {
-  bgReg[1] = color;
+  *BG_REG = color;
 }
 #endif
 
@@ -320,47 +317,29 @@ void InitializeGraphics(void)
 
   #if defined(__C64__)
   #define bank 3
-  //#define CharacterRom 0xD000
-  //#define ColorRam 0xD800
   #define charpos 7
   #define screenpos 2
-  //byte vicreg = 0x00;
-  int screenposition;
-  int* regd018 = (int*)0xD018;
-  int* regdd00 = (int*)0xDD00;
+  
+  #define regd018 (int*)0xD018
+  #define regdd00 (int*)0xDD00
 
-  byte* charfile = &characterset[0];//(int*)0x0840;
-  //int* attribfile = (int*)0x1040;
+  byte* charfile = (byte*)&characterset[0];
   byte* CharRam = (byte*)(bank * (16<<10) + (charpos <<11));
-  //byte* CharRam;
-  //CharRam = 0;
-  //CharRam += (bank * (16<<10) + (charpos <<11)); // *1024, *2048
 
-  //if (bufferselect)
-  //++screenpos;
   RASTERCOUNT = (byte*)0xD012;
-  bgReg = (byte*)0xD020;
   ScreenColors = (byte *)0xD800;
   
   SetBG(ColorBG);
   SetBorder(ColorBorder);
 
-  screenposition = (bank * (16<<10) + (screenpos <<10)); // *1024
-  ScreenChars = (byte*)screenposition;
+  ScreenChars = (byte*)(bank * (16<<10) + (screenpos <<10));
   memcpy(&CharRam[0], &charfile[0], 2048);
 
-  //ScreenCharBuffer = (byte*)screenposition;
-
-  //if (bufferselect)
-  //ScreenCharBuffer -= 0x0400; // Buffer location 1024b before the screen position
-  //else
-  //ScreenCharBuffer += 0x0400; // Buffer location 1024b after the screen position
-
-  //ScreenColorBuffer = (byte*) 0x0400; // Use the default screen character space for color buffer
   //Select Bank
-  regdd00[0] = (regdd00[0]&(255 - bank));
+  *regdd00 = (*regdd00 & (255 - bank));
+  //*regdd00 = ((*regdd00 & 0xFC) | bank);
   //Set Screen and Character Ram Position
-  regd018[0] = (screenpos << 4) + (charpos << 1);
+  *regd018 = (screenpos << 4) + (charpos << 1);
   #endif
 
   #if defined(__NES__)
@@ -530,20 +509,19 @@ void PrintString(char *text, byte posx, byte posy, bool fast)
       break;
     if (!fast)
       wait_vblank(1);
-    //if (buffer)
-    //SetCharBuffer(text[i], posx + i, posy);
     else
       SetChar(text[i], posx + i, posy);
-    #if defined(__C64__)
-    SetColor(attributeset[text[i]], posx + i, posy);
-    #endif
+
   }
   wait_vblank(1);
 }
 
 //int originOffset;
+
+#pragma bss-name (push, "ZEROPAGE")
 byte MapOriginX;
 byte MapOriginY;
+#pragma bss-name (pop)
 
 void SetTileOrigin(byte x, byte y)
 {
