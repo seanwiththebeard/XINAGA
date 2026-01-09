@@ -118,7 +118,7 @@ void DrawItem(byte index)
 {
   ConsoleBufferReset();
   if(MenuSelection == index)
-    ConsoleBufferAdd(">");
+    ConsoleBufferAdd("+");
   else
     ConsoleBufferAdd(" ");
   ConsoleBufferBackspace();

@@ -799,7 +799,7 @@ static void DrawCharacterCoordinates(byte index)
     CoordPosY -= quadHeight * 2;
   CoordPosY += quadHeight*2*characters.quadPosY[index];  
 
-  sprintf(strTemp,"<%3i><%3i>@", CoordPosX, CoordPosY);
+  sprintf(strTemp,"<%3i  %3i>@", CoordPosX, CoordPosY);
   PrintString(strTemp, viewportPosX + (viewportWidth >> 1), viewportPosY + (viewportHeight << 1), true);
 }
 
