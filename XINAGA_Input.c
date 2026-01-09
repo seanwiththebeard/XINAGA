@@ -22,9 +22,11 @@ bool ChangedState;
 
 #if __C64__
 #include <joystick.h>
+#include <conio.h>
 byte joyState;
 byte joyStateLast;
 byte joyTemp;
+#define keycode ((byte*)0x00C5)
 #endif
 
 #if (__NES__)
@@ -53,11 +55,13 @@ void InitializeInput()
   joy_install(joy_static_stddrv);
   #endif
 }
+#if (__APPLE2__)
 //Apple II
 #define keycode ((byte*)0xC000)
 #define keyflag ((byte*)0xC010)
 //const byte* keycode = (byte*)0xC000;
 //const byte* keyflag = (byte*)0xC010;
+#endif
 
 bool InputChanged(void)
 {
@@ -72,6 +76,7 @@ bool InputChanged(void)
   #endif
   return ChangedState;
 }
+
 
 void UpdateInput(void)
 { 
@@ -90,11 +95,26 @@ void UpdateInput(void)
     ChangedState = true;
     joyStateLast = joyState;
   }
+  
+  //if (kbhit())
+  {
+    //if (key != keycode[0])
+    {
+    //key = keycode[0];
+      SetChar(keycode[0], COLS - 1, 1);
+    //ChangedState = true;
+    }
+  }
+  //else
+  {
+    //key = 255;
+    //ChangedState = false;
+  }
   #endif
 
   #if defined(__APPLE2__)
   if(kbhit())
-    cgetc();
+  cgetc();
   else
   {
     key = 255;
@@ -136,7 +156,7 @@ void UpdateInput(void)
 bool InputUp(void)
 {
   #if __C64__
-  if (JOY_UP(joyState))
+  if (JOY_UP(joyState) || (key == 'w' || key == 'W'))
     return true;
   #endif
 

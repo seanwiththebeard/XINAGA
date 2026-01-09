@@ -47,6 +47,7 @@ int charsDrawn;
 byte DrawTileX;
 byte DrawTileY;
 byte DrawTileIndex;
+byte indexes[4];
 
 #if defined (__C64__) || (__NES__) || (__APPLE2__)
 #pragma bss-name (pop)
@@ -54,7 +55,10 @@ byte DrawTileIndex;
 
 
 //byte DrawTilePalette;
-byte indexes[4];
+byte arrowA;
+byte arrowB;
+byte arrowX;
+byte arrowY;
 
 static void getYCols()
 {
@@ -638,10 +642,6 @@ void FillViewport(byte index, byte width, byte height)
   UpdateAttributes();
 }
 
-byte arrowA;
-byte arrowB;
-byte arrowX;
-byte arrowY;
 void ReadyArrow(byte x, byte y)
 {
   x = x << 1;
