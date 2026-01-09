@@ -86,7 +86,7 @@ void A2Pixel(byte x, byte y, byte color);
 #define contextMenuWidth 19//(COLS - (viewportWidth * 2) - 3)
 #define contextMenuHeight 18//(2 * viewportHeight)
 
-#include <cbm_petscii_charmap.h>
+//#include <cbm_petscii_charmap.h>
 #pragma charmap(0x41, 0x61)
 #pragma charmap(0x42, 0x62)
 #pragma charmap(0x43, 0x63)
