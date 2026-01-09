@@ -40,9 +40,21 @@ bool screenFaded;
 #endif
 byte MapOriginX;
 byte MapOriginY;
+byte SetCharIndex;
+byte SetCharX;
+byte SetCharY;
+int charsDrawn;
+byte DrawTileX;
+byte DrawTileY;
+byte DrawTileIndex;
+
 #if defined (__C64__) || (__NES__) || (__APPLE2__)
 #pragma bss-name (pop)
 #endif
+
+
+//byte DrawTilePalette;
+byte indexes[4];
 
 static void getYCols()
 {
@@ -63,10 +75,8 @@ byte* ScreenChars;// = (byte*)(0x0400);
 #pragma data-name (push, "HGR")
 char HGR[0x2000] = {};
 #pragma data-name (pop)
-//byte* HGR = (byte*)0x2000;
-byte* HGRBuffer = (byte*)0x4000;
+//#define HGRBuffer (byte*)0x4000
 unsigned int RowsHGR[192];
-//int* RowsHGR = (int*)0xD400;
 #endif
 
 #define fadeFrames 2
@@ -422,10 +432,6 @@ void DrawChar(byte index, byte xpos, byte ypos)
 }
 #endif
 
-byte SetCharIndex;
-byte SetCharX;
-byte SetCharY;
-int charsDrawn;
 //Set Char Macro is in XINAGA.h - #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void _SetChar(void)
 {
@@ -524,12 +530,6 @@ void SetTileOrigin(byte x, byte y)
   MapOriginY = y;
 }
 
-byte DrawTileX;
-byte DrawTileY;
-byte DrawTileIndex;
-byte DrawTilePalette;
-byte indexes[4];
-
 /*void DrawTileSetup(void)
 {
 
@@ -611,10 +611,8 @@ void DrawTileDirectXY(byte index, byte x, byte y)
   byte tempY = MapOriginY;
 
   SetTileOrigin(x, y);
-  //DrawTileIndex = index;
-  DrawTileX = 0;
-  DrawTileY = 0;
-  //DrawTileDirect();
+  tilePosX = 0;
+  tilePosY = 0;
   DrawTileSeq(index);
 
   SetTileOrigin(tempX, tempY);
@@ -629,16 +627,13 @@ byte tilesPalette[TileCount];
 
 void FillViewport(byte index, byte width, byte height)
 {
-  byte byte_x, byte_y;
-  byte palette = tilesPalette[index];
+  byte byte_x, byte_y;  
   for(byte_y = 0; byte_y < height; ++byte_y)
     for(byte_x = 0; byte_x < width; ++byte_x)
     {
-      DrawTileX = byte_x;
-      DrawTileY = byte_y;
-      DrawTileIndex = index;
-      DrawTilePalette = palette;
-      DrawTileDirect();
+      tilePosX = byte_x;
+      tilePosY = byte_y;
+      DrawTileSeq(index);
     }
   UpdateAttributes();
 }
