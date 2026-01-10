@@ -403,47 +403,9 @@ void attachRandomPoint(byte index)
   }
   createPoint(x, y);
   mapQuads[x + (mapMatrixWidth * y)] = index;
-  //DrawTileIndex = index;
-  //DrawTileX = x;
-  //DrawTileY = y;
-  //DrawTileDirect();
   DrawPoint(x,y);
-  wait_vblank(1);
-  //DrawMiniMap();
-  //SetChar(index, posX + x, posY + y);
-  //SetColor(index + 2, posX + x, posY + y);  
+  //wait_vblank(1);
 }
-
-/*void DrawMap()
-{
-  byte x, y;
-  for (y = 0; y < height; ++y)
-    for (x = 0; x < width; ++x)
-    {
-      byte index = map[y][x];
-      #if(__APPLE2__)
-      if (x % 2 == 1)
-        ++index;
-      #endif
-      SetChar(index, posX + x, posY + y);
-    }
-}*/
-
-/*void DrawMapGenTiles(void)
-{
-  byte x, y;
-  DrawBorder("MapGen@", MiniMapX, MiniMapY, MiniMapSizeX + 2, MiniMapSizeY + 2, true);
-  SetTileOrigin(MiniMapX + 1, MiniMapY + 1);
-  for (y = 0; y < height; ++y)
-    for (x = 0; x < width; ++x)
-    {
-      DrawTileIndex = mapQuads[y][x];
-      DrawTileX = x;
-      DrawTileY = y;
-      DrawTileDirect();
-    }
-}*/
-
 
 void createContinent(byte size)
 {
@@ -556,111 +518,7 @@ void GenerateMap(byte seed)
   //WriteLineMessageWindow(strTemp, 0);
 }
 
-/*
-byte LastRoomOriginX;
-byte LastRoomOriginY;
-byte DestinationX;
-byte DestinationY;
-#define hallway '?'
-void ConnectHallway()
-{
-  byte x, y;
-  x = 0;
-  
-  if (LastRoomOriginY < DestinationY)
-    for (y = LastRoomOriginY; y < DestinationY; ++y)
-    {
-      createPoint(x,y);
-      mapQuads[x + (mapMatrixWidth *y)] = hallway;
-      DrawPoint(x, y);
-    }
-  else
-    for (y = DestinationY; y < LastRoomOriginY; ++y)
-    {
-      createPoint(x,y);
-      mapQuads[x + (mapMatrixWidth *y)] = hallway;
-      DrawPoint(x, y);
-    }
-  
-  if (LastRoomOriginX < DestinationX)
-    for (x = LastRoomOriginX; x < DestinationX; ++x)
-    {
-      createPoint(x,y);
-      mapQuads[x + (mapMatrixWidth *y)] = hallway;
-      DrawPoint(x, y);
-    }
-  else
-    for (x = DestinationX; x < LastRoomOriginX; ++x)
-    {
-      createPoint(x,y);
-      mapQuads[x + (mapMatrixWidth *y)] = hallway;
-      DrawPoint(x, y);
-    }
-  
-  LastRoomOriginX = DestinationX;
-  LastRoomOriginY = DestinationY;
-}
-
-void CreateRoom(byte size)
-{
-  
-  byte x,y;
-  //for (x = 0; x < count; ++x)
-  {
-    byte h = rand() % (mapMatrixHeight - size);
-    byte w = rand() % (mapMatrixWidth - size);
-    DestinationX = h;
-    DestinationY = w;    
-    
-
-    //while (mapQuads[w + (mapMatrixWidth * h)] != water)
-    {
-      //h = rand() % (mapMatrixHeight - size);
-      //w = rand() % (mapMatrixWidth - size);
-    }
-    for (y = 0; y < size; ++y)
-      for (x = 0; x < size; ++x)
-      {
-        createPoint(w + x, h + y);
-        mapQuads[w + x + (mapMatrixWidth * (h + y))] = grass;
-        DrawPoint(w+x, h+y);
-        
-      }
-
-    //SetChar(index, posX + w, posY + h);
-    //SetColor(index + 2, posX + w, posY + h);
-  }
-  
-}
-
-
-
-void GenerateDungeon(byte seed)
-{
-  byte y;
-  ClearMap();
-  //DrawMiniMap(false);
-  srand(seed);
-  for ( y = continentsBase; y > 0; --y)
-  {
-    
-    CreateRoom(2);
-    ConnectHallway();
-    
-    
-  }
-  //DrawMiniMap();
-  //DrawMapGenTiles();
-  //RotateAround();
-  //sprintf(strTemp, "Done@");
-  //WriteLineMessageWindow(strTemp, 0);
-}
-*/
-
-//#define menuPosX  3 + ROWS - (ROWS - consoleWidth)
-//#define menuPosY consolePosY - 1
 #define menuWidth 5
-//#define menuHeight consoleHeight
 #define menuCount 4
 void GetSeed()
 {
@@ -698,19 +556,12 @@ void GetSeed()
 screenName Update_MapGen()
 {
   ClearScreen();
-  FillViewport(32, 8, 8);
-  DrawMiniMap(false);
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  ClearMap();
+  DrawMiniMap(false);  
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth - 12, consoleHeight);
   ScreenFadeIn();
-  
-  //ClearMap();
-  //DrawMapGenTiles();
-  //SetLineMessageWindow("THE QUICK brown fox JUMPS over THE Lazy Dog@", 0);
-  //DrawCharset();
-  //while(1);
   GetSeed();
   //StoreMap();
-  //ClearMap();
   ScreenFadeOut();
   ClearScreen();
   return Map;

@@ -599,16 +599,6 @@ void DrawTileSeq(byte index)
   SetChar(index + 17, 	xB, yB);
 }
 
-void DrawTileDirect(void)
-{
-  DrawTileSetup();
-  #if defined(__NES__)
-  SetAttrib(DrawTileX + viewportPosX, DrawTileY+ viewportPosY, DrawTilePalette, false);  
-  //UpdateAttributes();
-  #endif
-  DrawTile();
-}
-
 void DrawTileDirectXY(byte index, byte x, byte y)
 {
   byte tempX = MapOriginX;
