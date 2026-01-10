@@ -16,36 +16,6 @@
 #pragma rodata-name (push, "SCREEN_MAP")
 #endif
 
-//Prototypes
-//      Map Functions
-screenName MapUpdate(void);
-static void DrawScreen(void);
-static void ActionMenu(void);
-static void InitializeMapData(void);
-void LoadMap(void);
-static void DrawMapViewport(void);
-static void DrawEntireMap(void);
-//void wrapX(sbyte *posX); //Used in map positions
-//void wrapY(sbyte *posY);
-#define wrapX(v) do { if ((v) < 0) (v) = mapWidth - 1; else if ((v) >= mapWidth) (v) = 0; } while(0)
-#define wrapY(v) do { if ((v) < 0) (v) = mapHeight - 1; else if ((v) >= mapHeight) (v) = 0; } while(0)
-//void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
-static void ApplyLOS(void);
-static void CameraFollow(void);
-static void BufferCharacters(void);
-static void MoveCharacter(byte index, byte dir);
-static bool CheckCollision(byte charIndex, byte Direction);
-static void DrawCharacterCoordinates(byte index);
-static void UpdatePlayerOnMiniMap(void);
-
-//      Quad Functions
-static void FillQuadBuffer(void);
-static void LoadQuadrant(byte quadIndex, byte quad);
-void LoadMapQuads(void);
-static byte GetPlayerQuad(void); //Returns the viewport quadrant of the player character
-static byte GetQuadInRelation(sbyte v, sbyte h);
-static void QuadScroll(byte direction);
-
 
 //Charset Layout C64
 //00-32 - Character Classes (8x 16x16 tiles)
@@ -87,7 +57,33 @@ static void QuadScroll(byte direction);
 //Tiles (Landmarks):	
 //NPCs:			
 
+//Prototypes
+//      Map Functions
+screenName MapUpdate(void);
+static void DrawScreen(void);
+static void ActionMenu(void);
+static void InitializeMapData(void);
+void LoadMap(void);
+static void DrawMapViewport(void);
+static void DrawEntireMap(void);
+#define wrapX(v) do { if ((v) < 0) (v) = mapWidth - 1; else if ((v) >= mapWidth) (v) = 0; } while(0)
+#define wrapY(v) do { if ((v) < 0) (v) = mapHeight - 1; else if ((v) >= mapHeight) (v) = 0; } while(0)
+//void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
+static void ApplyLOS(void);
+static void CameraFollow(void);
+static void BufferCharacters(void);
+static void MoveCharacter(byte index, byte dir);
+static bool CheckCollision(byte charIndex, byte Direction);
+static void DrawCharacterCoordinates(byte index);
+static void UpdatePlayerOnMiniMap(void);
 
+//      Quad Functions
+static void FillQuadBuffer(void);
+static void LoadQuadrant(byte quadIndex, byte quad);
+void LoadMapQuads(void);
+static byte GetPlayerQuad(void); //Returns the viewport quadrant of the player character
+static byte GetQuadInRelation(sbyte v, sbyte h);
+static void QuadScroll(byte direction);
 
 //Globals
 #define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
@@ -110,6 +106,7 @@ static bool LOSEnabled;
 #define mapHeight 32
 #define mapWidth 32
 static byte mapData[mapWidth * mapHeight];
+
 static const byte MapSet[] = { /*{w:8,h:8,bpp:1,count:256,brev:1,pal:"c64",np:1}*/
   0x00,0x3C,0x60,0x40,0x40,0x40,0x00,0x00,0x00,0x3C,0x06,0x02,0x02,0x02,0x00,0x00
     ,0xE7,0x81,0x81,0x00,0x00,0x81,0x81,0xE7,0xC3,0xC3,0xC3,0x00,0x00,0xC3,0xC3,0xC3

@@ -35,11 +35,7 @@ One byte describes 16x16 region
 #pragma rodata-name (push, "SCREEN_MAPGEN")
 #endif
 
-#define pointsBase 48
-#define continentsBase 4
-#define water 0xE0
-#define grass 0xF0
-byte countContinents;
+
 
 /* World Seed Parameters
 (Eight flags building a byte)
@@ -63,6 +59,13 @@ Before / After	//16
                 //1
 */
 
+#define pointsBase 32
+#define continentsBase 6
+#define water 0xE0
+#define grass 0xF0
+static byte countContinents;
+static byte totalPoints;
+
 typedef struct vector2
 {
   sbyte x;
@@ -72,9 +75,22 @@ typedef struct vector2
 
 struct vector2 *points;
 
-byte totalPoints;
+void DrawPoint(byte x, byte y)
+{
+  byte tile = mapQuads[x + (mapMatrixWidth * y)];
+  #if defined(__APPLE2__)
+  if (x % 2)
+  {
+    SetChar(tile + 1, x + viewportPosX, y + viewportPosY);
+    return;
+  }
+  SetChar(tile, x + viewportPosX, y + viewportPosY);
+  return;
+  #endif
+  SetChar(tile, x + viewportPosX, y + viewportPosY);
+}
 
-void createPoint(byte x, byte y)
+void createPoint(byte index, byte x, byte y)
 {
   struct vector2 *temp,*ptr;
   temp=(struct vector2 *)malloc(sizeof(struct vector2));  
@@ -98,6 +114,9 @@ void createPoint(byte x, byte y)
     ptr->next=temp;
   }
   ++totalPoints;
+  
+  mapQuads[x + (mapMatrixWidth * y)] = index;
+  DrawPoint(x,y);
 }
 
 struct vector2 *getPoint(byte index)
@@ -170,9 +189,9 @@ void clampPoint(struct vector2 *clmpt)
     clmpt->y = 0;
 }
 
-struct vector2 pointAdj;
 byte countAdjacent(byte x, byte y)
 {
+  struct vector2 pointAdj;
   byte i = 0;
   byte z = 0;
   byte adjX[4];
@@ -226,25 +245,9 @@ void addRandomPoints(byte count, int index)
       h = rand() % mapMatrixHeight;
       w = rand() % mapMatrixWidth;
     }
-    createPoint(w, h);
-    mapQuads[w+ (mapMatrixWidth * h)] = index;
+    createPoint(index, w, h);
+    //mapQuads[w+ (mapMatrixWidth * h)] = index;
   }
-}
-
-void DrawPoint(byte x, byte y)
-{
-  byte tile = mapQuads[x + (mapMatrixWidth * y)];
-  //tile = (tile << 1) + ((tile >> 3) << 4);
-  #if defined(__APPLE2__)
-  if (x % 2)
-  {
-    SetChar(tile + 1, x + viewportPosX, y + viewportPosY);
-    return;
-  }
-  SetChar(tile, x + viewportPosX, y + viewportPosY);
-  return;
-  #endif
-  SetChar(tile, x + viewportPosX, y + viewportPosY);
 }
 
 void attachRandomPoint(byte index)
@@ -318,77 +321,72 @@ void attachRandomPoint(byte index)
       return;
     }
   }
-  createPoint(x, y);
-  mapQuads[x + (mapMatrixWidth * y)] = index;
-  DrawPoint(x,y);
-}
-
-void createContinent(byte size)
-{
-  byte landcount = size + 1;  
-  addRandomPoints(1, grass);
-  while (landcount && (points != NULL))
-  {
-    attachRandomPoint(grass);
-    --landcount;
-  }
+  createPoint(index, x, y);
   
-  checkLandlocked();
-  
-  ++countContinents;
-  clearPoints();
-}
-
-void ClearMap()
-{
-  byte x, y;
-  clearPoints();
-  countContinents = 0;
-  
-  for (y = 0; y < mapMatrixHeight; ++y)
-    for (x = 0; x < mapMatrixWidth; ++x)
-    {
-      mapQuads[x + (mapMatrixWidth * y)] = water;
-      DrawPoint(x, y);
-    }
 }
 
 void GenerateMap(byte seed)
 {
   byte y;
-  ClearMap();
-  //DrawMiniMap(false);
+  byte totalPointsPlaced = 0;
+  clearPoints();
+  countContinents = 0;
+  memset (&mapQuads[0], water, mapMatrixHeight*mapMatrixWidth);
+  DrawMiniMap(false);  
+  
   srand(seed);
-  for ( y = continentsBase; y > 0; --y)
+  for ( y = 0; y < continentsBase; ++y)
   {
-    createContinent(pointsBase -  16*(y - 1));
+    //Create Continent
+    {
+      sbyte landcount = pointsBase - (y*6);  
+      addRandomPoints(1, grass);
+      while (landcount && (points != NULL))
+      {
+        attachRandomPoint(grass);
+        //attachRandomPoint(y+ '0');
+        --landcount;
+        //sprintf(strTemp, "Points (%d)@", totalPoints);
+        //SetLineMessageWindow(strTemp, 0);
+        ++totalPointsPlaced;
+      }
+
+      checkLandlocked();
+
+      ++countContinents;
+    }
+    clearPoints();
   }
+  sprintf(strTemp, "Seed(%d)points(%d)@", seed, totalPointsPlaced);
+  WriteLineMessageWindow(strTemp, 0);
 }
 
-#define menuWidth 5
-#define menuCount 4
 void GetSeed()
 {
   byte seed  = 0;
   bool exit = false;
+  #define menuWidth 5
+  #define menuCount 4
   ResetMenu("Seed@", COLS - menuWidth - 3, consolePosY, menuWidth, consoleHeight, menuCount);
   SetMenuItem(0, "Next@");
   SetMenuItem(1, "Last@");
   SetMenuItem(2, "Go@");
   SetMenuItem(3, "End@");
   
+  sprintf(strTemp, "Seed (%d)@", seed);
+  SetLineMessageWindow(strTemp, 0);
   while(1)
   {
-    sprintf(strTemp, "Seed (%d)@", seed);
-    SetLineMessageWindow(strTemp, 0);
+    
     GenerateMap(seed);
     ++seed;
+    //++exit;
   }
 
   while (!exit)
   {
-    sprintf(strTemp, "Seed (%d)@", seed);
-    SetLineMessageWindow(strTemp, 0);
+    //sprintf(strTemp, "Seed (%d)@", seed);
+    //SetLineMessageWindow(strTemp, 0);
     switch (GetMenuSelection())
     {
       case 0:
@@ -411,9 +409,8 @@ void GetSeed()
 screenName Update_MapGen()
 {
   ClearScreen();
-  ClearMap();
-  DrawMiniMap(false);  
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth - 12, consoleHeight);
+  //ClearMap();
+  ResizeMessageWindow(COLS - 22, viewportPosY, 21, 16);
   ScreenFadeIn();
   GetSeed();
   //StoreMap();

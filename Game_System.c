@@ -53,7 +53,7 @@ void DrawMiniMap(bool highlightPlayer)
 {
   byte x, y, tile = 0;
   //ClearScreen();
-  DrawBorder("Minimap@", viewportPosX - 1, viewportPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, true);
+  DrawBorder("Minimap@", viewportPosX - 1, viewportPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
   //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   //FillViewport(32, viewportWidth, viewportHeight);
   
