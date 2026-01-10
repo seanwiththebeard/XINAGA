@@ -28,8 +28,6 @@ One byte describes 16x16 region
 #if defined (__NES__)
 #pragma code-name (push, "MAPGEN")
 #pragma rodata-name (push, "MAPGEN")
-//#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
 #endif
 
 #if defined (__C64__)
@@ -39,13 +37,9 @@ One byte describes 16x16 region
 
 #define pointsBase 48
 #define continentsBase 4
-//#define grass 0x88
-//#define water 0x84
 #define water 0xE0
 #define grass 0xF0
-//void DrawMapGenTiles(void);
 byte countContinents;
-//byte map[height][width] = {};
 
 /* World Seed Parameters
 (Eight flags building a byte)
@@ -73,24 +67,12 @@ typedef struct vector2
 {
   sbyte x;
   sbyte y;
-  //bool landlocked;
   struct vector2 *next;
 };
 
 struct vector2 *points;
 
 byte totalPoints;
-/*byte CountPoints()
-{
-  struct vector2 *temp = points;
-  totalPoints = 0;
-  while(temp != NULL)
-  {
-    ++totalPoints;
-    temp = temp->next;
-  }
-  return totalPoints;
-}*/
 
 void createPoint(byte x, byte y)
 {
@@ -163,27 +145,10 @@ void deletePoint(int pos)
       }
       temp->next =ptr->next ;
     }
-    //sprintf(str, "Deleted element:%d",ptr->character.NAME);
-    //WriteLineMessageWindow(str, 0);
     free(ptr);
     --totalPoints;
   }
 }
-
-/*bool checkPoints(byte index, byte w, byte h)
-{
-  byte i = 0;
-  //for (i = 0; i < CountPoints(); ++i)
-  {
-    if (map[h][w] == index)
-    {
-      sprintf(strTemp, "Failed%d(%d,%d)@", i, w, h);
-      WriteLineMessageWindow(strTemp, 0);
-      return true;
-    }
-  }
-  return false;
-}*/
 
 void clearPoints()
 {
@@ -200,7 +165,7 @@ void clampPoint(struct vector2 *clmpt)
     clmpt->y = mapMatrixHeight - 1;
 
   if (clmpt->x >= mapMatrixWidth)
-    clmpt->x == 0;
+    clmpt->x = 0;
   if (clmpt->y >= mapMatrixHeight)
     clmpt->y = 0;
 }
@@ -243,55 +208,10 @@ void checkLandlocked()
 
     if (countAdjacent(tmpt->x, tmpt->y) == 4)
     {
-      //tmpt->landlocked = true;
       deletePoint(i);
     }
-    //else
-      //tmpt->landlocked = false;
   }
 }
-
-/*void FillAdjacent(byte passes, byte threshold)
-{
-  byte x, y, i;
-  for (i = 0; i < passes; ++i)
-  {
-    for (y = 0; y < height; ++y)
-      for (x = 0; x < width; ++x)
-      {
-        if (map[y][x] != grass)
-          if (countAdjacent(x, y) >= threshold)
-          {
-            createPoint(x, y);
-            map[y][x] = grass;
-            SetChar(grass, posX + x, posY + y);
-            //sprintf(strTemp, "Filled (%d, %d)@", x, y);
-            //WriteLineMessageWindow(strTemp, 0);
-          }
-      }
-    sprintf(strTemp, "Pass %d done@", i + 1);
-    WriteLineMessageWindow(strTemp, 0);
-  }
-}*/
-
-/*void RemoveIslands()
-{
-  byte x, y;
-  for (y = 0; y < height; ++y)
-    for (x = 0; x < width; ++x)
-    {
-      if (map[y][x] == grass)
-        if (countAdjacent(x, y) == 0)
-        {
-          map[y][x] = water;
-          SetChar(water, posX + x, posY + y);
-          sprintf(strTemp, "Removed (%d, %d)@", x, y);
-          WriteLineMessageWindow(strTemp, 0);
-        }
-    }
-  sprintf(strTemp, "Islands Removed@");
-  WriteLineMessageWindow(strTemp, 0);
-}*/
 
 void addRandomPoints(byte count, int index)
 {
@@ -308,9 +228,6 @@ void addRandomPoints(byte count, int index)
     }
     createPoint(w, h);
     mapQuads[w+ (mapMatrixWidth * h)] = index;
-
-    //SetChar(index, posX + w, posY + h);
-    //SetColor(index + 2, posX + w, posY + h);
   }
 }
 
@@ -404,26 +321,148 @@ void attachRandomPoint(byte index)
   createPoint(x, y);
   mapQuads[x + (mapMatrixWidth * y)] = index;
   DrawPoint(x,y);
-  //wait_vblank(1);
 }
 
 void createContinent(byte size)
 {
-  //char index = '0' + countContinents;// grass;
-  byte landcount = size + 1;
-  
-  //sprintf(&index, "%d", countContinents);
-  
+  byte landcount = size + 1;  
   addRandomPoints(1, grass);
   while (landcount && (points != NULL))
   {
     attachRandomPoint(grass);
-    checkLandlocked();
     --landcount;
   }
+  
+  checkLandlocked();
+  
   ++countContinents;
   clearPoints();
 }
+
+void ClearMap()
+{
+  byte x, y;
+  clearPoints();
+  countContinents = 0;
+  
+  for (y = 0; y < mapMatrixHeight; ++y)
+    for (x = 0; x < mapMatrixWidth; ++x)
+    {
+      mapQuads[x + (mapMatrixWidth * y)] = water;
+      DrawPoint(x, y);
+    }
+}
+
+void GenerateMap(byte seed)
+{
+  byte y;
+  ClearMap();
+  //DrawMiniMap(false);
+  srand(seed);
+  for ( y = continentsBase; y > 0; --y)
+  {
+    createContinent(pointsBase -  16*(y - 1));
+  }
+}
+
+#define menuWidth 5
+#define menuCount 4
+void GetSeed()
+{
+  byte seed  = 0;
+  bool exit = false;
+  ResetMenu("Seed@", COLS - menuWidth - 3, consolePosY, menuWidth, consoleHeight, menuCount);
+  SetMenuItem(0, "Next@");
+  SetMenuItem(1, "Last@");
+  SetMenuItem(2, "Go@");
+  SetMenuItem(3, "End@");
+  
+  while(1)
+  {
+    sprintf(strTemp, "Seed (%d)@", seed);
+    SetLineMessageWindow(strTemp, 0);
+    GenerateMap(seed);
+    ++seed;
+  }
+
+  while (!exit)
+  {
+    sprintf(strTemp, "Seed (%d)@", seed);
+    SetLineMessageWindow(strTemp, 0);
+    switch (GetMenuSelection())
+    {
+      case 0:
+        ++seed;
+        break;
+      case 1:
+        --seed;
+        break;
+      case 2:
+        GenerateMap(seed);
+        //GenerateDungeon(seed);
+        break;
+      case 3:
+        exit = true;
+        break;
+    }
+  }
+}
+
+screenName Update_MapGen()
+{
+  ClearScreen();
+  ClearMap();
+  DrawMiniMap(false);  
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth - 12, consoleHeight);
+  ScreenFadeIn();
+  GetSeed();
+  //StoreMap();
+  ScreenFadeOut();
+  ClearScreen();
+  return Map;
+}
+
+/*void FillAdjacent(byte passes, byte threshold)
+{
+  byte x, y, i;
+  for (i = 0; i < passes; ++i)
+  {
+    for (y = 0; y < height; ++y)
+      for (x = 0; x < width; ++x)
+      {
+        if (map[y][x] != grass)
+          if (countAdjacent(x, y) >= threshold)
+          {
+            createPoint(x, y);
+            map[y][x] = grass;
+            SetChar(grass, posX + x, posY + y);
+            //sprintf(strTemp, "Filled (%d, %d)@", x, y);
+            //WriteLineMessageWindow(strTemp, 0);
+          }
+      }
+    sprintf(strTemp, "Pass %d done@", i + 1);
+    WriteLineMessageWindow(strTemp, 0);
+  }
+}*/
+
+/*void RemoveIslands()
+{
+  byte x, y;
+  for (y = 0; y < height; ++y)
+    for (x = 0; x < width; ++x)
+    {
+      if (map[y][x] == grass)
+        if (countAdjacent(x, y) == 0)
+        {
+          map[y][x] = water;
+          SetChar(water, posX + x, posY + y);
+          sprintf(strTemp, "Removed (%d, %d)@", x, y);
+          WriteLineMessageWindow(strTemp, 0);
+        }
+    }
+  sprintf(strTemp, "Islands Removed@");
+  WriteLineMessageWindow(strTemp, 0);
+}*/
 
 /*void Rotate(direction dir)
 {
@@ -485,84 +524,3 @@ void RotateAround()
     DrawMiniMap(false);
   }
 }*/
-
-void ClearMap()
-{
-  byte x, y;
-  clearPoints();
-  countContinents = 0;
-  
-  for (y = 0; y < mapMatrixHeight; ++y)
-    for (x = 0; x < mapMatrixWidth; ++x)
-    {
-      mapQuads[x + (mapMatrixWidth * y)] = water;
-      DrawPoint(x, y);
-      //SetChar(map[y][x], posX + x, posY + y);
-    }
-}
-
-void GenerateMap(byte seed)
-{
-  byte y;
-  ClearMap();
-  //DrawMiniMap(false);
-  srand(seed);
-  for ( y = continentsBase; y > 0; --y)
-  {
-    createContinent(pointsBase -  8*(y - 1));
-  }
-  //DrawMiniMap();
-  //DrawMapGenTiles();
-  //RotateAround();
-  //sprintf(strTemp, "Done@");
-  //WriteLineMessageWindow(strTemp, 0);
-}
-
-#define menuWidth 5
-#define menuCount 4
-void GetSeed()
-{
-  byte seed  = 0;
-  bool exit = false;
-  ResetMenu("Seed@", COLS - menuWidth - 3, consolePosY, menuWidth, consoleHeight, menuCount);
-  SetMenuItem(0, "Next@");
-  SetMenuItem(1, "Last@");
-  SetMenuItem(2, "Go@");
-  SetMenuItem(3, "End@");
-
-  while (!exit)
-  {
-    sprintf(strTemp, "Seed (%d)@", seed);
-    SetLineMessageWindow(strTemp, 0);
-    switch (GetMenuSelection())
-    {
-      case 0:
-        ++seed;
-        break;
-      case 1:
-        --seed;
-        break;
-      case 2:
-        GenerateMap(seed);
-        //GenerateDungeon(seed);
-        break;
-      case 3:
-        exit = true;
-        break;
-    }
-  }
-}
-
-screenName Update_MapGen()
-{
-  ClearScreen();
-  ClearMap();
-  DrawMiniMap(false);  
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth - 12, consoleHeight);
-  ScreenFadeIn();
-  GetSeed();
-  //StoreMap();
-  ScreenFadeOut();
-  ClearScreen();
-  return Map;
-}
