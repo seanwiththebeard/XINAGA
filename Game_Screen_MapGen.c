@@ -62,6 +62,7 @@ Traversal challenge locations
         Cave
         Dense Woods
         Ruins (they link to each other)
+        Mountains
         Ocean(build boat; place shipwright X locations back)
         
 What about a sky world and an underworld? One mega-ruin with lots of exits?
@@ -396,6 +397,8 @@ void GenerateMap(byte seed)
     for (x = 0; x < mapMatrixWidth; ++x)
       DrawPoint(x, y);
   
+  DrawScenario();
+  
   srand(seed);
   for ( y = 0; y < continentsBase; ++y)
   {
@@ -421,7 +424,6 @@ void GenerateMap(byte seed)
   }
   sprintf(strTemp, "Seed(%d)points(%d)@", seed, totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
-  DrawScenario();
 }
 
 void GetSeed()
