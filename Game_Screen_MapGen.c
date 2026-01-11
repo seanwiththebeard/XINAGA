@@ -57,14 +57,59 @@ Before / After	//16
                 //4
                 //2
                 //1
+Traversal challenge locations
+	Overland (no challenge)
+        Cave
+        Dense Woods
+        Ruins (they link to each other)
+        Ocean(build boat; place shipwright X locations back)
+        
+What about a sky world and an underworld? One mega-ruin with lots of exits?
 */
 
 #define pointsBase 32
 #define continentsBase 6
 #define water 0xE0
 #define grass 0xF0
+#define forrest 0xE2
+#define mountain 0xE4
+
+
 static byte countContinents;
 static byte totalPoints;
+static byte forrestCount;
+
+static byte scenarioPoints[9];
+#define town 49
+#define castle 47
+#define dungeon 45
+#define woods 44
+#define land 36
+#define cave 40
+#define ocean 34
+#define ruins 48
+const byte traversal[] = {land, land, land, woods, land, land, land, ocean};
+//A location has the same land type as the previous traversal
+const byte locations[] = {dungeon, dungeon, ruins, ruins, dungeon, ruins, dungeon, dungeon};
+
+void DrawScenario()
+{
+  byte x;
+  scenarioPoints[0] = town;
+  scenarioPoints[8] = castle;
+  DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 2 , 20, 4, false);
+  for (x = 1; x < 8; ++x)
+  {
+    if (x % 3 == 0)
+      scenarioPoints[x] =locations[rand() %8];
+    else
+      scenarioPoints[x] =traversal[rand() %8];
+  }
+  for (x = 0; x < 9; ++x)
+  {
+    DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 2);
+  }
+}
 
 typedef struct vector2
 {
@@ -220,14 +265,27 @@ byte countAdjacent(byte x, byte y)
 
 void checkLandlocked()
 {
-  byte i;
+  byte i, x, y, index;
   for (i = 0; i < totalPoints; ++i)
   {
     struct vector2 *tmpt = getPoint(i);
-
-    if (countAdjacent(tmpt->x, tmpt->y) == 4)
+    x = tmpt->x;
+    y = tmpt->y;
+    if (countAdjacent(x, y) >= 4)
     {
+      if (forrestCount < 5)
+      {
+        index = forrest;
+        ++forrestCount;
+      }
+      else
+      {
+        index  = mountain;
+        forrestCount = 0;
+      }
       deletePoint(i);
+      mapQuads[x + (mapMatrixWidth * y)] = index;
+      DrawPoint(x,y);
     }
   }
 }
@@ -331,6 +389,7 @@ void GenerateMap(byte seed)
   byte totalPointsPlaced = 0;
   clearPoints();
   countContinents = 0;
+  forrestCount = 0;
   memset (&mapQuads[0], water, mapMatrixHeight*mapMatrixWidth);
   DrawMiniMap(false);
   for (y = 0; y < mapMatrixHeight; ++y)
@@ -362,6 +421,7 @@ void GenerateMap(byte seed)
   }
   sprintf(strTemp, "Seed(%d)points(%d)@", seed, totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
+  DrawScenario();
 }
 
 void GetSeed()
