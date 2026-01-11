@@ -327,12 +327,15 @@ void attachRandomPoint(byte index)
 
 void GenerateMap(byte seed)
 {
-  byte y;
+  byte x, y;
   byte totalPointsPlaced = 0;
   clearPoints();
   countContinents = 0;
   memset (&mapQuads[0], water, mapMatrixHeight*mapMatrixWidth);
-  DrawMiniMap(false);  
+  DrawMiniMap(false);
+  for (y = 0; y < mapMatrixHeight; ++y)
+    for (x = 0; x < mapMatrixWidth; ++x)
+      DrawPoint(x, y);
   
   srand(seed);
   for ( y = 0; y < continentsBase; ++y)
