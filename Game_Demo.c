@@ -10,6 +10,11 @@
 //#pragma rodata-name (push, "CODE")
 #endif
 
+#if defined (__C64__)
+#pragma code-name (push, "GAME")
+//#pragma rodata-name (push, "GAME")
+#endif
+
 #define DefaultScreen Map
 screenName currentScreen;
 byte strTemp[ConsoleBufferLength];
@@ -74,15 +79,15 @@ void SwitchScreen(screenName screen)
       currentScreen = MapUpdate();
       break;
     case Combat:
-      currentScreen = Update_Combat();
+      //currentScreen = Update_Combat();
       break;
     case MapGen:
-      #if !MSX
+      //#if !MSX
       currentScreen = Update_MapGen();
-      #endif
+      //#endif
       break;
     case Scenario:
-      currentScreen = Update_Scenario();
+      //currentScreen = Update_Scenario();
     default:
       currentScreen = DefaultScreen;
       break;

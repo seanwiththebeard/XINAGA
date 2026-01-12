@@ -10,6 +10,11 @@
 #pragma rodata-name (push, "GAME")
 #endif
 
+#if defined (__C64__)
+#pragma code-name (push, "GAME")
+//#pragma rodata-name (push, "GAME")
+#endif
+
 void DebugGraphics()
 {
   DrawCharset();

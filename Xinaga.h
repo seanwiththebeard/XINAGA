@@ -239,9 +239,11 @@ extern int YColumnIndex[ROWS];
 extern byte SetCharIndex;
 extern byte SetCharX;
 extern byte SetCharY;
+#if defined(__C64__) || defined(__APPLE2__) || defined(__NES__)
 #pragma zpsym ("SetCharIndex")
 #pragma zpsym ("SetCharX")
 #pragma zpsym ("SetCharY")
+#endif
 
 void _SetChar(void);
 #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
@@ -264,7 +266,7 @@ extern byte tilesPalette[TileCount];
 void SetTileOrigin(byte x, byte y);
 extern byte tilePosX;
 extern byte tilePosY;
-#if defined(__C64__) || (__APPLE2__) || (__NES__)
+#if defined(__C64__) || defined(__APPLE2__) || defined(__NES__)
 #pragma zpsym ("tilePosX")
 #pragma zpsym ("tilePosY")
 #pragma zpsym ("DrawTileX")
