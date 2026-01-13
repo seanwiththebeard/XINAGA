@@ -135,7 +135,8 @@ void DrawScenario()
     DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 2);
     SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2 + 2);
     SetChar(distChar[scenarioDist[x]], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 2);
-    scenChar = (scenarioPoints[x] << 1) + ((scenarioPoints[x] >> 3) << 4);
+    //scenChar = (scenarioPoints[x] << 1) + ((scenarioPoints[x] >> 3) << 4);
+    scenChar = '0' + x;
     scenPos.x = scenPos.x + distX[scenarioDir[x]] * scenarioDist[x];
     scenPos.y = scenPos.y + distY[scenarioDir[x]] * scenarioDist[x];
     clampPoint(&scenPos);
