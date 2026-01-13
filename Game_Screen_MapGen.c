@@ -68,6 +68,14 @@ Traversal challenge locations
 What about a sky world and an underworld? One mega-ruin with lots of exits?
 */
 
+typedef struct vector2
+{
+  sbyte x;
+  sbyte y;
+  struct vector2 *next;
+};
+void createPoint(byte index, byte x, byte y);
+
 #define pointsBase 32
 #define continentsBase 6
 #define water 0xE0
@@ -83,6 +91,9 @@ static byte forrestCount;
 static byte scenarioPoints[9];
 static byte scenarioDir[9];
 static byte scenarioDist[9];
+static sbyte distX[4] = {0, 0, 1, -1};
+static sbyte distY[4] = {-1, 1, 0, 0};
+
 const static char dirChar[4] = {"NSWE"};
 const static char distChar[4] = {"1234"};
 
@@ -97,10 +108,15 @@ const static char distChar[4] = {"1234"};
 const byte traversal[] = {land, land, land, woods, land, land, land, ocean};
 //A location has the same land type as the previous traversal
 const byte locations[] = {dungeon, dungeon, ruins, ruins, dungeon, ruins, dungeon, dungeon};
+void clampPoint(struct vector2 *clmpt);
+
 
 void DrawScenario()
 {
   byte x;
+  //byte posX, posY;
+  struct vector2 scenPos = {8, 8};
+  char scenChar;
   DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 2 , 20, 5, false);
   for (x = 0; x < 9; ++x)
   {
@@ -119,16 +135,16 @@ void DrawScenario()
     DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 2);
     SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2 + 2);
     SetChar(distChar[scenarioDist[x]], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 2);
+    scenChar = (scenarioPoints[x] << 1) + ((scenarioPoints[x] >> 3) << 4);
+    scenPos.x = scenPos.x + distX[scenarioDir[x]] * scenarioDist[x];
+    scenPos.y = scenPos.y + distY[scenarioDir[x]] * scenarioDist[x];
+    clampPoint(&scenPos);
     
+    createPoint(scenChar, scenPos.x, scenPos.y);
   }
 }
 
-typedef struct vector2
-{
-  sbyte x;
-  sbyte y;
-  struct vector2 *next;
-};
+
 
 struct vector2 *points;
 
@@ -316,7 +332,6 @@ void addRandomPoints(byte count, int index)
       w = rand() % mapMatrixWidth;
     }
     createPoint(index, w, h);
-    //mapQuads[w+ (mapMatrixWidth * h)] = index;
   }
 }
 
@@ -420,10 +435,7 @@ void GenerateMap(byte seed)
       while (landcount && (points != NULL))
       {
         attachRandomPoint(grass);
-        //attachRandomPoint(y+ '0');
         --landcount;
-        //sprintf(strTemp, "Points (%d)@", totalPoints);
-        //SetLineMessageWindow(strTemp, 0);
         ++totalPointsPlaced;
       }
 
