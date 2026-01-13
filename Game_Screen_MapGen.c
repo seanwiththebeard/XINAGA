@@ -137,12 +137,12 @@ void DrawScenario()
     scenarioPoints[8] = castle;
     
     scenarioDir[x] = rand() %4;
-    scenarioDist[x] = 1+rand()%4;
+    scenarioDist[x] = rand() %5;
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2);
     
     DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 3);
     SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2 + 3);
-    SetChar('0' + dist[x], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 3);
+    SetChar('0' + dist[scenarioDist[x]], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 3);
   }
   
   for (x = 0; x < 9; ++x)
