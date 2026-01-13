@@ -117,7 +117,7 @@ void DrawScenario()
   //byte posX, posY;
   struct vector2 scenPos = {8, 8};
   char scenChar;
-  DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 2 , 20, 5, false);
+  DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 2 , 20, 6, false);
   for (x = 0; x < 9; ++x)
   {
     if (x % 3 == 0)
@@ -132,9 +132,11 @@ void DrawScenario()
   scenarioPoints[8] = castle;
   for (x = 0; x < 9; ++x)
   {
-    DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 2);
-    SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2 + 2);
-    SetChar(distChar[scenarioDist[x]], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 2);
+    SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2);
+    
+    DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 3);
+    SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2 + 3);
+    SetChar(distChar[scenarioDist[x]], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 3);
     //scenChar = (scenarioPoints[x] << 1) + ((scenarioPoints[x] >> 3) << 4);
     scenChar = '0' + x;
     scenPos.x = scenPos.x + distX[scenarioDir[x]] * scenarioDist[x];
