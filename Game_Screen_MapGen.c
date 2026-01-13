@@ -74,9 +74,10 @@ typedef struct vector2
   sbyte y;
   struct vector2 *next;
 };
+struct vector2 *points;
 void createPoint(byte index, byte x, byte y);
 
-#define pointsBase 32
+#define pointsBase 64
 #define continentsBase 6
 #define water 0xE0
 #define grass 0xF0
@@ -95,7 +96,7 @@ static sbyte distX[4] = {0, 0, 1, -1};
 static sbyte distY[4] = {-1, 1, 0, 0};
 
 const static char dirChar[4] = {"NSWE"};
-const static char distChar[4] = {"1234"};
+const static byte dist[5] = {2, 2, 4, 3, 2};
 
 #define town 49
 #define castle 47
@@ -110,6 +111,14 @@ const byte traversal[] = {land, land, land, woods, land, land, land, ocean};
 const byte locations[] = {dungeon, dungeon, ruins, ruins, dungeon, ruins, dungeon, dungeon};
 void clampPoint(struct vector2 *clmpt);
 
+bool CheckOverlap(byte x, byte y)
+{
+  byte i;
+  for (i = 0; i < totalPoints; ++i)
+    if ((points[i].x == x) && (points[i].y == y))
+      return true;
+  return false;
+}
 
 void DrawScenario()
 {
@@ -124,24 +133,37 @@ void DrawScenario()
       scenarioPoints[x] =locations[rand() %8];
     else
       scenarioPoints[x] =traversal[rand() %8];
+    scenarioPoints[0] = town;
+    scenarioPoints[8] = castle;
     
     scenarioDir[x] = rand() %4;
-    scenarioDist[x] = rand() %4;
-  }
-  scenarioPoints[0] = town;
-  scenarioPoints[8] = castle;
-  for (x = 0; x < 9; ++x)
-  {
+    scenarioDist[x] = 1+rand()%4;
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2);
     
     DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 3);
     SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2 + 3);
-    SetChar(distChar[scenarioDist[x]], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 3);
+    SetChar('0' + dist[x], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 3);
+  }
+  
+  for (x = 0; x < 9; ++x)
+  {
+    
     //scenChar = (scenarioPoints[x] << 1) + ((scenarioPoints[x] >> 3) << 4);
     scenChar = '0' + x;
-    scenPos.x = scenPos.x + distX[scenarioDir[x]] * scenarioDist[x];
-    scenPos.y = scenPos.y + distY[scenarioDir[x]] * scenarioDist[x];
+    //if (x > 0)
+    {
+      scenPos.x += (distX[scenarioDir[x]] * dist[scenarioDist[x]]);
+      scenPos.y += (distY[scenarioDir[x]] * dist[scenarioDist[x]]);
+    }
+    
     clampPoint(&scenPos);
+    
+    while(CheckOverlap(scenPos.x, scenPos.y))
+    {
+      scenPos.x += (distX[scenarioDir[x]]);
+      scenPos.y += (distY[scenarioDir[x]]);
+      clampPoint(&scenPos);
+    }
     
     createPoint(scenChar, scenPos.x, scenPos.y);
   }
@@ -149,7 +171,6 @@ void DrawScenario()
 
 
 
-struct vector2 *points;
 
 void DrawPoint(byte x, byte y)
 {
@@ -315,8 +336,11 @@ void checkLandlocked()
         forrestCount = 0;
       }
       deletePoint(i);
-      mapQuads[x + (mapMatrixWidth * y)] = index;
-      DrawPoint(x,y);
+      if(mapQuads[x + (mapMatrixWidth * y)] == grass)
+      {
+        mapQuads[x + (mapMatrixWidth * y)] = index;
+        DrawPoint(x,y);
+      }
     }
   }
 }
@@ -426,15 +450,19 @@ void GenerateMap(byte seed)
     for (x = 0; x < mapMatrixWidth; ++x)
       DrawPoint(x, y);
   
-  DrawScenario();
   
   srand(seed);
+  DrawScenario();
+  sprintf(strTemp, "Seed(%d)points(%d)@", seed, totalPointsPlaced);
+  WriteLineMessageWindow(strTemp, 0);
+  //return;
+  
   for ( y = 0; y < continentsBase; ++y)
   {
     //Create Continent
     {
       sbyte landcount = pointsBase - (y*6);  
-      addRandomPoints(1, grass);
+      //addRandomPoints(1, grass);
       while (landcount && (points != NULL))
       {
         attachRandomPoint(grass);
@@ -448,8 +476,7 @@ void GenerateMap(byte seed)
     }
     clearPoints();
   }
-  sprintf(strTemp, "Seed(%d)points(%d)@", seed, totalPointsPlaced);
-  WriteLineMessageWindow(strTemp, 0);
+  
 }
 
 void GetSeed()
