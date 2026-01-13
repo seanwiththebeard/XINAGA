@@ -96,7 +96,7 @@ static sbyte distX[4] = {0, 0, 1, -1};
 static sbyte distY[4] = {-1, 1, 0, 0};
 
 const static char dirChar[4] = {"NSWE"};
-const static byte dist[5] = {2, 2, 4, 3, 2};
+const static byte dist[5] = {6, 3, 4, 3, 7};
 
 #define town 49
 #define castle 47
@@ -164,6 +164,9 @@ void DrawScenario()
       scenPos.y += (distY[scenarioDir[x]]);
       clampPoint(&scenPos);
     }
+    
+    //Draw line from last point to this one using the terrain type
+    //Unless it's water, in which case we don't want to draw water over an existing critical path
     
     createPoint(scenChar, scenPos.x, scenPos.y);
   }
