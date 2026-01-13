@@ -22,6 +22,7 @@ void main(void)
   //InitializeGraphics();
   //DebugGraphics();
   //DebugMap();
+  //Demo(Map);
   Demo(MapGen);
   //Demo(EditParty);
   

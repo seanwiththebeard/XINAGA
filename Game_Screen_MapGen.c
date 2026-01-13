@@ -81,6 +81,11 @@ static byte totalPoints;
 static byte forrestCount;
 
 static byte scenarioPoints[9];
+static byte scenarioDir[9];
+static byte scenarioDist[9];
+const static char dirChar[4] = {"NSWE"};
+const static char distChar[4] = {"1234"};
+
 #define town 49
 #define castle 47
 #define dungeon 45
@@ -96,19 +101,25 @@ const byte locations[] = {dungeon, dungeon, ruins, ruins, dungeon, ruins, dungeo
 void DrawScenario()
 {
   byte x;
-  scenarioPoints[0] = town;
-  scenarioPoints[8] = castle;
-  DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 2 , 20, 4, false);
-  for (x = 1; x < 8; ++x)
+  DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 2 , 20, 5, false);
+  for (x = 0; x < 9; ++x)
   {
     if (x % 3 == 0)
       scenarioPoints[x] =locations[rand() %8];
     else
       scenarioPoints[x] =traversal[rand() %8];
+    
+    scenarioDir[x] = rand() %4;
+    scenarioDist[x] = rand() %4;
   }
+  scenarioPoints[0] = town;
+  scenarioPoints[8] = castle;
   for (x = 0; x < 9; ++x)
   {
     DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 2);
+    SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2 + 2);
+    SetChar(distChar[scenarioDist[x]], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 2);
+    
   }
 }
 
