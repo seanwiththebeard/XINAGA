@@ -64,7 +64,7 @@ Traversal challenge locations
         Ruins (they link to each other)
         Mountains
         Ocean(build boat; place shipwright X locations back)
-        
+
 What about a sky world and an underworld? One mega-ruin with lots of exits?
 */
 
@@ -74,8 +74,10 @@ typedef struct vector2
   sbyte y;
   struct vector2 *next;
 };
+
 struct vector2 *points;
 void createPoint(byte index, byte x, byte y);
+void clampPoint(struct vector2 *clmpt);
 
 #define pointsBase 64
 #define continentsBase 6
@@ -83,7 +85,6 @@ void createPoint(byte index, byte x, byte y);
 #define grass 0xF0
 #define forrest 0xE2
 #define mountain 0xE4
-
 
 static byte countContinents;
 static byte totalPoints;
@@ -95,8 +96,9 @@ static byte scenarioDist[9];
 static sbyte distX[4] = {0, 0, 1, -1};
 static sbyte distY[4] = {-1, 1, 0, 0};
 
-const static char dirChar[4] = {"NSWE"};
-const static byte dist[5] = {6, 3, 4, 3, 7};
+const static char dirChar[4] = {"NSEW"};
+const static byte dist[5] = {4, 4, 4, 4, 4};
+//const static byte dist[5] = {6, 3, 4, 3, 7};
 
 #define town 49
 #define castle 47
@@ -106,10 +108,10 @@ const static byte dist[5] = {6, 3, 4, 3, 7};
 #define cave 40
 #define ocean 34
 #define ruins 48
+#define road 0x9c
 const byte traversal[] = {land, land, land, woods, land, land, land, ocean};
 //A location has the same land type as the previous traversal
 const byte locations[] = {dungeon, dungeon, ruins, ruins, dungeon, ruins, dungeon, dungeon};
-void clampPoint(struct vector2 *clmpt);
 
 bool CheckOverlap(byte x, byte y)
 {
@@ -123,8 +125,9 @@ bool CheckOverlap(byte x, byte y)
 void DrawScenario()
 {
   byte x;
-  //byte posX, posY;
+  byte failure = 0;
   struct vector2 scenPos = {8, 8};
+  struct vector2 originPos = {8, 8};
   char scenChar;
   DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 2 , 20, 6, false);
   for (x = 0; x < 9; ++x)
@@ -135,41 +138,60 @@ void DrawScenario()
       scenarioPoints[x] =traversal[rand() %8];
     scenarioPoints[0] = town;
     scenarioPoints[8] = castle;
-    
+
     scenarioDir[x] = rand() %4;
+    while (scenarioDir[x] == scenarioDir[x-1])
+      scenarioDir[x] = rand() %4;
+
     scenarioDist[x] = rand() %5;
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2);
-    
+
     DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 3);
     SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2 + 3);
     SetChar('0' + dist[scenarioDist[x]], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 3);
   }
-  
+
+  createPoint('S', originPos.x, originPos.y); 
+
   for (x = 0; x < 9; ++x)
   {
-    
+    byte i;
+    char pathIndex = road;
     //scenChar = (scenarioPoints[x] << 1) + ((scenarioPoints[x] >> 3) << 4);
     scenChar = '0' + x;
-    //if (x > 0)
-    {
-      scenPos.x += (distX[scenarioDir[x]] * dist[scenarioDist[x]]);
-      scenPos.y += (distY[scenarioDir[x]] * dist[scenarioDist[x]]);
-    }
-    
+    scenPos.x += (distX[scenarioDir[x]] * dist[scenarioDist[x]]);
+    scenPos.y += (distY[scenarioDir[x]] * dist[scenarioDist[x]]);
     clampPoint(&scenPos);
-    
+
     while(CheckOverlap(scenPos.x, scenPos.y))
     {
       scenPos.x += (distX[scenarioDir[x]]);
       scenPos.y += (distY[scenarioDir[x]]);
       clampPoint(&scenPos);
     }
+    createPoint(scenChar, scenPos.x, scenPos.y);
     
     //Draw line from last point to this one using the terrain type
     //Unless it's water, in which case we don't want to draw water over an existing critical path
-    
-    createPoint(scenChar, scenPos.x, scenPos.y);
+    if (scenarioPoints[x] == ocean)
+      pathIndex = water + 1;
+
+    //while ((originPos.x != scenPos.x) || (originPos.y != scenPos.y))
+    for (i = 0; i < scenarioDist[x]; ++i)
+    {
+      originPos.x += (distX[scenarioDir[x]]);
+      originPos.y += (distY[scenarioDir[x]]);
+      clampPoint(&originPos);
+
+      //Skip any existing points along the way
+      //if(!CheckOverlap(originPos.x, originPos.y))
+      //createPoint(pathIndex, originPos.x, originPos.y); 
+    }
+    originPos.x = scenPos.x;
+    originPos.y = scenPos.y;
   }
+
+  while(1);
 }
 
 
@@ -214,7 +236,7 @@ void createPoint(byte index, byte x, byte y)
     ptr->next=temp;
   }
   ++totalPoints;
-  
+
   mapQuads[x + (mapMatrixWidth * y)] = index;
   DrawPoint(x,y);
 }
@@ -304,7 +326,7 @@ byte countAdjacent(byte x, byte y)
   adjY[1] = y + 1;
   adjY[2] = y;
   adjY[3] = y;
-  
+
   for (;z < 4; ++z)
   {
     pointAdj.x = adjX[z];
@@ -371,7 +393,7 @@ void attachRandomPoint(byte index)
   byte i;
   bool exit = false;
   byte failure = 0;
-  
+
   while (1)
   {
     byte dir = rand() % 4;
@@ -437,7 +459,7 @@ void attachRandomPoint(byte index)
     }
   }
   createPoint(index, x, y);
-  
+
 }
 
 void GenerateMap(byte seed)
@@ -452,14 +474,14 @@ void GenerateMap(byte seed)
   for (y = 0; y < mapMatrixHeight; ++y)
     for (x = 0; x < mapMatrixWidth; ++x)
       DrawPoint(x, y);
-  
-  
+
+
   srand(seed);
   DrawScenario();
   sprintf(strTemp, "Seed(%d)points(%d)@", seed, totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
   //return;
-  
+
   for ( y = 0; y < continentsBase; ++y)
   {
     //Create Continent
@@ -479,7 +501,7 @@ void GenerateMap(byte seed)
     }
     clearPoints();
   }
-  
+
 }
 
 void GetSeed()
@@ -493,12 +515,12 @@ void GetSeed()
   SetMenuItem(1, "Last@");
   SetMenuItem(2, "Go@");
   SetMenuItem(3, "End@");
-  
+
   sprintf(strTemp, "Seed (%d)@", seed);
   SetLineMessageWindow(strTemp, 0);
   while(1)
   {
-    
+
     GenerateMap(seed);
     ++seed;
     //++exit;
