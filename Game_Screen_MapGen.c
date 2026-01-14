@@ -130,6 +130,9 @@ void DrawScenario()
   struct vector2 originPos = {8, 8};
   char scenChar;
   DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 2 , 20, 6, false);
+  
+  createPoint('S', originPos.x, originPos.y);
+  
   for (x = 0; x < 9; ++x)
   {
     if (x % 3 == 0)
@@ -138,22 +141,24 @@ void DrawScenario()
       scenarioPoints[x] =traversal[rand() %8];
     scenarioPoints[0] = town;
     scenarioPoints[8] = castle;
-    
+
     scenarioDir[x] = rand() %4;
     if (x > 0)
       while (scenarioDir[x] == scenarioDir[x-1])
         scenarioDir[x] = rand() %4;
-    
+
     scenarioDist[x] = rand() %5;
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2);
 
     DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 3);
     SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2 + 3);
     SetChar('0' + dist[scenarioDist[x]], viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 3);
+
+    //Check points for overlap and adjust until they're separated
+    {
+    }
   }
-
-  createPoint('S', originPos.x, originPos.y); 
-
+  
   for (x = 0; x < 9; ++x)
   {
     byte i;
@@ -171,7 +176,7 @@ void DrawScenario()
       clampPoint(&scenPos);
     }
     createPoint(scenChar, scenPos.x, scenPos.y);
-    
+
     //Draw line from last point to this one using the terrain type
     //Unless it's water, in which case we don't want to draw water over an existing critical path
     if (scenarioPoints[x] == ocean)
