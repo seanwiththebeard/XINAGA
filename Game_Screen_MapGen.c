@@ -138,11 +138,12 @@ void DrawScenario()
       scenarioPoints[x] =traversal[rand() %8];
     scenarioPoints[0] = town;
     scenarioPoints[8] = castle;
-
+    
     scenarioDir[x] = rand() %4;
-    while (scenarioDir[x] == scenarioDir[x-1])
-      scenarioDir[x] = rand() %4;
-
+    if (x > 0)
+      while (scenarioDir[x] == scenarioDir[x-1])
+        scenarioDir[x] = rand() %4;
+    
     scenarioDist[x] = rand() %5;
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2);
 
