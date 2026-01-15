@@ -538,6 +538,7 @@ void GenerateMap(byte seed)
   //TO-DO: Change the minimap to draw with an offset to translate quad references into minimap glyphs
   //Need a place for 64 glyphs to correspond to 64 tile geomorphs, probably 0xE0
   //Minimap glyph will be (mapQuads[x + (mapMatrixWidth * y)] + MiniMapGlypBase)
+  //8 types of terrain with 8 variations each = 64
   for (y = 0; y < 16; ++y)
     for (x = 0; x < 16; ++x)
     {
