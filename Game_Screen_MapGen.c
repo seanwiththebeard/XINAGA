@@ -82,10 +82,7 @@ void deletePoint(int pos);
 
 #define pointsBase 64
 #define continentsBase 6
-#define water 0xE0
-#define grass 0xF0
-#define forrest 0xE2
-#define mountain 0xE4
+
 
 static byte countContinents;
 static byte totalPoints;
@@ -101,6 +98,7 @@ const static char dirChar[4] = {"NSEW"};
 const static byte dist[5] = {4, 3, 3, 5, 2};
 //const static byte dist[5] = {6, 3, 4, 3, 7};
 
+//Scenario Tiles
 #define town 49
 #define castle 47
 #define dungeon 45
@@ -108,12 +106,20 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 #define land 36
 #define cave 40
 #define ocean 34
-#define oceanTravel 0xe1
 #define ruins 48
+
+//Minimap Glyphs
+#define water 0xE0
+#define grass 0xF0
+#define forrest 0xE2
+#define mountain 0xE4
+#define waterTravel 0xe1
 #define road 0xf1
+
+
 const byte traversal[] = {land, land, land, woods, land, land, land, ocean};
 //A location has the same land type as the previous traversal
-const byte locations[] = {dungeon, dungeon, ruins, ruins, dungeon, ruins, dungeon, dungeon};
+const byte locations[] = {dungeon, cave, ruins, ruins, dungeon, ruins, dungeon, dungeon};
 
 bool CheckOverlap(byte x, byte y)
 {
@@ -202,7 +208,7 @@ void DrawScenario()
       //Unless it's water, in which case we don't want to draw water over an existing critical path
       if (scenarioPoints[x] == ocean)
       {
-        pathIndex = oceanTravel;
+        pathIndex = waterTravel;
         createPoint(pathIndex, originPos.x, originPos.y);
         deletePoint(totalPoints - 1);
         continue;
