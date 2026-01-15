@@ -482,6 +482,10 @@ static void InitializeMapData()
   tilesPalette[44] = 3; //Trees
   tilesPalette[35] = 2; //Sign
 
+  ScreenQuad.Chars[63][0] = water;
+  ScreenQuad.Chars[63][1] = water;
+  ScreenQuad.Chars[62][0] = grass;
+  ScreenQuad.Chars[62][1] = grass;
 
   //ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
   //ScreenQuad.Chars[2][1] = 44; // Set the wizard to trees on 1

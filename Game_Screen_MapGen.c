@@ -533,6 +533,21 @@ void GenerateMap(byte seed)
     totalPointsPlaced += totalPoints;
     clearPoints();
   }
+  
+  //Translate to quad indexes...
+  //TO-DO: Change the minimap to draw with an offset to translate quad references into minimap glyphs
+  //Need a place for 64 glyphs to correspond to 64 tile geomorphs, probably 0xE0
+  //Minimap glyph will be (mapQuads[x + (mapMatrixWidth * y)] + MiniMapGlypBase)
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 16; ++x)
+    {
+      if (mapQuads[x + (mapMatrixWidth * y)] == water)
+        mapQuads[x + (mapMatrixWidth * y)] = 63;
+      
+      if (mapQuads[x + (mapMatrixWidth * y)] == grass)
+        mapQuads[x + (mapMatrixWidth * y)] = 62;
+    }
+  
   sprintf(strTemp, "Points Placed:  (%3d)@", totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
 }
