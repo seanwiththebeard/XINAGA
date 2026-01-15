@@ -98,7 +98,7 @@ static sbyte distX[4] = {0, 0, 1, -1};
 static sbyte distY[4] = {-1, 1, 0, 0};
 
 const static char dirChar[4] = {"NSEW"};
-const static byte dist[5] = {4, 3, 3, 5, 9};
+const static byte dist[5] = {4, 3, 3, 5, 2};
 //const static byte dist[5] = {6, 3, 4, 3, 7};
 
 #define town 49
@@ -171,7 +171,7 @@ void DrawScenario()
     scenarioDist[x] = rand() %5;
     distTravel = dist[scenarioDist[x]];
     if (scenarioPoints[x] == ocean)
-      distTravel += 8;
+      distTravel += 5;
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2);
 
     DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 3);
@@ -182,7 +182,7 @@ void DrawScenario()
     clampPoint(&scenPos);
 
     //Check points for overlap and adjust until they're separated
-    while(CheckOverlap(scenPos.x, scenPos.y) == true)
+    while(CheckOverlap(scenPos.x, scenPos.y))
     {
       scenPos.x += (distX[scenarioDir[x]]);
       scenPos.y += (distY[scenarioDir[x]]);
@@ -539,7 +539,7 @@ void GenerateMap(byte seed)
 
 void GetSeed()
 {
-  byte seed  = 0;
+  byte seed  = 20;
   bool exit = false;
   #define menuWidth 5
   #define menuCount 4
@@ -549,14 +549,13 @@ void GetSeed()
   SetMenuItem(2, "Go@");
   SetMenuItem(3, "End@");
 
-  //sprintf(strTemp, "Seed (%d)@", seed);
-  //SetLineMessageWindow(strTemp, 0);
-  while(1)
+  sprintf(strTemp, "Seed (%d)@", seed);
+  SetLineMessageWindow(strTemp, 0);
+  //while(1)
   {
 
-    GenerateMap(seed);
-    ++seed;
-    //++exit;
+    //GenerateMap(seed);
+    //++seed;
   }
 
   while (!exit)

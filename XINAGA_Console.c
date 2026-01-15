@@ -84,11 +84,13 @@ byte Width;
 byte PosX;
 byte PosY;
 
-#define MessageCount 4
+#define MessageCount 5
 const char* const Messages[MessageCount]= {
   "Hello there!@",
   "This is a sign@",
-  "Wizard's Forest@"};
+  "Wizard's Forest@",
+  "There's a feeling I get when I look to the west...@"
+};
 
 //Selection Menu
 byte MenuHeight;
