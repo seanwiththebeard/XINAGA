@@ -110,7 +110,7 @@ const static byte dist[5] = {4, 3, 3, 5, 9};
 #define ocean 34
 #define oceanTravel 0xe1
 #define ruins 48
-#define road 0x9c
+#define road 0xf1
 const byte traversal[] = {land, land, land, woods, land, land, land, ocean};
 //A location has the same land type as the previous traversal
 const byte locations[] = {dungeon, dungeon, ruins, ruins, dungeon, ruins, dungeon, dungeon};
@@ -147,7 +147,7 @@ void DrawScenario()
 
   scenPos.x = originX;
   scenPos.y = originY;
-  //createPoint('S', scenPos.x, scenPos.y);
+  createPoint('S', scenPos.x, scenPos.y);
 
   for (x = 0; x < 9; ++x)
   {
@@ -509,7 +509,7 @@ void GenerateMap(byte seed)
   srand(seed);
   DrawScenario();
   checkLandlocked();
-  sprintf(strTemp, "Generating:    (%3d)@", seed);
+  sprintf(strTemp, "Generating Seed:(%3d)@", seed);
   WriteLineMessageWindow(strTemp, 0);
   //return;
 
@@ -533,7 +533,7 @@ void GenerateMap(byte seed)
     totalPointsPlaced += totalPoints;
     clearPoints();
   }
-  sprintf(strTemp, "Points Placed: (%3d)@", totalPointsPlaced);
+  sprintf(strTemp, "Points Placed:  (%3d)@", totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
 }
 
