@@ -853,7 +853,7 @@ static void ActionMenu()
     case 3:
       UpdatePlayerOnMiniMap();
       ScreenFadeOut();
-      ClearScreen();
+      //ClearScreen();
       DrawMiniMap(true);
       WaitForInput();
       ScreenFadeOut();
@@ -885,6 +885,8 @@ void DrawMap()
 screenName MapUpdate()
 {
   exitScreen = false;
+  MiniMapPosX = 20;
+  MiniMapPosY = 1;
 
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
@@ -913,7 +915,12 @@ screenName MapUpdate()
         if (InputChanged())
           ActionMenu();
       if (Dir < 4)
-        MoveCharacter(followIndex, Dir);        
+      {
+        MoveCharacter(followIndex, Dir);
+        UpdatePlayerOnMiniMap();
+        DrawMiniMap(true);
+
+      }
     }
   }
   ScreenFadeOut();

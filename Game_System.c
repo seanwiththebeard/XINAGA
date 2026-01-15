@@ -54,10 +54,12 @@ uint16_t randseed;
 
 byte MiniMapHighlightX;
 byte MiniMapHighlightY;
+byte MiniMapPosX;
+byte MiniMapPosY;
 void DrawMiniMap(bool highlightPlayer)
 {
   byte x, y, tile = 0;
-  DrawBorder("Minimap@", viewportPosX - 1, viewportPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
+  DrawBorder("Minimap@", MiniMapPosX - 1, MiniMapPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
   UpdateAttributes();
   
   for (y = 0; y < mapMatrixHeight; ++y)
@@ -66,11 +68,11 @@ void DrawMiniMap(bool highlightPlayer)
     for (x = 0; x < mapMatrixWidth; ++x)
     {
       tile = mapQuads[x + tY];
-      SetChar(tile, x + viewportPosX, y + viewportPosY);
+      SetChar(tile, x + MiniMapPosX, y + MiniMapPosY);
     }
   }  
   if(highlightPlayer)
-    SetChar('X', viewportPosX + 1 + MiniMapHighlightX, viewportPosY + 1 + MiniMapHighlightY);
+    SetChar('X', MiniMapPosX + 1 + MiniMapHighlightX, MiniMapPosY + 1 + MiniMapHighlightY);
   ScreenFadeIn();
 }
 
