@@ -507,9 +507,9 @@ void GenerateMap(byte seed)
 
 
   srand(seed);
+  sprintf(strTemp, "Generating Seed:(%3d)@", seed);
   DrawScenario();
   checkLandlocked();
-  sprintf(strTemp, "Generating Seed:(%3d)@", seed);
   WriteLineMessageWindow(strTemp, 0);
   //return;
 
@@ -565,13 +565,13 @@ void GetSeed()
   SetMenuItem(2, "Go@");
   SetMenuItem(3, "End@");
 
-  sprintf(strTemp, "Seed (%d)@", seed);
-  SetLineMessageWindow(strTemp, 0);
-  //while(1)
+  //sprintf(strTemp, "Seed (%d)@", seed);
+  //SetLineMessageWindow(strTemp, 0);
+  while(1)
   {
 
-    //GenerateMap(seed);
-    //++seed;
+    GenerateMap(seed);
+    ++seed;
   }
 
   while (!exit)
