@@ -99,27 +99,30 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 //const static byte dist[5] = {6, 3, 4, 3, 7};
 
 //Scenario Tiles
-#define town 49
-#define castle 47
-#define dungeon 45
-#define woods 44
-#define land 36
-#define cave 40
-#define ocean 34
-#define ruins 48
+#define scenTown 49
+#define scenCastle 47
+#define scenDungeon 45
+#define scenCave 40
+#define scenRuins 48
+#define scenWater 34
+#define scenGrass 36
+#define scenForrest 44
 
 //Minimap Glyphs
-#define water 0xE0
+#define miniMapWater 0xE0
 #define grass 0xF0
+#define road 0xf1
 #define forrest 0xE2
 #define mountain 0xE4
 #define waterTravel 0xe1
-#define road 0xf1
+//Town
+//Dungeon
 
 
-const byte traversal[] = {land, land, land, woods, land, land, land, ocean};
+
+const byte traversal[] = {scenGrass, scenForrest, scenGrass, scenForrest, scenGrass, scenGrass, scenGrass, scenWater};
 //A location has the same land type as the previous traversal
-const byte locations[] = {dungeon, cave, ruins, ruins, dungeon, ruins, dungeon, dungeon};
+const byte locations[] = {scenDungeon, scenCave, scenRuins, scenRuins, scenDungeon, scenRuins, scenDungeon, scenDungeon};
 
 bool CheckOverlap(byte x, byte y)
 {
@@ -166,8 +169,8 @@ void DrawScenario()
       scenarioPoints[x] =locations[rand() %8];
     else
       scenarioPoints[x] =traversal[rand() %8];
-    scenarioPoints[0] = town;
-    scenarioPoints[8] = castle;
+    scenarioPoints[0] = scenTown;
+    scenarioPoints[8] = scenCastle;
 
     scenarioDir[x] = rand() %4;
     if (x > 0)
@@ -176,7 +179,7 @@ void DrawScenario()
 
     scenarioDist[x] = rand() %5;
     distTravel = dist[scenarioDist[x]];
-    if (scenarioPoints[x] == ocean)
+    if (scenarioPoints[x] == scenWater)
       distTravel += 5;
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2);
 
@@ -206,7 +209,7 @@ void DrawScenario()
 
       //Draw line from last point to this one using the terrain type
       //Unless it's water, in which case we don't want to draw water over an existing critical path
-      if (scenarioPoints[x] == ocean)
+      if (scenarioPoints[x] == scenWater)
       {
         pathIndex = waterTravel;
         createPoint(pathIndex, originPos.x, originPos.y);
@@ -369,7 +372,7 @@ byte countAdjacent(byte x, byte y)
     clampPoint(&pointAdj);
     adjX[z] = pointAdj.x;
     adjY[z] = pointAdj.y;
-    if (mapQuads[adjX[z] + (mapMatrixWidth * adjY[z])] != water)
+    if (mapQuads[adjX[z] + (mapMatrixWidth * adjY[z])] != miniMapWater)
       ++i;
   }
   return i;
@@ -414,7 +417,7 @@ void addRandomPoints(byte count, int index)
     byte h = rand() % mapMatrixHeight;
     byte w = rand() % mapMatrixWidth;
 
-    while (mapQuads[w + (mapMatrixWidth * h)] != water)
+    while (mapQuads[w + (mapMatrixWidth * h)] != miniMapWater)
     {
       h = rand() % mapMatrixHeight;
       w = rand() % mapMatrixWidth;
@@ -467,7 +470,7 @@ void attachRandomPoint(byte index)
         break;
     }
     
-    if ((mapQuads[x + (mapMatrixWidth * y)] == water))
+    if ((mapQuads[x + (mapMatrixWidth * y)] == miniMapWater))
       exit = true;
 
     if (exit)
@@ -505,7 +508,7 @@ void GenerateMap(byte seed)
   clearPoints();
   countContinents = 0;
   forrestCount = 0;
-  memset (&mapQuads[0], water, mapMatrixHeight*mapMatrixWidth);
+  memset (&mapQuads[0], miniMapWater, mapMatrixHeight*mapMatrixWidth);
   DrawMiniMap(false);
   for (y = 0; y < mapMatrixHeight; ++y)
     for (x = 0; x < mapMatrixWidth; ++x)
@@ -548,7 +551,7 @@ void GenerateMap(byte seed)
   for (y = 0; y < 16; ++y)
     for (x = 0; x < 16; ++x)
     {
-      if (mapQuads[x + (mapMatrixWidth * y)] == water)
+      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapWater)
         mapQuads[x + (mapMatrixWidth * y)] = 63;
       
       if (mapQuads[x + (mapMatrixWidth * y)] == grass)
@@ -573,10 +576,10 @@ void GetSeed()
 
   //sprintf(strTemp, "Seed (%d)@", seed);
   //SetLineMessageWindow(strTemp, 0);
-  while(1)
+  //while(1)
   {
 
-    GenerateMap(seed);
+    //GenerateMap(seed);
     ++seed;
   }
 
