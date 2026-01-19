@@ -67,7 +67,7 @@ void DrawMiniMap(bool highlightPlayer)
     byte tY = (y * mapMatrixWidth);
     for (x = 0; x < mapMatrixWidth; ++x)
     {
-      tile = mapQuads[x + tY];
+      tile = mapQuads[x + tY] + MiniMapOffset;
       SetChar(tile, x + MiniMapPosX, y + MiniMapPosY);
     }
   }  

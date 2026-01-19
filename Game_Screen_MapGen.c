@@ -106,12 +106,12 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 #define scenForrest 44
 
 //Minimap Glyphs
-#define miniMapWater 0xF0
-#define road 0xF1
-#define grass 0xF2
-#define forrest 0xF3
-#define mountain 0xF4
-#define waterTravel 0xF5
+#define miniMapWater 0
+#define road 1
+#define grass 2
+#define forrest 3
+#define mountain 4
+#define waterTravel 5
 //Town
 //Dungeon
 
@@ -228,6 +228,11 @@ void DrawScenario()
 void DrawPoint(byte x, byte y)
 {
   byte tile = mapQuads[x + (mapMatrixWidth * y)];
+  
+  //Don't add offset if tile is a number
+  if (tile < 16)
+    tile += MiniMapOffset;
+  
   #if defined(__APPLE2__)
   if (x % 2)
   {

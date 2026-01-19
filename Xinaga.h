@@ -256,6 +256,7 @@ void DrawCharset(void);
 //	Tiles
 #define TileCount 64
 #define TileSize 16
+#define TileIndexOffset 64
 extern byte DrawTileX;
 extern byte DrawTileY;
 extern byte DrawTileIndex;
