@@ -22,7 +22,7 @@ void main()
 {
   InitializeGraphics();
   DrawCharset();
-  //DebugGraphics();
+  DebugGraphics();
   //while(1);
   //GFX_DEMO();
   Demo(MapGen);

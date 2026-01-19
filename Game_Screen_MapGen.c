@@ -35,8 +35,6 @@ One byte describes 16x16 region
 #pragma rodata-name (push, "SCREEN_MAPGEN")
 #endif
 
-
-
 /* World Seed Parameters
 (Eight flags building a byte)
 Light /Shadow	//128
@@ -82,7 +80,6 @@ void deletePoint(int pos);
 
 #define pointsBase 64
 #define continentsBase 6
-
 
 static byte countContinents;
 static byte totalPoints;
@@ -142,7 +139,7 @@ void DrawScenario()
 {
   byte x;
   byte distTravel;
-  byte failure = 0;
+  //byte failure = 0;
   #define originX 8
   #define originY 8
   struct vector2 scenPos = {originX, originY};
@@ -225,13 +222,8 @@ void DrawScenario()
     originPos.y = scenPos.y;
 
     createPoint(scenChar, scenPos.x, scenPos.y);
-    //sprintf(strTemp, "Point %d pos %d %d@", x, scenPos.x, scenPos.y);
-    //WriteLineMessageWindow(strTemp, 0);
   }
 }
-
-
-
 
 void DrawPoint(byte x, byte y)
 {
@@ -560,10 +552,9 @@ void GenerateMap(byte seed)
   WriteLineMessageWindow(strTemp, 0);
 }
 
+byte seed  = 20;
 void GetSeed()
 {
-  byte seed  = 20;
-  bool exit = false;
   #define menuWidth 5
   #define menuCount 4
   ResetMenu("Seed@", COLS - menuWidth - 3, consolePosY, menuWidth, consoleHeight, menuCount);
@@ -577,11 +568,11 @@ void GetSeed()
   //while(1)
   {
 
-    GenerateMap(seed);
-    ++seed;
+    //GenerateMap(seed);
+    //++seed;
   }
 
-  while (!exit)
+  while (1)
   {
     //sprintf(strTemp, "Seed (%d)@", seed);
     //SetLineMessageWindow(strTemp, 0);
@@ -598,8 +589,8 @@ void GetSeed()
         //GenerateDungeon(seed);
         break;
       case 3:
-        exit = true;
-        break;
+        //exit = true;
+        return;
     }
   }
 }
@@ -609,7 +600,6 @@ screenName Update_MapGen()
   ClearScreen();
   MiniMapPosX = 1;
   MiniMapPosY = 1;
-  //ClearMap();
   ResizeMessageWindow(COLS - 22, viewportPosY, 21, 16);
   ScreenFadeIn();
   GetSeed();
