@@ -118,11 +118,9 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 //Town
 //Dungeon
 
-
-
-const byte traversal[] = {scenGrass, scenForrest, scenGrass, scenForrest, scenGrass, scenGrass, scenGrass, scenWater};
+const byte traversal[8] = {scenGrass, scenForrest, scenGrass, scenForrest, scenGrass, scenGrass, scenGrass, scenWater};
 //A location has the same land type as the previous traversal
-const byte locations[] = {scenDungeon, scenCave, scenRuins, scenRuins, scenDungeon, scenRuins, scenDungeon, scenDungeon};
+const byte locations[8] = {scenDungeon, scenCave, scenRuins, scenRuins, scenDungeon, scenRuins, scenDungeon, scenDungeon};
 
 bool CheckOverlap(byte x, byte y)
 {
