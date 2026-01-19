@@ -109,12 +109,12 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 #define scenForrest 44
 
 //Minimap Glyphs
-#define miniMapWater 0xE0
-#define grass 0xF0
-#define road 0xf1
-#define forrest 0xE2
-#define mountain 0xE4
-#define waterTravel 0xe1
+#define miniMapWater 0xF0
+#define road 0xF1
+#define grass 0xF2
+#define forrest 0xF3
+#define mountain 0xF4
+#define waterTravel 0xF5
 //Town
 //Dungeon
 
@@ -579,7 +579,7 @@ void GetSeed()
   //while(1)
   {
 
-    //GenerateMap(seed);
+    GenerateMap(seed);
     ++seed;
   }
 
