@@ -91,7 +91,7 @@ static byte scenarioDist[9];
 static sbyte distX[4] = {0, 0, 1, -1};
 static sbyte distY[4] = {-1, 1, 0, 0};
 
-const static char dirChar[4] = {"NSEW"};
+const static char dirChar[5] = {"NSEW"};
 const static byte dist[5] = {4, 3, 3, 5, 2};
 //const static byte dist[5] = {6, 3, 4, 3, 7};
 
