@@ -206,25 +206,25 @@ void DrawScenario()
       originPos.x += (distX[scenarioDir[x]]);
       originPos.y += (distY[scenarioDir[x]]);
       clampPoint(&originPos);
-      
+
       if (x > 0)
       {
-      //Draw line from last point to this one using the terrain type
-      //Unless it's water, in which case we don't want to draw water over an existing critical path
-      if (scenarioPoints[x] == scenWater)
-      {
-        pathIndex = waterTravel;
-        createPoint(pathIndex, originPos.x, originPos.y);
-        deletePoint(totalPoints - 1);
-        continue;
-      }
+        //Draw line from last point to this one using the terrain type
+        //Unless it's water, in which case we don't want to draw water over an existing critical path
+        if (scenarioPoints[x] == scenWater)
+        {
+          pathIndex = waterTravel;
+          createPoint(pathIndex, originPos.x, originPos.y);
+          deletePoint(totalPoints - 1);
+          continue;
+        }
 
-      //Skip any existing points along the way
-      if(!CheckOverlap(originPos.x, originPos.y))
-      {
-        createPoint(pathIndex, originPos.x, originPos.y);
+        //Skip any existing points along the way
+        if(!CheckOverlap(originPos.x, originPos.y))
+        {
+          createPoint(pathIndex, originPos.x, originPos.y);
+        }
       }
-    }
     }
     originPos.x = scenPos.x;
     originPos.y = scenPos.y;
@@ -236,11 +236,11 @@ void DrawScenario()
 void DrawPoint(byte x, byte y)
 {
   byte tile = mapQuads[x + (mapMatrixWidth * y)];
-  
+
   //Don't add offset if tile is a number
   if (tile < 16)
     tile += MiniMapOffset;
-  
+
   #if defined(__APPLE2__)
   if (x % 2)
   {
@@ -389,7 +389,7 @@ void checkLandlocked()
     struct vector2 *tmpt = getPoint(i);
     x = tmpt->x;
     y = tmpt->y;
-    
+
     if (countAdjacent(x, y) >= 4)
     {
       if (forrestCount < 5)
@@ -472,7 +472,7 @@ void attachRandomPoint(byte index)
       default:
         break;
     }
-    
+
     if ((mapQuads[x + (mapMatrixWidth * y)] == miniMapWater))
       exit = true;
 
@@ -545,7 +545,7 @@ void GenerateMap(byte seed)
     totalPointsPlaced += totalPoints;
     clearPoints();
   }
-  
+
   //Translate to quad indexes...
   //TO-DO: Change the minimap to draw with an offset to translate quad references into minimap glyphs
   //Need a place for 64 glyphs to correspond to 64 tile geomorphs, probably 0xE0
@@ -556,11 +556,11 @@ void GenerateMap(byte seed)
     {
       if (mapQuads[x + (mapMatrixWidth * y)] == miniMapWater)
         mapQuads[x + (mapMatrixWidth * y)] = 63;
-      
+
       if (mapQuads[x + (mapMatrixWidth * y)] == grass)
         mapQuads[x + (mapMatrixWidth * y)] = 62;
     }
-  
+
   sprintf(strTemp, "Points Placed:  (%3d)@", totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
 }
@@ -578,11 +578,11 @@ void GetSeed()
 
   //sprintf(strTemp, "Seed (%d)@", seed);
   //SetLineMessageWindow(strTemp, 0);
-  //while(1)
+  while(1)
   {
 
-    //GenerateMap(seed);
-    //++seed;
+    GenerateMap(seed);
+    ++seed;
   }
 
   while (1)
