@@ -103,19 +103,19 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 #define scenRuins 48
 #define scenWater 34
 #define scenGrass 36
-#define scenForrest 44
+#define scenForest 44
 
 //Minimap Glyphs
 #define miniMapWater 0
 #define road 1
 #define grass 2
-#define forrest 3
+#define forest 3
 #define mountain 4
 #define waterTravel 5
 //Town
 //Dungeon
 
-const byte traversal[8] = {scenGrass, scenForrest, scenGrass, scenForrest, scenGrass, scenGrass, scenGrass, scenWater};
+const byte traversal[8] = {scenGrass, scenForest, scenGrass, scenForest, scenGrass, scenGrass, scenGrass, scenWater};
 //A location has the same land type as the previous traversal
 const byte locations[8] = {scenDungeon, scenCave, scenRuins, scenRuins, scenDungeon, scenRuins, scenDungeon, scenDungeon};
 
@@ -147,11 +147,11 @@ void DrawScenario()
   char scenChar;
   char pathIndex;
 
-  DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 2 , 20, 6, false);
+  DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 3 , 20, 6, false);
 
   scenPos.x = originX;
   scenPos.y = originY;
-  createPoint('S', scenPos.x, scenPos.y);
+  //createPoint(road, scenPos.x, scenPos.y);
 
   for (x = 0; x < 9; ++x)
   {
@@ -175,11 +175,16 @@ void DrawScenario()
     scenarioDist[x] = rand() %5;
     distTravel = dist[scenarioDist[x]];
     if (scenarioPoints[x] == scenWater)
-      distTravel += 5;
-    SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2);
+    {
+      if (x > 2)
+        distTravel += 5;
+      else
+        scenarioPoints[x] = scenForest;
+    }
+    SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 3);
 
-    DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 3);
-    SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 2 + 3);
+    DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 4);
+    SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 6);
 
     scenPos.x += (distX[scenarioDir[x]] * distTravel);
     scenPos.y += (distY[scenarioDir[x]] * distTravel);
@@ -193,7 +198,7 @@ void DrawScenario()
       clampPoint(&scenPos);
       ++distTravel;
     }
-    SetChar('0' + distTravel, viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 2 + 3);
+    SetChar('0' + distTravel, viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 6);
 
     while ((originPos.x != scenPos.x) || (originPos.y != scenPos.y))
       //for (i = 0; i < scenarioDist[x]; ++i)
@@ -201,7 +206,9 @@ void DrawScenario()
       originPos.x += (distX[scenarioDir[x]]);
       originPos.y += (distY[scenarioDir[x]]);
       clampPoint(&originPos);
-
+      
+      if (x > 0)
+      {
       //Draw line from last point to this one using the terrain type
       //Unless it's water, in which case we don't want to draw water over an existing critical path
       if (scenarioPoints[x] == scenWater)
@@ -217,6 +224,7 @@ void DrawScenario()
       {
         createPoint(pathIndex, originPos.x, originPos.y);
       }
+    }
     }
     originPos.x = scenPos.x;
     originPos.y = scenPos.y;
@@ -386,7 +394,7 @@ void checkLandlocked()
     {
       if (forrestCount < 5)
       {
-        index = forrest;
+        index = forest;
         ++forrestCount;
       }
       else
@@ -562,7 +570,7 @@ void GetSeed()
 {
   #define menuWidth 5
   #define menuCount 4
-  ResetMenu("Seed@", COLS - menuWidth - 3, consolePosY, menuWidth, consoleHeight, menuCount);
+  ResetMenu("Seed@", COLS - menuWidth - 1, consolePosY, menuWidth, consoleHeight, menuCount);
   SetMenuItem(0, "Next@");
   SetMenuItem(1, "Last@");
   SetMenuItem(2, "Go@");
