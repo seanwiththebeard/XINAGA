@@ -15,6 +15,19 @@
 //#pragma rodata-name (push, "GAME")
 #endif
 
+const byte MiniMapGlyphs[64] = 
+{
+  '0', '1', '2', '3', '4', '5', '6', '7',
+  '8', '9', 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0,
+  0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7
+  
+};
+
 void DebugGraphics()
 {
   DrawCharset();
@@ -54,6 +67,7 @@ uint16_t randseed;
 
 byte MiniMapHighlightX;
 byte MiniMapHighlightY;
+
 byte MiniMapPosX;
 byte MiniMapPosY;
 void DrawMiniMap(bool highlightPlayer)
@@ -67,12 +81,15 @@ void DrawMiniMap(bool highlightPlayer)
     byte tY = (y * mapMatrixWidth);
     for (x = 0; x < mapMatrixWidth; ++x)
     {
-      tile = mapQuads[x + tY] + MiniMapOffset;
+      //tile = mapQuads[x + tY] + MiniMapOffset;
+      //tile = mapQuads[x + tY];
+      tile = MiniMapGlyphs[mapQuads[x + tY]];
+      
       SetChar(tile, x + MiniMapPosX, y + MiniMapPosY);
     }
   }  
   if(highlightPlayer)
-    SetChar('X', MiniMapPosX + 1 + MiniMapHighlightX, MiniMapPosY + 1 + MiniMapHighlightY);
+    SetChar('X', MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
   ScreenFadeIn();
 }
 

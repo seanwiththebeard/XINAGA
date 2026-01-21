@@ -24,6 +24,9 @@ void DebugGraphics();
 
 extern byte MiniMapPosX;
 extern byte MiniMapPosY;
+extern byte SetPlayerPositionX;
+extern byte SetPlayerPositionY;
+extern const byte MiniMapGlyphs[64];
 #define MiniMapOffset 0xF0
 //Each mapQuad is a 16x16 area, corresponding to a 16x16 geomorph from the bitmap containing 64
 extern byte mapQuads[mapMatrixHeight * mapMatrixWidth];

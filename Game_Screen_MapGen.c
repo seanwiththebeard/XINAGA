@@ -107,11 +107,11 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 
 //Minimap Glyphs
 #define miniMapWater 0
-#define road 1
-#define grass 2
-#define forest 3
-#define mountain 4
-#define waterTravel 5
+#define miniMapRoads 1
+#define miniMapGrass 2
+#define miniMapForest 3
+#define miniMapMountain 4
+#define miniMapWaterTravel 5
 //Town
 //Dungeon
 
@@ -157,7 +157,7 @@ void DrawScenario()
   {
     scenPos.x = originPos.x;
     scenPos.y = originPos.y;
-    pathIndex = road;
+    pathIndex = miniMapRoads;
     scenChar = '0' + x;
 
     if (x % 3 == 0)
@@ -182,6 +182,7 @@ void DrawScenario()
         scenarioPoints[x] = scenForest;
     }
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 3);
+    
 
     DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 4);
     SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 6);
@@ -199,6 +200,12 @@ void DrawScenario()
       ++distTravel;
     }
     SetChar('0' + distTravel, viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 6);
+    
+    if (x == 0)
+    {
+      SetPlayerPositionX = scenPos.x;
+      SetPlayerPositionY = scenPos.y;      
+    }
 
     while ((originPos.x != scenPos.x) || (originPos.y != scenPos.y))
       //for (i = 0; i < scenarioDist[x]; ++i)
@@ -213,7 +220,7 @@ void DrawScenario()
         //Unless it's water, in which case we don't want to draw water over an existing critical path
         if (scenarioPoints[x] == scenWater)
         {
-          pathIndex = waterTravel;
+          pathIndex = miniMapWaterTravel;
           createPoint(pathIndex, originPos.x, originPos.y);
           deletePoint(totalPoints - 1);
           continue;
@@ -231,6 +238,57 @@ void DrawScenario()
 
     createPoint(scenChar, scenPos.x, scenPos.y);
   }
+}
+
+void TranslateQuadIndices()
+{
+  byte x, y;
+  //Translate to quad indexes...
+  //TO-DO: Change the minimap to draw with an offset to translate quad references into minimap glyphs
+  //Need a place for 64 glyphs to correspond to 64 tile geomorphs, probably 0xE0
+  //Minimap glyph will be (mapQuads[x + (mapMatrixWidth * y)] + MiniMapGlypBase)
+  //8 types of terrain with 8 variations each = 64
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 16; ++x)
+    {
+      if ((mapQuads[x + (mapMatrixWidth * y)] >= '0') && (mapQuads[x + (mapMatrixWidth * y)] <= '9'))
+      {
+        mapQuads[x + (mapMatrixWidth * y)] -= '0';
+        continue;
+      }
+
+      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapWater)
+      {
+        mapQuads[x + (mapMatrixWidth * y)] = 56;
+        continue;
+      }
+      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapRoads)
+      {
+        mapQuads[x + (mapMatrixWidth * y)] = 57;
+        continue;
+      }
+      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapGrass)
+      {
+        mapQuads[x + (mapMatrixWidth * y)] = 58;
+        continue;
+      }
+      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapForest)
+      {
+        mapQuads[x + (mapMatrixWidth * y)] = 59;
+        continue;
+      }
+      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapMountain)
+      {
+        mapQuads[x + (mapMatrixWidth * y)] = 60;
+        continue;
+      }
+      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapWaterTravel)
+      {
+        mapQuads[x + (mapMatrixWidth * y)] = 61;
+        continue;
+      }
+    }
+
 }
 
 void DrawPoint(byte x, byte y)
@@ -394,16 +452,16 @@ void checkLandlocked()
     {
       if (forrestCount < 5)
       {
-        index = forest;
+        index = miniMapForest;
         ++forrestCount;
       }
       else
       {
-        index  = mountain;
+        index  = miniMapMountain;
         forrestCount = 0;
       }
       deletePoint(i);
-      if(mapQuads[x + (mapMatrixWidth * y)] == grass)
+      if(mapQuads[x + (mapMatrixWidth * y)] == miniMapGrass)
       {
         mapQuads[x + (mapMatrixWidth * y)] = index;
         DrawPoint(x,y);
@@ -533,7 +591,7 @@ void GenerateMap(byte seed)
       //addRandomPoints(1, grass);
       while (landcount && (points != NULL))
       {
-        attachRandomPoint(grass);
+        attachRandomPoint(miniMapGrass);
         --landcount;
         //++totalPointsPlaced;
       }
@@ -545,22 +603,7 @@ void GenerateMap(byte seed)
     totalPointsPlaced += totalPoints;
     clearPoints();
   }
-
-  //Translate to quad indexes...
-  //TO-DO: Change the minimap to draw with an offset to translate quad references into minimap glyphs
-  //Need a place for 64 glyphs to correspond to 64 tile geomorphs, probably 0xE0
-  //Minimap glyph will be (mapQuads[x + (mapMatrixWidth * y)] + MiniMapGlypBase)
-  //8 types of terrain with 8 variations each = 64
-  for (y = 0; y < 16; ++y)
-    for (x = 0; x < 16; ++x)
-    {
-      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapWater)
-        mapQuads[x + (mapMatrixWidth * y)] = 63;
-
-      if (mapQuads[x + (mapMatrixWidth * y)] == grass)
-        mapQuads[x + (mapMatrixWidth * y)] = 62;
-    }
-
+  TranslateQuadIndices();
   sprintf(strTemp, "Points Placed:  (%3d)@", totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
 }
@@ -578,11 +621,12 @@ void GetSeed()
 
   //sprintf(strTemp, "Seed (%d)@", seed);
   //SetLineMessageWindow(strTemp, 0);
-  while(1)
+  //while(1)
   {
 
     GenerateMap(seed);
-    ++seed;
+    return;
+    //++seed;
   }
 
   while (1)
