@@ -965,6 +965,8 @@ screenName MapUpdate()
   exitScreen = false;
   MiniMapPosX = 20;
   MiniMapPosY = 1;
+  characters.quadPosX[0]  = SetPlayerPositionX;
+  characters.quadPosY[0]  = SetPlayerPositionY;
 
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
