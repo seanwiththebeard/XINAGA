@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
-//#pragma code-name (push, "LOWCODE")
+#pragma code-name (push, "XINAGA")
 #endif
 
 #if defined (__NES__)

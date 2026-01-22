@@ -22,7 +22,7 @@ One byte describes 16x16 region
 */
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "LC")
+#pragma code-name (push, "SCREEN_MAPGEN")
 #endif
 
 #if defined (__NES__)
