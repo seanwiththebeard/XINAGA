@@ -226,7 +226,7 @@ byte ScreenChars[ROWS*COLS];
 #endif
 
 #if defined(__C64__)
-const byte const charset[2048];
+//const byte const charset[2048];
 byte *ScreenChars;// = (byte *)0x0400;
 byte *ScreenColors;// = (byte *)0xD800;
 #define RASTERCOUNT (byte*)0xD012

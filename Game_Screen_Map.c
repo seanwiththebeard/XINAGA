@@ -109,6 +109,23 @@ static bool LOSEnabled;
 #define mapWidth 32
 static byte mapData[mapWidth * mapHeight];
 
+//Quad Data
+byte mapQuads[mapMatrixHeight * mapMatrixWidth];  //These are the quad-tile references that make up the map
+
+static struct
+{ //These are the quad indexes referenced in mapQuads[y][x]
+  #define ScreenQuadCount 64
+  byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
+  byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
+  byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
+}ScreenQuad;
+byte quadBuffer[4];
+
+#define quadWidth 8
+#define quadHeight 8
+#define quadWidthDouble 16
+#define quadHeightDouble 16
+
 static const byte MapSet[] = { /*{w:8,h:8,bpp:1,count:256,brev:1,pal:"c64",np:1}*/
   0x00,0x3C,0x60,0x40,0x40,0x40,0x00,0x00,0x00,0x3C,0x06,0x02,0x02,0x02,0x00,0x00
     ,0xE7,0x81,0x81,0x00,0x00,0x81,0x81,0xE7,0xC3,0xC3,0xC3,0x00,0x00,0xC3,0xC3,0xC3
@@ -292,24 +309,6 @@ static void UpdatePlayerOnMiniMap(void)
   MiniMapHighlightX = CoordPosX >> 4;
   MiniMapHighlightY = CoordPosY >> 4;
 }
-
-//Quad Data
-byte mapQuads[mapMatrixHeight * mapMatrixWidth];  //These are the quad-tile references that make up the map
-
-static struct
-{ //These are the quad indexes referenced in mapQuads[y][x]
-  #define ScreenQuadCount 256
-  byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
-  byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
-  byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
-}ScreenQuad;
-byte quadBuffer[4];
-
-#define quadWidth 8
-#define quadHeight 8
-#define quadWidthDouble (quadWidth << 1)
-#define quadHeightDouble (quadHeight << 1)
-//#define yQuadHeight quadHeight << 1
 
 static void FillQuadBuffer()
 {
