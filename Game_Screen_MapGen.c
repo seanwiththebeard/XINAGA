@@ -608,7 +608,7 @@ void GenerateMap(byte seed)
   WriteLineMessageWindow(strTemp, 0);
 }
 
-byte seed  = 150;
+byte seed  = 20;
 void GetSeed()
 {
   #define menuWidth 5
