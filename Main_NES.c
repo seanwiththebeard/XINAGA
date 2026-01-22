@@ -192,7 +192,7 @@ void main(void) //Must be in $E000-$FFFF??
   UploadCharset();
   
   //currentScreen = EditParty;
-  Demo(Map);
+  Demo(MapGen);
 
   //PPU_Color(0, 0, 1, 0);
   
