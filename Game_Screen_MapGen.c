@@ -107,8 +107,12 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 
 //Minimap Glyphs
 #define miniMapWater 0
-#define miniMapRoads 1
-#define miniMapGrass 2
+//#define miniMapRoads 1
+#define miniMapRoadsH 6
+#define miniMapRoadsV 7
+#define miniMapRoadsI 8
+
+#define miniMapGrass 16
 #define miniMapForest 3
 #define miniMapMountain 4
 #define miniMapWaterTravel 5
@@ -128,13 +132,13 @@ byte GetFringeMask(byte x, byte y, char fringe)
   byte adjY[4];
   adjX[0] = x;
   adjY[0] = y - 1;
-  
+
   adjX[1] = x;
   adjY[1] = y + 1;
-  
+
   adjX[2] = x + 1;
   adjY[2] = y;
-  
+
   adjX[3] = x - 1;
   adjY[3] = y;
 
@@ -189,8 +193,9 @@ void DrawScenario()
   {
     scenPos.x = originPos.x;
     scenPos.y = originPos.y;
-    pathIndex = miniMapRoads;
+    pathIndex = miniMapRoadsV;
     scenChar = '0' + x;
+    //scenChar = miniMapGrass;
 
     if (x % 3 == 0)
       scenarioPoints[x] =locations[rand() %8];
@@ -203,6 +208,9 @@ void DrawScenario()
     if (x > 0)
       while (scenarioDir[x] == scenarioDir[x-1])
         scenarioDir[x] = rand() %4;
+
+    if (scenarioDir[x] > 1)
+      pathIndex = miniMapRoadsH;      
 
     scenarioDist[x] = rand() %5;
     distTravel = dist[scenarioDist[x]];
@@ -244,10 +252,11 @@ void DrawScenario()
     {
       originPos.x += (distX[scenarioDir[x]]);
       originPos.y += (distY[scenarioDir[x]]);
-      clampPoint(&originPos);
+      clampPoint(&originPos);      
 
       if (x > 0)
       {
+
         //Draw line from last point to this one using the terrain type
         //Unless it's water, in which case we don't want to draw water over an existing critical path
         if (scenarioPoints[x] == scenWater)
@@ -257,10 +266,17 @@ void DrawScenario()
           deletePoint(totalPoints - 1);
           continue;
         }
-
         //Skip any existing points along the way
-        if(!CheckOverlap(originPos.x, originPos.y))
+        //if(!CheckOverlap(originPos.x, originPos.y))
         {
+          byte indexRoad = mapQuads[originPos.x + (mapMatrixWidth* originPos.y)];
+
+          if (pathIndex == miniMapRoadsH)
+            if (indexRoad == miniMapRoadsV)
+              pathIndex = miniMapRoadsI;
+          if (pathIndex == miniMapRoadsV)
+            if (indexRoad == miniMapRoadsH)
+              pathIndex = miniMapRoadsI;
           createPoint(pathIndex, originPos.x, originPos.y);
         }
       }
@@ -269,6 +285,8 @@ void DrawScenario()
     originPos.y = scenPos.y;
 
     createPoint(scenChar, scenPos.x, scenPos.y);
+
+    SetChar('0' + x, scenPos.x + viewportPosX, scenPos.y + viewportPosY);
   }
 }
 
@@ -287,7 +305,7 @@ void TranslateQuadIndices()
       byte index  = mapQuads[offset];
       if ((index >= '0') && (index <= '9'))
       {
-        mapQuads[offset] = 58;//-= '0';
+        mapQuads[offset] = 62;//-= '0';
         continue;
       }
 
@@ -296,14 +314,24 @@ void TranslateQuadIndices()
         mapQuads[offset] = 56;
         continue;
       }
-      if (index == miniMapRoads)
+      if (index == miniMapRoadsH)
       {
-        mapQuads[offset] = 57;
+        mapQuads[offset] = 32;
+        continue;
+      }
+      if (index == miniMapRoadsV)
+      {
+        mapQuads[offset] = 33;
+        continue;
+      }
+      if (index == miniMapRoadsI)
+      {
+        mapQuads[offset] = 34;
         continue;
       }
       if (index == miniMapGrass)
       {
-        mapQuads[offset] = 58;
+        mapQuads[offset] = 0;
         continue;
       }
       if (index == miniMapForest)
@@ -322,14 +350,14 @@ void TranslateQuadIndices()
         continue;
       }
     }
-  
+
   for (y = 0; y < 16; ++y)
     for (x = 0; x < 16; ++x)
     {
       byte offset = x + (mapMatrixWidth * y);
       byte index  = mapQuads[offset];
-      if ( index == 58)
-        mapQuads[offset] = GetFringeMask(x, y, 56);
+      if ( index == 0)
+        mapQuads[offset] += GetFringeMask(x, y, 56);
     }
 
 }
@@ -339,8 +367,8 @@ void DrawPoint(byte x, byte y)
   byte tile = mapQuads[x + (mapMatrixWidth * y)];
 
   //Don't add offset if tile is a number
-  if (tile < 16)
-    tile += MiniMapOffset;
+  //if (tile < 16)
+  tile += MiniMapOffset;
 
   #if defined(__APPLE2__)
   if (x % 2)

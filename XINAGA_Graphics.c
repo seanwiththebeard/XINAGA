@@ -668,8 +668,10 @@ void DrawLineH(byte index, byte x, byte y, byte length)
   {
     tempIndex = index;
     posX = x + count;
+    #if defined (__APPLE2__)
     if (posX % 2 == 1 && index != ' ')
       ++tempIndex;
+    #endif
     SetChar(tempIndex, posX, y);
   }
   //wait_vblank(1);
@@ -678,8 +680,10 @@ void DrawLineV(byte index, byte x, byte y, byte length)
 {
   byte count;
   byte tempIndex = index;
+  #if defined (__APPLE2__)
   if (x % 2 == 1)
     ++tempIndex;
+  #endif
   for (count = 0; count < length; ++count)
   {
     SetChar(tempIndex, x, y + count);
@@ -728,11 +732,20 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
     }
     //wait_vblank(1);
   }
-
+  #if defined (__APPLE2__)
   DrawLineH(0xEC, xPos1, yPos, widthInside2);
   DrawLineH(0xFC, xPos1, yPos + heightInside1, widthInside2);
   DrawLineV(0xEE, xPos, yPos1, heightInside1);
   DrawLineV(0xFE, xPos + widthInside1, yPos1, heightInside2);
+  #endif;
+  
+  #if !defined(__APPLE2__)
+  DrawLineH(0xEC, xPos1, yPos, widthInside2);
+  DrawLineH(0xED, xPos1, yPos + heightInside1, widthInside2);
+  DrawLineV(0xEE, xPos, yPos1, heightInside1);
+  DrawLineV(0xEF, xPos + widthInside1, yPos1, heightInside2);
+  #endif
+  
   DrawCorners(xPos, yPos, widthInside1, heightInside1);
   PrintString(text, xPos1, yPos, true);
 
