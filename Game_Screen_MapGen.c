@@ -119,6 +119,38 @@ const byte traversal[8] = {scenGrass, scenForest, scenGrass, scenForest, scenGra
 //A location has the same land type as the previous traversal
 const byte locations[8] = {scenDungeon, scenCave, scenRuins, scenRuins, scenDungeon, scenRuins, scenDungeon, scenDungeon};
 
+byte GetFringeMask(byte x, byte y, char fringe)
+{
+  struct vector2 pointAdj;
+  byte mask = 0;
+  byte z = 0;
+  byte adjX[4];
+  byte adjY[4];
+  adjX[0] = x;
+  adjY[0] = y - 1;
+  
+  adjX[1] = x;
+  adjY[1] = y + 1;
+  
+  adjX[2] = x + 1;
+  adjY[2] = y;
+  
+  adjX[3] = x - 1;
+  adjY[3] = y;
+
+  for (;z < 4; ++z)
+  {
+    pointAdj.x = adjX[z];
+    pointAdj.y = adjY[z];
+    clampPoint(&pointAdj);
+    adjX[z] = pointAdj.x;
+    adjY[z] = pointAdj.y;
+    if (mapQuads[adjX[z] + (mapMatrixWidth * adjY[z])] == fringe)
+      mask += (1 << z);
+  }
+  return mask;
+}
+
 bool CheckOverlap(byte x, byte y)
 {
   struct vector2 *p = points;
@@ -182,7 +214,7 @@ void DrawScenario()
         scenarioPoints[x] = scenForest;
     }
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 3);
-    
+
 
     DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 4);
     SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 6);
@@ -200,7 +232,7 @@ void DrawScenario()
       ++distTravel;
     }
     SetChar('0' + distTravel, viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 6);
-    
+
     if (x == 0)
     {
       SetPlayerPositionX = scenPos.x;
@@ -251,42 +283,53 @@ void TranslateQuadIndices()
   for (y = 0; y < 16; ++y)
     for (x = 0; x < 16; ++x)
     {
-      if ((mapQuads[x + (mapMatrixWidth * y)] >= '0') && (mapQuads[x + (mapMatrixWidth * y)] <= '9'))
+      byte offset = x + (mapMatrixWidth * y);
+      byte index  = mapQuads[offset];
+      if ((index >= '0') && (index <= '9'))
       {
-        mapQuads[x + (mapMatrixWidth * y)] -= '0';
+        mapQuads[offset] = 58;//-= '0';
         continue;
       }
 
-      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapWater)
+      if (index == miniMapWater)
       {
-        mapQuads[x + (mapMatrixWidth * y)] = 56;
+        mapQuads[offset] = 56;
         continue;
       }
-      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapRoads)
+      if (index == miniMapRoads)
       {
-        mapQuads[x + (mapMatrixWidth * y)] = 57;
+        mapQuads[offset] = 57;
         continue;
       }
-      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapGrass)
+      if (index == miniMapGrass)
       {
-        mapQuads[x + (mapMatrixWidth * y)] = 58;
+        mapQuads[offset] = 58;
         continue;
       }
-      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapForest)
+      if (index == miniMapForest)
       {
-        mapQuads[x + (mapMatrixWidth * y)] = 59;
+        mapQuads[offset] = 59;
         continue;
       }
-      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapMountain)
+      if (index == miniMapMountain)
       {
-        mapQuads[x + (mapMatrixWidth * y)] = 60;
+        mapQuads[offset] = 60;
         continue;
       }
-      if (mapQuads[x + (mapMatrixWidth * y)] == miniMapWaterTravel)
+      if (index == miniMapWaterTravel)
       {
-        mapQuads[x + (mapMatrixWidth * y)] = 61;
+        mapQuads[offset] = 61;
         continue;
       }
+    }
+  
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 16; ++x)
+    {
+      byte offset = x + (mapMatrixWidth * y);
+      byte index  = mapQuads[offset];
+      if ( index == 58)
+        mapQuads[offset] = GetFringeMask(x, y, 56);
     }
 
 }

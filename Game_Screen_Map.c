@@ -481,7 +481,7 @@ static void InitializeMapData()
       //ScreenQuad.Chars[byte_index][1] = tree;
 
       ScreenQuad.Chars[byte_index][0] = 36;
-      ScreenQuad.Chars[byte_index][1] = 36;
+      ScreenQuad.Chars[byte_index][1] = 34;
 
       ScreenQuad.ScatterIndex[byte_index] = 0;
       //++byte_index;
@@ -574,8 +574,8 @@ static void InitializeMapData()
     characters.collide[byte_i] = false;
   }
   characters.visible[0] = true;
-  characters.posX[0]  = 12;
-  characters.posY[0]  = 12;
+  characters.posX[0]  = 8;
+  characters.posY[0]  = 8;
   characters.quadPosX[0]  = SetPlayerPositionX;
   characters.quadPosY[0]  = SetPlayerPositionY;
   //characters.quadPosX[0]  = 1;
