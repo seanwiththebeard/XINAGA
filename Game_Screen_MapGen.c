@@ -272,8 +272,6 @@ void DrawScenario()
         //Skip any existing points along the way
         //if(!CheckOverlap(originPos.x, originPos.y))
         {
-
-
           if (pathIndex == miniMapRoadsH)
             if (indexRoad == miniMapRoadsV)
               pathIndex = miniMapRoadsI;
