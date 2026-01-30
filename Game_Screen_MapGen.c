@@ -270,6 +270,9 @@ void DrawScenario()
         //if(!CheckOverlap(originPos.x, originPos.y))
         {
           byte indexRoad = mapQuads[originPos.x + (mapMatrixWidth* originPos.y)];
+          //Don't place a road if a scenario location exists
+          if ((indexRoad >= '0') && (indexRoad <= '9'))
+            continue;
 
           if (pathIndex == miniMapRoadsH)
             if (indexRoad == miniMapRoadsV)
@@ -651,7 +654,7 @@ void GenerateMap(byte seed)
   srand(seed);
   sprintf(strTemp, "Generating Seed:(%3d)@", seed);
   DrawScenario();  
-  //checkLandlocked();
+  checkLandlocked();
   WriteLineMessageWindow(strTemp, 0);
   //return;
 
@@ -694,11 +697,11 @@ void GetSeed()
 
   //sprintf(strTemp, "Seed (%d)@", seed);
   //SetLineMessageWindow(strTemp, 0);
-  //while(1)
+  while(1)
   {
 
     GenerateMap(seed);
-    return;
+    //return;
     ++seed;
   }
 
