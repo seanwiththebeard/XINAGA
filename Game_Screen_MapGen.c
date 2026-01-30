@@ -256,10 +256,13 @@ void DrawScenario()
 
       if (x > 0)
       {
-
+        byte indexRoad = mapQuads[originPos.x + (mapMatrixWidth* originPos.y)];
+        //Don't place a road if a scenario location exists
+        if ((indexRoad >= '0') && (indexRoad <= '9'))
+          continue;
         //Draw line from last point to this one using the terrain type
         //Unless it's water, in which case we don't want to draw water over an existing critical path
-        if (scenarioPoints[x] == scenWater)
+        if ((scenarioPoints[x] == scenWater) && (!CheckOverlap(scenPos.x, scenPos.y)))
         {
           pathIndex = miniMapWaterTravel;
           createPoint(pathIndex, originPos.x, originPos.y);
@@ -269,10 +272,7 @@ void DrawScenario()
         //Skip any existing points along the way
         //if(!CheckOverlap(originPos.x, originPos.y))
         {
-          byte indexRoad = mapQuads[originPos.x + (mapMatrixWidth* originPos.y)];
-          //Don't place a road if a scenario location exists
-          if ((indexRoad >= '0') && (indexRoad <= '9'))
-            continue;
+
 
           if (pathIndex == miniMapRoadsH)
             if (indexRoad == miniMapRoadsV)
