@@ -346,7 +346,8 @@ void TranslateQuadIndices()
       }
       if (index == miniMapWaterTravel)
       {
-        mapQuads[offset] = 61;
+        mapQuads[offset] = 56;        
+        //mapQuads[offset] = 61;
         continue;
       }
     }
@@ -504,7 +505,7 @@ byte countAdjacent(byte x, byte y)
     clampPoint(&pointAdj);
     adjX[z] = pointAdj.x;
     adjY[z] = pointAdj.y;
-    if (mapQuads[adjX[z] + (mapMatrixWidth * adjY[z])] != miniMapWater)
+    if ((mapQuads[adjX[z] + (mapMatrixWidth * adjY[z])] != miniMapWater) && (mapQuads[adjX[z] + (mapMatrixWidth * adjY[z])] != miniMapWaterTravel))
       ++i;
   }
   return i;
@@ -649,8 +650,8 @@ void GenerateMap(byte seed)
 
   srand(seed);
   sprintf(strTemp, "Generating Seed:(%3d)@", seed);
-  DrawScenario();
-  checkLandlocked();
+  DrawScenario();  
+  //checkLandlocked();
   WriteLineMessageWindow(strTemp, 0);
   //return;
 
@@ -675,6 +676,7 @@ void GenerateMap(byte seed)
     clearPoints();
   }
   TranslateQuadIndices();
+  DrawMiniMap(false);
   sprintf(strTemp, "Points Placed:  (%3d)@", totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
 }
