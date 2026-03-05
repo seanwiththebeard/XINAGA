@@ -736,7 +736,7 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
   DrawLineH(0xFC, xPos1, yPos + heightInside1, widthInside2);
   DrawLineV(0xEE, xPos, yPos1, heightInside1);
   DrawLineV(0xFE, xPos + widthInside1, yPos1, heightInside2);
-  #endif;
+  #endif
   
   #if !defined(__APPLE2__)
   DrawLineH(0xEC, xPos1, yPos, widthInside2);

@@ -178,7 +178,7 @@ void main(void)
   //INIMLT();
   
   //DebugGraphics();
-  Demo(MapGen);
+  RunGame(EditParty);
   
   while(1);
 }
