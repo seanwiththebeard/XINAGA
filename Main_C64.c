@@ -23,7 +23,7 @@ void main(void)
   //DebugGraphics();
   //DebugMap();
   //Demo(Map);
-  Demo(MapGen);
+  Demo(Title);
   //Demo(EditParty);
   
 }

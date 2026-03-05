@@ -15,7 +15,7 @@
 //#pragma rodata-name (push, "GAME")
 #endif
 
-#define DefaultScreen Map
+#define DefaultScreen Title
 screenName currentScreen;
 byte strTemp[ConsoleBufferLength];
 

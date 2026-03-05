@@ -293,7 +293,7 @@ void MenuEditParty()
         {
           //repeatRoster = false;
           exitWindow = true;
-          nextScreen = Map;
+          nextScreen = MapGen;
         }
         else
           WriteLineMessageWindow("Party Empty!@", 0);

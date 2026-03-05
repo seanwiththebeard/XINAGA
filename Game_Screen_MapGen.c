@@ -695,18 +695,18 @@ void GetSeed()
 
   //sprintf(strTemp, "Seed (%d)@", seed);
   //SetLineMessageWindow(strTemp, 0);
-  while(1)
+  //while(1)
   {
 
-    GenerateMap(seed);
+    //GenerateMap(seed);
     //return;
-    ++seed;
+    //++seed;
   }
 
   while (1)
   {
-    //sprintf(strTemp, "Seed (%d)@", seed);
-    //SetLineMessageWindow(strTemp, 0);
+    sprintf(strTemp, "Seed (%d)@", seed);
+    SetLineMessageWindow(strTemp, 0);
     switch (GetMenuSelection())
     {
       case 0:
