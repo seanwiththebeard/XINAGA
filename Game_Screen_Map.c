@@ -1,7 +1,7 @@
 #include "Xinaga.h"
 #include "GameData.h"
 #if defined(__APPLE2__)
-#pragma code-name (push, "SCREEN_MAP")
+#pragma code-name (push, "CODE")
 #endif
 
 #if defined (__NES__)
