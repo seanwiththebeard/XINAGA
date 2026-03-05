@@ -21,23 +21,23 @@ byte strTemp[ConsoleBufferLength];
 
 const RaceDescriptionDef const RaceDescription[] = 
 {
-  {"Human@", 255},
-  {"Elf@", 6}, 
-  {"Dwarf@", 255}, 
-  {"Construct@", 6}
+  {"Human", 255},
+  {"Elf", 6}, 
+  {"Dwarf", 255}, 
+  {"Construct", 6}
 };
 
 
 const ClassDescriptionDef const ClassDescription[]= 
 {
-  {"Fighter@", 8},
-  {"Wizard@", 4}, 
-  {"Cleric@", 6}, 
-  {"Thief@", 4},
-  {"Ranger@", 8},
-  {"Monk@", 6},
-  {"Bard@", 4},
-  {"Construct@", 8} // Never levels up, strong early on but expensive to upgrade stats
+  {"Fighter", 8},
+  {"Wizard", 4}, 
+  {"Cleric", 6}, 
+  {"Thief", 4},
+  {"Ranger", 8},
+  {"Monk", 6},
+  {"Bard", 4},
+  {"Construct", 8} // Never levels up, strong early on but expensive to upgrade stats
   
 };
 

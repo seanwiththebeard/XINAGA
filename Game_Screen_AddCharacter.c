@@ -54,7 +54,7 @@ void AddToRoster()
   
   
   ConsoleBufferReset();
-  sprintf(strTemp, "NAME%x@", &PlayerChar[0]);
+  sprintf(strTemp, "%s %c%c%c %x@", ClassDescription[CLASS].NAME, RaceDescription[RACE].NAME[0], RaceDescription[RACE].NAME[1], RaceDescription[RACE].NAME[2], &PlayerChar[0]);
   //ConsoleBufferAdd("Hello @");
   //ConsoleBufferAdd(strTemp);
   //ConsoleBufferAddNumber(CountRoster());
@@ -147,8 +147,9 @@ void MenuGetClass()
         return;
     }
   }
-    WriteLineMessageWindow("Class Confirmed:@", 0);
-    WriteLineMessageWindow(ClassDescription[CLASS].NAME, 0);
+        sprintf(strTemp, "Class Confirmed: %s@", ClassDescription[CLASS].NAME, 0);
+        WriteLineMessageWindow(strTemp, 0);
+
 
     if (RaceDescription[RACE].HITDICEMAX < ClassDescription[CLASS].HITDICE)
       HITDICE = RaceDescription[RACE].HITDICEMAX;
@@ -227,24 +228,78 @@ void ListRoster()
   }
 }
 
+bool AddRandom()
+{
+        byte hitdice;
+        RACE = rand() % 4;
+        STR = RollDice(3, 6);
+        CON = RollDice(3, 6);
+        DEX = RollDice(3, 6);
+        WIS = RollDice(3, 6);
+        INT = RollDice(3, 6);
+        CHR = RollDice(3, 6);
+        CLASS = rand() % 4;
+       
+    if (RaceDescription[RACE].HITDICEMAX < ClassDescription[CLASS].HITDICE)
+      HITDICE = RaceDescription[RACE].HITDICEMAX;
+    else
+      HITDICE = ClassDescription[CLASS].HITDICE;
+
+    hitdice = RollDice(1, HITDICE);
+    if (hitdice + AbilityModifier[CON] < 1)
+    {
+        sprintf(strTemp, "%s %s died, no HP@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME);            
+        WriteLineMessageWindow(strTemp, 0);
+        return false;
+    }
+    else
+    {
+      HPMAX = hitdice + AbilityModifier[CON];
+      HP = HPMAX;
+            sprintf(strTemp, "%s %s added@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME);
+            WriteLineMessageWindow(strTemp, 0);
+      AddToRoster();
+            return true;
+    }
+        
+}
+
 void MenuEditParty()
 {
-  ListParty();
-  ListRoster();
+        byte added = 0;
+        
+  //ListParty();
+  //ListRoster();
+
+        
   
-  ResetMenu("Party@",consolePosX, contextMenuPosY, 9, 9, 9);
-  SetMenuItem(0, "Create@");
-  SetMenuItem(1, "Delete@");
-  SetMenuItem(2, "Add@");
-  SetMenuItem(3, "Remove@");
-  SetMenuItem(4, "Begin@");
-  SetMenuItem(5, "Credits@");
-  SetMenuItem(6, "Combat@");
-  SetMenuItem(7, "Map Gen@");
-  SetMenuItem(8, "Scenario@");
+  
   
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   ScreenFadeIn();
+
+        //while (CountRoster() + CountParty() < 4)
+               //AddRandom();
+
+        //while(CountParty() < 4)
+                //AddParty(0);
+        
+        ListParty();
+        ListRoster();
+        ResetMenu("Party@",consolePosX, contextMenuPosY, 10, 10, 10);
+        SetMenuItem(0, "Random@");
+        SetMenuItem(1, "Create@");
+        SetMenuItem(2, "Delete@");
+        SetMenuItem(3, "Add@");
+        SetMenuItem(4, "Remove@");
+        SetMenuItem(5, "Begin@");
+        SetMenuItem(6, "Credits@");
+        SetMenuItem(7, "Combat@");
+        SetMenuItem(8, "Map Gen@");
+        SetMenuItem(9, "Scenario@");
+        
+
+        
   
   //sprintf(strTemp, "Address %4x %s@", &RaceDescription[0], &RaceDescription[0]);
     //WriteLineMessageWindow(strTemp, 0);
@@ -252,13 +307,17 @@ void MenuEditParty()
   
   switch(GetMenuSelection())
   {
-    case 0: //Create
+    case 0:
+            if(CountRoster() + CountParty() < 8)
+              AddRandom();
+            break;
+    case 1: //Create
       {
         if (CountRoster() < 12)
           MenuGetRace();
         break;
       }
-    case 1: //Delete
+    case 2: //Delete
       {
         if (CountRoster() > 0)
           if (AreYouSure())
@@ -268,7 +327,7 @@ void MenuEditParty()
           }
         break;
       }
-    case 2: //Add to party
+    case 3: //Add to party
       {
         if ((CountRoster() > 0) && (CountParty() < 4))
         {
@@ -277,7 +336,7 @@ void MenuEditParty()
         }
         break;
       }
-    case 3: //Remove from party
+    case 4: //Remove from party
       {
         if (CountParty() > 0 && CountRoster() < 12)
         {
@@ -287,7 +346,7 @@ void MenuEditParty()
         }
         break;
       }
-    case 4: //Begin Adventure
+    case 5: //Begin Adventure
       {
         if (CountParty() > 0)
         {
@@ -299,19 +358,19 @@ void MenuEditParty()
           WriteLineMessageWindow("Party Empty!@", 0);
         break;
       }
-    case 5: //Debug Credits
+    case 6: //Debug Credits
       exitWindow = true;
       //nextScreen = Credits;
       break;
-    case 6:
+    case 7:
       exitWindow = true;
       nextScreen = Combat;
       break;
-    case 7:
+    case 8:
       exitWindow = true;
       nextScreen = MapGen;
       break;
-    case 8:
+    case 9:
       exitWindow = true;
       nextScreen = Scenario;
       break;
@@ -319,6 +378,8 @@ void MenuEditParty()
   //ClearMenu();
   //ClearScreen();
 }
+
+
 
 screenName DrawAddCharacterScreen()
 {

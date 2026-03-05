@@ -133,6 +133,8 @@ void DrawItem(byte index)
   }
   
   ConsoleBufferAdd(MenuItems[index]);
+  ConsoleBufferAdd("@");
+        
   ConsoleBufferPrint(MenuPosX, MenuPosY + index);
   //wait_vblank(1);
 }
