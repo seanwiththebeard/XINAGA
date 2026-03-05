@@ -33,7 +33,7 @@ extern byte mapQuads[mapMatrixHeight * mapMatrixWidth];
 
 extern byte followIndex;
 
-void Demo(screenName startingScreen);
+void RunGame(screenName startingScreen);
 void DrawMiniMap(bool highlightPlayer);
 void WaitForInput(void);
 void LoadMap(void);

@@ -96,7 +96,7 @@ void SwitchScreen(screenName screen)
   SwitchScreen(currentScreen);
 }
 
-void Demo(screenName startingScreen)
+void RunGame(screenName startingScreen)
 {
   srand(0);
   InitializeInput();
