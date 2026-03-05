@@ -103,7 +103,7 @@ void RollStats()
 void MenuGetClassPrimeStats()
 {
   byte x;
-  ResetMenu("Class@",22, 2, 8, 9, 6);
+  ResetMenu("Class@", consolePosX, contextMenuPosY, 11, 10, 6);
   for (x = 0; x < 4; ++x)
   {
     SetMenuItem(x, ClassDescription[x].NAME);
@@ -176,7 +176,7 @@ void MenuGetClass()
 
 void MenuGetRace()
 {
-  ResetMenu("Race@", 12, 2, 9, 9, 5);
+  ResetMenu("Race@", consolePosX, contextMenuPosY, 11, 10, 5);
   SetMenuItem(0, RaceDescription[0].NAME);
   SetMenuItem(1, RaceDescription[1].NAME);
   SetMenuItem(2, RaceDescription[2].NAME);
@@ -202,7 +202,7 @@ void ListParty()
 {
   byte x;
   byte partyCount = CountParty();
-  ResetMenu("Party@", contextMenuPosX, contextMenuPosY, contextMenuWidth, partyCount + 1, partyCount);
+  ResetMenu("Party@", contextMenuPosX, contextMenuPosY, contextMenuWidth, 4, partyCount);
   if (partyCount > 0)
   {
 
@@ -218,7 +218,7 @@ void ListRoster()
 {
   byte x;
   byte rosterCount = CountRoster();
-  ResetMenu("Roster@", contextMenuPosX, contextMenuPosY + CountParty() + 2, contextMenuWidth, rosterCount + 1, rosterCount);
+  ResetMenu("Roster@", contextMenuPosX, contextMenuPosY + 7, contextMenuWidth, 8, rosterCount);
   if (rosterCount > 0)
   {
 
@@ -265,18 +265,8 @@ bool AddRandom()
 }
 
 void MenuEditParty()
-{
-        byte added = 0;
-        
-  //ListParty();
-  //ListRoster();
-
-        
+{  
   
-  
-  
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  ScreenFadeIn();
 
         //while (CountRoster() + CountParty() < 4)
                //AddRandom();
@@ -286,7 +276,7 @@ void MenuEditParty()
         
         ListParty();
         ListRoster();
-        ResetMenu("Party@",consolePosX, contextMenuPosY, 10, 10, 10);
+        ResetMenu("Party@",consolePosX, contextMenuPosY, 11, 10, 10);
         SetMenuItem(0, "Random@");
         SetMenuItem(1, "Create@");
         SetMenuItem(2, "Delete@");
@@ -307,7 +297,7 @@ void MenuEditParty()
   
   switch(GetMenuSelection())
   {
-    case 0:
+    case 0: //Random
             if(CountRoster() + CountParty() < 8)
               AddRandom();
             break;
@@ -389,13 +379,16 @@ screenName DrawAddCharacterScreen()
   CurrentCharacter = 0;
   srand(randseed);
   ClearScreen();
-  
+
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  ScreenFadeIn();
   while (!exitWindow)
-  {  
-    MenuEditParty();
-    ScreenFadeOut();
-    ClearScreen();
+  {
+          
+          MenuEditParty();
   }
-  ScreenFadeOut();
+ScreenFadeOut();
+        ClearScreen();
+//  ScreenFadeOut();
   return nextScreen;
 }

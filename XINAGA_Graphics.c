@@ -443,14 +443,13 @@ void _SetChar(void)
   #if defined(__APPLE2__)
   if (ScreenChars[offset] != SetCharIndex) 
   {
-    ScreenChars[offset] = SetCharIndex;
+    
     DrawChar(SetCharIndex, SetCharX, SetCharY);
   }
+        ScreenChars[offset] = SetCharIndex;
   #endif
   #if defined(__C64__)
   ScreenChars[offset] = SetCharIndex;
-  //gotoxy(SetCharX,SetCharY);
-  //cputc(SetCharIndex);
   ScreenColors[offset] = attributeset[SetCharIndex];
   #endif
 
