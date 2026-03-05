@@ -369,8 +369,6 @@ void MenuEditParty()
   //ClearScreen();
 }
 
-
-
 screenName DrawAddCharacterScreen()
 {
   ScreenFadeOut();
