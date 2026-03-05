@@ -10,9 +10,9 @@
 //#link "Game_Screen_Title.c"
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_Map.c"
-//#link "Game_Screen_Combat.c"
-//#link "Game_Screen_MapGen.c"
-//#link "Game_Screen_Scenario.c"
+////#link "Game_Screen_Combat.c"
+////#link "Game_Screen_MapGen.c"
+////#link "Game_Screen_Scenario.c"
 
 //#resource "apple2-xinaga.cfg"
 //#resource "apple2.rom"
@@ -25,7 +25,7 @@ void main()
   //DebugGraphics();
   //while(1);
   //GFX_DEMO();
-  Demo(MapGen);
+  RunGame(Map);
 }
 
 const byte const charset[2048] = {/*{w:8,h:8,count:256, bpp:1}*/

@@ -83,7 +83,7 @@ void SwitchScreen(screenName screen)
       break;
     case MapGen:
       //#if !MSX
-      currentScreen = Update_MapGen();
+      //currentScreen = Update_MapGen();
       //#endif
       break;
     case Scenario:
