@@ -2,7 +2,7 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "GAME")
+#pragma code-name (push, "LOWCODE")
 #endif
 
 #if defined (__NES__)
@@ -35,10 +35,7 @@ screenName Update_Title()
     //++seed;
   }
 
-  DrawBorder("@",12, 5, 16, 5, true);
-  PrintString("Greetings from the librarian Soodo Nim@", 14, 7, true);
-  DrawBorder("@", 12, 19, 16, 5, true);
-  PrintString("Press Space@", 14, 21, true);
+  
 
   while (1)
   {
