@@ -24,6 +24,7 @@ extern const byte attributeset[256];
 
 //Screen Layout
 #if defined(__APPLE2__)
+#include <stdio.h>
 #define COLS 40
 #define ROWS 24
 
@@ -239,7 +240,8 @@ extern int YColumnIndex[ROWS];
 extern byte SetCharIndex;
 extern byte SetCharX;
 extern byte SetCharY;
-#if defined(__C64__) || defined(__APPLE2__) || defined(__NES__)
+//|| defined(__APPLE2__)
+#if defined(__C64__) || defined(__NES__) 
 #pragma zpsym ("SetCharIndex")
 #pragma zpsym ("SetCharX")
 #pragma zpsym ("SetCharY")
@@ -267,7 +269,8 @@ extern byte tilesPalette[TileCount];
 void SetTileOrigin(byte x, byte y);
 extern byte tilePosX;
 extern byte tilePosY;
-#if defined(__C64__) || defined(__APPLE2__) || defined(__NES__)
+// || defined(__APPLE2__) 
+#if defined(__C64__)|| defined(__NES__)
 #pragma zpsym ("tilePosX")
 #pragma zpsym ("tilePosY")
 #pragma zpsym ("DrawTileX")
@@ -312,11 +315,11 @@ bool InputRight(void);
 bool InputFire(void);
 
 //	Text
-int sprintf (char* buf, const char* format, ...);
+//int sprintf (char* buf, const char* format, ...);
 void PrintString(char *text, byte posx, byte posy, bool fast);
 
 //Console
-#define ConsoleBufferLength 128
+#define ConsoleBufferLength 64
 extern byte strTemp[ConsoleBufferLength];
 extern const char* const Messages[];
 void ResizeMessageWindow (byte x, byte y, byte w, byte h);

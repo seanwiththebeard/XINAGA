@@ -2,7 +2,7 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "GAME")
+//#pragma code-name (push, "CODE")
 #endif
 
 #if defined (__NES__)
@@ -93,10 +93,8 @@ void RollStats()
   INT = RollDice(3, 6);
   CHR = RollDice(3, 6);
 
-  WriteLineMessageWindow("Rolled Stats:@", 0);
-  sprintf(strTemp, "STR:%2i CON:%2i DEX:%2i WIS:%2i INT:%2i CHR:%2i@", STR, CON, DEX, WIS, INT, CHR);
-  WriteLineMessageWindow(strTemp, 0);
-  //sprintf(strTemp, "(WIS: %2d) (INT: %2d) (CHR: %2d)@", WIS, INT, CHR);
+  //WriteLineMessageWindow("Rolled Stats:@", 0);
+  //sprintf(strTemp, "STR:%2i CON:%2i DEX:%2i WIS:%2i INT:%2i CHR:%2i@", STR, CON, DEX, WIS, INT, CHR);
   //WriteLineMessageWindow(strTemp, 0);
 }
 
@@ -126,8 +124,9 @@ void MenuGetClass()
 {
   byte hitdice;
   RollStats();
-  MenuGetClassPrimeStats();  
+  MenuGetClassPrimeStats(); 
   CLASS = GetMenuSelection();
+
   while(!IsMenuItemHighlighted(CLASS))
   {
     if (CLASS < 4)
@@ -147,7 +146,8 @@ void MenuGetClass()
         return;
     }
   }
-        sprintf(strTemp, "Class Confirmed: %s@", ClassDescription[CLASS].NAME, 0);
+        
+        sprintf(strTemp, "Class Confirmed: %s @", ClassDescription[CLASS].NAME, 0);
         WriteLineMessageWindow(strTemp, 0);
 
 
@@ -187,13 +187,13 @@ void MenuGetRace()
     ClearMenu();
   else
   {
-    //ConsoleBufferReset();
+    ConsoleBufferReset();
     //ConsoleBufferAdd("Race Confirmed: %s@");
     //ConsoleBufferAdd(RaceDescription[RACE].NAME);
     //ConsoleBufferPrintConsole(0);
     
-    sprintf(strTemp, "Race Confirmed: %s@", RaceDescription[RACE].NAME);
-    WriteLineMessageWindow(strTemp, 0);
+    //sprintf(strTemp, "Race Confirmed: %s@ @", RaceDescription[RACE].NAME);
+    //WriteLineMessageWindow(strTemp, 0);
     MenuGetClass();
   }
 }
@@ -379,6 +379,8 @@ screenName DrawAddCharacterScreen()
   ClearScreen();
 
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+          WriteLineMessageWindow("Party Empty!@", 0);
+        
   ScreenFadeIn();
   while (!exitWindow)
   {

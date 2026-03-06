@@ -10,7 +10,7 @@
 
 
 #if defined (__APPLE2__)
-#pragma code-name (push, "CODE")
+//#pragma code-name (push, "CODE")
 #endif
 
 #if defined (__NES__)
@@ -34,8 +34,8 @@ byte tileIndexes[64];
 bool screenFaded;
 
 #define ScreenCharSize ROWS*COLS
-
-#if defined (__C64__) || (__NES__) || (__APPLE2__)
+// || (__APPLE2__)
+#if defined (__C64__) || (__NES__)
 #pragma bss-name (push, "ZEROPAGE")
 #endif
 byte MapOriginX;
@@ -48,8 +48,8 @@ byte DrawTileX;
 byte DrawTileY;
 byte DrawTileIndex;
 byte indexes[4];
-
-#if defined (__C64__) || (__NES__) || (__APPLE2__)
+// || (__APPLE2__)
+#if defined (__C64__) || (__NES__)
 #pragma bss-name (pop)
 #endif
 
@@ -405,10 +405,10 @@ void InitializeGraphics(void)
     *dst = src[7];
 }*/
 
-#pragma bss-name (push, "ZEROPAGE")
+//#pragma bss-name (push, "ZEROPAGE")
 const byte* src;
 byte* dest;
-#pragma bss-name (pop)
+//#pragma bss-name (pop)
 void DrawChar(byte index, byte xpos, byte ypos)
 {
   //base = RowsHGR[ypos << 3] + xpos;
@@ -563,14 +563,15 @@ void DrawTile()
   SetChar(indexes[2], x, y + 1);
   SetChar(indexes[3], x + 1, y + 1);
 }
-
-#if defined(__C64__) || (__APPLE2__) || (__NES__)
+ // || (__APPLE2__) 
+#if defined(__C64__)|| (__NES__)
 #pragma bss-name (push, "ZEROPAGE")
 #endif
 byte tilePosX;
 byte tilePosY;
 byte xA, yA, xB, yB, posX, posY;
-#if defined(__C64__) || (__APPLE2__) || (__NES__)
+ // || (__APPLE2__) 
+#if defined(__C64__) || (__NES__)
 #pragma bss-name (pop)
 #endif
 

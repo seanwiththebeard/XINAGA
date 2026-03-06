@@ -2,7 +2,7 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "GAME")
+//#pragma code-name (push, "CODE")
 #endif
 
 #if defined (__NES__)

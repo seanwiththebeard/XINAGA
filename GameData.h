@@ -53,7 +53,7 @@ screenName MapUpdate(void);
 void LoadMapQuads();
 
 //Combat
-//screenName Update_Combat(void);
+screenName Update_Combat(void);
 
 //Credits
 screenName Update_Credits(void);
@@ -62,7 +62,7 @@ screenName Update_Credits(void);
 screenName Update_MapGen(void);
 
 //Scenario
-//screenName Update_Scenario(void);
+screenName Update_Scenario(void);
 
 void TickMoonPhase(void);
 

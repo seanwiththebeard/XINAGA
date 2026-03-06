@@ -2,7 +2,7 @@
 
 #if defined(__APPLE2__)
 //#pragma code-name (push, "LOWCODE")
-#pragma code-name (push, "CODE")
+//#pragma code-name (push, "CODE")
 #endif
 
 #if defined (__NES__)
@@ -251,7 +251,7 @@ void ClearConsoleContent()
   else
     consoleContents = (byte*)realloc(consoleContents, size);
 
-  if (consoleContents)
+  //if (consoleContents)
     memset(&consoleContents[0], ' ', size);
 }
 

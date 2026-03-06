@@ -22,7 +22,8 @@ One byte describes 16x16 region
 */
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "CODE")
+//#pragma code-name (push, "CODE")
+//#pragma rodata-name (push, "LC")
 #endif
 
 #if defined (__NES__)
