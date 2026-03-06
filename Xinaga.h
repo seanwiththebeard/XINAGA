@@ -4,6 +4,8 @@
 #include <string.h> //For memcpy
 #include <stdint.h> //For byte and sbyte
 #include <stdlib.h> //For srand
+#include <stdio.h> //For sprintf
+
 
 typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
@@ -24,7 +26,6 @@ extern const byte attributeset[256];
 
 //Screen Layout
 #if defined(__APPLE2__)
-#include <stdio.h>
 #define COLS 40
 #define ROWS 24
 

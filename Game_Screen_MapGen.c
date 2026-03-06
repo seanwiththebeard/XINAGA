@@ -22,8 +22,8 @@ One byte describes 16x16 region
 */
 
 #if defined(__APPLE2__)
-//#pragma code-name (push, "CODE")
-//#pragma rodata-name (push, "LC")
+#pragma code-name (push, "LC")
+#pragma rodata-name (push, "LC")
 #endif
 
 #if defined (__NES__)
@@ -688,7 +688,7 @@ void GetSeed()
 {
   #define menuWidth 5
   #define menuCount 4
-  ResetMenu("Seed@", COLS - menuWidth - 1, consolePosY, menuWidth, consoleHeight, menuCount);
+  ResetMenu("Seed@", COLS - 7, consolePosY - 4, 6, menuCount , menuCount);
   SetMenuItem(0, "Next@");
   SetMenuItem(1, "Last@");
   SetMenuItem(2, "Go@");
@@ -732,7 +732,7 @@ screenName Update_MapGen()
   ClearScreen();
   MiniMapPosX = 1;
   MiniMapPosY = 1;
-  ResizeMessageWindow(COLS - 22, viewportPosY, 21, 16);
+  ResizeMessageWindow(COLS - 22, viewportPosY, 21, 8);
   ScreenFadeIn();
   GetSeed();
   //StoreMap();

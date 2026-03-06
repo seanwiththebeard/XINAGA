@@ -7,34 +7,27 @@
 //#link "XINAGA_Console.c"
 //#link "Game_Demo.c"
 //#link "Game_System.c"
-////#link "Game_Screen_Title.c"
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_Map.c"
-////#link "Game_Screen_Combat.c"
+//#link "Game_Screen_Combat.c"
 //#link "Game_Screen_MapGen.c"
-////#link "Game_Screen_Scenario.c"
+//#link "Game_Screen_Scenario.c"
 
 //#resource "apple2-xinaga.cfg"
-////#resource "apple2.rom"
+//#resource "apple2.rom"
 #define CFGFILE apple2-xinaga.cfg
-char data[64] = "@"; 
 
 void main()
 {
   InitializeGraphics();
-        ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-        //sprintf(data, "%s  @", RaceDescription[0].NAME);            
-        WriteLineMessageWindow(data, 0);
-          WriteLineMessageWindow("Party Empty!@", 0);
-        while(1);
   //DrawCharset();
   //DebugGraphics();
   //while(1);
   //GFX_DEMO();
   //DrawMiniMap(false);
-        
   RunGame(EditParty);
 }
+#pragma rodata-name (push, "LC")
 
 const byte const charset[2048] = {/*{w:8,h:8,count:256, bpp:1}*/
   0x00, 0x70, 0x18, 0x28, 0x68, 0x58, 0x6C, 0x04, 0x00, 0x07, 0x0C, 0x08,
