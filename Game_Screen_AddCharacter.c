@@ -17,6 +17,8 @@
 #pragma rodata-name (push, "SCREEN_ADDCHAR")
 #endif
 
+int rands = 0;
+
 screenName nextScreen;
 
 bool AreYouSure();
@@ -33,6 +35,93 @@ byte CHR;
 byte RACE;
 byte CLASS;
 byte HITDICE;
+
+char namePrefixA[][8][] = 
+{
+        {//Human
+        "Hur",
+        "Dur",
+        "Ran",
+        "Mal",
+        "Fal",
+        "Lir",
+        "Gaf",
+        "Jex"
+        },
+        {//Elf
+        "Lis",
+        "Kes",
+        "Sz'",
+        "Th'",
+        "Yli",
+        "Lwi",
+        "Eol",
+        "Rys"
+        },
+        {//Dwarf
+        "Muh",
+        "Dov",
+        "Sha",
+        "Ste",
+        "Sfo",
+        "Yeg",
+        "Gos",
+        "Woz"
+        },
+        {//Construct
+        "AP",
+        "ZI",
+        "OP",
+        "UO",
+        "GH",
+        "QK",
+        "MN",
+        "ZY"
+        }
+};
+char nameSuffixA[][8][] = 
+{
+        {//Human
+        "kar@",
+        "roth@",
+        "mar@",
+        "par@",
+        "dak@",
+        "eos@",
+        "nast@",
+        "stle@"
+        },
+        {//Elf
+        "leu@",
+        "ious@",
+        "yir@",
+        "thel@",
+        "aeu@",
+        "ndir@",
+        "brae@",
+        "owas@"
+        },
+        {//Dwarf
+        "yen@",
+        "ama@",
+        "ral@",
+        "apa@",
+        "oru@",
+        "eke@",
+        "hest@",
+        "julo@"
+        },
+        {//Construct
+        "-A@",
+        "-B@",
+        "-C@",
+        "-D@",
+        "-E@",
+        "-F@",
+        "-G@",
+        "-H@"
+        }
+};
 
 void AddToRoster()
 {
@@ -54,13 +143,17 @@ void AddToRoster()
   
   
   ConsoleBufferReset();
-  sprintf(strTemp, "%s %c%c%c %x@", ClassDescription[CLASS].NAME, RaceDescription[RACE].NAME[0], RaceDescription[RACE].NAME[1], RaceDescription[RACE].NAME[2], &PlayerChar[0]);
+  //sprintf(strTemp, "%s %c%c%c %x@", ClassDescription[CLASS].NAME, RaceDescription[RACE].NAME[0], RaceDescription[RACE].NAME[1], RaceDescription[RACE].NAME[2], &PlayerChar[0]);
+  sprintf(strTemp, "%s%s @",namePrefixA[RACE][rand()%8], nameSuffixA[RACE][rand()%8] );
+  
   //ConsoleBufferAdd("Hello @");
   //ConsoleBufferAdd(strTemp);
   //ConsoleBufferAddNumber(CountRoster());
   for (i = 0; strTemp[i] != '@'; ++i)
     PlayerChar->NAME[i] = strTemp[i];
   PlayerChar->NAME[i] = '@';
+        WriteLineMessageWindow(PlayerChar->NAME, 0);
+        
   
   
   //ConsoleBufferReset();
@@ -238,7 +331,7 @@ bool AddRandom()
         WIS = RollDice(3, 6);
         INT = RollDice(3, 6);
         CHR = RollDice(3, 6);
-        CLASS = rand() % 4;
+        CLASS = rand() % 6;
        
     if (RaceDescription[RACE].HITDICEMAX < ClassDescription[CLASS].HITDICE)
       HITDICE = RaceDescription[RACE].HITDICEMAX;
@@ -258,6 +351,7 @@ bool AddRandom()
       HP = HPMAX;
             sprintf(strTemp, "%s %s added@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME);
             WriteLineMessageWindow(strTemp, 0);
+            
       AddToRoster();
             return true;
     }
@@ -286,14 +380,7 @@ void MenuEditParty()
         SetMenuItem(6, "Credits@");
         SetMenuItem(7, "Combat@");
         SetMenuItem(8, "Map Gen@");
-        SetMenuItem(9, "Scenario@");
-        
-
-        
-  
-  //sprintf(strTemp, "Address %4x %s@", &RaceDescription[0], &RaceDescription[0]);
-    //WriteLineMessageWindow(strTemp, 0);
-  
+        SetMenuItem(9, "Scenario@");    
   
   switch(GetMenuSelection())
   {

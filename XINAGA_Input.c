@@ -80,8 +80,7 @@ bool InputChanged(void)
 
 void UpdateInput(void)
 { 
-  //++randseed;
-  //srand(randseed);
+  srand(++randseed);
   #if __C64__
   joyTemp = joy_read(0);
 
