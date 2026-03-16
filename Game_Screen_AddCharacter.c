@@ -358,16 +358,103 @@ bool AddRandom()
         
 }
 
+void EditPartyMenu()
+{
+        ListParty();
+        ListRoster();
+        ResetMenu("Party@",consolePosX, contextMenuPosY, 11, 10, 6);
+        SetMenuItem(0, "Next@");
+        SetMenuItem(1, "Last@");
+        SetMenuItem(2, "Edit@");
+        SetMenuItem(3, "Remove@");
+        SetMenuItem(4, "Begin@");
+        SetMenuItem(5, "Back@");
+        switch(GetMenuSelection())
+        {
+                case 0: //Next
+                        {
+                                break;
+                        }
+                case 1: //Last
+                        {
+                                break;
+                        }
+                case 2: //Edit
+                        {
+                                break;
+                        }
+                case 3: //Remove
+                        {
+                                break;
+                        }
+                case 4: //Begin Adventure
+                        {
+                                exitWindow = true;
+                                nextScreen = MapGen;
+                        }
+                case 5: //Back
+                        {
+                                break;
+                        }
+        }
+}
+
+void EditRosterMenu()
+{
+        //ListParty();
+        ListRoster();
+        ResetMenu("Roster@",consolePosX, contextMenuPosY, 11, 10, 7);
+        SetMenuItem(0, "Next@");
+        SetMenuItem(1, "Last@");
+        SetMenuItem(2, "Create@");
+        SetMenuItem(3, "Random@");
+        SetMenuItem(4, "Delete@");
+        SetMenuItem(5, "Join@");
+        SetMenuItem(6, "Back@");
+        switch(GetMenuSelection())
+        {
+                case 0: //Next
+                        {
+                                break;
+                        }
+                case 1: //Last
+                        {
+                                break;
+                        }
+                case 2: //Create
+                        {
+                                break;
+                        }
+                case 3: //Random
+                        {
+                                break;
+                        }
+                case 4: //Delete
+                        {
+                                break;
+                        }
+                case 5: //Join
+                        {
+                                break;
+                        }
+                case 6: //Back
+                        {
+                                break;
+                        }
+        }
+}
+
+void MainMenu()
+{
+        ResetMenu("Debug Menu@",consolePosX, contextMenuPosY, 11, 10, 4);
+        SetMenuItem(0, "EditParty@");
+        SetMenuItem(1, "Combat@");
+        SetMenuItem(2, "Map Gen@");
+        SetMenuItem(3, "Scenario@");    
+}
+
 void MenuEditParty()
-{  
-  
-
-        //while (CountRoster() + CountParty() < 4)
-               //AddRandom();
-
-        //while(CountParty() < 4)
-                //AddParty(0);
-        
+{          
         ListParty();
         ListRoster();
         ResetMenu("Party@",consolePosX, contextMenuPosY, 11, 10, 10);

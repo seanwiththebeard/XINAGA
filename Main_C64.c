@@ -9,13 +9,11 @@
 //#link "XINAGA_Console.c"
 //#link "Game_Demo.c"
 //#link "Game_System.c"
-//#link "Game_Screen_Title.c"
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_Map.c"
 //#link "Game_Screen_Combat.c"
 //#link "Game_Screen_MapGen.c"
 //#link "Game_Screen_Scenario.c"
-//screenName nextScreen = Map;
 
 void main(void)
 {
@@ -27,7 +25,7 @@ void main(void)
   //Demo(EditParty);
   
 }
-
+#pragma rodata-name (push, "GAME_RODATA")
 /*{pal:"c64",layout:"c64"}*/
 const char PALETTE[16] = { 
   0x00,			// screen color
@@ -63,7 +61,6 @@ const byte attributeset[256] = {
   0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05,
   0x05, 0x05, 0x05, 0x05
   };
-
 
 //#pragma rodata-name("CHARS")
 /*{w:8, h:8, count:256, bpp:1, brev:1, pal:"c64", np:1}*/
