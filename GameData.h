@@ -98,7 +98,6 @@ typedef struct playerChar
   struct playerChar *next;
   int	EXP;
   char 	NAME[16];
-  bool 	inParty;
   byte	HP,
   	HPMAX,
   	STR,
@@ -120,8 +119,12 @@ struct playerChar *getPlayerChar(byte index);
 
 typedef struct Session
 {
-        struct playerChar PartyChars[4];
+        byte PartyChars[4];
         struct playerChar RosterChars[12];
+};
+typedef struct SavedGame
+{
+        struct Session gameSessions[4];
 };
 
 extern struct Session Sessions[4];

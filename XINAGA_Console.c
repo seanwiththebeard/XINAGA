@@ -119,6 +119,7 @@ void ClearItem(byte index)
 
 void DrawItem(byte index)
 {
+  ClearItem(index);
   ConsoleBufferReset();
   if(MenuSelection == index)
     ConsoleBufferAdd("+");
@@ -139,6 +140,22 @@ void DrawItem(byte index)
   //wait_vblank(1);
 }
 
+byte menuSel;
+void SetMenuSelect(byte sel)
+{
+        menuSel = sel;
+}
+
+void ClearMenuContents()
+{
+        byte x;
+        DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
+        for (x = 0; x < menuItemsCount; ++x)
+                {
+                        MenuItems[x] = (char*)"";
+                        MenuHighlight[x] = false;    
+                }
+}
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
 {
   byte x;
@@ -148,9 +165,10 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
   MenuWidth = w;
   MenuHeight = h;
   MenuCount = c;
-  MenuSelection = 0;
+  MenuSelection = menuSel;
+  menuSel = 0; //Reset for next draw if we don't keep it
   
-  DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
+  DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, false);
   for (x = 0; x < menuItemsCount; ++x)
   {
     MenuItems[x] = (char*)"";
@@ -183,7 +201,7 @@ void DrawMenu()
   DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
   for (x = 0; x < MenuCount; ++x)
   {
-    ClearItem(x);
+    //ClearItem(x);
     DrawItem(x);
   }
 }

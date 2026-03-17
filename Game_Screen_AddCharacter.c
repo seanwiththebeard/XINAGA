@@ -138,9 +138,7 @@ void AddToRoster()
   PlayerChar->WIS = WIS;
   PlayerChar->CHR = CHR;
   PlayerChar->RACE = RACE;
-  PlayerChar->CLASS = CLASS;
-  PlayerChar->inParty = false;
-  
+  PlayerChar->CLASS = CLASS;  
   
   ConsoleBufferReset();
   //sprintf(strTemp, "%s %c%c%c %x@", ClassDescription[CLASS].NAME, RaceDescription[RACE].NAME[0], RaceDescription[RACE].NAME[1], RaceDescription[RACE].NAME[2], &PlayerChar[0]);
@@ -401,8 +399,17 @@ void EditPartyMenu()
 
 void EditRosterMenu()
 {
+        bool exit = false;
+        byte selection = 0;
+        byte rosterSelected = 0;
         //ListParty();
+        ResetMenu("Roster@",consolePosX, contextMenuPosY, 11, 10, 7);
+        ClearMenu();
         ListRoster();
+        
+        while(!exit)
+        {
+        SetMenuSelect(selection);
         ResetMenu("Roster@",consolePosX, contextMenuPosY, 11, 10, 7);
         SetMenuItem(0, "Next@");
         SetMenuItem(1, "Last@");
@@ -410,15 +417,23 @@ void EditRosterMenu()
         SetMenuItem(3, "Random@");
         SetMenuItem(4, "Delete@");
         SetMenuItem(5, "Join@");
-        SetMenuItem(6, "Back@");
-        switch(GetMenuSelection())
+        SetMenuItem(6, "Back@");       
+
+        selection = GetMenuSelection();
+        switch(selection)
         {
                 case 0: //Next
                         {
+                                ++rosterSelected;
+                                SetMenuSelect(rosterSelected);                                        
+                                ListRoster();
                                 break;
                         }
                 case 1: //Last
                         {
+                                --rosterSelected;
+                                SetMenuSelect(rosterSelected);                                        
+                                ListRoster();
                                 break;
                         }
                 case 2: //Create
@@ -427,6 +442,12 @@ void EditRosterMenu()
                         }
                 case 3: //Random
                         {
+                                if(CountRoster() + CountParty() < 8)
+                                {
+                                        AddRandom();
+                                        SetMenuSelect(rosterSelected);                                        
+                                        ListRoster();
+                                }
                                 break;
                         }
                 case 4: //Delete
@@ -439,14 +460,17 @@ void EditRosterMenu()
                         }
                 case 6: //Back
                         {
+                                exit = true;
                                 break;
                         }
+        }
         }
 }
 
 void TavernMenu()
 {
         ResetMenu("Tavern@",consolePosX, contextMenuPosY, 11, 10, 4);
+        ClearMenu();
         SetMenuItem(0, "Party@");
         SetMenuItem(1, "Roster@");
         SetMenuItem(2, "Save Game@");

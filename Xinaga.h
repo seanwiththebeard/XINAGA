@@ -341,6 +341,8 @@ void SetMenuItem(byte index, char *value);
 void HighlightMenuItem(byte index);
 void DrawMenu(void);
 void ClearMenu(void);
+void ClearMenuContents();
 byte IsMenuItemHighlighted(byte index);
 byte GetMenuSelection(void);
+void SetMenuSelect(byte sel);
 #endif
