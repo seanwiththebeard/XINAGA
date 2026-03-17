@@ -444,13 +444,58 @@ void EditRosterMenu()
         }
 }
 
+void TavernMenu()
+{
+        ResetMenu("Tavern@",consolePosX, contextMenuPosY, 11, 10, 4);
+        SetMenuItem(0, "Party@");
+        SetMenuItem(1, "Roster@");
+        SetMenuItem(2, "Save Game@");
+        SetMenuItem(3, "Load Game@");
+        switch(GetMenuSelection())
+                {
+                        case 0: //Edit Party
+                                EditPartyMenu();
+                                break;
+                        case 1: //Edit Roster
+                                EditRosterMenu();
+                                break;
+                        case 2: //Save Game
+                                break;
+                        case 3: //Load Game
+                                break;
+                }
+}
+
 void MainMenu()
 {
-        ResetMenu("Debug Menu@",consolePosX, contextMenuPosY, 11, 10, 4);
-        SetMenuItem(0, "EditParty@");
-        SetMenuItem(1, "Combat@");
-        SetMenuItem(2, "Map Gen@");
-        SetMenuItem(3, "Scenario@");    
+        ResetMenu("Debug Menu@",consolePosX, contextMenuPosY, 11, 10, 5);
+        SetMenuItem(0, "Tavern@");
+        SetMenuItem(1, "Map@");
+        SetMenuItem(2, "Combat@");
+        SetMenuItem(3, "Map Gen@");
+        SetMenuItem(4, "Scenario@");
+        switch(GetMenuSelection())
+                {
+                        case 0: //Tavern
+                                TavernMenu();
+                                break;
+                        case 1: //Map
+                                exitWindow = true;
+                                nextScreen = Map;
+                                break;
+                        case 2: //Combat
+                                exitWindow = true;
+                                nextScreen = Combat;
+                                break;
+                        case 3: //Mapgen
+                                exitWindow = true;
+                                nextScreen = MapGen;
+                                break;
+                        case 4: //Scenario
+                                exitWindow = true;
+                                nextScreen = Scenario;
+                                break;
+                }
 }
 
 void MenuEditParty()
@@ -526,15 +571,15 @@ void MenuEditParty()
       exitWindow = true;
       //nextScreen = Credits;
       break;
-    case 7:
+    case 7: //Combat
       exitWindow = true;
       nextScreen = Combat;
       break;
-    case 8:
+    case 8: //MapGen
       exitWindow = true;
       nextScreen = MapGen;
       break;
-    case 9:
+    case 9: //Scenario
       exitWindow = true;
       nextScreen = Scenario;
       break;
@@ -545,24 +590,25 @@ void MenuEditParty()
 
 screenName DrawAddCharacterScreen()
 {
-  ScreenFadeOut();
-  nextScreen = EditParty;
-  exitWindow = false;
-  CurrentCharacter = 0;
-  srand(randseed);
-  ClearScreen();
-
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-          WriteLineMessageWindow("Party Empty!@", 0);
-        
-  ScreenFadeIn();
-  while (!exitWindow)
-  {
-          
-          MenuEditParty();
-  }
-ScreenFadeOut();
+        ScreenFadeOut();
+        nextScreen = EditParty;
+        exitWindow = false;
+        CurrentCharacter = 0;
+        srand(randseed);
         ClearScreen();
-//  ScreenFadeOut();
-  return nextScreen;
+        
+        ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+        //WriteLineMessageWindow("Party Empty!@", 0);
+        
+        ScreenFadeIn();
+        while (!exitWindow)
+                {         
+                        TavernMenu();
+                        //MainMenu();
+                        //MenuEditParty();
+                }
+        ScreenFadeOut();
+        ClearScreen();
+        //  ScreenFadeOut();
+        return nextScreen;
 }
