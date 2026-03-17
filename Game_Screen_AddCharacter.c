@@ -484,8 +484,10 @@ void TavernMenu()
                                 EditRosterMenu();
                                 break;
                         case 2: //Save Game
+                                DiskSave("FILE", (byte*)&Sessions[0], sizeof(struct Session) * 4);
                                 break;
                         case 3: //Load Game
+                                DiskLoad("FILE", (byte*)&Sessions[0], sizeof(struct Session) * 4);
                                 break;
                 }
 }

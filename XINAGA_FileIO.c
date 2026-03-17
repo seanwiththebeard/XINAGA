@@ -47,7 +47,7 @@ void DiskSave(char *filename, byte *source, int size)
   
   //https://retrocomputing.stackexchange.com/questions/25240/how-do-i-save-data-from-a-program-with-cc65
   FILE *fp;
-  char data_out[] = "This is my data to save.@";
+  //char data_out[] = "This is my data to save.@";
   
   //Saving
   _filetype = 's';
