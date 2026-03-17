@@ -19,6 +19,8 @@
 screenName currentScreen;
 byte strTemp[ConsoleBufferLength];
 
+struct Session Sessions[4];
+
 const RaceDescriptionDef const RaceDescription[] = 
 {
   {"Human", 255},

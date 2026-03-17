@@ -118,6 +118,14 @@ typedef struct playerChar
 
 struct playerChar *getPlayerChar(byte index);
 
+typedef struct Session
+{
+        struct playerChar PartyChars[4];
+        struct playerChar RosterChars[12];
+};
+
+extern struct Session Sessions[4];
+
 	//Party
 void AddParty(byte index);
 void RemoveParty(void);
