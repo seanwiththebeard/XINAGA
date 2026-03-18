@@ -360,7 +360,7 @@ void EditPartyMenu()
 {
         ListParty();
         ListRoster();
-        ResetMenu("Party@",consolePosX, contextMenuPosY, 11, 10, 6);
+        ResetMenu("Party@", COLS - contextMenuWidth - 1, contextMenuPosY, contextMenuWidth, 10, 6);
         SetMenuItem(0, "Next@");
         SetMenuItem(1, "Last@");
         SetMenuItem(2, "Edit@");
@@ -403,14 +403,14 @@ void EditRosterMenu()
         byte selection = 0;
         byte rosterSelected = 0;
         //ListParty();
-        ResetMenu("Roster@",consolePosX, contextMenuPosY, 11, 10, 7);
+        ResetMenu("Roster@",COLS - contextMenuWidth - 1, contextMenuPosY, contextMenuWidth, 10, 7);
         ClearMenu();
         ListRoster();
         
         while(!exit)
         {
         SetMenuSelect(selection);
-        ResetMenu("Roster@",consolePosX, contextMenuPosY, 11, 10, 7);
+        ResetMenu("Roster@",COLS - contextMenuWidth - 1, contextMenuPosY, contextMenuWidth, 10, 7);
         SetMenuItem(0, "Next@");
         SetMenuItem(1, "Last@");
         SetMenuItem(2, "Create@");
@@ -469,7 +469,7 @@ void EditRosterMenu()
 
 void TavernMenu()
 {
-        ResetMenu("Tavern@",consolePosX, contextMenuPosY, 11, 10, 4);
+        ResetMenu("Tavern@", COLS - contextMenuWidth - 1, contextMenuPosY, contextMenuWidth, 10, 4);
         ClearMenu();
         SetMenuItem(0, "Party@");
         SetMenuItem(1, "Roster@");
@@ -528,7 +528,7 @@ void MenuEditParty()
 {          
         ListParty();
         ListRoster();
-        ResetMenu("Party@",consolePosX, contextMenuPosY, 11, 10, 10);
+        ResetMenu("Party@",COLS - contextMenuWidth, contextMenuPosY, contextMenuWidth, 10, 10);
         SetMenuItem(0, "Random@");
         SetMenuItem(1, "Create@");
         SetMenuItem(2, "Delete@");

@@ -47,7 +47,7 @@ extern const byte attributeset[256];
 
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
-#define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
+#define contextMenuWidth 11
 #define contextMenuHeight (2 * viewportHeight)
 
 #include <conio.h> //for cgetc() and kbhit()
@@ -85,8 +85,8 @@ void A2Pixel(byte x, byte y, byte color);
 
 #define contextMenuPosX 20//viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
-#define contextMenuWidth 19//(COLS - (viewportWidth * 2) - 3)
-#define contextMenuHeight 18//(2 * viewportHeight)
+#define contextMenuWidth 11
+#define contextMenuHeight 18
 
 //#include <cbm_petscii_charmap.h>
 #pragma charmap(0x41, 0x61)
@@ -169,7 +169,7 @@ void A2Pixel(byte x, byte y, byte color);
 
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY
-#define contextMenuWidth (COLS - (viewportWidth * 2) - 5)
+#define contextMenuWidth 11
 #define contextMenuHeight (2 * viewportHeight)
 
 #define MMC_MODE 0x00
@@ -218,7 +218,7 @@ extern const char PALETTE_3[16];
 #define viewportHeight 9
 #define contextMenuPosX viewportPosX + (viewportWidth * 2) + 1
 #define contextMenuPosY viewportPosY
-#define contextMenuWidth (COLS - (viewportWidth * 2) - 3)
+#define contextMenuWidth 11
 #define contextMenuHeight (2 * viewportHeight)
 #endif
 
