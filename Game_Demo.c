@@ -53,6 +53,13 @@ void SelectBank()
 }
 #endif
 
+void DrawInterface()
+{
+        DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+        DrawCharStats();
+        ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+        SetTileOrigin(viewportPosX, viewportPosY);
+}
 
 void SwitchScreen(screenName screen)
 {
@@ -61,6 +68,7 @@ void SwitchScreen(screenName screen)
   
   //ScreenDisable();
   ClearScreen();
+  DrawInterface();
   //Load specified screen
   //UpdateInput();
   currentScreen = screen;

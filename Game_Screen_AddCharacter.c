@@ -456,6 +456,11 @@ void EditRosterMenu()
                         }
                 case 5: //Join
                         {
+                                if ((CountRoster() > 0) && (CountParty() < 4))
+                                {
+                                        AddParty(CurrentCharacter);
+                                        CurrentCharacter = 0;
+                                }
                                 break;
                         }
                 case 6: //Back
@@ -616,25 +621,25 @@ void MenuEditParty()
 
 screenName DrawAddCharacterScreen()
 {
-        ScreenFadeOut();
+        //ScreenFadeOut();
         nextScreen = EditParty;
         exitWindow = false;
         CurrentCharacter = 0;
         srand(randseed);
-        ClearScreen();
+        //ClearScreen();
         
-        ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+        //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
         //WriteLineMessageWindow("Party Empty!@", 0);
         
-        ScreenFadeIn();
+        //ScreenFadeIn();
         while (!exitWindow)
                 {         
                         TavernMenu();
                         //MainMenu();
                         //MenuEditParty();
                 }
-        ScreenFadeOut();
-        ClearScreen();
+        //ScreenFadeOut();
+        //ClearScreen();
         //  ScreenFadeOut();
         return nextScreen;
 }
