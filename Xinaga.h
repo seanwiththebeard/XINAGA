@@ -18,6 +18,9 @@ typedef int8_t sbyte;	// 8-bit signed
 #define left 2
 #define right 3
 
+#define MiniMapPosX 2
+#define MiniMapPosY 2
+
 extern uint16_t randseed;
 #define ReadBit(b, n) (((b) >> (n)) & 1)
 
@@ -46,7 +49,7 @@ extern const byte attributeset[256];
 #define selectionCount 4
 
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
-#define contextMenuPosY viewportPosY
+#define contextMenuPosY viewportPosY + 16
 #define contextMenuWidth 11
 #define contextMenuHeight (2 * viewportHeight)
 
@@ -72,21 +75,21 @@ void A2Pixel(byte x, byte y, byte color);
 #define viewportHeight 9
 
 #define consolePosX 1
-#define consolePosY 20 //2 + 2*viewportHeight
-#define consoleWidth 38
-#define consoleHeight 4//(ROWS - viewportHeight * 2 - 3)
+#define consolePosY 20
+#define consoleWidth 26
+#define consoleHeight 4
 
 #define selectionWidth 6
-#define selectionPosX 33//consoleWidth - selectionWidth + 1
+#define selectionPosX 33
 #define selectionPosY consolePosY
 
 #define selectionHeight consoleHeight
 #define selectionCount 4
 
-#define contextMenuPosX 20//viewportPosX + viewportWidth * 2 + 1
-#define contextMenuPosY viewportPosY
+#define contextMenuPosX COLS - contextMenuWidth - 1
+#define contextMenuPosY 13
 #define contextMenuWidth 11
-#define contextMenuHeight 18
+#define contextMenuHeight 11
 
 //#include <cbm_petscii_charmap.h>
 #pragma charmap(0x41, 0x61)
@@ -168,7 +171,7 @@ void A2Pixel(byte x, byte y, byte color);
 #define viewportHeight 9
 
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
-#define contextMenuPosY viewportPosY
+#define contextMenuPosY viewportPosY + 16
 #define contextMenuWidth 11
 #define contextMenuHeight (2 * viewportHeight)
 
@@ -217,7 +220,7 @@ extern const char PALETTE_3[16];
 #define viewportWidth 9
 #define viewportHeight 9
 #define contextMenuPosX viewportPosX + (viewportWidth * 2) + 1
-#define contextMenuPosY viewportPosY
+#define contextMenuPosY viewportPosY + 16
 #define contextMenuWidth 11
 #define contextMenuHeight (2 * viewportHeight)
 #endif

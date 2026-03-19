@@ -22,8 +22,8 @@ void DebugGraphics();
 #define mapMatrixWidth 16
 #define mapMatrixHeight 16
 
-extern byte MiniMapPosX;
-extern byte MiniMapPosY;
+//extern byte MiniMapPosX;
+//extern byte MiniMapPosY;
 extern byte SetPlayerPositionX;
 extern byte SetPlayerPositionY;
 extern const byte MiniMapGlyphs[64];

@@ -920,7 +920,7 @@ static bool exitScreen;
 static void ActionMenu()
 {
   byte action;
-  ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, menuCount);
+  ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6);
   SetMenuItem(0, "Search@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Party@");
@@ -975,8 +975,6 @@ byte lastMiniMapY;
 screenName MapUpdate()
 {
   exitScreen = false;
-  MiniMapPosX = 20;
-  MiniMapPosY = 1;
   characters.quadPosX[0]  = SetPlayerPositionX;
   characters.quadPosY[0]  = SetPlayerPositionY;
 

@@ -730,8 +730,6 @@ void GetSeed()
 screenName Update_MapGen()
 {
   ClearScreen();
-  MiniMapPosX = 1;
-  MiniMapPosY = 1;
   ResizeMessageWindow(COLS - 22, viewportPosY, 21, 8);
   ScreenFadeIn();
   GetSeed();

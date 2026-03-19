@@ -68,12 +68,10 @@ uint16_t randseed;
 byte MiniMapHighlightX;
 byte MiniMapHighlightY;
 
-byte MiniMapPosX;
-byte MiniMapPosY;
 void DrawMiniMap(bool highlightPlayer)
 {
   byte x, y, tile = 0;
-  DrawBorder("Minimap@", MiniMapPosX - 1, MiniMapPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
+  //DrawBorder("Minimap@", MiniMapPosX - 1, MiniMapPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
   UpdateAttributes();
   
   for (y = 0; y < mapMatrixHeight; ++y)
@@ -318,23 +316,27 @@ void RemoveParty() //Removes Last Party Member (?)
   DeleteParty(index);
 }
 
+#define PartyStatsX viewportWidth * 2 + 1
+#define PartyStatsY 0
+#define PartyStatsWidth COLS - PartyStatsX - 2
+#define PartyStatsHeight 14
 
 void DrawCharStatus(byte characterIndex)
 {
   //byte statX = CharStatPosX;
-  byte statY = contextMenuPosY + characterIndex * (3);
+  byte statY = PartyStatsY + 1 + characterIndex * (3);
   struct playerChar *PlayerChar = getPartyMember(characterIndex);
 
-  DrawBorder(PlayerChar->NAME, contextMenuPosX - 1, statY - 1, contextMenuWidth, 4, true);
-  DrawTileDirectXY(PlayerChar->CLASS, contextMenuPosX, statY);
+  DrawBorder(PlayerChar->NAME, PartyStatsX, statY - 1, COLS - PartyStatsX - 2, 4, true);
+  DrawTileDirectXY(PlayerChar->CLASS, PartyStatsX + 1, statY);
   
   ConsoleBufferReset();
   ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
-  ConsoleBufferPrint(contextMenuPosX + 2, statY);
+  ConsoleBufferPrint(PartyStatsX + 3, statY);
   ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
-  ConsoleBufferPrint(contextMenuPosX + 2, statY+1);
+  ConsoleBufferPrint(PartyStatsX + 3, statY+1);
   sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
-  PrintString(strTemp, contextMenuPosX + 9, statY + 1, true);
+  PrintString(strTemp, PartyStatsX + 10, statY + 1, true);
   ConsoleBufferReset();
   
   //sprintf(strTemp, "%s@", ClassDescriptions[PlayerChar->CLASS].NAME);
@@ -385,7 +387,7 @@ void DrawCharStats()
   byte i;
   //DrawBorder("Moon Phases@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, 3, true);
   DrawMoonPhase();
-  DrawBorder("Party@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, (viewportHeight << 1) + 2, true);
+  DrawBorder("@", PartyStatsX, PartyStatsY, PartyStatsWidth, PartyStatsHeight - 1, true);
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
 }
