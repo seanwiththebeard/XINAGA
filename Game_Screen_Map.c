@@ -975,11 +975,16 @@ byte lastMiniMapY;
 void UpdateLocalMiniMap()
 {
         //DrawMiniMap(true);
+        MiniMapPosX = 20;
+        MiniMapPosY = 13;
+        MiniMapWidth = 5;
+        MiniMapHeight = 5;
         SetChar(MiniMapGlyphs[mapQuads[lastMiniMapX + mapMatrixWidth * lastMiniMapY]], MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
         UpdatePlayerOnMiniMap();
         lastMiniMapX = MiniMapHighlightX;
         lastMiniMapY = MiniMapHighlightY;
         SetChar('X', MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
+        
 }
 
 screenName MapUpdate()
@@ -996,12 +1001,11 @@ screenName MapUpdate()
   FillViewport(32, viewportWidth, viewportHeight);
   ScreenFadeIn();
   DrawMapViewport();
-
-        MiniMapPosX = 18;
-        MiniMapPosY = 18;
+        
         
   UpdatePlayerOnMiniMap();
-  //DrawMiniMap(true);
+        UpdateLocalMiniMap();
+  DrawMiniMap(true);
 
         
 

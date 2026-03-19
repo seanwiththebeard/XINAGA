@@ -177,14 +177,14 @@ void DrawScenario()
   byte x;
   byte distTravel;
   //byte failure = 0;
-  #define originX 8
-  #define originY 8
+  #define originX PartyStatsX
+  #define originY PartyStatsY
   struct vector2 scenPos = {originX, originY};
   struct vector2 originPos = {originX, originY};
   char scenChar;
   char pathIndex;
 
-  DrawBorder("Scenario Path@", viewportPosX - 1, viewportPosY- 1 +mapMatrixHeight + 3 , 20, 6, false);
+  //DrawBorder("Scenario Path@", originX, originY , PartyStatsWidth, PartyStatsHeight, false);
 
   scenPos.x = originX;
   scenPos.y = originY;
@@ -225,8 +225,8 @@ void DrawScenario()
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 3);
 
 
-    DrawTileDirectXY(scenarioPoints[x], viewportPosX  + 2*x,  viewportPosY + mapMatrixHeight + 4);
-    SetChar(dirChar[scenarioDir[x]], viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 6);
+    DrawTileDirectXY(scenarioPoints[x], originX +1 + 2*x,  originY + 1);
+    SetChar(dirChar[scenarioDir[x]], originX +1 + 2*x, originY + 3);
 
     scenPos.x += (distX[scenarioDir[x]] * distTravel);
     scenPos.y += (distY[scenarioDir[x]] * distTravel);
@@ -240,7 +240,7 @@ void DrawScenario()
       clampPoint(&scenPos);
       ++distTravel;
     }
-    SetChar('0' + distTravel, viewportPosX  + 2*x + 1, viewportPosY + mapMatrixHeight + 6);
+    SetChar('0' + distTravel, originX + 2  + 2*x, originY + 3);
 
     if (x == 0)
     {
@@ -379,10 +379,10 @@ void DrawPoint(byte x, byte y)
     SetChar(tile + 1, x + viewportPosX, y + viewportPosY);
     return;
   }
-  SetChar(tile, x + viewportPosX, y + viewportPosY);
+  SetChar(tile, x + MiniMapPosX, y + MiniMapPosY);
   return;
   #endif
-  SetChar(tile, x + viewportPosX, y + viewportPosY);
+  SetChar(tile, x + MiniMapPosX, y + MiniMapPosY);
 }
 
 void createPoint(byte index, byte x, byte y)
@@ -652,7 +652,7 @@ void GenerateMap(byte seed)
 
   srand(seed);
   sprintf(strTemp, "Generating Seed:(%3d)@", seed);
-  DrawScenario();  
+  DrawScenario();
   checkLandlocked();
   WriteLineMessageWindow(strTemp, 0);
   //return;
@@ -688,7 +688,7 @@ void GetSeed()
 {
   #define menuWidth 5
   #define menuCount 4
-  ResetMenu("Seed@", COLS - 7, consolePosY - 4, 6, menuCount , menuCount);
+  ResetMenu("Seed@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, menuCount);
   SetMenuItem(0, "Next@");
   SetMenuItem(1, "Last@");
   SetMenuItem(2, "Go@");
@@ -729,8 +729,11 @@ void GetSeed()
 
 screenName Update_MapGen()
 {
-  ClearScreen();
-  ResizeMessageWindow(COLS - 22, viewportPosY, 21, 8);
+  //ClearScreen();
+        MiniMapPosX = viewportPosX;
+        MiniMapPosY = viewportPosY;
+        
+  //ResizeMessageWindow(COLS - 22, viewportPosY, 21, 8);
   ScreenFadeIn();
   GetSeed();
   //StoreMap();

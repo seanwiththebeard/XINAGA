@@ -19,6 +19,13 @@ typedef int8_t sbyte;	// 8-bit signed
 #define right 3
 extern byte MiniMapPosX;
 extern byte MiniMapPosY;
+extern byte MiniMapWidth;
+extern byte MiniMapHeight;
+
+#define PartyStatsX viewportWidth * 2 + 1
+#define PartyStatsY 0
+#define PartyStatsWidth COLS - PartyStatsX - 2
+#define PartyStatsHeight 13
 
 extern uint16_t randseed;
 #define ReadBit(b, n) (((b) >> (n)) & 1)

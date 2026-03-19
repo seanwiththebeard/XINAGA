@@ -401,7 +401,6 @@ void EditRosterMenu()
 {
         bool exit = false;
         byte selection = 0;
-        byte rosterSelected = 0;
         //ResetMenu("Roster@",contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 7);
         ClearMenu();
         ListParty();
@@ -417,22 +416,22 @@ void EditRosterMenu()
         SetMenuItem(3, "Random@");
         SetMenuItem(4, "Delete@");
         SetMenuItem(5, "Join@");
-        SetMenuItem(6, "Back@");       
+        SetMenuItem(6, "Back@");
 
         selection = GetMenuSelection();
         switch(selection)
         {
                 case 0: //Next
                         {
-                                ++rosterSelected;
-                                SetMenuSelect(rosterSelected);                                        
+                                ++CurrentCharacter;
+                                SetMenuSelect(CurrentCharacter);                                        
                                 ListRoster();
                                 break;
                         }
                 case 1: //Last
                         {
-                                --rosterSelected;
-                                SetMenuSelect(rosterSelected);                                        
+                                --CurrentCharacter;
+                                SetMenuSelect(CurrentCharacter);                                        
                                 ListRoster();
                                 break;
                         }
@@ -445,7 +444,7 @@ void EditRosterMenu()
                                 if(CountRoster() + CountParty() < 8)
                                 {
                                         AddRandom();
-                                        SetMenuSelect(rosterSelected);                                        
+                                        SetMenuSelect(CurrentCharacter);                                        
                                         ListRoster();
                                 }
                                 break;
@@ -457,9 +456,12 @@ void EditRosterMenu()
                 case 5: //Join
                         {
                                 if ((CountRoster() > 0) && (CountParty() < 4))
-                                {
+                                {                                   
                                         AddParty(CurrentCharacter);
-                                        CurrentCharacter = 0;
+                                        --CurrentCharacter;
+                                        SetMenuSelect(CurrentCharacter);
+                                        ListParty();
+                                        ListRoster();
                                 }
                                 break;
                         }

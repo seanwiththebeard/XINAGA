@@ -15,8 +15,10 @@
 #pragma rodata-name (push, "GAME_RODATA")
 #endif
 
-extern byte MiniMapPosX = 2;
-extern byte MiniMapPosY = 2;
+byte MiniMapPosX = 2;
+byte MiniMapPosY = 2;
+byte MiniMapWidth = 16;
+byte MiniMapHeight = 16;
 
 const byte MiniMapGlyphs[64] = 
 {
@@ -77,10 +79,10 @@ void DrawMiniMap(bool highlightPlayer)
   //DrawBorder("Minimap@", MiniMapPosX - 1, MiniMapPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
   UpdateAttributes();
   
-  for (y = 0; y < mapMatrixHeight; ++y)
+  for (y = 0; y < MiniMapHeight; ++y)
   {
     byte tY = (y * mapMatrixWidth);
-    for (x = 0; x < mapMatrixWidth; ++x)
+    for (x = 0; x < MiniMapWidth; ++x)
     {
       //tile = mapQuads[x + tY] + MiniMapOffset;
       //tile = mapQuads[x + tY];
@@ -319,11 +321,6 @@ void RemoveParty() //Removes Last Party Member (?)
   DeleteParty(index);
 }
 
-#define PartyStatsX viewportWidth * 2 + 1
-#define PartyStatsY 0
-#define PartyStatsWidth COLS - PartyStatsX - 2
-#define PartyStatsHeight 14
-
 void DrawCharStatus(byte characterIndex)
 {
   //byte statX = CharStatPosX;
@@ -390,7 +387,7 @@ void DrawCharStats()
   byte i;
   //DrawBorder("Moon Phases@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, 3, true);
   DrawMoonPhase();
-  DrawBorder("@", PartyStatsX, PartyStatsY, PartyStatsWidth, PartyStatsHeight - 1, true);
+  DrawBorder("@", PartyStatsX, PartyStatsY, PartyStatsWidth, PartyStatsHeight, true);
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
 }
