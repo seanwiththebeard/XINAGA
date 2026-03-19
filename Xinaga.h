@@ -17,9 +17,8 @@ typedef int8_t sbyte;	// 8-bit signed
 #define down 1
 #define left 2
 #define right 3
-
-#define MiniMapPosX 2
-#define MiniMapPosY 2
+extern byte MiniMapPosX;
+extern byte MiniMapPosY;
 
 extern uint16_t randseed;
 #define ReadBit(b, n) (((b) >> (n)) & 1)

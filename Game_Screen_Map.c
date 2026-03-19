@@ -972,6 +972,16 @@ void DrawMap()
 byte lastMiniMapX;
 byte lastMiniMapY;
 
+void UpdateLocalMiniMap()
+{
+        //DrawMiniMap(true);
+        SetChar(MiniMapGlyphs[mapQuads[lastMiniMapX + mapMatrixWidth * lastMiniMapY]], MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
+        UpdatePlayerOnMiniMap();
+        lastMiniMapX = MiniMapHighlightX;
+        lastMiniMapY = MiniMapHighlightY;
+        SetChar('X', MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
+}
+
 screenName MapUpdate()
 {
   exitScreen = false;
@@ -986,9 +996,14 @@ screenName MapUpdate()
   FillViewport(32, viewportWidth, viewportHeight);
   ScreenFadeIn();
   DrawMapViewport();
-  UpdatePlayerOnMiniMap();
-  DrawMiniMap(true);
 
+        MiniMapPosX = 18;
+        MiniMapPosY = 18;
+        
+  UpdatePlayerOnMiniMap();
+  //DrawMiniMap(true);
+
+        
 
   while (!exitScreen)
   {
@@ -1011,14 +1026,7 @@ screenName MapUpdate()
       {
         MoveCharacter(followIndex, Dir);
         DrawCharacterCoordinates(followIndex);
-        {
-          SetChar(MiniMapGlyphs[mapQuads[lastMiniMapX + mapMatrixWidth * lastMiniMapY]], MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
-          UpdatePlayerOnMiniMap();
-          lastMiniMapX = MiniMapHighlightX;
-          lastMiniMapY = MiniMapHighlightY;          
-          SetChar('X', MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
-        }
-
+        UpdateLocalMiniMap();
       }
     }
   }

@@ -15,6 +15,9 @@
 #pragma rodata-name (push, "GAME_RODATA")
 #endif
 
+extern byte MiniMapPosX = 2;
+extern byte MiniMapPosY = 2;
+
 const byte MiniMapGlyphs[64] = 
 {
   0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7,
