@@ -7,7 +7,6 @@
 //#link "XINAGA_Console.c"
 //#link "Game_Demo.c"
 //#link "Game_System.c"
-//#link "Game_Screen_Title.c"
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_Map.c"
 //#link "Game_Screen_Combat.c"
@@ -188,16 +187,14 @@ void main(void) //Must be in $E000-$FFFF??
   heapend[0] = 0x8000; //heapend
   //memset((int*)heaporg[0], 0, heapend[0] - heaporg[0]); 
 
-  InitializeGraphics();
+  //InitializeGraphics();
   UploadCharset();
-  
-  //currentScreen = EditParty;
   RunGame(EditParty);
 
   //PPU_Color(0, 0, 1, 0);
   
   //DebugGraphics();
-
+        //DebugMap();
   //DrawCharset();
   //LoadMap();
   //DrawMiniMap(false);

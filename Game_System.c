@@ -37,14 +37,14 @@ void DebugGraphics()
 {
   DrawCharset();
   
-  ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
+  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
   WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 0);
   WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz@", 0);
   WriteLineMessageWindow("01234567890 !#$%^&@", 0);
   WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
   
-  //while(1);
+  while(1);
 }
 
 void DebugMap()
@@ -115,11 +115,10 @@ byte RollDice(byte count, byte diceSize)
 
 void DrawCharStatus(byte characterIndex)
 {
-  //byte statX = CharStatPosX;
   byte statY = PartyStatsY + 1 + characterIndex * (3);
   struct playerChar *PlayerChar = getPartyMember(characterIndex);
 
-  DrawBorder(PlayerChar->NAME, PartyStatsX, statY - 1, COLS - PartyStatsX - 2, 4, true);
+  DrawBorder(PlayerChar->NAME, PartyStatsX, statY - 1, PartyStatsWidth, 4, true);
   DrawTileDirectXY(PlayerChar->CLASS, PartyStatsX + 1, statY);
   
   ConsoleBufferReset();
@@ -130,11 +129,6 @@ void DrawCharStatus(byte characterIndex)
   sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
   PrintString(strTemp, PartyStatsX + 10, statY + 1, true);
   ConsoleBufferReset();
-  
-  //sprintf(strTemp, "%s@", ClassDescriptions[PlayerChar->CLASS].NAME);
-  //PrintString(strTemp, CharStatPosX, statY + 1, true, false);
-  //ReverseBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
-  //CopyDoubleBufferArea(statX - 1, statY - 1, COLS - statX + 1, 5);
 }
 
 byte moonA;
@@ -177,7 +171,6 @@ void TickMoonPhase()
 void DrawCharStats()
 {
   byte i;
-  //DrawBorder("Moon Phases@", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, 3, true);
   DrawMoonPhase();
   DrawBorder("@", PartyStatsX, PartyStatsY, PartyStatsWidth, PartyStatsHeight, true);
   for (i = 0; i < CountParty(); ++i)

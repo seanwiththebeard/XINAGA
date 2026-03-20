@@ -21,11 +21,6 @@ extern byte MiniMapPosY;
 extern byte MiniMapWidth;
 extern byte MiniMapHeight;
 
-#define PartyStatsX viewportWidth * 2 + 1
-#define PartyStatsY 0
-#define PartyStatsWidth COLS - PartyStatsX - 2
-#define PartyStatsHeight 13
-
 extern uint16_t randseed;
 #define ReadBit(b, n) (((b) >> (n)) & 1)
 
@@ -38,20 +33,25 @@ extern const byte attributeset[256];
 #define viewportHeight 9
 
 #define consolePosX 1
-#define consolePosY 2 + 2*viewportHeight
-#define consoleWidth 26
-#define consoleHeight (ROWS - viewportHeight * 2 - 3)
+#define consolePosY 20
+#define consoleWidth 20
+#define consoleHeight 3
 
-#define contextMenuPosX COLS - contextMenuWidth - 1
+#define contextMenuPosX 20
 #define contextMenuPosY 13
-#define contextMenuWidth 11
-#define contextMenuHeight 10
+#define contextMenuWidth 8
+#define contextMenuHeight 4
 
-#define selectionPosX consoleWidth + 2
-#define selectionPosY consolePosY
+#define selectionPosX 22
+#define selectionPosY 20
 #define selectionWidth 6
-#define selectionHeight consoleHeight
+#define selectionHeight 4
 #define selectionCount 4
+
+#define PartyStatsX 21
+#define PartyStatsY 1
+#define PartyStatsWidth contextMenuWidth
+#define PartyStatsHeight 13
 
 //Screen Layout
 #if defined(__APPLE2__)
@@ -136,22 +136,6 @@ void A2Pixel(byte x, byte y, byte color);
 
 #define COLS 32
 #define ROWS 30
-
-#define consolePosX 2
-#define consolePosY (viewportPosY + (viewportHeight * 2) + 1)
-#define consoleWidth ROWS - selectionWidth - 3
-#define consoleHeight (ROWS - consolePosY - 3)
-
-#define selectionPosX COLS - selectionWidth - 2
-#define selectionPosY consolePosY
-#define selectionWidth 6
-#define selectionHeight consoleHeight
-#define selectionCount 4
-
-#define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
-#define contextMenuPosY viewportPosY + 16
-#define contextMenuWidth 11
-#define contextMenuHeight (2 * viewportHeight)
 
 #define MMC_MODE 0x00
 #define MMC3_SET_REG(r,n)\

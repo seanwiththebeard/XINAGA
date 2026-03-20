@@ -18,6 +18,7 @@
 //Debug Functions
 void DebugMap();
 void DebugGraphics();
+void DrawInterface();
 
 #define mapMatrixWidth 16
 #define mapMatrixHeight 16
@@ -88,8 +89,11 @@ extern const ClassDescriptionDef const ClassDescription[8];
 
 extern const sbyte const AbilityModifier[];
 
-//Lists
-	//Roster
+void create(void);
+void delete_pos(byte pos);
+byte CountRoster(void);
+void AddParty(byte index);
+void RemoveParty(byte index);
 
 typedef struct playerChar
 {
