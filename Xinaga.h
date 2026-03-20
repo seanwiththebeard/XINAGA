@@ -6,7 +6,6 @@
 #include <stdlib.h> //For srand
 #include <stdio.h> //For sprintf
 
-
 typedef uint8_t byte;
 typedef int8_t sbyte;	// 8-bit signed
 #define bool byte
@@ -33,11 +32,6 @@ extern uint16_t randseed;
 extern const byte characterset[2048];
 extern const byte attributeset[256];
 
-//Screen Layout
-#if defined(__APPLE2__)
-#define COLS 40
-#define ROWS 24
-
 #define viewportPosX 1
 #define viewportPosY 1
 #define viewportWidth 9
@@ -45,8 +39,13 @@ extern const byte attributeset[256];
 
 #define consolePosX 1
 #define consolePosY 2 + 2*viewportHeight
-#define consoleWidth 38
+#define consoleWidth 26
 #define consoleHeight (ROWS - viewportHeight * 2 - 3)
+
+#define contextMenuPosX COLS - contextMenuWidth - 1
+#define contextMenuPosY 13
+#define contextMenuWidth 11
+#define contextMenuHeight 10
 
 #define selectionPosX consoleWidth + 2
 #define selectionPosY consolePosY
@@ -54,10 +53,10 @@ extern const byte attributeset[256];
 #define selectionHeight consoleHeight
 #define selectionCount 4
 
-#define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
-#define contextMenuPosY viewportPosY + 16
-#define contextMenuWidth 11
-#define contextMenuHeight (2 * viewportHeight)
+//Screen Layout
+#if defined(__APPLE2__)
+#define COLS 40
+#define ROWS 24
 
 #include <conio.h> //for cgetc() and kbhit()
 #define STROBE(addr) __asm__ ("sta %w", addr)
@@ -74,28 +73,6 @@ void A2Pixel(byte x, byte y, byte color);
 #if defined(__C64__)
 #define COLS 40
 #define ROWS 25
-
-#define viewportPosX 1
-#define viewportPosY 1
-#define viewportWidth 9
-#define viewportHeight 9
-
-#define consolePosX 1
-#define consolePosY 20
-#define consoleWidth 26
-#define consoleHeight 4
-
-#define selectionWidth 6
-#define selectionPosX 33
-#define selectionPosY consolePosY
-
-#define selectionHeight consoleHeight
-#define selectionCount 4
-
-#define contextMenuPosX COLS - contextMenuWidth - 1
-#define contextMenuPosY 13
-#define contextMenuWidth 11
-#define contextMenuHeight 11
 
 //#include <cbm_petscii_charmap.h>
 #pragma charmap(0x41, 0x61)
@@ -170,11 +147,6 @@ void A2Pixel(byte x, byte y, byte color);
 #define selectionWidth 6
 #define selectionHeight consoleHeight
 #define selectionCount 4
-
-#define viewportPosX 2
-#define viewportPosY 2
-#define viewportWidth 9
-#define viewportHeight 9
 
 #define contextMenuPosX viewportPosX + viewportWidth * 2 + 1
 #define contextMenuPosY viewportPosY + 16
