@@ -1,9 +1,7 @@
+
 #include "neslib.h"
 #include "vrambuf.h"
 #include <string.h>
-
-#pragma code-name (push, "STARTUP")
-#pragma rodata-name (push, "STARTUP")
 
 // index to end of buffer
 byte updptr = 0;
