@@ -90,9 +90,7 @@ extern const sbyte const AbilityModifier[];
 
 //Lists
 	//Roster
-void create(void);
-void delete_pos(byte pos);
-byte CountRoster(void);
+
 typedef struct playerChar
 {
   struct playerChar *next;
@@ -130,8 +128,7 @@ typedef struct SavedGame
 extern struct Session Sessions[4];
 
 	//Party
-void AddParty(byte index);
-void RemoveParty(void);
+
 byte CountParty(void);
 
 struct playerChar *getPartyMember(byte index);

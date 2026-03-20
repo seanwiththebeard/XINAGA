@@ -17,13 +17,18 @@
 #pragma rodata-name (push, "SCREEN_ADDCHAR")
 #endif
 
+//Prototypes
+void create(void);
+void delete_pos(byte pos);
+byte CountRoster(void);
+void AddParty(byte index);
+void RemoveParty(byte index);
+
 int rands = 0;
-
 screenName nextScreen;
-
 bool AreYouSure();
 bool exitWindow;
-byte CurrentCharacter;
+sbyte CurrentCharacter;
 byte HPMAX;
 byte HP;
 byte STR;
@@ -293,30 +298,34 @@ void ListParty()
 {
   byte x;
   byte partyCount = CountParty();
+        if(CurrentCharacter < 0)
+        CurrentCharacter = 0;
   ResetMenu("Party@", 1, 1, viewportWidth * 2, viewportHeight - 1, partyCount);
   if (partyCount > 0)
   {
-
     for (x = 0; x < partyCount; ++x)
     {
       SetMenuItem(x, getPartyMember(x)->NAME);
     }
-    DrawMenu();
   }
+        DrawMenu();
 }
 
 void ListRoster()
 {
-  byte x;
-  byte rosterCount = CountRoster();
-  ResetMenu("Roster@", 1, 10, viewportWidth * 2, viewportHeight, rosterCount);
-  if (rosterCount > 0)
-  {
+        byte x;
+        byte rosterCount = CountRoster();
 
-    for (x = 0; x < rosterCount; ++x)
-      SetMenuItem(x, getPlayerChar(x)->NAME);
-    DrawMenu();
-  }
+        if(CurrentCharacter < 0)
+        CurrentCharacter = 0;
+        
+        ResetMenu("Roster@", 1, 10, viewportWidth * 2, viewportHeight, rosterCount);
+        if (rosterCount > 0)
+        {
+                for (x = 0; x < rosterCount; ++x)
+                SetMenuItem(x, getPlayerChar(x)->NAME);
+        }
+        DrawMenu();
 }
 
 bool AddRandom()
@@ -358,42 +367,74 @@ bool AddRandom()
 
 void EditPartyMenu()
 {
+        bool exit = false;
+        byte selection = 0;
+        ClearMenu();
+        CurrentCharacter = 0;
         ListParty();
         ListRoster();
-        ResetMenu("Party@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6);
-        SetMenuItem(0, "Next@");
-        SetMenuItem(1, "Last@");
-        SetMenuItem(2, "Edit@");
-        SetMenuItem(3, "Remove@");
-        SetMenuItem(4, "Begin@");
-        SetMenuItem(5, "Back@");
-        switch(GetMenuSelection())
+
+        while(!exit)
         {
-                case 0: //Next
-                        {
-                                break;
-                        }
-                case 1: //Last
-                        {
-                                break;
-                        }
-                case 2: //Edit
-                        {
-                                break;
-                        }
-                case 3: //Remove
-                        {
-                                break;
-                        }
-                case 4: //Begin Adventure
-                        {
-                                exitWindow = true;
-                                nextScreen = MapGen;
-                        }
-                case 5: //Back
-                        {
-                                break;
-                        }
+                SetMenuSelect(selection);
+                ResetMenu("Party@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6);
+                SetMenuItem(0, "Next@");
+                SetMenuItem(1, "Last@");
+                SetMenuItem(2, "Edit@");
+                SetMenuItem(3, "Remove@");
+                SetMenuItem(4, "Begin@");
+                SetMenuItem(5, "Back@");
+
+                selection = GetMenuSelection();
+                switch(selection)
+                {
+                        case 0: //Next
+                                {
+                                        if (CurrentCharacter < (CountParty()-1))
+                                        {
+                                                ++CurrentCharacter;
+                                                SetMenuSelect(CurrentCharacter);
+                                                ListParty();
+                                        }
+                                        break;
+                                }
+                        case 1: //Last
+                                {
+                                        if(CurrentCharacter > 0)
+                                        {
+                                                --CurrentCharacter;
+                                                SetMenuSelect(CurrentCharacter);
+                                                ListParty();
+                                        }
+                                        break;
+                                }
+                        case 2: //Edit
+                                {
+                                        break;
+                                }
+                        case 3: //Remove
+                                {
+                                        if (CountParty() > 0 && CountRoster() < 12)
+                                        {
+                                                RemoveParty(CurrentCharacter);
+                                                --CurrentCharacter;
+                                                ListRoster();
+                                                SetMenuSelect(CurrentCharacter);
+                                                ListParty();
+                                        }
+                                        break;
+                                }
+                        case 4: //Begin Adventure
+                                {
+                                        exitWindow = true;
+                                        nextScreen = MapGen;
+                                }
+                        case 5: //Back
+                                {
+                                        exit = true;
+                                        break;
+                                }
+                }
         }
 }
 
@@ -401,8 +442,8 @@ void EditRosterMenu()
 {
         bool exit = false;
         byte selection = 0;
-        //ResetMenu("Roster@",contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 7);
         ClearMenu();
+        CurrentCharacter = 0;
         ListParty();
         ListRoster();
         
@@ -423,16 +464,22 @@ void EditRosterMenu()
         {
                 case 0: //Next
                         {
-                                ++CurrentCharacter;
-                                SetMenuSelect(CurrentCharacter);                                        
-                                ListRoster();
+                                if (CurrentCharacter < (CountRoster()-1))
+                                {
+                                        ++CurrentCharacter;
+                                        SetMenuSelect(CurrentCharacter);
+                                        ListRoster();
+                                }
                                 break;
                         }
                 case 1: //Last
                         {
-                                --CurrentCharacter;
-                                SetMenuSelect(CurrentCharacter);                                        
-                                ListRoster();
+                                if(CurrentCharacter > 0)
+                                {
+                                        --CurrentCharacter;
+                                        SetMenuSelect(CurrentCharacter);
+                                        ListRoster();
+                                }
                                 break;
                         }
                 case 2: //Create
@@ -444,7 +491,8 @@ void EditRosterMenu()
                                 if(CountRoster() + CountParty() < 8)
                                 {
                                         AddRandom();
-                                        SetMenuSelect(CurrentCharacter);                                        
+                                        SetMenuSelect(CurrentCharacter);
+                                        ListParty();
                                         ListRoster();
                                 }
                                 break;
@@ -455,12 +503,12 @@ void EditRosterMenu()
                         }
                 case 5: //Join
                         {
-                                if ((CountRoster() > 0) && (CountParty() < 4))
+                                if ((CountRoster()) && (CountParty() < 4))
                                 {                                   
                                         AddParty(CurrentCharacter);
                                         --CurrentCharacter;
-                                        SetMenuSelect(CurrentCharacter);
                                         ListParty();
+                                        SetMenuSelect(CurrentCharacter);
                                         ListRoster();
                                 }
                                 break;
@@ -582,7 +630,7 @@ void MenuEditParty()
       {
         if (CountParty() > 0 && CountRoster() < 12)
         {
-          RemoveParty();
+          RemoveParty(CurrentCharacter);
           CurrentCharacter = 0;
           return;
         }
@@ -644,4 +692,212 @@ screenName DrawAddCharacterScreen()
         //ClearScreen();
         //  ScreenFadeOut();
         return nextScreen;
+}
+
+struct playerChar *startRoster;
+//struct playerChar *startRoster=NULL;
+
+byte CountRoster()
+{
+  struct playerChar *temp = startRoster;
+  byte i = 0;
+  while(temp != NULL)
+  {
+    ++i;
+    temp = temp->next;
+  }
+  return i;
+}
+
+void create()
+{
+  struct playerChar *temp,*ptr;
+  temp=(struct playerChar *)malloc(sizeof(struct playerChar));  
+
+  if(temp==NULL)
+    return;
+
+  temp->next=NULL;
+  if(startRoster==NULL)
+    startRoster=temp;
+  else
+  {
+    ptr=startRoster;
+    while(ptr->next!=NULL)
+    {
+      ptr=ptr->next;
+    }
+    ptr->next=temp;
+  }
+}
+
+struct playerChar *getPlayerChar(byte index)
+{
+  byte i = 0;
+  struct playerChar *tmp = startRoster;
+  while (tmp != NULL)
+  {
+    if(i == index)
+    {
+      return tmp;
+    }
+    tmp = tmp->next;
+    ++i;
+  }
+}
+
+void delete_pos(byte pos)
+{
+  byte i;
+  struct playerChar *temp,*ptr;
+  temp = NULL;
+
+  if(startRoster==NULL)
+    return;
+  else
+  {
+    if(pos==0)
+    {
+      ptr=startRoster;
+      startRoster=startRoster->next ;
+    }
+    else
+    {
+      ptr=startRoster;
+      for(i=0;i<pos;i++)
+      {
+        temp=ptr; 
+        ptr=ptr->next ;
+        if(ptr==NULL)
+        {
+          WriteLineMessageWindow("Position not Found:@", 0);
+          return;
+        }
+      }
+      temp->next = ptr->next ;
+    }
+    //sprintf(str, "Deleted element:%d",ptr->character.NAME);
+    //WriteLineMessageWindow(str, 0);
+    free(ptr);
+  }
+}
+
+//Party
+struct playerChar *startParty;
+//struct playerChar *startParty=NULL;
+
+byte CountParty()
+{
+  struct playerChar *temp = startParty;
+  byte i = 0;
+  while(temp != NULL)
+  {
+    ++i;
+    temp = temp->next;
+  }
+  return i;
+}
+
+struct playerChar *getPartyMember(byte index)
+{
+  byte i = 0;
+  struct playerChar *tmp = startParty;
+  while (tmp != NULL)
+  {
+    if(i == index)
+    {
+      return tmp;
+    }
+    tmp = tmp->next;
+    ++i;
+  }
+}
+
+void AddParty(byte index)
+{
+  struct playerChar *temp,*ptr,*src;
+  temp=(struct playerChar *)malloc(sizeof(struct playerChar));
+  src = getPlayerChar(index);
+
+  if(temp==NULL)
+    return;
+  
+  memcpy(temp, src, sizeof(struct playerChar));
+  
+  temp->next=NULL;
+  if(startParty==NULL)
+    startParty=temp;
+  else
+  {
+    ptr=startParty;
+    while(ptr->next!=NULL)
+    {
+      ptr=ptr->next;
+    }
+    ptr->next=temp;
+  }
+  delete_pos(index);
+}
+
+void DeleteParty(byte pos)
+{
+  byte i;
+  struct playerChar *temp,*ptr;
+  temp = NULL;
+
+  if(startParty==NULL)
+    return;
+  else
+  {
+    if(pos==0)
+    {
+      ptr=startParty;
+      startParty=startParty->next ;
+    }
+    else
+    {
+      ptr=startParty;
+      for(i=0;i<pos;i++)
+      {
+        temp=ptr; 
+        ptr=ptr->next ;
+        if(ptr==NULL)
+        {
+          WriteLineMessageWindow("Position not Found:@", 0);
+          return;
+        }
+      }
+      temp->next =ptr->next ;
+    }
+    //sprintf(str, "Deleted element:%d",ptr->character.NAME);
+    //WriteLineMessageWindow(str, 0);
+    free(ptr);
+  }
+}
+
+void RemoveParty(byte index) //Removes Last Party Member (?)
+{
+  //byte index = CountParty()-1;
+  struct playerChar *temp,*ptr,*src;
+  temp=(struct playerChar *)malloc(sizeof(struct playerChar));
+  src = getPartyMember(index);
+
+  if(temp==NULL)
+    return;
+  
+  memcpy(temp, src, sizeof(struct playerChar));
+  
+  temp->next=NULL;
+  if(startRoster==NULL)
+    startRoster=temp;
+  else
+  {
+    ptr=startRoster;
+    while(ptr->next!=NULL)
+    {
+      ptr=ptr->next;
+    }
+    ptr->next=temp;
+  }
+  DeleteParty(index);
 }
