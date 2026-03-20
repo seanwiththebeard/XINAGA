@@ -399,7 +399,7 @@ void SelectPlayerAction(void)
   byte moveX = combatParticipant.posX[SelectedCharacter];
   byte moveY = combatParticipant.posY[SelectedCharacter];
 
-  ResetMenu("Action@", selectionPosX, selectionPosY, selectionWidth, selectionHeight, 5);
+  ResetMenu("Action@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 5);
   SetMenuItem(0, "Move@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Magic@");

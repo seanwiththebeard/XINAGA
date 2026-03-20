@@ -666,6 +666,7 @@ void DrawLineH(byte index, byte x, byte y, byte length)
   byte tempIndex;
   for (count = 0; count < length; ++count)
   {
+        
     tempIndex = index;
     posX = x + count;
     #if defined (__APPLE2__)
@@ -680,6 +681,8 @@ void DrawLineV(byte index, byte x, byte y, byte length)
 {
   byte count;
   byte tempIndex = index;
+        if (x >= COLS)
+        return;
   #if defined (__APPLE2__)
   if (x % 2 == 1)
     ++tempIndex;
