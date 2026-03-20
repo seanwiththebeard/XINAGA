@@ -67,6 +67,7 @@ static void InitializeMapData(void);
 void LoadMap(void);
 static void DrawMapViewport(void);
 static void DrawEntireMap(void);
+void UpdateLocalMiniMap();
 #define wrapX(v) do { if ((v) < 0) (v) = mapWidth - 1; else if ((v) >= mapWidth) (v) = 0; } while(0)
 #define wrapY(v) do { if ((v) < 0) (v) = mapHeight - 1; else if ((v) >= mapHeight) (v) = 0; } while(0)
 //void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
@@ -941,12 +942,17 @@ static void ActionMenu()
     case 3:
       UpdatePlayerOnMiniMap();
       ScreenFadeOut();
+            MiniMapPosX = 2;
+        MiniMapPosY = 2;
+        MiniMapWidth = 16;
+        MiniMapHeight = 16;
       //ClearScreen();
       DrawMiniMap(true);
       WaitForInput();
       ScreenFadeOut();
       DrawMap();
       ScreenFadeIn();
+        UpdateLocalMiniMap();
       //DrawMapViewport();
       break;
     case 4:

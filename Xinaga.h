@@ -44,7 +44,7 @@ extern const byte attributeset[256];
 
 #define PartyStatsX 19
 #define PartyStatsY 0
-#define PartyStatsWidth COLS - PartyStatsX - 1
+#define PartyStatsWidth COLS - PartyStatsX
 #define PartyStatsHeight 13
 
 //Screen Layout
