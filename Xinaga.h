@@ -34,12 +34,12 @@ extern const byte attributeset[256];
 
 #define consolePosX 1
 #define consolePosY 20
-#define consoleWidth 20
+#define consoleWidth COLS - contextMenuWidth - 3
 #define consoleHeight 3
 
-#define contextMenuPosX 29
+#define contextMenuPosX COLS - contextMenuWidth - 1
 #define contextMenuPosY 13
-#define contextMenuWidth COLS - contextMenuPosX - 1
+#define contextMenuWidth 11
 #define contextMenuHeight 10
 
 #define PartyStatsX 19
