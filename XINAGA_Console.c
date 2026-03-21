@@ -104,7 +104,7 @@ char *menutitle;
 #define menuItemsCount 16
 char *MenuItems[menuItemsCount];
 bool MenuHighlight[menuItemsCount];
-void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c);
+void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, bool clear);
 void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();
 
@@ -156,9 +156,9 @@ void ClearMenuContents()
                         MenuHighlight[x] = false;    
                 }
 }
-void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
+void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte clear)
 {
-  byte x;
+  //byte x;
   menutitle = title;
   MenuPosX = posX;
   MenuPosY = posY;
@@ -167,13 +167,15 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c)
   MenuCount = c;
   MenuSelection = menuSel;
   menuSel = 0; //Reset for next draw if we don't keep it
+        if(clear)
+  ClearMenuContents();
   
-  DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, false);
-  for (x = 0; x < menuItemsCount; ++x)
-  {
-    MenuItems[x] = (char*)"";
-    MenuHighlight[x] = false;    
-  }
+  //DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, false);
+  //for (x = 0; x < menuItemsCount; ++x)
+  //{
+    //MenuItems[x] = (char*)"";
+    //MenuHighlight[x] = false;    
+  //}
 }
 void SetMenuItem(byte index, char *value)
 {

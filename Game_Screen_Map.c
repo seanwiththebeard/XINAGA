@@ -888,7 +888,7 @@ static void DrawCharacterCoordinates(byte index)
         //DrawMiniMap(true
         MiniMapHighlightX = CoordPosX / 16;
         MiniMapHighlightY = CoordPosY / 16;
-        DrawLocalMiniMap();
+        DrawLocalMiniMap(true);
 }
 
 void LoadMap()
@@ -919,7 +919,7 @@ static bool exitScreen;
 static void ActionMenu()
 {
   byte action;
-  ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6);
+  ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6, true);
   SetMenuItem(0, "Search@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Party@");
@@ -931,14 +931,14 @@ static void ActionMenu()
   ClearMenu();
   switch (action)
   {
-    case 0:
+    case 0:            
       break;
     case 1:
       break;
     case 2:
       break;
     case 3:
-      ScreenFadeOut();
+//ScreenFadeOut();
             MiniMapPosX = 2;
         MiniMapPosY = 2;
         MiniMapWidth = 16;
@@ -948,8 +948,7 @@ static void ActionMenu()
       WaitForInput();
       ScreenFadeOut();
       DrawMap();
-            //DrawLocalMiniMap();
-      ScreenFadeIn();
+      //ScreenFadeIn();
         //UpdateLocalMiniMap();
       //DrawMapViewport();
       break;
@@ -964,6 +963,8 @@ static void ActionMenu()
       break;
   }
   DrawCharStats();
+DrawLocalMiniMap(false);
+     
 }
 
 void DrawMap()
@@ -987,6 +988,7 @@ screenName MapUpdate()
   LoadMapQuads();
   //FillViewport(32, viewportWidth, viewportHeight);
   ScreenFadeIn();
+  ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 0, true);
   DrawMapViewport();
         
 

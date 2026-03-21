@@ -67,7 +67,7 @@ void SwitchScreen(screenName screen)
   //WriteLineMessageWindow("Hello@", 0);
   
   //ScreenDisable();
-  ClearScreen();
+  //ClearScreen();
   DrawInterface();
   //Load specified screen
   //UpdateInput();

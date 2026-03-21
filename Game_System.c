@@ -59,15 +59,6 @@ void DebugMap()
   while(1);
 }
 
-struct
-{
-  int
-  	GOLD;
-  byte
-  	CARRYING_WEIGHT,
-  	CARRYING_CAPACITY; 
-}Party;
-
 uint16_t randseed;
 
 byte MiniMapHighlightX;
@@ -98,45 +89,46 @@ void DrawMiniMap(bool highlightPlayer)
 
 byte lastX;
 byte lastY;
-void DrawLocalMiniMap()
+void DrawLocalMiniMap(bool checkLast)
 {
-        #define radius 2
-        sbyte sampleX, sampleY;
+        #define radius 4
+        #define posX contextMenuPosX + 1
+        #define posY contextMenuPosY
+        
+        sbyte sampleX, sampleY, sampleXX, sampleYY;
+        byte offset;
+        char target;
 
+        if(checkLast)
         if ((lastX == MiniMapHighlightX) && (lastY == MiniMapHighlightY))
-                return;
-
-        MiniMapPosX = 20;
-        MiniMapPosY = 13;
-        MiniMapWidth = 5;
-        MiniMapHeight = 5;
+                return;        
         
         UpdateAttributes();
         for (sampleY = -radius; sampleY <= radius; ++sampleY)
+                {
+                        sampleYY = sampleY + MiniMapHighlightY;        
+                        if (sampleYY < 0)
+                                        sampleYY += mapMatrixHeight;
+                        if (sampleYY >= mapMatrixHeight)
+                                        sampleYY -= mapMatrixHeight;
                 for (sampleX = -radius; sampleX <= radius; ++sampleX)
                         {
-                                byte offset;
-                                char target;
-
-                                sbyte sampleXX = sampleX + MiniMapHighlightX;
-                                sbyte sampleYY = sampleY + MiniMapHighlightY;
+                                sampleXX = sampleX + MiniMapHighlightX;
                                 
-                                if (!sampleXX)
+                                if (sampleXX < 0)
                                         sampleXX += mapMatrixWidth;
-                                if (!sampleYY)
-                                        sampleYY += mapMatrixHeight;
+                                
                                 if (sampleXX >= mapMatrixWidth)
                                         sampleXX -= mapMatrixWidth;
-                                if (sampleYY >= mapMatrixHeight)
-                                        sampleYY -= mapMatrixHeight;
-                                offset = sampleXX + 16* sampleYY;
-                                target = MiniMapGlyphs[mapQuads[offset]];
-                                SetChar(target, sampleX + (MiniMapPosX + radius), sampleY + (MiniMapPosY + radius));
+                                
+                                offset = sampleXX + mapMatrixWidth* sampleYY;
+                                if ((sampleX == 0) && (sampleY == 0))
+                                        target = 'X';
+                                else
+                                        target = MiniMapGlyphs[mapQuads[offset]];
+                                SetChar(target, sampleX + (posX + radius), sampleY + (posY + radius));
                         }
-                
-        
-    SetChar('X', MiniMapPosX + radius, MiniMapPosY + radius);
-
+                }
         lastX = MiniMapHighlightX;
         lastY = MiniMapHighlightY;
 }

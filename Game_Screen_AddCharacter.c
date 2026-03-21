@@ -166,7 +166,7 @@ void AddToRoster()
 
 bool AreYouSure()
 {
-  ResetMenu("Sure?@",consolePosX + consoleWidth + 1, 20, 5, 2, 2);
+  ResetMenu("Sure?@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 2, true);
   SetMenuItem(0, "No @");
   SetMenuItem(1, "Yes@");
   
@@ -190,7 +190,7 @@ void RollStats()
 void MenuGetClassPrimeStats()
 {
   byte x;
-  ResetMenu("Class@", consolePosX, contextMenuPosY, 11, 10, 6);
+  ResetMenu("Class@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6, true);
   for (x = 0; x < 4; ++x)
   {
     SetMenuItem(x, ClassDescription[x].NAME);
@@ -265,7 +265,7 @@ void MenuGetClass()
 
 void MenuGetRace()
 {
-  ResetMenu("Race@", consolePosX, contextMenuPosY, 11, 10, 5);
+  ResetMenu("Race@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 5, true);
   SetMenuItem(0, RaceDescription[0].NAME);
   SetMenuItem(1, RaceDescription[1].NAME);
   SetMenuItem(2, RaceDescription[2].NAME);
@@ -293,7 +293,7 @@ void ListParty()
   byte partyCount = CountParty();
         if(CurrentCharacter < 0)
         CurrentCharacter = 0;
-  ResetMenu("Party@", 1, 1, viewportWidth * 2, viewportHeight - 1, partyCount);
+  ResetMenu("Party@", 1, 1, viewportWidth * 2, 4, partyCount, true);
   if (partyCount > 0)
   {
     for (x = 0; x < partyCount; ++x)
@@ -301,7 +301,7 @@ void ListParty()
       SetMenuItem(x, getPartyMember(x)->NAME);
     }
   }
-        DrawMenu();
+        //DrawMenu();
 }
 
 void ListRoster()
@@ -312,13 +312,13 @@ void ListRoster()
         if(CurrentCharacter < 0)
         CurrentCharacter = 0;
         
-        ResetMenu("Roster@", 1, 10, viewportWidth * 2, viewportHeight, rosterCount);
+        ResetMenu("Roster@", 1, 10, viewportWidth * 2, viewportHeight, rosterCount, true);
         if (rosterCount > 0)
         {
                 for (x = 0; x < rosterCount; ++x)
                 SetMenuItem(x, getPlayerChar(x)->NAME);
         }
-        DrawMenu();
+        //DrawMenu();
 }
 
 bool AddRandom()
@@ -358,6 +358,17 @@ bool AddRandom()
         
 }
 
+void MenuParty(bool clear)
+{
+        ResetMenu("Party@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6, clear);
+                SetMenuItem(0, "Next@");
+                SetMenuItem(1, "Last@");
+                SetMenuItem(2, "Edit@");
+                SetMenuItem(3, "Remove@");
+                SetMenuItem(4, "Begin@");
+                SetMenuItem(5, "Back@");
+}
+
 void EditPartyMenu()
 {
         bool exit = false;
@@ -365,19 +376,14 @@ void EditPartyMenu()
         ClearMenu();
         CurrentCharacter = 0;
         ListParty();
-        ListRoster();
+        //ListRoster();
+        SetMenuSelect(selection);
+        MenuParty(true);
 
         while(!exit)
         {
                 SetMenuSelect(selection);
-                ResetMenu("Party@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6);
-                SetMenuItem(0, "Next@");
-                SetMenuItem(1, "Last@");
-                SetMenuItem(2, "Edit@");
-                SetMenuItem(3, "Remove@");
-                SetMenuItem(4, "Begin@");
-                SetMenuItem(5, "Back@");
-
+                MenuParty(false);
                 selection = GetMenuSelection();
                 switch(selection)
                 {
@@ -431,19 +437,10 @@ void EditPartyMenu()
         }
 }
 
-void EditRosterMenu()
+
+void MenuRoster(bool clear)
 {
-        bool exit = false;
-        byte selection = 0;
-        ClearMenu();
-        CurrentCharacter = 0;
-        ListParty();
-        ListRoster();
-        
-        while(!exit)
-        {
-        SetMenuSelect(selection);
-        ResetMenu("Roster@",contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 7);
+        ResetMenu("Roster@",contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 7, clear);
         SetMenuItem(0, "Next@");
         SetMenuItem(1, "Last@");
         SetMenuItem(2, "Create@");
@@ -451,8 +448,23 @@ void EditRosterMenu()
         SetMenuItem(4, "Delete@");
         SetMenuItem(5, "Join@");
         SetMenuItem(6, "Back@");
-
+}
+void EditRosterMenu()
+{
+        bool exit = false;
+        byte selection = 0;
+        //ClearMenu();
+        CurrentCharacter = 0;
+        //ListParty();
+        ListRoster();
+        MenuRoster(true);
+        
+        while(!exit)
+        {
+        SetMenuSelect(selection);
+        MenuRoster(false);
         selection = GetMenuSelection();
+                
         switch(selection)
         {
                 case 0: //Next
@@ -461,7 +473,7 @@ void EditRosterMenu()
                                 {
                                         ++CurrentCharacter;
                                         SetMenuSelect(CurrentCharacter);
-                                        ListRoster();
+                                        //ListRoster();
                                 }
                                 break;
                         }
@@ -471,12 +483,18 @@ void EditRosterMenu()
                                 {
                                         --CurrentCharacter;
                                         SetMenuSelect(CurrentCharacter);
-                                        ListRoster();
+                                        //ListRoster();
                                 }
                                 break;
                         }
                 case 2: //Create
                         {
+                                if (CountRoster() < 12)
+                                {
+                                        MenuGetRace();
+                                        ListParty();
+                                        //ListRoster();
+                                }
                                 break;
                         }
                 case 3: //Random
@@ -486,12 +504,19 @@ void EditRosterMenu()
                                         AddRandom();
                                         SetMenuSelect(CurrentCharacter);
                                         ListParty();
-                                        ListRoster();
+                                        //ListRoster();
                                 }
                                 break;
                         }
                 case 4: //Delete
                         {
+                                if (CountRoster() > 0)
+                                        if (AreYouSure())
+                                        {
+                                                delete_pos(CurrentCharacter);
+                                                ListRoster();
+                                                return;
+                                        }
                                 break;
                         }
                 case 5: //Join
@@ -502,7 +527,6 @@ void EditRosterMenu()
                                         --CurrentCharacter;
                                         ListParty();
                                         SetMenuSelect(CurrentCharacter);
-                                        ListRoster();
                                 }
                                 break;
                         }
@@ -512,13 +536,13 @@ void EditRosterMenu()
                                 break;
                         }
         }
+                                        ListRoster();
         }
 }
 
 void TavernMenu()
 {
-        ResetMenu("Tavern@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 4);
-        ClearMenu();
+        ResetMenu("Tavern@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 4, true);
         SetMenuItem(0, "Party@");
         SetMenuItem(1, "Roster@");
         SetMenuItem(2, "Save Game@");
@@ -532,158 +556,29 @@ void TavernMenu()
                                 EditRosterMenu();
                                 break;
                         case 2: //Save Game
-                                DiskSave("FILE", (byte*)&Sessions[0], sizeof(struct Session) * 4);
+                                DiskSave("file", (byte*)&Sessions[0], sizeof(struct Session) * 4);
                                 break;
                         case 3: //Load Game
-                                DiskLoad("FILE", (byte*)&Sessions[0], sizeof(struct Session) * 4);
+                                DiskLoad("file", (byte*)&Sessions[0], sizeof(struct Session) * 4);
                                 break;
                 }
-}
-
-void MainMenu()
-{
-        ResetMenu("Debug Menu@",consolePosX, contextMenuPosY, 11, 10, 5);
-        SetMenuItem(0, "Tavern@");
-        SetMenuItem(1, "Map@");
-        SetMenuItem(2, "Combat@");
-        SetMenuItem(3, "Map Gen@");
-        SetMenuItem(4, "Scenario@");
-        switch(GetMenuSelection())
-                {
-                        case 0: //Tavern
-                                TavernMenu();
-                                break;
-                        case 1: //Map
-                                exitWindow = true;
-                                nextScreen = Map;
-                                break;
-                        case 2: //Combat
-                                exitWindow = true;
-                                nextScreen = Combat;
-                                break;
-                        case 3: //Mapgen
-                                exitWindow = true;
-                                nextScreen = MapGen;
-                                break;
-                        case 4: //Scenario
-                                exitWindow = true;
-                                nextScreen = Scenario;
-                                break;
-                }
-}
-
-void MenuEditParty()
-{          
-        //ListParty();
-        ListRoster();
-        ResetMenu("Party@",COLS - contextMenuWidth, contextMenuPosY, contextMenuWidth, 10, 10);
-        SetMenuItem(0, "Random@");
-        SetMenuItem(1, "Create@");
-        SetMenuItem(2, "Delete@");
-        SetMenuItem(3, "Add@");
-        SetMenuItem(4, "Remove@");
-        SetMenuItem(5, "Begin@");
-        SetMenuItem(6, "Credits@");
-        SetMenuItem(7, "Combat@");
-        SetMenuItem(8, "Map Gen@");
-        SetMenuItem(9, "Scenario@");    
-  
-  switch(GetMenuSelection())
-  {
-    case 0: //Random
-            if(CountRoster() + CountParty() < 8)
-              AddRandom();
-            break;
-    case 1: //Create
-      {
-        if (CountRoster() < 12)
-          MenuGetRace();
-        break;
-      }
-    case 2: //Delete
-      {
-        if (CountRoster() > 0)
-          if (AreYouSure())
-          {
-            delete_pos(CurrentCharacter);
-            return;
-          }
-        break;
-      }
-    case 3: //Add to party
-      {
-        if ((CountRoster() > 0) && (CountParty() < 4))
-        {
-          AddParty(CurrentCharacter);
-          CurrentCharacter = 0;
-        }
-        break;
-      }
-    case 4: //Remove from party
-      {
-        if (CountParty() > 0 && CountRoster() < 12)
-        {
-          RemoveParty(CurrentCharacter);
-          CurrentCharacter = 0;
-          return;
-        }
-        break;
-      }
-    case 5: //Begin Adventure
-      {
-        if (CountParty() > 0)
-        {
-          //repeatRoster = false;
-          exitWindow = true;
-          nextScreen = MapGen;
-        }
-        else
-          WriteLineMessageWindow("Party Empty!@", 0);
-        break;
-      }
-    case 6: //Debug Credits
-      exitWindow = true;
-      //nextScreen = Credits;
-      break;
-    case 7: //Combat
-      exitWindow = true;
-      nextScreen = Combat;
-      break;
-    case 8: //MapGen
-      exitWindow = true;
-      nextScreen = MapGen;
-      break;
-    case 9: //Scenario
-      exitWindow = true;
-      nextScreen = Scenario;
-      break;
-  }
-  //ClearMenu();
-  //ClearScreen();
 }
 
 screenName DrawAddCharacterScreen()
 {
-        //ScreenFadeOut();
         nextScreen = EditParty;
         exitWindow = false;
         CurrentCharacter = 0;
         srand(randseed);
-        //ClearScreen();
-        
-        //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-        //WriteLineMessageWindow("Party Empty!@", 0);
         
         ScreenFadeIn();
+        ListParty();
+        ListRoster();
+        DrawCharStats();
         while (!exitWindow)
                 {         
                         TavernMenu();
-                        //MainMenu();
-                        //MenuEditParty();
                 }
-        //ScreenFadeOut();
-        //ClearScreen();
-        //  ScreenFadeOut();
         return nextScreen;
 }
 

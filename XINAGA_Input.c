@@ -100,7 +100,7 @@ void UpdateInput(void)
     //if (key != keycode[0])
     {
     //key = keycode[0];
-      SetChar(keycode[0], COLS - 1, 1);
+      //SetChar(keycode[0], COLS - 1, 1);
     //ChangedState = true;
     }
   }

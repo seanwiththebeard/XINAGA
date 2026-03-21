@@ -42,7 +42,7 @@ void DrawMap(void);
 
 extern byte MiniMapHighlightX;
 extern byte MiniMapHighlightY;
-void DrawLocalMiniMap();
+void DrawLocalMiniMap(bool checkLast);
 
 //Add Character
 screenName DrawAddCharacterScreen(void);
@@ -97,7 +97,7 @@ typedef struct playerChar
 {
   struct playerChar *next;
   int	EXP;
-  char 	NAME[16];
+  char 	NAME[12];
   byte	HP,
   	HPMAX,
   	STR,
@@ -119,8 +119,10 @@ struct playerChar *getPlayerChar(byte index);
 
 typedef struct Session
 {
-        byte PartyChars[4];
         struct playerChar RosterChars[12];
+        int GOLD, STEPS;
+        byte PartyChars[4], HOURS, MINUTES, SECONDS;
+        //byte CARRYING_WEIGHT, CARRYING_CAPACITY; 
 };
 typedef struct SavedGame
 {
@@ -128,8 +130,6 @@ typedef struct SavedGame
 };
 
 extern struct Session Sessions[4];
-
-	//Party
 
 byte CountParty(void);
 

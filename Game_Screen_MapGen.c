@@ -222,11 +222,11 @@ void DrawScenario()
       else
         scenarioPoints[x] = scenForest;
     }
-    SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 3);
+    SetChar('0'+x, PartyStatsX + 1  + 2*x, PartyStatsY + 1);
 
 
-    DrawTileDirectXY(scenarioPoints[x], PartyStatsX +1 + 2*x,  PartyStatsY + 1);
-    SetChar(dirChar[scenarioDir[x]], PartyStatsX +1 + 2*x, PartyStatsY + 3);
+    DrawTileDirectXY(scenarioPoints[x], PartyStatsX +1 + 2*x,  PartyStatsY + 2);
+    SetChar(dirChar[scenarioDir[x]], PartyStatsX +1 + 2*x, PartyStatsY + 4);
 
     scenPos.x += (distX[scenarioDir[x]] * distTravel);
     scenPos.y += (distY[scenarioDir[x]] * distTravel);
@@ -240,7 +240,7 @@ void DrawScenario()
       clampPoint(&scenPos);
       ++distTravel;
     }
-    SetChar('0' + distTravel, PartyStatsX + 2  + 2*x, PartyStatsY + 3);
+    SetChar('0' + distTravel, PartyStatsX + 2  + 2*x, PartyStatsY + 4);
 
     if (x == 0)
     {
@@ -688,7 +688,7 @@ void GetSeed()
 {
   #define menuWidth 5
   #define menuCount 4
-  ResetMenu("Seed@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, menuCount);
+  ResetMenu("Seed@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, menuCount, true);
   SetMenuItem(0, "Next@");
   SetMenuItem(1, "Last@");
   SetMenuItem(2, "Go@");
@@ -736,8 +736,8 @@ screenName Update_MapGen()
   ScreenFadeIn();
   GetSeed();
   //StoreMap();
-  ScreenFadeOut();
-  ClearScreen();
+  //ScreenFadeOut();
+  //ClearScreen();
   return Map;
 }
 
