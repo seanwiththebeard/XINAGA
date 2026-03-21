@@ -969,29 +969,10 @@ static void ActionMenu()
 void DrawMap()
 {
 
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+  //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  //DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawScreen();
 }
-byte lastMiniMapX;
-byte lastMiniMapY;
-
-//void UpdateLocalMiniMap()
-//{
-        //DrawMiniMap(true);
-       // MiniMapPosX = 20;
-        //MiniMapPosY = 13;
-       // MiniMapWidth = 5;
-        //MiniMapHeight = 5;
-        //SetChar(MiniMapGlyphs[mapQuads[lastMiniMapX + mapMatrixWidth * lastMiniMapY]], MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
-        //UpdatePlayerOnMiniMap();
-        //lastMiniMapX = MiniMapHighlightX;
-        //lastMiniMapY = MiniMapHighlightY;
-        //SetChar('X', MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
-        //DrawLocalMiniMap();
-        
-        
-//}
 
 screenName MapUpdate()
 {
@@ -999,12 +980,12 @@ screenName MapUpdate()
   characters.quadPosX[0]  = SetPlayerPositionX;
   characters.quadPosY[0]  = SetPlayerPositionY;
 
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+  //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  //DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawCharStats();
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
-  FillViewport(32, viewportWidth, viewportHeight);
+  //FillViewport(32, viewportWidth, viewportHeight);
   ScreenFadeIn();
   DrawMapViewport();
         
