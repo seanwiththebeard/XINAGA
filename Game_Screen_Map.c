@@ -77,7 +77,7 @@ static void BufferCharacters(void);
 static void MoveCharacter(byte index, byte dir);
 static bool CheckCollision(byte charIndex, byte Direction);
 static void DrawCharacterCoordinates(byte index);
-static void UpdatePlayerOnMiniMap(void);
+//static void UpdatePlayerOnMiniMap(void);
 
 //      Quad Functions
 static void FillQuadBuffer(void);
@@ -302,15 +302,6 @@ static void BufferCharacters()
   }
 }
 
-
-static void UpdatePlayerOnMiniMap(void)
-{
-  //MiniMapHighlightX = characters.quadPosX[followIndex];
-  //MiniMapHighlightY = characters.quadPosY[followIndex];
-
-  MiniMapHighlightX = CoordPosX >> 4;
-  MiniMapHighlightY = CoordPosY >> 4;
-}
 
 static void FillQuadBuffer()
 {
@@ -610,7 +601,6 @@ static void InitializeMapData()
   characters.quadPosY[2]  = 0;
 
   LoadMapQuads();
-  UpdatePlayerOnMiniMap();
   LOSEnabled = true;
 }
 
@@ -948,7 +938,6 @@ static void ActionMenu()
     case 2:
       break;
     case 3:
-      UpdatePlayerOnMiniMap();
       ScreenFadeOut();
             MiniMapPosX = 2;
         MiniMapPosY = 2;
@@ -1018,9 +1007,6 @@ screenName MapUpdate()
   FillViewport(32, viewportWidth, viewportHeight);
   ScreenFadeIn();
   DrawMapViewport();
-        UpdatePlayerOnMiniMap();
-        //DrawLocalMiniMap();
-
         
 
   while (!exitScreen)
@@ -1044,7 +1030,6 @@ screenName MapUpdate()
       {
         MoveCharacter(followIndex, Dir);
         DrawCharacterCoordinates(followIndex);
-        UpdatePlayerOnMiniMap();
       }
     }
   }
