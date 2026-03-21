@@ -42,9 +42,7 @@ void DrawMap(void);
 
 extern byte MiniMapHighlightX;
 extern byte MiniMapHighlightY;
-
-//Title
-screenName Update_Title(void);
+void DrawLocalMiniMap();
 
 //Add Character
 screenName DrawAddCharacterScreen(void);

@@ -96,6 +96,51 @@ void DrawMiniMap(bool highlightPlayer)
   ScreenFadeIn();
 }
 
+byte lastX;
+byte lastY;
+void DrawLocalMiniMap()
+{
+        #define radius 2
+        sbyte sampleX, sampleY;
+
+        if ((lastX == MiniMapHighlightX) && (lastY == MiniMapHighlightY))
+                return;
+
+        MiniMapPosX = 20;
+        MiniMapPosY = 13;
+        MiniMapWidth = 5;
+        MiniMapHeight = 5;
+        
+        UpdateAttributes();
+        for (sampleY = -radius; sampleY <= radius; ++sampleY)
+                for (sampleX = -radius; sampleX <= radius; ++sampleX)
+                        {
+                                byte offset;
+                                char target;
+
+                                sbyte sampleXX = sampleX + MiniMapHighlightX;
+                                sbyte sampleYY = sampleY + MiniMapHighlightY;
+                                
+                                if (!sampleXX)
+                                        sampleXX += mapMatrixWidth;
+                                if (!sampleYY)
+                                        sampleYY += mapMatrixHeight;
+                                if (sampleXX >= mapMatrixWidth)
+                                        sampleXX -= mapMatrixWidth;
+                                if (sampleYY >= mapMatrixHeight)
+                                        sampleYY -= mapMatrixHeight;
+                                offset = sampleXX + 16* sampleYY;
+                                target = MiniMapGlyphs[mapQuads[offset]];
+                                SetChar(target, sampleX + (MiniMapPosX + radius), sampleY + (MiniMapPosY + radius));
+                        }
+                
+        
+    SetChar('X', MiniMapPosX + radius, MiniMapPosY + radius);
+
+        lastX = MiniMapHighlightX;
+        lastY = MiniMapHighlightY;
+}
+
 void DrawCharset()
 {
   byte x, y;

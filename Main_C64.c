@@ -17,13 +17,7 @@
 
 void main(void)
 {
-  //InitializeGraphics();
-  //DebugGraphics();
-  //DebugMap();
-  //Demo(Map);
-  RunGame(EditParty);
-  //Demo(EditParty);
-  
+  RunGame(MapGen);
 }
 #pragma rodata-name (push, "GAME_RODATA")
 /*{pal:"c64",layout:"c64"}*/

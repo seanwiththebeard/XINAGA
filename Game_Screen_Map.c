@@ -67,7 +67,7 @@ static void InitializeMapData(void);
 void LoadMap(void);
 static void DrawMapViewport(void);
 static void DrawEntireMap(void);
-void UpdateLocalMiniMap();
+//void UpdateLocalMiniMap();
 #define wrapX(v) do { if ((v) < 0) (v) = mapWidth - 1; else if ((v) >= mapWidth) (v) = 0; } while(0)
 #define wrapY(v) do { if ((v) < 0) (v) = mapHeight - 1; else if ((v) >= mapHeight) (v) = 0; } while(0)
 //void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
@@ -842,8 +842,11 @@ static void MoveCharacter(byte index, byte dir)
       byte edgeCheckX = characters.posX[index] % 16;
       byte edgeCheckY = characters.posY[index] % 16;
       if(changedQuads)
-        UpdatePlayerOnMiniMap();
-
+        {
+                //UpdatePlayerOnMiniMap;
+                
+        }
+                    
       switch (dir)
       {
         case 0:
@@ -891,6 +894,11 @@ static void DrawCharacterCoordinates(byte index)
 
   sprintf(strTemp,"<%3i  %3i>@", CoordPosX, CoordPosY);
   PrintString(strTemp, viewportPosX + (viewportWidth >> 1), viewportPosY + (viewportHeight << 1), true);
+        //UpdatePlayerOnMiniMap;
+        //DrawMiniMap(true
+        MiniMapHighlightX = CoordPosX / 16;
+        MiniMapHighlightY = CoordPosY / 16;
+        DrawLocalMiniMap();
 }
 
 void LoadMap()
@@ -951,8 +959,9 @@ static void ActionMenu()
       WaitForInput();
       ScreenFadeOut();
       DrawMap();
+            //DrawLocalMiniMap();
       ScreenFadeIn();
-        UpdateLocalMiniMap();
+        //UpdateLocalMiniMap();
       //DrawMapViewport();
       break;
     case 4:
@@ -978,20 +987,22 @@ void DrawMap()
 byte lastMiniMapX;
 byte lastMiniMapY;
 
-void UpdateLocalMiniMap()
-{
+//void UpdateLocalMiniMap()
+//{
         //DrawMiniMap(true);
-        MiniMapPosX = 20;
-        MiniMapPosY = 13;
-        MiniMapWidth = 5;
-        MiniMapHeight = 5;
-        SetChar(MiniMapGlyphs[mapQuads[lastMiniMapX + mapMatrixWidth * lastMiniMapY]], MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
-        UpdatePlayerOnMiniMap();
-        lastMiniMapX = MiniMapHighlightX;
-        lastMiniMapY = MiniMapHighlightY;
-        SetChar('X', MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
+       // MiniMapPosX = 20;
+        //MiniMapPosY = 13;
+       // MiniMapWidth = 5;
+        //MiniMapHeight = 5;
+        //SetChar(MiniMapGlyphs[mapQuads[lastMiniMapX + mapMatrixWidth * lastMiniMapY]], MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
+        //UpdatePlayerOnMiniMap();
+        //lastMiniMapX = MiniMapHighlightX;
+        //lastMiniMapY = MiniMapHighlightY;
+        //SetChar('X', MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
+        //DrawLocalMiniMap();
         
-}
+        
+//}
 
 screenName MapUpdate()
 {
@@ -1007,11 +1018,8 @@ screenName MapUpdate()
   FillViewport(32, viewportWidth, viewportHeight);
   ScreenFadeIn();
   DrawMapViewport();
-        
-        
-  UpdatePlayerOnMiniMap();
-        UpdateLocalMiniMap();
-  DrawMiniMap(true);
+        UpdatePlayerOnMiniMap();
+        //DrawLocalMiniMap();
 
         
 
@@ -1036,7 +1044,7 @@ screenName MapUpdate()
       {
         MoveCharacter(followIndex, Dir);
         DrawCharacterCoordinates(followIndex);
-        UpdateLocalMiniMap();
+        UpdatePlayerOnMiniMap();
       }
     }
   }

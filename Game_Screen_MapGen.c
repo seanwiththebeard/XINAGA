@@ -177,8 +177,8 @@ void DrawScenario()
   byte x;
   byte distTravel;
   //byte failure = 0;
-  #define originX PartyStatsX
-  #define originY PartyStatsY
+  #define originX 8
+  #define originY 8
   struct vector2 scenPos = {originX, originY};
   struct vector2 originPos = {originX, originY};
   char scenChar;
@@ -225,8 +225,8 @@ void DrawScenario()
     SetChar('0'+x, viewportPosX  + 2*x, viewportPosY + mapMatrixHeight + 3);
 
 
-    DrawTileDirectXY(scenarioPoints[x], originX +1 + 2*x,  originY + 1);
-    SetChar(dirChar[scenarioDir[x]], originX +1 + 2*x, originY + 3);
+    DrawTileDirectXY(scenarioPoints[x], PartyStatsX +1 + 2*x,  PartyStatsY + 1);
+    SetChar(dirChar[scenarioDir[x]], PartyStatsX +1 + 2*x, PartyStatsY + 3);
 
     scenPos.x += (distX[scenarioDir[x]] * distTravel);
     scenPos.y += (distY[scenarioDir[x]] * distTravel);
@@ -240,7 +240,7 @@ void DrawScenario()
       clampPoint(&scenPos);
       ++distTravel;
     }
-    SetChar('0' + distTravel, originX + 2  + 2*x, originY + 3);
+    SetChar('0' + distTravel, PartyStatsX + 2  + 2*x, PartyStatsY + 3);
 
     if (x == 0)
     {
@@ -698,9 +698,8 @@ void GetSeed()
   //SetLineMessageWindow(strTemp, 0);
   //while(1)
   {
-
-    //GenerateMap(seed);
-    //return;
+          GenerateMap(seed);
+    return;
     //++seed;
   }
 
