@@ -68,7 +68,7 @@ void SwitchScreen(screenName screen)
   
   //ScreenDisable();
   //ClearScreen();
-  DrawInterface();
+  //DrawInterface();
   //Load specified screen
   //UpdateInput();
   currentScreen = screen;
@@ -120,11 +120,16 @@ void RunGame(screenName startingScreen)
   #endif
   LoadMap();
   currentScreen = startingScreen;
+DrawInterface();
 
-  //DrawBorder("@",12, 5, 16, 5, true);
-  //PrintString("Greetings from the librarian Soodo Nim@", 14, 7, true);
+        //WriteLineMessageWindow("Greetings from the librarian Soodo Nim@", 0);
+        //WriteLineMessageWindow("..not to be confused with evil Anto Nim@", 0);
+        //WaitForInput();
+        
+        
   //DrawBorder("@", 12, 19, 16, 5, true);
   //PrintString("Press Space@", 14, 21, true);
+
   
   while(1)
   {

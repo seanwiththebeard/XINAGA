@@ -734,6 +734,8 @@ screenName Update_MapGen()
         
   //ResizeMessageWindow(COLS - 22, viewportPosY, 21, 8);
   ScreenFadeIn();
+        DrawInterface();
+FillViewport(' ', viewportWidth, viewportHeight);
   GetSeed();
   //StoreMap();
   //ScreenFadeOut();

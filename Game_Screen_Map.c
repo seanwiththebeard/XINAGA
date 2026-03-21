@@ -864,6 +864,7 @@ static void MoveCharacter(byte index, byte dir)
         //SetBG(0);
         //SetBorder(0);
       }
+            ++Sessions[0].STEPS;
     }
     DrawEntireMap();
   }

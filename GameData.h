@@ -97,7 +97,7 @@ typedef struct playerChar
 {
   struct playerChar *next;
   int	EXP;
-  char 	NAME[12];
+  char 	NAME[8];
   byte	HP,
   	HPMAX,
   	STR,
@@ -108,7 +108,8 @@ typedef struct playerChar
         CHR,
   	RACE,
   	CLASS,
-  	HITDICE,
+  	ARMOR,
+        WEAPON,
   	LEVEL,
   	CARRYING_WEIGHT,
   	CARRYING_CAPACITY,
@@ -120,14 +121,15 @@ struct playerChar *getPlayerChar(byte index);
 typedef struct Session
 {
         struct playerChar RosterChars[12];
-        int GOLD, STEPS;
-        byte PartyChars[4], HOURS, MINUTES, SECONDS;
+        int GOLD;
+        int STEPS;
+        byte PartyChars[4], SOLAR, LUNAR, MINAR;
         //byte CARRYING_WEIGHT, CARRYING_CAPACITY; 
 };
-typedef struct SavedGame
-{
-        struct Session gameSessions[4];
-};
+//typedef struct SavedGame
+//{
+        //struct Session gameSessions[4];
+//};
 
 extern struct Session Sessions[4];
 

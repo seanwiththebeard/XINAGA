@@ -121,6 +121,22 @@ const char nameSuffixA[][8][] =
         }
 };
 
+void DrawPartyStats()
+{
+        DrawBorder("Stats@", viewportPosX - 1 , viewportPosY + 4, viewportWidth * 2 + 2, 5, true);
+        ConsoleBufferReset();
+        sprintf(strTemp, "GOLD:        %05u@", Sessions[0].GOLD);
+        ConsoleBufferPrint(viewportPosX, viewportPosY + 5);
+        sprintf(strTemp, "STEPS:       %05u@", Sessions[0].STEPS);
+        ConsoleBufferPrint(viewportPosX, viewportPosY + 6);
+        sprintf(strTemp, "YEAR%02i MON%02i DAY%02i@", Sessions[0].SOLAR, Sessions[0].LUNAR, Sessions[0].MINAR);
+        ConsoleBufferPrint(viewportPosX, viewportPosY + 7);
+
+        sprintf(strTemp, "Size of Session: %u@", sizeof(Sessions[0]));
+        WriteLineMessageWindow(strTemp, 0);
+        
+}
+
 void AddToRoster()
 {
   struct playerChar *PlayerChar;
@@ -573,6 +589,7 @@ screenName DrawAddCharacterScreen()
         
         ScreenFadeIn();
         ListParty();
+        DrawPartyStats();
         ListRoster();
         DrawCharStats();
         while (!exitWindow)

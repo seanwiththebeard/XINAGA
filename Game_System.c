@@ -180,7 +180,7 @@ void DrawMoonPhase()
   PrintString(strTemp, viewportPosX + (viewportWidth / 2) + 2, viewportPosY -1, true);
   ConsoleBufferReset();
 }
-void TickMoonPhase()
+void TickMoonPhase() //The SOLUS and the LUNUS and the MOONUS
 {
   bool draw = false;
   ++moonTick;
@@ -198,9 +198,24 @@ void TickMoonPhase()
   if (draw)
   {
     if (moonA > 3)
+    {
       moonA = 0;
+            ++Sessions[0].MINAR;
+            if (Sessions[0].MINAR == 24)
+            {
+                    Sessions[0].MINAR = 0;
+                    ++Sessions[0].LUNAR;
+                    if (Sessions[0].LUNAR == 10)
+                    {
+                            Sessions[0].LUNAR = 0;
+                            ++Sessions[0].SOLAR;
+                    }
+            }
+    }
     if (moonB > 3)
+    {
       moonB = 0;
+    }
     DrawMoonPhase(); 
   }
 }
