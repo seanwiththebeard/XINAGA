@@ -72,15 +72,15 @@ extern struct Party;
 typedef struct 
 {
   char
-    	NAME[12];
+    	NAME[8];
   byte
     	HITDICEMAX;
 }RaceDescriptionDef;
-extern const RaceDescriptionDef const RaceDescription[4];
+extern const RaceDescriptionDef const RaceDescription[8];
 
 typedef struct
 {
-  char NAME[12]; 
+  char NAME[8]; 
   byte HITDICE;
 }ClassDescriptionDef;
 extern const ClassDescriptionDef const ClassDescription[8];

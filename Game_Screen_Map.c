@@ -981,6 +981,7 @@ screenName MapUpdate()
   exitScreen = false;
   characters.quadPosX[0]  = SetPlayerPositionX;
   characters.quadPosY[0]  = SetPlayerPositionY;
+        characters.tile[followIndex] = getPartyMember(0)->CLASS;
 
   //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   //DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);

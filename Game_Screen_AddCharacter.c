@@ -34,6 +34,17 @@ byte RACE;
 byte CLASS;
 byte HITDICE;
 
+
+/*
+{"Human", 255},
+  {"Elf", 6}, 
+  {"Dwarf", 255},
+  {"Halfling", 6},
+  {"Orc", 6},
+  {"Fuzzer", 6},
+  {"Dracon", 6},
+  {"Construct", 6}
+*/
 const char namePrefixA[][8][] = 
 {
         {//Human
@@ -65,6 +76,46 @@ const char namePrefixA[][8][] =
         "Yeg",
         "Gos",
         "Woz"
+        },
+        {//Halfling
+        "Flo",
+        "Bli",
+        "Man",
+        "Tem",
+        "Huw",
+        "Jle",
+        "Nel",
+        "Sul"
+        },
+        {//Orc
+        "Mor",
+        "Far",
+        "Hir",
+        "Gha",
+        "Mal",
+        "Ral",
+        "Dan",
+        "Pol"
+        },
+        {//Fuzzer
+        "Uwe",
+        "Reu",
+        "Bes",
+        "Kle",
+        "Uye",
+        "Xes",
+        "Ztu",
+        "Hsa"
+        },
+        {//Dracon
+        "Fah",
+        "Sza",
+        "Oha",
+        "Wah",
+        "Lah",
+        "Rah",
+        "Qua",
+        "Pla"
         },
         {//Construct
         "AP",
@@ -109,6 +160,46 @@ const char nameSuffixA[][8][] =
         "hest@",
         "julo@"
         },
+        {//Halfling
+        "bo@",
+        "blib@",
+        "mak@",
+        "bar@",
+        "est@",
+        "nlo@",
+        "kle@",
+        "hoh@"
+        },
+        {//Orc
+        "gen@",
+        "nir@",
+        "aar@",
+        "air@",
+        "olen@",
+        "geth@",
+        "menk@",
+        "fhan@"
+        },
+        {//Fuzzer
+        "papa@",
+        "riga@",
+        "gisa@",
+        "huer@",
+        "fath@",
+        "mner@",
+        "uiop@",
+        "fust@"
+        },
+        {//Dracon
+        "fir@",
+        "nir@",
+        "lir@",
+        "kir@",
+        "hir@",
+        "mir@",
+        "wir@",
+        "zir@"
+        },
         {//Construct
         "-A@",
         "-B@",
@@ -141,6 +232,8 @@ void AddToRoster()
 {
   struct playerChar *PlayerChar;
   byte i;
+       ConsoleBufferReset();
+        
   create();
   PlayerChar = getPlayerChar(CountRoster() - 1);
   PlayerChar->HPMAX = HPMAX;
@@ -337,18 +430,17 @@ void ListRoster()
         //DrawMenu();
 }
 
-bool AddRandom()
+bool AddRandom(byte class, byte race)
 {
         byte hitdice;
-        RACE = rand() % 4;
+        RACE = race;
+        CLASS = class;
         STR = RollDice(3, 6);
         CON = RollDice(3, 6);
         DEX = RollDice(3, 6);
         WIS = RollDice(3, 6);
         INT = RollDice(3, 6);
         CHR = RollDice(3, 6);
-        CLASS = rand() % 6;
-       
     if (RaceDescription[RACE].HITDICEMAX < ClassDescription[CLASS].HITDICE)
       HITDICE = RaceDescription[RACE].HITDICEMAX;
     else
@@ -517,7 +609,7 @@ void EditRosterMenu()
                         {
                                 if(CountRoster() + CountParty() < 8)
                                 {
-                                        AddRandom();
+                                        AddRandom(rand() % 8, rand() % 8);
                                         SetMenuSelect(CurrentCharacter);
                                         ListParty();
                                         //ListRoster();
@@ -580,18 +672,43 @@ void TavernMenu()
                 }
 }
 
+byte index[] = {2, 7, 5, 3};
 screenName DrawAddCharacterScreen()
 {
         nextScreen = EditParty;
         exitWindow = false;
         CurrentCharacter = 0;
-        srand(randseed);
+        srand(477);
         
         ScreenFadeIn();
         ListParty();
         DrawPartyStats();
         ListRoster();
         DrawCharStats();
+        
+                        while(CountParty() < 4)
+                        {
+                                while(!AddRandom(index[CountParty()], rand() % 8));
+                                AddParty(CurrentCharacter);
+                                ListParty();
+                                DrawPartyStats();        
+                                ListRoster();
+                                DrawCharStats();
+                        }
+        //while(CountParty() != 4)
+        //
+                //ListParty();
+                //DrawPartyStats();        
+                //ListRoster();
+                ////AddRandom(rand() % 8, CountRoster() + 2);
+                //if (CountRoster())
+                //{
+                        //AddParty(CurrentCharacter);
+                        //ListParty();
+                       // DrawCharStats();
+                //}
+      //  }
+        return MapGen;
         while (!exitWindow)
                 {         
                         TavernMenu();
