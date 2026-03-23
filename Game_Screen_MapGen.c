@@ -117,6 +117,9 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 #define miniMapForest 3
 #define miniMapMountain 4
 #define miniMapWaterTravel 5
+#define miniMapDungeonFloor 9
+#define miniMapDungeonWall 11
+
 //Town
 //Dungeon
 
@@ -544,24 +547,7 @@ void checkLandlocked()
   }
 }
 
-void addRandomPoints(byte count, int index)
-{
-  byte x;
-  for (x = 0; x < count; ++x)
-  {
-    byte h = rand() % mapMatrixHeight;
-    byte w = rand() % mapMatrixWidth;
-
-    while (mapQuads[w + (mapMatrixWidth * h)] != miniMapWater)
-    {
-      h = rand() % mapMatrixHeight;
-      w = rand() % mapMatrixWidth;
-    }
-    createPoint(index, w, h);
-  }
-}
-
-void attachRandomPoint(byte index)
+void attachRandomPoint(byte index, byte antiIndex)
 {
   sbyte x, y;
   byte i;
@@ -605,7 +591,7 @@ void attachRandomPoint(byte index)
         break;
     }
 
-    if ((mapQuads[x + (mapMatrixWidth * y)] == miniMapWater))
+    if ((mapQuads[x + (mapMatrixWidth * y)] == antiIndex))
       exit = true;
 
     if (exit)
@@ -636,7 +622,7 @@ void attachRandomPoint(byte index)
 
 }
 
-void GenerateMap(byte seed)
+void GenerateOverworld(byte seed)
 {
   byte x, y;
   byte totalPointsPlaced = 0;
@@ -665,7 +651,7 @@ void GenerateMap(byte seed)
       //addRandomPoints(1, grass);
       while (landcount && (points != NULL))
       {
-        attachRandomPoint(miniMapGrass);
+        attachRandomPoint(miniMapGrass, miniMapWater);
         --landcount;
         //++totalPointsPlaced;
       }
@@ -683,6 +669,55 @@ void GenerateMap(byte seed)
   WriteLineMessageWindow(strTemp, 0);
 }
 
+void GenerateTown(byte seed)
+{
+        srand(seed);
+}
+
+void PlaceRoom()
+{
+        #define sizeXMin 2
+        #define sizeXMax 7
+        #define sizeYMin 2
+        #define sizeYMax 7
+        
+        struct vector2 point;
+        byte x, y;
+        byte sizeX = sizeXMin + (rand() % (sizeXMax - sizeXMin));
+        byte sizeY = sizeYMin + (rand() % (sizeYMax - sizeYMin));
+
+        point.x = rand() % mapMatrixWidth;
+        point.y = rand() % mapMatrixHeight;
+
+        for (y = 0; y < sizeY; ++y)
+                {
+                        for (x = 0; x < sizeX; ++x)
+                        {
+                                mapQuads[point.x + (mapMatrixWidth * point.y)] = miniMapDungeonFloor;
+                                DrawPoint(point.x, point.y);
+                                ++point.x;
+                                clampPoint(&point);
+                        }
+                ++point.y;
+                point.x -= sizeX;
+                clampPoint(&point);
+                }        
+}
+void GenerateDungeon(byte seed)
+{
+        #define RoomCount 5
+        byte x,y;
+        for (y = 0; y < mapMatrixWidth; ++y)
+                for(x = 0; x < mapMatrixHeight; ++x)
+                        {
+                                mapQuads[x + (mapMatrixWidth * y)] = miniMapDungeonWall;
+                                DrawPoint(x,y);
+                        }        
+        srand(seed);
+        for (x = 0; x < RoomCount; ++x)
+                PlaceRoom();
+}
+
 byte seed  = 20;
 void GetSeed()
 {
@@ -691,15 +726,20 @@ void GetSeed()
   ResetMenu("Seed@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, menuCount, true);
   SetMenuItem(0, "Next@");
   SetMenuItem(1, "Last@");
-  SetMenuItem(2, "Go@");
-  SetMenuItem(3, "End@");
+  SetMenuItem(2, "Overworld@");
+  SetMenuItem(3, "Town@");
+  SetMenuItem(4, "Dungeon@");
+  SetMenuItem(5, "End@");
 
   //sprintf(strTemp, "Seed (%d)@", seed);
   //SetLineMessageWindow(strTemp, 0);
-  //while(1)
+  while(1)
   {
-          GenerateMap(seed);
-    return;
+          GenerateOverworld(seed);
+          GenerateDungeon(seed);
+          ++seed;
+          
+    //return;
     //++seed;
   }
 
@@ -716,10 +756,15 @@ void GetSeed()
         --seed;
         break;
       case 2:
-        GenerateMap(seed);
-        //GenerateDungeon(seed);
+        GenerateOverworld(seed);
         break;
       case 3:
+        GenerateTown(seed);
+        break;
+      case 4:
+        GenerateDungeon(seed);
+        break;
+      case 5:
         //exit = true;
         return;
     }
