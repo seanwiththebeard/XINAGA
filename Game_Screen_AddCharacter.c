@@ -221,11 +221,7 @@ void DrawPartyStats()
         sprintf(strTemp, "STEPS:       %05u@", Sessions[0].STEPS);
         ConsoleBufferPrint(viewportPosX, viewportPosY + 6);
         sprintf(strTemp, "YEAR%02i MON%02i DAY%02i@", Sessions[0].SOLAR, Sessions[0].LUNAR, Sessions[0].MINAR);
-        ConsoleBufferPrint(viewportPosX, viewportPosY + 7);
-
-        sprintf(strTemp, "Size of Session: %u@", sizeof(Sessions[0]));
-        WriteLineMessageWindow(strTemp, 0);
-        
+        ConsoleBufferPrint(viewportPosX, viewportPosY + 7);        
 }
 
 void AddToRoster()
@@ -257,7 +253,11 @@ void AddToRoster()
   for (i = 0; strTemp[i] != '@'; ++i)
     PlayerChar->NAME[i] = strTemp[i];
   PlayerChar->NAME[i] = '@';
-        WriteLineMessageWindow(PlayerChar->NAME, 0);
+
+
+        sprintf(strTemp, "%s %s %s@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME, PlayerChar->NAME);
+            WriteLineMessageWindow(strTemp, 0);
+        //WriteLineMessageWindow(PlayerChar->NAME, 0);
         
   
   
@@ -292,15 +292,16 @@ void RollStats()
   CHR = RollDice(3, 6);
 
   //WriteLineMessageWindow("Rolled Stats:@", 0);
-  //sprintf(strTemp, "STR:%2i CON:%2i DEX:%2i WIS:%2i INT:%2i CHR:%2i@", STR, CON, DEX, WIS, INT, CHR);
-  //WriteLineMessageWindow(strTemp, 0);
+  WriteLineMessageWindow("@", 0);
+  sprintf(strTemp, "STR:%2i CON:%2i DEX:%2i WIS:%2i INT:%2i CHR:%2i@", STR, CON, DEX, WIS, INT, CHR);
+  WriteLineMessageWindow(strTemp, 0);
 }
 
 void MenuGetClassPrimeStats()
 {
   byte x;
-  ResetMenu("Class@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6, true);
-  for (x = 0; x < 4; ++x)
+  ResetMenu("Class@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 10, true);
+  for (x = 0; x < 8; ++x)
   {
     SetMenuItem(x, ClassDescription[x].NAME);
   }
@@ -314,8 +315,8 @@ void MenuGetClassPrimeStats()
   if (DEX >= 9)
     HighlightMenuItem(3);
   
-  SetMenuItem(4, "Reroll@");
-  SetMenuItem(5, "Exit@");
+  SetMenuItem(8, "Reroll@");
+  SetMenuItem(9, "Exit@");
 }
 
 void MenuGetClass()
@@ -327,20 +328,20 @@ void MenuGetClass()
 
   while(!IsMenuItemHighlighted(CLASS))
   {
-    if (CLASS < 4)
+    if (CLASS < 8)
     {
       WriteLineMessageWindow("Prime stat low@", 0);
       CLASS = GetMenuSelection();
     }
     else
     {
-      if (CLASS == 4) //Reroll
+      if (CLASS == 8) //Reroll
       {
         RollStats();
         MenuGetClassPrimeStats();
         CLASS = GetMenuSelection();
       }
-      if (CLASS == 5)
+      if (CLASS == 9)
         return;
     }
   }
@@ -374,14 +375,19 @@ void MenuGetClass()
 
 void MenuGetRace()
 {
-  ResetMenu("Race@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 5, true);
+  ResetMenu("Race@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 9, true);
   SetMenuItem(0, RaceDescription[0].NAME);
   SetMenuItem(1, RaceDescription[1].NAME);
   SetMenuItem(2, RaceDescription[2].NAME);
   SetMenuItem(3, RaceDescription[3].NAME);
-  SetMenuItem(4, "Exit@");
+  SetMenuItem(4, RaceDescription[4].NAME);
+  SetMenuItem(5, RaceDescription[5].NAME);
+  SetMenuItem(6, RaceDescription[6].NAME);
+  SetMenuItem(7, RaceDescription[7].NAME);
+        
+  SetMenuItem(8, "Exit@");
   RACE = GetMenuSelection();
-  if (RACE == 4)
+  if (RACE == 8)
     ClearMenu();
   else
   {
@@ -435,12 +441,7 @@ bool AddRandom(byte class, byte race)
         byte hitdice;
         RACE = race;
         CLASS = class;
-        STR = RollDice(3, 6);
-        CON = RollDice(3, 6);
-        DEX = RollDice(3, 6);
-        WIS = RollDice(3, 6);
-        INT = RollDice(3, 6);
-        CHR = RollDice(3, 6);
+        RollStats();
     if (RaceDescription[RACE].HITDICEMAX < ClassDescription[CLASS].HITDICE)
       HITDICE = RaceDescription[RACE].HITDICEMAX;
     else
@@ -456,10 +457,7 @@ bool AddRandom(byte class, byte race)
     else
     {
       HPMAX = hitdice + AbilityModifier[CON];
-      HP = HPMAX;
-            sprintf(strTemp, "%s %s added@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME);
-            WriteLineMessageWindow(strTemp, 0);
-            
+      HP = HPMAX;            
       AddToRoster();
             return true;
     }
@@ -708,7 +706,7 @@ screenName DrawAddCharacterScreen()
                        // DrawCharStats();
                 //}
       //  }
-        return MapGen;
+        //return MapGen;
         while (!exitWindow)
                 {         
                         TavernMenu();
