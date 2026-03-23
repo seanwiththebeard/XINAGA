@@ -735,7 +735,7 @@ void GetSeed()
   //SetLineMessageWindow(strTemp, 0);
   while(1)
   {
-          GenerateOverworld(seed);
+          //GenerateOverworld(seed);
           GenerateDungeon(seed);
           ++seed;
           
