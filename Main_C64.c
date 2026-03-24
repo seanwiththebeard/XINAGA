@@ -17,9 +17,7 @@
 
 void main(void)
 {
-        //InitializeGraphics();
-        //DrawCharset();
-//while(1);
+  //DiskSave("hello.bin", &attributeset[0], 256);
   RunGame(MapGen);
 }
 #pragma rodata-name (push, "GAME_RODATA")
