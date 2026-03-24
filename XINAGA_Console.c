@@ -18,11 +18,43 @@
 #endif
 
 //Console Buffer
-byte* consoleContents;
 int contentOffset; //Offset of Last Line
+byte* consoleContents;
 
 //StringBuilder
 byte StringLength;
+
+byte menuSel;
+
+//Console
+byte Height;
+byte Width;
+byte PosX;
+byte PosY;
+
+#define MessageCount 5
+const char* const Messages[MessageCount]= {
+  "Hello there!@",
+  "This is a sign@",
+  "Wizard's Forest@",
+  "There's a feeling I get when I look to the west...@"
+};
+
+//Selection Menu
+byte MenuHeight;
+byte MenuWidth;
+byte MenuPosX;
+byte MenuPosY;
+byte MenuCount;
+sbyte MenuSelection;
+char *menutitle;
+#define menuItemsCount 16
+char *MenuItems[menuItemsCount];
+bool MenuHighlight[menuItemsCount];
+void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, bool clear);
+void SetMenuItem(byte index, char *value);
+byte GetMenuSelection();
+
 
 void ConsoleBufferReset()
 {
@@ -79,35 +111,6 @@ void ConsoleBufferPrintConsole(byte delay) //Prints the contents of the buffer t
   WriteLineMessageWindow("@", delay);
 }
 
-//Console
-byte Height;
-byte Width;
-byte PosX;
-byte PosY;
-
-#define MessageCount 5
-const char* const Messages[MessageCount]= {
-  "Hello there!@",
-  "This is a sign@",
-  "Wizard's Forest@",
-  "There's a feeling I get when I look to the west...@"
-};
-
-//Selection Menu
-byte MenuHeight;
-byte MenuWidth;
-byte MenuPosX;
-byte MenuPosY;
-byte MenuCount;
-sbyte MenuSelection;
-char *menutitle;
-#define menuItemsCount 16
-char *MenuItems[menuItemsCount];
-bool MenuHighlight[menuItemsCount];
-void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, bool clear);
-void SetMenuItem(byte index, char *value);
-byte GetMenuSelection();
-
 void ClearItem(byte index)
 {
   byte x;
@@ -140,7 +143,6 @@ void DrawItem(byte index)
   //wait_vblank(1);
 }
 
-byte menuSel;
 void SetMenuSelect(byte sel)
 {
         menuSel = sel;
@@ -156,6 +158,7 @@ void ClearMenuContents()
                         MenuHighlight[x] = false;
                 }
 }
+
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte clear)
 {
   //byte x;
@@ -177,6 +180,7 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte c
     //MenuHighlight[x] = false;
   //}
 }
+
 void SetMenuItem(byte index, char *value)
 {
   MenuItems[index] = value;
@@ -207,6 +211,7 @@ void DrawMenu()
     DrawItem(x);
   }
 }
+
 void ClearMenu()
 {
   byte x;
@@ -216,7 +221,6 @@ void ClearMenu()
     for (x = 1; x < MenuHeight; ++x)
       DrawLineH(' ', xPos, yPos + x - 1, MenuWidth);
 }
-
 
 byte GetMenuSelection()
 {
@@ -296,8 +300,6 @@ void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
   ClearConsoleContent();
   DrawConsoleContent();
 }
-
-
 
 void ScrollMessageWindowUp()
 {

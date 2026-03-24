@@ -71,7 +71,7 @@ static void getYCols()
   #if defined(__APPLE2__)
   for (y = 0; y != 192; ++y)
     RowsHGR[y] = (y>>6)*0x28 + (y&7)*0x400 + ((y>>3)&7)*0x80;
-  #endif  
+  #endif
 }
 
 #if defined(__APPLE2__)
@@ -193,7 +193,6 @@ void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
   #if defined (__NES__)
   byte offset = ((y >>2 ) << 3) + (x >> 2); //(y / 4) * 8 + (x / 4); //Which byte of the attribute table?
-  
   byte shift = ((x & 3) > 1 ? 2 : 0) + ((y & 3) > 1 ? 4 : 0);
   byte mask = ~(0b11 << shift);
 
@@ -364,6 +363,7 @@ void InitializeGraphics(void)
 
   ScreenChars = (byte*)(bank * (16<<10) + (screenpos <<10));
   memcpy((byte*)(bank * (16<<10) + (charpos <<11)), (byte*)&characterset[0], 2048);
+  memcpy(&attributeset[0], &attributesDefault[0], 256);
 
   //Select Bank
   *regdd00 = (*regdd00 & (255 - bank));

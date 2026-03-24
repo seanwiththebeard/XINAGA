@@ -25,6 +25,8 @@ extern uint16_t randseed;
 #define ReadBit(b, n) (((b) >> (n)) & 1)
 
 extern const byte characterset[2048];
+extern const byte attributesDefault[256];
+
 extern byte attributeset[256];
 
 #define viewportPosX 1
