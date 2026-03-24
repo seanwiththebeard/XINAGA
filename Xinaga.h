@@ -202,7 +202,7 @@ extern byte SetCharIndex;
 extern byte SetCharX;
 extern byte SetCharY;
 //|| defined(__APPLE2__)
-#if defined(__C64__) || defined(__NES__) 
+#if defined(__C64__) || defined(__NES__)
 #pragma zpsym ("SetCharIndex")
 #pragma zpsym ("SetCharX")
 #pragma zpsym ("SetCharY")
@@ -230,7 +230,7 @@ extern byte tilesPalette[TileCount];
 void SetTileOrigin(byte x, byte y);
 extern byte tilePosX;
 extern byte tilePosY;
-// || defined(__APPLE2__) 
+// || defined(__APPLE2__)
 #if defined(__C64__)|| defined(__NES__)
 #pragma zpsym ("tilePosX")
 #pragma zpsym ("tilePosY")
@@ -270,7 +270,7 @@ void UpdateInput(void);
 bool InputChanged(void);
 bool NoInput(void);
 bool InputUp(void);
-bool InputDown(void); 
+bool InputDown(void);
 bool InputLeft(void);
 bool InputRight(void);
 bool InputFire(void);

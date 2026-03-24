@@ -37,7 +37,7 @@ byte HITDICE;
 
 /*
 {"Human", 255},
-  {"Elf", 6}, 
+  {"Elf", 6},
   {"Dwarf", 255},
   {"Halfling", 6},
   {"Orc", 6},
@@ -45,7 +45,7 @@ byte HITDICE;
   {"Dracon", 6},
   {"Construct", 6}
 */
-const char namePrefixA[][8][] = 
+const char namePrefixA[][8][] =
 {
         {//Human
         "Hur",
@@ -128,7 +128,7 @@ const char namePrefixA[][8][] =
         "ZY"
         }
 };
-const char nameSuffixA[][8][] = 
+const char nameSuffixA[][8][] =
 {
         {//Human
         "kar@",
@@ -221,7 +221,7 @@ void DrawPartyStats()
         sprintf(strTemp, "STEPS:       %05u@", Sessions[0].STEPS);
         ConsoleBufferPrint(viewportPosX, viewportPosY + 6);
         sprintf(strTemp, "YEAR%02i MON%02i DAY%02i@", Sessions[0].SOLAR, Sessions[0].LUNAR, Sessions[0].MINAR);
-        ConsoleBufferPrint(viewportPosX, viewportPosY + 7);        
+        ConsoleBufferPrint(viewportPosX, viewportPosY + 7);
 }
 
 void AddToRoster()
@@ -229,7 +229,6 @@ void AddToRoster()
   struct playerChar *PlayerChar;
   byte i;
        ConsoleBufferReset();
-        
   create();
   PlayerChar = getPlayerChar(CountRoster() - 1);
   PlayerChar->HPMAX = HPMAX;
@@ -241,12 +240,10 @@ void AddToRoster()
   PlayerChar->WIS = WIS;
   PlayerChar->CHR = CHR;
   PlayerChar->RACE = RACE;
-  PlayerChar->CLASS = CLASS;  
-  
+  PlayerChar->CLASS = CLASS;
   ConsoleBufferReset();
   //sprintf(strTemp, "%s %c%c%c %x@", ClassDescription[CLASS].NAME, RaceDescription[RACE].NAME[0], RaceDescription[RACE].NAME[1], RaceDescription[RACE].NAME[2], &PlayerChar[0]);
   sprintf(strTemp, "%s%s @",namePrefixA[RACE][rand()%8], nameSuffixA[RACE][rand()%8] );
-  
   //ConsoleBufferAdd("Hello @");
   //ConsoleBufferAdd(strTemp);
   //ConsoleBufferAddNumber(CountRoster());
@@ -258,9 +255,6 @@ void AddToRoster()
         sprintf(strTemp, "%s %s %s@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME, PlayerChar->NAME);
             WriteLineMessageWindow(strTemp, 0);
         //WriteLineMessageWindow(PlayerChar->NAME, 0);
-        
-  
-  
   //ConsoleBufferReset();
   //sprintf(strTemp, "Address: %X@", &PlayerChar[0]);
   //ConsoleBufferAdd(strTemp);
@@ -278,7 +272,6 @@ bool AreYouSure()
   ResetMenu("Sure?@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 2, true);
   SetMenuItem(0, "No @");
   SetMenuItem(1, "Yes@");
-  
   return (GetMenuSelection());
 }
 
@@ -305,7 +298,6 @@ void MenuGetClassPrimeStats()
   {
     SetMenuItem(x, ClassDescription[x].NAME);
   }
-  
   if (STR >= 9)
     HighlightMenuItem(0);
   if (INT >= 9)
@@ -314,7 +306,6 @@ void MenuGetClassPrimeStats()
     HighlightMenuItem(2);
   if (DEX >= 9)
     HighlightMenuItem(3);
-  
   SetMenuItem(8, "Reroll@");
   SetMenuItem(9, "Exit@");
 }
@@ -323,7 +314,7 @@ void MenuGetClass()
 {
   byte hitdice;
   RollStats();
-  MenuGetClassPrimeStats(); 
+  MenuGetClassPrimeStats();
   CLASS = GetMenuSelection();
 
   while(!IsMenuItemHighlighted(CLASS))
@@ -345,7 +336,6 @@ void MenuGetClass()
         return;
     }
   }
-        
         sprintf(strTemp, "Class Confirmed: %s @", ClassDescription[CLASS].NAME, 0);
         WriteLineMessageWindow(strTemp, 0);
 
@@ -384,7 +374,6 @@ void MenuGetRace()
   SetMenuItem(5, RaceDescription[5].NAME);
   SetMenuItem(6, RaceDescription[6].NAME);
   SetMenuItem(7, RaceDescription[7].NAME);
-        
   SetMenuItem(8, "Exit@");
   RACE = GetMenuSelection();
   if (RACE == 8)
@@ -395,7 +384,6 @@ void MenuGetRace()
     //ConsoleBufferAdd("Race Confirmed: %s@");
     //ConsoleBufferAdd(RaceDescription[RACE].NAME);
     //ConsoleBufferPrintConsole(0);
-    
     //sprintf(strTemp, "Race Confirmed: %s@ @", RaceDescription[RACE].NAME);
     //WriteLineMessageWindow(strTemp, 0);
     MenuGetClass();
@@ -426,7 +414,6 @@ void ListRoster()
 
         if(CurrentCharacter < 0)
         CurrentCharacter = 0;
-        
         ResetMenu("Roster@", 1, 10, viewportWidth * 2, viewportHeight, rosterCount, true);
         if (rosterCount > 0)
         {
@@ -450,18 +437,17 @@ bool AddRandom(byte class, byte race)
     hitdice = RollDice(1, HITDICE);
     if (hitdice + AbilityModifier[CON] < 1)
     {
-        sprintf(strTemp, "%s %s died, no HP@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME);            
+        sprintf(strTemp, "%s %s died, no HP@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME);
         WriteLineMessageWindow(strTemp, 0);
         return false;
     }
     else
     {
       HPMAX = hitdice + AbilityModifier[CON];
-      HP = HPMAX;            
+      HP = HPMAX;
       AddToRoster();
             return true;
     }
-        
 }
 
 void MenuParty(bool clear)
@@ -564,13 +550,11 @@ void EditRosterMenu()
         //ListParty();
         ListRoster();
         MenuRoster(true);
-        
         while(!exit)
         {
         SetMenuSelect(selection);
         MenuRoster(false);
         selection = GetMenuSelection();
-                
         switch(selection)
         {
                 case 0: //Next
@@ -628,7 +612,7 @@ void EditRosterMenu()
                 case 5: //Join
                         {
                                 if ((CountRoster()) && (CountParty() < 4))
-                                {                                   
+                                {
                                         AddParty(CurrentCharacter);
                                         --CurrentCharacter;
                                         ListParty();
@@ -677,26 +661,24 @@ screenName DrawAddCharacterScreen()
         exitWindow = false;
         CurrentCharacter = 0;
         srand(477);
-        
         ScreenFadeIn();
         ListParty();
         DrawPartyStats();
         ListRoster();
         DrawCharStats();
-        
                         while(CountParty() < 4)
                         {
                                 while(!AddRandom(index[CountParty()], rand() % 8));
                                 AddParty(CurrentCharacter);
                                 ListParty();
-                                DrawPartyStats();        
+                                DrawPartyStats();
                                 ListRoster();
                                 DrawCharStats();
                         }
         //while(CountParty() != 4)
         //
                 //ListParty();
-                //DrawPartyStats();        
+                //DrawPartyStats();
                 //ListRoster();
                 ////AddRandom(rand() % 8, CountRoster() + 2);
                 //if (CountRoster())
@@ -708,7 +690,7 @@ screenName DrawAddCharacterScreen()
       //  }
         //return MapGen;
         while (!exitWindow)
-                {         
+                {
                         TavernMenu();
                 }
         return nextScreen;

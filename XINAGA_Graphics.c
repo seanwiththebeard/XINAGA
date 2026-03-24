@@ -301,7 +301,7 @@ void raster_wait(byte line)
   #endif
 }
 
-void wait_vblank(byte frames) 
+void wait_vblank(byte frames)
 {
   byte count = frames;
   for (count = frames; count; --count)
@@ -309,7 +309,7 @@ void wait_vblank(byte frames)
     //UpdateInput();
 
     #if defined (__C64__)
-    raster_wait(255);    
+    raster_wait(255);
     #endif
 
     #if defined (__APPLE2__)
@@ -350,12 +350,9 @@ void InitializeGraphics(void)
   #endif
 
   #if defined(__C64__)
-  
   #define regd018 (int*)0xD018
   #define regdd00 (int*)0xDD00
-  
   ScreenColors = (byte *)0xD800;
-  
   SetBG(ColorBG);
   SetBorder(ColorBorder);
 
@@ -371,7 +368,7 @@ void InitializeGraphics(void)
 
   #if defined(__NES__)
   vrambuf_clear();
-  set_vram_update(updbuf);  
+  set_vram_update(updbuf);
   pal_bright(4);
   pal_clear();
   pal_bg(PALETTE_0);
@@ -427,7 +424,6 @@ void DrawChar(byte index, byte xpos, byte ypos)
   //src = &charset[index << 3];
   src = charset + (index << 3);
   dest = (byte*)HGR + RowsHGR[ypos << 3] + xpos;
-  
   //HGR[base + 0x0000] = src[0];
   //HGR[base + 0x0400] = src[1];
   //HGR[base + 0x0800] = src[2];
@@ -436,7 +432,6 @@ void DrawChar(byte index, byte xpos, byte ypos)
   //HGR[base + 0x1400] = src[5];
   //HGR[base + 0x1800] = src[6];
   //HGR[base + 0x1C00] = src[7];
-  
   dest[0x0000] = src[0];
   dest[0x0400] = src[1];
   dest[0x0800] = src[2];
@@ -453,9 +448,8 @@ void _SetChar(void)
 {
   int offset = SetCharX + YColumnIndex[SetCharY];
   #if defined(__APPLE2__)
-  if (ScreenChars[offset] != SetCharIndex) 
+  if (ScreenChars[offset] != SetCharIndex)
   {
-    
     DrawChar(SetCharIndex, SetCharX, SetCharY);
   }
         ScreenChars[offset] = SetCharIndex;
@@ -469,7 +463,7 @@ void _SetChar(void)
   ScreenChars[offset] = SetCharIndex;
   vrambuf_put(NTADR_A(SetCharX,SetCharY), &SetCharIndex, 1);
 
-  if (++charsDrawn >=21) 
+  if (++charsDrawn >=21)
   {
     wait_vblank(1);
     charsDrawn = 0;
@@ -575,14 +569,14 @@ void DrawTile()
   SetChar(indexes[2], x, y + 1);
   SetChar(indexes[3], x + 1, y + 1);
 }
- // || (__APPLE2__) 
+ // || (__APPLE2__)
 #if defined(__C64__)|| (__NES__)
 #pragma bss-name (push, "ZEROPAGE")
 #endif
 byte tilePosX;
 byte tilePosY;
 byte xA, yA, xB, yB, posX, posY;
- // || (__APPLE2__) 
+ // || (__APPLE2__)
 #if defined(__C64__) || (__NES__)
 #pragma bss-name (pop)
 #endif
@@ -590,7 +584,7 @@ byte xA, yA, xB, yB, posX, posY;
 void DrawTileSeq(byte index)
 {
 
-  posX = tilePosX << 1; 
+  posX = tilePosX << 1;
   posY = tilePosY << 1;
   xA = posX + MapOriginX;
   yA = posY + MapOriginY;
@@ -598,12 +592,12 @@ void DrawTileSeq(byte index)
   yB = yA + 1;
 
   #if defined(__NES__)
-  SetAttrib(posX + viewportPosX, posY + viewportPosY, tilesPalette[index], false);  
+  SetAttrib(posX + viewportPosX, posY + viewportPosY, tilesPalette[index], false);
   //UpdateAttributes();
   #endif
 
   //index = (index << 1) + ((index >> 3) << 4);
-  index = tileIndexes[index]; //(index << 1) + ((index & 0xF8) << 1);  
+  index = tileIndexes[index]; //(index << 1) + ((index & 0xF8) << 1);
 
   SetChar(index, 	xA, yA);
   SetChar(index + 1, 	xB, yA);
@@ -633,7 +627,7 @@ byte tilesPalette[TileCount];
 
 void FillViewport(byte index, byte width, byte height)
 {
-  byte byte_x, byte_y;  
+  byte byte_x, byte_y;
   for(byte_y = 0; byte_y < height; ++byte_y)
     for(byte_x = 0; byte_x < width; ++byte_x)
     {
@@ -678,7 +672,6 @@ void DrawLineH(byte index, byte x, byte y, byte length)
   byte tempIndex;
   for (count = 0; count < length; ++count)
   {
-        
     tempIndex = index;
     posX = x + count;
     #if defined (__APPLE2__)
@@ -753,14 +746,14 @@ void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool 
   DrawLineV(0xEE, xPos, yPos1, heightInside1);
   DrawLineV(0xFE, xPos + widthInside1, yPos1, heightInside2);
   #endif
-  
+
   #if !defined(__APPLE2__)
   DrawLineH(0xEC, xPos1, yPos, widthInside2);
   DrawLineH(0xED, xPos1, yPos + heightInside1, widthInside2);
   DrawLineV(0xEE, xPos, yPos1, heightInside1);
   DrawLineV(0xEF, xPos + widthInside1, yPos1, heightInside2);
   #endif
-  
+
   DrawCorners(xPos, yPos, widthInside1, heightInside1);
   PrintString(text, xPos1, yPos, true);
 

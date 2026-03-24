@@ -61,7 +61,7 @@ screenName Update_Credits(void);
 screenName Update_MapGen(void);
 
 //Scenario
-screenName Update_Scenario(void);
+//screenName Update_Scenario(void);
 
 void TickMoonPhase(void);
 
@@ -69,7 +69,7 @@ void TickMoonPhase(void);
 byte RollDice(byte count, byte diceSize);
 extern struct Party;
 
-typedef struct 
+typedef struct
 {
   char
     	NAME[8];
@@ -80,7 +80,7 @@ extern const RaceDescriptionDef const RaceDescription[8];
 
 typedef struct
 {
-  char NAME[8]; 
+  char NAME[8];
   byte HITDICE;
 }ClassDescriptionDef;
 extern const ClassDescriptionDef const ClassDescription[8];
@@ -124,7 +124,7 @@ typedef struct Session
         int GOLD;
         int STEPS;
         byte PartyChars[4], SOLAR, LUNAR, MINAR;
-        //byte CARRYING_WEIGHT, CARRYING_CAPACITY; 
+        //byte CARRYING_WEIGHT, CARRYING_CAPACITY;
 };
 //typedef struct SavedGame
 //{

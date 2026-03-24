@@ -70,7 +70,7 @@ void ApplyCombatRewards();
 //Combat Session Data
 //Eventually create a structure containing this data and malloc an instance at combat runtime
 
-struct 
+struct
 {
   byte tileIndex[MaxCombatParticipants];
   byte targetIndex[MaxCombatParticipants];
@@ -96,7 +96,7 @@ void ClearRoster(void)
     combatParticipant.initiative[i] = 0;
     combatParticipant.active[i] = false;
     combatParticipant.alive[i] = false;
-    combatParticipant.movement[i] = 0;  
+    combatParticipant.movement[i] = 0;
   }
   SelectedCharacter = 0;
 }
@@ -150,7 +150,7 @@ void GetMonsters(void)
 
   for (i = SelectedCharacter; i < LastMonster; ++i)
     //for (i = 0; i < MonsterCount; ++i)
-  {    
+  {
     combatParticipant.isPlayerChar[i] = false;
     combatParticipant.tileIndex[i] = 5; //33+i;
     combatParticipant.posX[i] = i;
@@ -241,7 +241,7 @@ bool SelectNextCharacter()
     if (SelectedCharacter >= MaxCombatParticipants)
       SelectedCharacter = 0;
 
-    //if (combatParticipant[SelectedCharacter].isPlayerChar)   
+    //if (combatParticipant[SelectedCharacter].isPlayerChar)
     if (combatParticipant.active[SelectedCharacter])
       if (combatParticipant.alive[SelectedCharacter])
         found = true;
@@ -250,7 +250,7 @@ bool SelectNextCharacter()
     if (count > MaxCombatParticipants)
     {
       WriteLineMessageWindow("No Entities@", consoleDelay);
-      return false; 
+      return false;
     }
   }
   return true;
@@ -548,7 +548,7 @@ void MoveCombatCharacter(byte index, byte dir)
         break;
       default:
         break;
-    }    
+    }
   }
   combatParticipant.tileIndex[index] = tempTile;
   DrawOneCharacter();
@@ -589,7 +589,6 @@ void DrawOneCharacter()
     //DrawTileX = combatParticipant.posX[SelectedCharacter];
     //DrawTileY = combatParticipant.posY[SelectedCharacter];
     //DrawTileDirect();
-    
     tilePosX = combatParticipant.posX[SelectedCharacter];
     tilePosY = combatParticipant.posY[SelectedCharacter];
     DrawTileSeq(combatParticipant.tileIndex[SelectedCharacter]);
@@ -608,7 +607,6 @@ void DrawCharacters(void)
       //DrawTileX = combatParticipant.posX[i];
       //DrawTileY = combatParticipant.posY[i];
       //DrawTileDirect();
-      
       tilePosX = combatParticipant.posX[i];
       tilePosY = combatParticipant.posY[i];
       DrawTileSeq(combatParticipant.tileIndex[i]);

@@ -41,14 +41,14 @@ void DiskSave(char *filename, byte *source, int size)
   cbm_k_save(source, source + size - 1);
   cbm_k_close(0);
   //cbm_k_clall;
-  
+
   Commodore 64 file system records 2 bytes start adress header at the beginning of the files, but PC recorded .BIN files do not have these 2 Bytes, this difference can cause problems.
   */
-  
+
   //https://retrocomputing.stackexchange.com/questions/25240/how-do-i-save-data-from-a-program-with-cc65
   FILE *fp;
   //char data_out[] = "This is my data to save.@";
-  
+
   //Saving
   _filetype = 's';
   if ((fp = fopen (filename, "w")) == 0) {
@@ -58,7 +58,7 @@ void DiskSave(char *filename, byte *source, int size)
   fwrite (source, 1, size, fp);
   fclose (fp);
   #endif
-  
+
   #if defined(__APPLE2__)
   FILE* filepointer = fopen(filename, "wb"); //Write Binary
   fwrite((int*)source, size, 1, filepointer);
@@ -69,13 +69,13 @@ void DiskSave(char *filename, byte *source, int size)
   source;
   size;
   #endif
-  
+
   #if defined (MSX)
   filename;
   source;
   size;
   #endif
-  
+
   #if defined (__ATARI__)
   filename;
   source;
@@ -94,7 +94,7 @@ void DiskLoad(char *filename, byte *dest, int size)
   cbm_k_close(0);
   cbm_k_clall;
   */
-  
+
   //https://retrocomputing.stackexchange.com/questions/25240/how-do-i-save-data-from-a-program-with-cc65
   FILE *fp;
   int x = 0;
@@ -127,19 +127,19 @@ void DiskLoad(char *filename, byte *dest, int size)
   fclose(filepointer);
   size;
   #endif
-  
+
   #if defined(__NES__)
   filename;
   dest;
   size;
   #endif
-  
+
   #if defined(MSX)
   filename;
   dest;
   size;
   #endif
-  
+
   #if defined (__ATARI__)
   filename;
   dest;

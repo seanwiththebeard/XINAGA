@@ -38,7 +38,7 @@ One byte describes 16x16 region
 
 
 /*{w:8, h:8, count:32, bpp:1, brev:1, pal:"c64", np:1}*/
-const byte OverworldGeoMorphSet[256] = 
+const byte OverworldGeoMorphSet[256] =
 {
         0x00, 0x7F, 0x67, 0x5B, 0x7F, 0x73, 0x6D, 0x7F,
 	0x00, 0x7F, 0x55, 0x7F, 0x6A, 0x7F, 0x55, 0x7F, 0x00, 0x7F, 0x41, 0x41,
@@ -72,8 +72,8 @@ const byte OverworldGeoMorphAttrib[32] = {
   0x05, 0x05, 0x05, 0x05
   };
 
-/*{w:8, h:8, count:32, bpp:1, brev:1, pal:"c64", np:1}*/ 
-const byte DungeonGeoMorphSet[256] = 
+/*{w:8, h:8, count:32, bpp:1, brev:1, pal:"c64", np:1}*/
+const byte DungeonGeoMorphSet[256] =
 {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -284,7 +284,7 @@ void DrawScenario()
         scenarioDir[x] = rand() %4;
 
     if (scenarioDir[x] > 1)
-      pathIndex = miniMapRoadsH;      
+      pathIndex = miniMapRoadsH;
 
     scenarioDist[x] = rand() %5;
     distTravel = dist[scenarioDist[x]];
@@ -318,7 +318,7 @@ void DrawScenario()
     if (x == 0)
     {
       SetPlayerPositionX = scenPos.x;
-      SetPlayerPositionY = scenPos.y;      
+      SetPlayerPositionY = scenPos.y;
     }
 
     while ((originPos.x != scenPos.x) || (originPos.y != scenPos.y))
@@ -326,7 +326,7 @@ void DrawScenario()
     {
       originPos.x += (distX[scenarioDir[x]]);
       originPos.y += (distY[scenarioDir[x]]);
-      clampPoint(&originPos);      
+      clampPoint(&originPos);
 
       if (x > 0)
       {
@@ -421,7 +421,7 @@ void TranslateQuadIndices()
       }
       if (index == miniMapWaterTravel)
       {
-        mapQuads[offset] = 56;        
+        mapQuads[offset] = 56;
         //mapQuads[offset] = 61;
         continue;
       }
@@ -461,7 +461,7 @@ void DrawPoint(byte x, byte y)
 void createPoint(byte index, byte x, byte y)
 {
   struct vector2 *temp,*ptr;
-  temp=(struct vector2 *)malloc(sizeof(struct vector2));  
+  temp=(struct vector2 *)malloc(sizeof(struct vector2));
 
   if(temp==NULL)
     return;
@@ -522,7 +522,7 @@ void deletePoint(int pos)
       ptr=points;
       for(i=0;i<pos;i++)
       {
-        temp=ptr; 
+        temp=ptr;
         ptr=ptr->next;
         if(ptr==NULL)
         {
@@ -697,7 +697,6 @@ void GenerateOverworld(byte seed)
   byte x, y;
   byte totalPointsPlaced = 0;
   UploadCharPage((byte*)OverworldGeoMorphSet, 7);
-  
   clearPoints();
   countContinents = 0;
   forrestCount = 0;
@@ -719,7 +718,7 @@ void GenerateOverworld(byte seed)
   {
     //Create Continent
     {
-      sbyte landcount = pointsBase - (y*6);  
+      sbyte landcount = pointsBase - (y*6);
       //addRandomPoints(1, grass);
       while (landcount && (points != NULL))
       {
@@ -762,7 +761,6 @@ void PlaceRoom()
         #define sizeXMax 7
         #define sizeYMin 2
         #define sizeYMax 7
-        
         struct vector2 point;
         byte x, y;
         byte sizeX = sizeXMin + (rand() % (sizeXMax - sizeXMin));
@@ -783,7 +781,7 @@ void PlaceRoom()
                 ++point.y;
                 point.x -= sizeX;
                 clampPoint(&point);
-                }        
+                }
 }
 void GenerateDungeon(byte seed)
 {
@@ -795,7 +793,7 @@ void GenerateDungeon(byte seed)
                         {
                                 mapQuads[x + (mapMatrixWidth * y)] = miniMapDungeonWall;
                                 DrawPoint(x,y);
-                        }        
+                        }
         srand(seed);
         for (x = 0; x < RoomCount; ++x)
                 PlaceRoom();
@@ -818,10 +816,9 @@ void GetSeed()
   //SetLineMessageWindow(strTemp, 0);
   while(1)
   {
-          //GenerateOverworld(seed);
+          GenerateOverworld(seed);
           GenerateDungeon(seed);
           ++seed;
-          
     //return;
     //++seed;
   }
@@ -859,7 +856,6 @@ screenName Update_MapGen()
   //ClearScreen();
         MiniMapPosX = viewportPosX;
         MiniMapPosY = viewportPosY;
-        
   //ResizeMessageWindow(COLS - 22, viewportPosY, 21, 8);
   ScreenFadeIn();
         DrawInterface();

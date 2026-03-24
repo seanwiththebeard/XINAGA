@@ -20,7 +20,7 @@ byte MiniMapPosY = 2;
 byte MiniMapWidth = 16;
 byte MiniMapHeight = 16;
 
-const byte MiniMapGlyphs[64] = 
+const byte MiniMapGlyphs[64] =
 {
   0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7,
   0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff,
@@ -30,26 +30,22 @@ const byte MiniMapGlyphs[64] =
   0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0,
   0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe2, 0xe7
-  
 };
 
 void DebugGraphics()
 {
   DrawCharset();
-  
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
   WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
   WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 0);
   WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz@", 0);
   WriteLineMessageWindow("01234567890 !#$%^&@", 0);
   WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
-  
   while(1);
 }
 
 void DebugMap()
 {
-  
   LoadMap();
   memset(&mapQuads[0], 0x02, mapMatrixHeight * mapMatrixWidth);
   SetTileOrigin(viewportPosX, viewportPosY);
@@ -69,7 +65,6 @@ void DrawMiniMap(bool highlightPlayer)
   byte x, y, tile = 0;
   //DrawBorder("Minimap@", MiniMapPosX - 1, MiniMapPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
   UpdateAttributes();
-  
   for (y = 0; y < MiniMapHeight; ++y)
   {
     byte tY = (y * mapMatrixWidth);
@@ -78,10 +73,9 @@ void DrawMiniMap(bool highlightPlayer)
       //tile = mapQuads[x + tY] + MiniMapOffset;
       //tile = mapQuads[x + tY];
       tile = MiniMapGlyphs[mapQuads[x + tY]];
-      
       SetChar(tile, x + MiniMapPosX, y + MiniMapPosY);
     }
-  }  
+  }
   if(highlightPlayer)
     SetChar('X', MiniMapPosX + MiniMapHighlightX, MiniMapPosY + MiniMapHighlightY);
   ScreenFadeIn();
@@ -94,19 +88,17 @@ void DrawLocalMiniMap(bool checkLast)
         #define radius 4
         #define posX contextMenuPosX + 1
         #define posY contextMenuPosY
-        
         sbyte sampleX, sampleY, sampleXX, sampleYY;
         byte offset;
         char target;
 
         if(checkLast)
         if ((lastX == MiniMapHighlightX) && (lastY == MiniMapHighlightY))
-                return;        
-        
+                return;
         UpdateAttributes();
         for (sampleY = -radius; sampleY <= radius; ++sampleY)
                 {
-                        sampleYY = sampleY + MiniMapHighlightY;        
+                        sampleYY = sampleY + MiniMapHighlightY;
                         if (sampleYY < 0)
                                         sampleYY += mapMatrixHeight;
                         if (sampleYY >= mapMatrixHeight)
@@ -114,13 +106,10 @@ void DrawLocalMiniMap(bool checkLast)
                 for (sampleX = -radius; sampleX <= radius; ++sampleX)
                         {
                                 sampleXX = sampleX + MiniMapHighlightX;
-                                
                                 if (sampleXX < 0)
                                         sampleXX += mapMatrixWidth;
-                                
                                 if (sampleXX >= mapMatrixWidth)
                                         sampleXX -= mapMatrixWidth;
-                                
                                 offset = sampleXX + mapMatrixWidth* sampleYY;
                                 if ((sampleX == 0) && (sampleY == 0))
                                         target = 'X';
@@ -157,7 +146,6 @@ void DrawCharStatus(byte characterIndex)
 
   DrawBorder(PlayerChar->NAME, PartyStatsX, statY - 1, PartyStatsWidth, 4, true);
   DrawTileDirectXY(PlayerChar->CLASS, PartyStatsX + 1, statY);
-  
   ConsoleBufferReset();
   ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
   ConsoleBufferPrint(PartyStatsX + 3, statY);
@@ -175,7 +163,7 @@ byte moonTick;
 
 void DrawMoonPhase()
 {
-  ConsoleBufferReset();  
+  ConsoleBufferReset();
   sprintf(strTemp, "<%c||%c>@", phaseChar[moonA], phaseChar[moonB]);
   PrintString(strTemp, viewportPosX + (viewportWidth / 2) + 2, viewportPosY -1, true);
   ConsoleBufferReset();
@@ -216,7 +204,7 @@ void TickMoonPhase() //The SOLUS and the LUNUS and the MOONUS
     {
       moonB = 0;
     }
-    DrawMoonPhase(); 
+    DrawMoonPhase();
   }
 }
 

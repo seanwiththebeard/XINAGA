@@ -79,7 +79,7 @@ bool InputChanged(void)
 
 
 void UpdateInput(void)
-{ 
+{
   //srand(++randseed);
   #if __C64__
   joyTemp = joy_read(0);
@@ -94,7 +94,6 @@ void UpdateInput(void)
     ChangedState = true;
     joyStateLast = joyState;
   }
-  
   //if (kbhit())
   {
     //if (key != keycode[0])
@@ -123,7 +122,7 @@ void UpdateInput(void)
   key = keycode[0];
   //SetChar(key, COLS - 1, 1);
   #endif
-  
+
   #if (__NES__)
   padTemp = pad_poll(0);
   if (padTemp == pad)
@@ -135,7 +134,7 @@ void UpdateInput(void)
     padStateLast = pad;
   }
   #endif
-  
+
   #if (MSX)
   padTemp = GTSTCK(STCK_Joy1);
   trigATemp = GTTRIG(TRIG_Joy1_A);
@@ -165,16 +164,16 @@ bool InputUp(void)
     return true;
   }
   #endif
-  
+
   #if (__NES__)
   return pad&PAD_UP;
   #endif
-  
+
   #if (MSX)
   if (pad == STCK_N)
     return true;
   #endif
-  
+
   return false;
 }
 
@@ -188,16 +187,16 @@ bool InputDown(void)
   if (key == 's' || key == 'S')
     return true;
   #endif
-  
+
   #if (__NES__)
   return pad&PAD_DOWN;
   #endif
-  
+
   #if (MSX)
   if (pad == STCK_S)
     return true;
   #endif
-  
+
   return false;
 }
 
@@ -207,21 +206,21 @@ bool InputLeft(void)
   if (JOY_LEFT(joyState))
     return true;
   #endif
-  
+
   #if defined(__APPLE2__)
   if (key == 'a' || key == 'A')
     return true;
   #endif
-  
+
   #if (__NES__)
   return pad&PAD_LEFT;
   #endif
-  
+
   #if (MSX)
   if (pad == STCK_W)
     return true;
   #endif
-  
+
   return false;
 }
 
@@ -231,21 +230,21 @@ bool InputRight(void)
   if (JOY_RIGHT(joyState))
     return true;
   #endif
-  
+
   #if defined(__APPLE2__)
   if (key == 'd' || key == 'D')
     return true;
   #endif
-  
+
   #if (__NES__)
   return pad&PAD_RIGHT;
   #endif
-  
+
   #if (MSX)
   if (pad == STCK_E)
     return true;
   #endif
-  
+
   return false;
 }
 
@@ -259,11 +258,11 @@ bool InputFire(void)
   if (key == ' ')
     return true;
   #endif
-  
+
   #if (__NES__)
   return pad&PAD_A;
   #endif
-  
+
   #if (MSX)
   if (GTTRIG(TRIG_Joy1_A))
   {
@@ -271,7 +270,7 @@ bool InputFire(void)
     return true;
   }
   #endif
-  
+
   return false;
 }
 
@@ -279,7 +278,7 @@ void WaitForInput(void)
 {
   bool ex = false;
   WriteLineMessageWindow("Press space to continue@", 0);
-  
+
   while (!ex)
   {
     UpdateInput();

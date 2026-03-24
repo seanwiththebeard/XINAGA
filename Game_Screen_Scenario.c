@@ -66,21 +66,21 @@ byte QuestLocation;
 const char* const questOrigin[4] = { "the castle", "a tavern rumor", "your library studies", "a dream at the inn"};
 //Map Location Types (rule of fours, four tileset variations of each of four options)
 
-//Primary Settlement: 	
-//			Castle		
-//			City		
-//			Seaport		
-//			Outpost		
+//Primary Settlement:
+//			Castle
+//			City
+//			Seaport
+//			Outpost
 
 //Secondary Settlement:
-//			Village		
+//			Village
 //			Library		Scholar Library, Wizard's Collection, War Records, Ruined Archive
-//			Inn		
-//			Abandoned Cabin	
+//			Inn
+//			Abandoned Cabin
 
-//Dungeon:		Cavern		
-//			Tower		
-//			Ruins		
+//Dungeon:		Cavern
+//			Tower
+//			Ruins
 //			Portal		Crystal Rift, Nightmare, Clouds, Lunar
 
 //Landmark:		Forrest		Open Fields, Dense Woods, Swamp, Giant Stump

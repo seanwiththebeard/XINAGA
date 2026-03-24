@@ -63,7 +63,7 @@ void ConsoleBufferEndline()
     --StringLength;
   strTemp[StringLength - 1] = '@';
 }
-  
+
 void ConsoleBufferPrint(byte x, byte y) //Prints the contents of the buffer to a screen position
 {
   ConsoleBufferEndline();
@@ -113,7 +113,7 @@ void ClearItem(byte index)
   byte x;
   for (x = 0; x < MenuWidth; ++x)
   {
-    SetChar(' ', MenuPosX + x, MenuPosY + index);    
+    SetChar(' ', MenuPosX + x, MenuPosY + index);
   }
 }
 
@@ -126,16 +126,16 @@ void DrawItem(byte index)
   else
     ConsoleBufferAdd(" ");
   ConsoleBufferBackspace();
-  
+
   if (MenuHighlight[index] == true)
   {
     ConsoleBufferAdd("+@");
     ConsoleBufferBackspace();
   }
-  
+
   ConsoleBufferAdd(MenuItems[index]);
   ConsoleBufferAdd("@");
-        
+
   ConsoleBufferPrint(MenuPosX, MenuPosY + index);
   //wait_vblank(1);
 }
@@ -153,7 +153,7 @@ void ClearMenuContents()
         for (x = 0; x < menuItemsCount; ++x)
                 {
                         MenuItems[x] = (char*)"";
-                        MenuHighlight[x] = false;    
+                        MenuHighlight[x] = false;
                 }
 }
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte clear)
@@ -169,12 +169,12 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte c
   menuSel = 0; //Reset for next draw if we don't keep it
         if(clear)
   ClearMenuContents();
-  
+
   //DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, false);
   //for (x = 0; x < menuItemsCount; ++x)
   //{
     //MenuItems[x] = (char*)"";
-    //MenuHighlight[x] = false;    
+    //MenuHighlight[x] = false;
   //}
 }
 void SetMenuItem(byte index, char *value)
@@ -212,7 +212,7 @@ void ClearMenu()
   byte x;
   byte xPos = MenuPosX;
   byte yPos = MenuPosY;
-  
+
     for (x = 1; x < MenuHeight; ++x)
       DrawLineH(' ', xPos, yPos + x - 1, MenuWidth);
 }
@@ -222,7 +222,7 @@ byte GetMenuSelection()
 {
   bool exit = false;
   bool refresh = false;
-  
+
   while (1)
   {
     UpdateInput();
@@ -234,29 +234,29 @@ byte GetMenuSelection()
         --MenuSelection;
         if (MenuSelection < 0)
           MenuSelection = MenuCount - 1;
-        
+
         refresh = true;
       }
-      
+
       if(InputDown())
       {
         ++MenuSelection;
         if (MenuSelection >= MenuCount)
           MenuSelection = 0;
-        
+
         refresh = true;
       }
-      
+
       if (refresh)
       {
-        DrawItem(LastSelection); 
+        DrawItem(LastSelection);
         DrawItem(MenuSelection);
       }
-      
+
       if (InputFire())
         return MenuSelection;
     }
-  }  
+  }
 }
 
 void ClearConsoleContent()
@@ -264,7 +264,7 @@ void ClearConsoleContent()
   /*free(consoleContents);
   consoleContents = malloc(Width * Height);
   memset(&consoleContents[0], ' ', Width*Height);*/
-  
+
   int size = Width * Height;
   if (consoleContents == NULL)
     consoleContents = (byte*)malloc(size);
@@ -289,7 +289,7 @@ void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
   PosY = yPos;
   Width = w;
   Height = h;
-  
+
   contentOffset = Width * (Height - 1);
 
   DrawBorder("@",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
@@ -303,30 +303,28 @@ void ScrollMessageWindowUp()
 {
   byte x;
   int y;
-  
+
   for (y = 0; y < contentOffset; ++y)
     consoleContents[y] = consoleContents[y + Width];
-  
+
   for (x = 0; x < (Width); ++x)
     consoleContents[contentOffset + x] = ' ';
-  
+
   DrawConsoleContent();
 }
 
 void SetLineMessageWindow(char *message, byte delay)
 {
   byte x;
-  byte length = 0; 
+  byte length = 0;
   for (;message[length] != '@' && length < ConsoleBufferLength; ++length);
   ++length;
-  
   for (x = 0; x < Width; ++x)
     //if (GetChar(PosX + x, PosY + Height - 1) != message[x])
     {
       SetChar(' ', PosX + x, PosY + Height - 1);
       consoleContents[contentOffset + x] = ' ';
     }
-  
   for(x = 0; x < length; ++x)
   {
     if (message[x] == '@')
@@ -350,7 +348,6 @@ void SetLineMessageWindow(char *message, byte delay)
           wait_vblank(delay);
       }
     }
-    
     if (length > Width)
       if (message[x] == ' ')
       {
@@ -358,12 +355,10 @@ void SetLineMessageWindow(char *message, byte delay)
         byte wordStart = x + 1;
         char temp[128];
         byte i = 0;
-        
         while (message[wordStart + wordLength] != ' ' && message[wordStart + wordLength] != '@')
         {
           ++wordLength;
         }
-        
         if(x + wordLength > Width - 1)
         {
           ++x; //Skips the space

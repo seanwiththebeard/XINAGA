@@ -21,10 +21,10 @@ byte strTemp[ConsoleBufferLength];
 
 struct Session Sessions[4];
 
-const RaceDescriptionDef const RaceDescription[8] = 
+const RaceDescriptionDef const RaceDescription[8] =
 {
   {"Human", 255},
-  {"Elf", 6}, 
+  {"Elf", 6},
   {"Dwarf", 255},
   {"Frobit", 6},
   {"Orc", 6},
@@ -35,7 +35,7 @@ const RaceDescriptionDef const RaceDescription[8] =
 };
 
 
-const ClassDescriptionDef const ClassDescription[8]= 
+const ClassDescriptionDef const ClassDescription[8]=
 {
   {"Fighter", 8},
   {"Ranger", 8},
@@ -69,7 +69,6 @@ void SwitchScreen(screenName screen)
 {
   //ResizeMessageWindow(1, 1, 10, 15);
   //WriteLineMessageWindow("Hello@", 0);
-  
   //ScreenDisable();
   //ClearScreen();
   //DrawInterface();
@@ -101,13 +100,12 @@ void SwitchScreen(screenName screen)
       break;
     case Scenario:
       #if !MSX
-      currentScreen = Update_Scenario();
+      //currentScreen = Update_Scenario();
       #endif
     default:
       currentScreen = DefaultScreen;
       break;
   }
-  
   SwitchScreen(currentScreen);
 }
 
@@ -118,7 +116,6 @@ void RunGame(screenName startingScreen)
   InitializeGraphics();
   ClearScreen();
   ScreenFadeOut();
-  
   #if defined(__NES__)
   MMC3_PRG_8000(0);
   #endif
@@ -129,16 +126,11 @@ DrawInterface();
         //WriteLineMessageWindow("Greetings from the librarian Soodo Nim@", 0);
         //WriteLineMessageWindow("..not to be confused with evil Anto Nim@", 0);
         //WaitForInput();
-        
-        
   //DrawBorder("@", 12, 19, 16, 5, true);
   //PrintString("Press Space@", 14, 21, true);
-
-  
   while(1)
   {
     SwitchScreen(currentScreen);
-    
     //DrawBorder("@", 12, 19, 16, 5, true);
   //PrintString("Press Space@", 14, 21, true);
 
@@ -148,7 +140,7 @@ DrawInterface();
     if (InputChanged())
       if (InputFire())
         break;
-  }  
+  }
   }
 }
 
@@ -170,7 +162,7 @@ byte CountRoster()
 void create()
 {
   struct playerChar *temp,*ptr;
-  temp=(struct playerChar *)malloc(sizeof(struct playerChar));  
+  temp=(struct playerChar *)malloc(sizeof(struct playerChar));
 
   if(temp==NULL)
     return;
@@ -224,7 +216,7 @@ void delete_pos(byte pos)
       ptr=startRoster;
       for(i=0;i<pos;i++)
       {
-        temp=ptr; 
+        temp=ptr;
         ptr=ptr->next ;
         if(ptr==NULL)
         {
@@ -279,9 +271,7 @@ void AddParty(byte index)
 
   if(temp==NULL)
     return;
-  
   memcpy(temp, src, sizeof(struct playerChar));
-  
   temp->next=NULL;
   if(startParty==NULL)
     startParty=temp;
@@ -317,7 +307,7 @@ void DeleteParty(byte pos)
       ptr=startParty;
       for(i=0;i<pos;i++)
       {
-        temp=ptr; 
+        temp=ptr;
         ptr=ptr->next ;
         if(ptr==NULL)
         {
@@ -342,9 +332,7 @@ void RemoveParty(byte index) //Removes Last Party Member (?)
 
   if(temp==NULL)
     return;
-  
   memcpy(temp, src, sizeof(struct playerChar));
-  
   temp->next=NULL;
   if(startRoster==NULL)
     startRoster=temp;

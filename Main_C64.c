@@ -13,7 +13,7 @@
 //#link "Game_Screen_Map.c"
 //#link "Game_Screen_Combat.c"
 //#link "Game_Screen_MapGen.c"
-//#link "Game_Screen_Scenario.c"
+////#link "Game_Screen_Scenario.c"
 
 void main(void)
 {
@@ -24,7 +24,8 @@ void main(void)
 }
 #pragma rodata-name (push, "GAME_RODATA")
 /*{pal:"c64",layout:"c64"}*/
-const char PALETTE[16] = { 
+//This has to be here or the colors aren't there in the 8BWS asset editor, they draw from these definitions
+const char PALETTE[16] = {
   0x00,			// screen color
 
   0x01,0x02,0x03,0x04,	// background palette 0
@@ -61,7 +62,7 @@ byte attributeset[256] = {
 
 //#pragma rodata-name("CHARS")
 /*{w:8, h:8, count:256, bpp:1, brev:1, pal:"c64", np:1}*/
-const byte characterset[2048] = 
+const byte characterset[2048] =
 {
   0x00, 0x07, 0x0C, 0x0A, 0x0B, 0x0D, 0x1B, 0x10, 0x00, 0xE0, 0x30, 0x10,
 	0x10, 0xB0, 0xD8, 0x08, 0x00, 0x03, 0x07, 0x07, 0x05, 0x06, 0x09, 0x18,

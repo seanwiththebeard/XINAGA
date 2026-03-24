@@ -44,19 +44,19 @@
 //NPCs:			Monster Sign Treasure Gateway Ship Horse ? ?
 
 //Town/Castle Tileset
-//Tiles (Terrain):	
-//Tiles (Landmarks):	
-//NPCs:			
+//Tiles (Terrain):
+//Tiles (Landmarks):
+//NPCs:
 
 //Dungeon/Tower Tileset
-//Tiles (Terrain):	
-//Tiles (Landmarks):	
-//NPCs:			
+//Tiles (Terrain):
+//Tiles (Landmarks):
+//NPCs:
 
 //Combat Tileset
-//Tiles (Terrain):	
-//Tiles (Landmarks):	
-//NPCs:			
+//Tiles (Terrain):
+//Tiles (Landmarks):
+//NPCs:
 
 //Prototypes
 //      Map Functions
@@ -306,14 +306,14 @@ static void BufferCharacters()
 static void FillQuadBuffer()
 {
   byte quadX = characters.quadPosX[followIndex];
-  byte quadY = characters.quadPosY[followIndex];  
+  byte quadY = characters.quadPosY[followIndex];
   byte byte_x = (quadX + 1) & (quadWidth - 1);
   byte byte_y = (quadY + 1) & (quadHeight - 1);
   byte row0 = mapMatrixWidth * quadY;
-  byte row1 = mapMatrixWidth * byte_y; 
-  quadBuffer[0] = mapQuads[quadX + row0]; 
-  quadBuffer[1] = mapQuads[byte_x + row0]; 
-  quadBuffer[2] = mapQuads[quadX + row1]; 
+  byte row1 = mapMatrixWidth * byte_y;
+  quadBuffer[0] = mapQuads[quadX + row0];
+  quadBuffer[1] = mapQuads[byte_x + row0];
+  quadBuffer[2] = mapQuads[quadX + row1];
   quadBuffer[3] = mapQuads[byte_x + row1];
 }
 
@@ -435,15 +435,13 @@ static void InitializeMapData()
   int byte_offset;
   int byte_index = 0;
   //memset(&mapQuads[0], 0, 256);
-  
   SetPlayerPositionX = 8;
-  SetPlayerPositionY = 8;  
+  SetPlayerPositionY = 8;
 
   for (byte_y = 0; byte_y < 16; ++byte_y)
     for (byte_x = 0; byte_x < 16; ++byte_x)
     {
       //mapQuads[byte_x + 16*byte_y] = 16;
-      
       mapQuads[byte_x + 16*byte_y] = byte_x + 16*byte_y;
     }
 
@@ -488,40 +486,39 @@ static void InitializeMapData()
 
   //ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
   //ScreenQuad.Chars[2][1] = 44; // Set the wizard to trees on 1
-  
   /*
   Tile Offset 32
   0 Water
   0 = Water 2
   1 = Rocks 10
   Index 56
-  
+
   1 Roads
   0 = Grass 4
   1 = Roads 14
   Index 57
-  
+
   2 Grass
   0 - Grass 4
   1 - Trees 12
   Index 58
-  
+
   3 Forest
   0 - Grass 4
   1 - Trees 12
   Index 59
-  
+
   4 Mountains
   0 = Grass 4
   1 - Rocks 10
   Index 60
-  
+
   5 - Ocean Travel
   0 - Water 2
   1 - Grass 4
   Index 61
   */
-  
+
   #define grass 36
   #define water 34
   #define signpost 35
@@ -530,40 +527,40 @@ static void InitializeMapData()
   #define road 46
   #define walls 46
   #define floor 38
-  
+
   tilesOpaque[tree] = true; //Trees
   tilesOpaque[rocks] = true; //rocks
-  
+
   tilesPalette[tree] = 3; //Trees
   tilesPalette[signpost] = 2; //Sign
   //ScreenQuad.Chars[0][0] = water;
   //ScreenQuad.Chars[0][1] = rocks;
-  
+
   ScreenQuad.Chars[32][0] = grass;
   ScreenQuad.Chars[32][1] = road;
   ScreenQuad.Chars[33][0] = grass;
   ScreenQuad.Chars[33][1] = road;
   ScreenQuad.Chars[34][0] = grass;
   ScreenQuad.Chars[34][1] = road;
-  
+
   ScreenQuad.Chars[56][0] = water;
   ScreenQuad.Chars[56][1] = rocks;
-  
+
   ScreenQuad.Chars[57][0] = grass;
   ScreenQuad.Chars[57][1] = road;
-  
+
   ScreenQuad.Chars[58][0] = grass;
   ScreenQuad.Chars[58][1] = tree;
-  
+
   ScreenQuad.Chars[59][0] = grass;
   ScreenQuad.Chars[59][1] = tree;
-  
+
   ScreenQuad.Chars[60][0] = grass;
   ScreenQuad.Chars[60][1] = rocks;
-  
+
   ScreenQuad.Chars[61][0] = water;
   ScreenQuad.Chars[61][1] = rocks;
-  
+
   ScreenQuad.Chars[62][0] = floor;
   ScreenQuad.Chars[62][1] = walls;
 
@@ -733,7 +730,7 @@ static void DrawEntireMap()
     mapOffset = (mapWidth * ((offsetY + byte_y) & 31));
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
-      viewportBuffer[byte_x + viewportOffset] = mapData[((offsetX + byte_x) & 31) + mapOffset];      
+      viewportBuffer[byte_x + viewportOffset] = mapData[((offsetX + byte_x) & 31) + mapOffset];
     }
     viewportOffset += viewportWidth;
   }
@@ -747,7 +744,7 @@ static void DrawEntireMap()
   {
     tilePosX = 0;
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
-    { 
+    {
       byte newIndex = viewportBuffer[offset];
       if (viewportBufferLast[offset] != newIndex)
       {
@@ -796,7 +793,7 @@ static void MoveCharacter(byte index, byte dir)
           ++characters.quadPosY[index];
           changedQuads = true;
           if(characters.quadPosY[index] == mapMatrixHeight)
-            characters.quadPosY[index] = 0; 
+            characters.quadPosY[index] = 0;
         }
         break;
       case left:
@@ -808,7 +805,7 @@ static void MoveCharacter(byte index, byte dir)
           --characters.quadPosX[index];
           changedQuads = true;
           if(characters.quadPosX[index] < 0)
-            characters.quadPosX[index] = mapMatrixWidth - 1; 
+            characters.quadPosX[index] = mapMatrixWidth - 1;
         }
         break;
       case right:
@@ -820,7 +817,7 @@ static void MoveCharacter(byte index, byte dir)
           ++characters.quadPosX[index];
           changedQuads = true;
           if(characters.quadPosX[index] == mapMatrixWidth)
-            characters.quadPosX[index] = 0; 
+            characters.quadPosX[index] = 0;
         }
         break;
       default:
@@ -831,12 +828,10 @@ static void MoveCharacter(byte index, byte dir)
     {
       byte edgeCheckX = characters.posX[index] % 16;
       byte edgeCheckY = characters.posY[index] % 16;
-      if(changedQuads)
-        {
+      //if(changedQuads)
+        //{
                 //UpdatePlayerOnMiniMap;
-                
-        }
-                    
+        //}
       switch (dir)
       {
         case 0:
@@ -881,7 +876,7 @@ static void DrawCharacterCoordinates(byte index)
 
   if (CoordPosY >= quadHeight * 2)
     CoordPosY -= quadHeight * 2;
-  CoordPosY += quadHeight*2*characters.quadPosY[index];  
+  CoordPosY += quadHeight*2*characters.quadPosY[index];
 
   sprintf(strTemp,"<%3i  %3i>@", CoordPosX, CoordPosY);
   PrintString(strTemp, viewportPosX + (viewportWidth >> 1), viewportPosY + (viewportHeight << 1), true);
@@ -932,7 +927,7 @@ static void ActionMenu()
   ClearMenu();
   switch (action)
   {
-    case 0:            
+    case 0:
       break;
     case 1:
       break;
@@ -965,7 +960,6 @@ static void ActionMenu()
   }
   DrawCharStats();
 DrawLocalMiniMap(false);
-     
 }
 
 void DrawMap()
@@ -992,7 +986,6 @@ screenName MapUpdate()
   ScreenFadeIn();
   ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 0, true);
   DrawMapViewport();
-        
 
   while (!exitScreen)
   {
@@ -1002,7 +995,7 @@ screenName MapUpdate()
       direction Dir = 4;
       if (InputUp())
         Dir = up;
-      if (InputDown()) 
+      if (InputDown())
         Dir = down;
       if (InputLeft())
         Dir = left;
