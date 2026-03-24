@@ -13,7 +13,7 @@
 
 #if defined (__C64__)
 #pragma code-name (push, "XINAGA")
-#pragma rodata-name (push, "XINAGA_RODATA")
+//#pragma rodata-name (push, "XINAGA_RODATA")
 #endif
 
 //void PlaySong(byte index)

@@ -20,7 +20,7 @@ void main(void)
   //DiskSave("hello.bin", &attributeset[0], 256);
   RunGame(MapGen);
 }
-#pragma rodata-name (push, "GAME_RODATA")
+#pragma rodata-name (push, "GAME_DISKDATA")
 /*{pal:"c64",layout:"c64"}*/
 //This has to be here or the colors aren't there in the 8BWS asset editor, they draw from these definitions
 const char PALETTE[16] = {
