@@ -324,6 +324,19 @@ void wait_vblank(byte frames)
   }
 }
 
+#if defined(__C64__)
+  #define bank 3
+  #define charpos 7
+  #define screenpos 2
+#endif
+
+void UploadCharPage(byte *source, byte page)
+{
+  #if defined(__C64__)
+  memcpy((byte*)(bank * (16<<10) + (charpos <<11) + (256 * page)), source, 256);
+  #endif
+}
+
 void InitializeGraphics(void)
 {
   #if defined(__APPLE2__)
@@ -335,9 +348,6 @@ void InitializeGraphics(void)
   #endif
 
   #if defined(__C64__)
-  #define bank 3
-  #define charpos 7
-  #define screenpos 2
   
   #define regd018 (int*)0xD018
   #define regdd00 (int*)0xDD00

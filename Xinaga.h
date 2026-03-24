@@ -187,6 +187,7 @@ extern const char PALETTE_3[16];
 #define ColorBorder ColorBG
 #define ColorText 1
 void InitializeGraphics(void);
+void UploadCharPage(byte *source, byte page);
 void wait_vblank(byte frames);
 void SetBorder(byte color);
 void SetBG(byte color);
