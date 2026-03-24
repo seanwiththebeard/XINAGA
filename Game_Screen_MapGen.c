@@ -94,8 +94,8 @@ static byte forrestCount;
 static byte scenarioPoints[9];
 static byte scenarioDir[9];
 static byte scenarioDist[9];
-static sbyte distX[4] = {0, 0, 1, -1};
-static sbyte distY[4] = {-1, 1, 0, 0};
+static const sbyte distX[4] = {0, 0, 1, -1};
+static const sbyte distY[4] = {-1, 1, 0, 0};
 
 const static char dirChar[5] = {"NSEW"};
 const static byte dist[5] = {4, 3, 3, 5, 2};
@@ -734,7 +734,8 @@ void GenerateDungeon(byte seed)
                 PlaceRoom();
 }
 
-byte seed  = 20;
+byte seed;
+
 void GetSeed()
 {
   #define menuWidth 5
@@ -788,6 +789,7 @@ void GetSeed()
 
 screenName Update_MapGen()
 {
+  seed = 20;
   //ClearScreen();
         MiniMapPosX = viewportPosX;
         MiniMapPosY = viewportPosY;

@@ -15,10 +15,10 @@
 #pragma rodata-name (push, "GAME_RODATA")
 #endif
 
-byte MiniMapPosX = 2;
-byte MiniMapPosY = 2;
-byte MiniMapWidth = 16;
-byte MiniMapHeight = 16;
+byte MiniMapPosX;//= 2;
+byte MiniMapPosY;// = 2;
+byte MiniMapWidth;// = 16;
+byte MiniMapHeight;// = 16;
 
 const byte MiniMapGlyphs[64] =
 {
@@ -151,7 +151,7 @@ void DrawCharStatus(byte characterIndex)
   ConsoleBufferPrint(PartyStatsX + 3, statY);
   ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
   ConsoleBufferPrint(PartyStatsX + 3, statY+1);
-  sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);  
+  sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);
   PrintString(strTemp, PartyStatsX + 10, statY + 1, true);
   ConsoleBufferReset();
 }

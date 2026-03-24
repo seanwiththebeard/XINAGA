@@ -17,7 +17,7 @@
 #pragma rodata-name (push, "GAME_RODATA")
 #endif
 
-int rands = 0;
+int rands;
 screenName nextScreen;
 bool AreYouSure();
 bool exitWindow;
