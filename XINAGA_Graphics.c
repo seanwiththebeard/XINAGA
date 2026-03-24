@@ -334,8 +334,10 @@ void UploadCharPage(byte *source, byte page)
 {
   #if defined(__C64__)
   memcpy((byte*)(bank * (16<<10) + (charpos <<11) + (256 * page)), source, 256);
+  memcpy(&attributeset[32*page], &source[256], 32);
   #endif
 }
+  //memcpy((byte*)attributeset[256-32], source, 20); //Mega Man Credits Effect, what's it overwriting?
 
 void InitializeGraphics(void)
 {
