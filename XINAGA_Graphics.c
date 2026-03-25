@@ -27,6 +27,7 @@
 #if defined (__C64__)
 #pragma code-name (push, "XINAGA")
 //#pragma rodata-name (push, "XINAGA_RODATA")
+byte attributeset[256];
 #endif
 
 int YColumnIndex[ROWS];
