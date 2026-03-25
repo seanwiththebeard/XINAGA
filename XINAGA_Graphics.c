@@ -341,6 +341,10 @@ void UploadCharPage(byte *source, byte page)
   memcpy((byte*)&charset[256*page], source, 256);
   //memcpy(&attributeset[32*page], &source[256], 32);
   #endif
+
+  #if defined(__NES__)
+  source;page;
+  #endif
 }
 
   //memcpy((byte*)attributeset[256-32], source, 20); //Mega Man Credits Effect, what's it overwriting?

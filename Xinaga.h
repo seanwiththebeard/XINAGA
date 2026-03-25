@@ -27,7 +27,6 @@ extern uint16_t randseed;
 extern const byte characterset[2048];
 extern const byte attributesDefault[256];
 
-extern byte attributeset[256];
 
 #define viewportPosX 1
 #define viewportPosY 1
@@ -67,6 +66,7 @@ void A2Pixel(byte x, byte y, byte color);
 #endif
 
 #if defined(__C64__)
+extern byte attributeset[256];
 #define COLS 40
 #define ROWS 25
 
@@ -129,6 +129,7 @@ void A2Pixel(byte x, byte y, byte color);
 
 #if defined(__NES__)
 #include <peekpoke.h>
+extern const byte attributeset[256];
 
 #define COLS 32
 #define ROWS 30
