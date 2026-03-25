@@ -753,9 +753,9 @@ void GetSeed()
   while(1)
   {
           GenerateOverworld(seed);
-          GenerateDungeon(seed);
+          //GenerateDungeon(seed);
           ++seed;
-    //return;
+    return;
     //++seed;
   }
 
