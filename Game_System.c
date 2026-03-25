@@ -12,7 +12,7 @@
 
 #if defined (__C64__)
 #pragma code-name (push, "GAME")
-#pragma rodata-name (push, "GAME_RODATA")
+#pragma rodata-name (push, "GAME")
 #endif
 
 byte MiniMapPosX;//= 2;

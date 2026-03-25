@@ -15,7 +15,7 @@
 
 #if defined (__C64__)
 #pragma code-name (push, "SCREEN_COMBAT")
-#pragma rodata-name (push, "GAME_RODATA")
+#pragma rodata-name (push, "SCREEN_COMBAT")
 #endif
 
 #define fillTile 36

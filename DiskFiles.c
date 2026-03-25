@@ -1,9 +1,11 @@
 #include "Xinaga.h"
 
+#if defined(__C64__)
 #pragma rodata-name (push, "GAME_DISKDATA")
+
 /*{pal:"c64",layout:"c64"}*/
-//This has to be here or the colors aren't there in the 8BWS asset editor, they draw from these definitions
 const char PALETTE[16] = {
+//This has to be here or the colors aren't there in the 8BWS asset editor, they draw from these definitions
   0x00,			// screen color
 
   0x01,0x02,0x03,0x04,	// background palette 0
@@ -38,7 +40,6 @@ const byte attributesDefault[256] = {
   0x05, 0x05, 0x05, 0x05
   };
 
-//#pragma rodata-name("CHARS")
 /*{w:8, h:8, count:256, bpp:1, brev:1, pal:"c64", np:1}*/
 const byte characterset[2048] =
 {
@@ -214,3 +215,4 @@ const byte characterset[2048] =
 	0x3C, 0x7E, 0x7E, 0x3C, 0x3C, 0x7E, 0x7E, 0x3C, 0x7E, 0x7E, 0x18, 0x00,
 	0x00, 0x18, 0x3C, 0x7E, 0x7E, 0x3C, 0x18, 0x00
 };
+#endif

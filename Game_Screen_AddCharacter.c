@@ -14,7 +14,7 @@
 
 #if defined (__C64__)
 #pragma code-name (push, "SCREEN_ADDCHAR")
-#pragma rodata-name (push, "GAME_RODATA")
+#pragma rodata-name (push, "SCREEN_ADDCHAR")
 #endif
 
 int rands;

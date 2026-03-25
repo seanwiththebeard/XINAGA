@@ -33,7 +33,7 @@ One byte describes 16x16 region
 
 #if defined (__C64__)
 #pragma code-name (push, "SCREEN_MAPGEN")
-#pragma rodata-name (push, "GAME_DISKDATA")
+#pragma rodata-name (push, "SCREEN_MAPGEN")
 #endif
 
 const byte OverworldGeoMorphSet[256];
