@@ -212,7 +212,7 @@ extern byte SetCharY;
 #endif
 
 void _SetChar(void);
-#define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
+#define SetChar(charindex, x, y) do {SetCharIndex = (charindex); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void ClearScreen(void);
 void DrawLineH(byte index, byte x, byte y, byte length);
 void DrawLineV(byte index, byte x, byte y, byte length);

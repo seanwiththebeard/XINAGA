@@ -764,65 +764,77 @@ static void DrawEntireMap()
 static void MoveCharacter(byte index, byte dir)
 {
   bool scrollQuads = false;
-  bool changedQuads = false;
+  //bool changedQuads = false;
   byte checkCollision = CheckCollision(index, dir);
 
   TickMoonPhase();
   if(!checkCollision)
   {
+    sbyte posX = characters.posX[index];
+    sbyte posY = characters.posY[index];
+    sbyte qPosX = characters.quadPosX[index];
+    sbyte qPosY = characters.quadPosY[index];
     switch (dir)
     {
       case up:
-        --characters.posY[index];
-        if (characters.posY[index] < 0)
-          characters.posY[index] = mapHeight - 1;
-        if (characters.posY[index] == 15 || characters.posY[index] == 31)
+        --posY;
+        if (posY < 0)
+          posY = mapHeight - 1;
+        //if (posY == 15 || posY == 31)
+        if (posY % 16 == 15)
         {
-          --characters.quadPosY[index];
-          changedQuads = true;
-          if(characters.quadPosY[index] < 0)
-            characters.quadPosY[index] = mapMatrixHeight - 1;
+          --qPosY;
+          //changedQuads = true;
+          if(qPosY < 0)
+            qPosY = mapMatrixHeight - 1;
         }
         break;
       case down:
-        ++characters.posY[index];
-        if (characters.posY[index] >= mapHeight)
-          characters.posY[index] = 0;
-        if (characters.posY[index] == 0 || characters.posY[index] == 16)
+        ++posY;
+        if (posY >= mapHeight)
+          posY = 0;
+        //if (posY == 0 || posY == 16)
+        if (posY % 16 == 0)
         {
-          ++characters.quadPosY[index];
-          changedQuads = true;
-          if(characters.quadPosY[index] == mapMatrixHeight)
-            characters.quadPosY[index] = 0;
+          ++qPosY;
+          //changedQuads = true;
+          if(qPosY == mapMatrixHeight)
+            qPosY = 0;
         }
         break;
       case left:
-        --characters.posX[index];
-        if (characters.posX[index] < 0)
-          characters.posX[index] = mapWidth - 1;
-        if (characters.posX[index] == 15 || characters.posX[index] == 31)
+        --posX;
+        if (posX < 0)
+          posX = mapWidth - 1;
+        //if (posX == 15 || posX == 31)
+        if (posX % 16 == 15)
         {
-          --characters.quadPosX[index];
-          changedQuads = true;
-          if(characters.quadPosX[index] < 0)
-            characters.quadPosX[index] = mapMatrixWidth - 1;
+          --qPosX;
+          //changedQuads = true;
+          if(qPosX < 0)
+            qPosX = mapMatrixWidth - 1;
         }
         break;
       case right:
-        ++characters.posX[index];
-        if (characters.posX[index] >= mapWidth)
-          characters.posX[index] = 0;
-        if (characters.posX[index] == 0 || characters.posX[index] == 16)
+        ++posX;
+        if (posX >= mapWidth)
+          posX = 0;
+        //if (posX == 0 || posX == 16)
+        if (posX % 16 == 0)
         {
-          ++characters.quadPosX[index];
-          changedQuads = true;
-          if(characters.quadPosX[index] == mapMatrixWidth)
-            characters.quadPosX[index] = 0;
+          ++qPosX;
+          //changedQuads = true;
+          if(qPosX == mapMatrixWidth)
+            qPosX = 0;
         }
         break;
       default:
         break;
     }
+    characters.posX[index] = posX;
+    characters.posY[index] = posY;
+    characters.quadPosX[index] = qPosX;
+    characters.quadPosY[index] = qPosY;
 
     if (index == followIndex)
     {

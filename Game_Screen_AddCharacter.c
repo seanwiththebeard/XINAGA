@@ -655,7 +655,7 @@ void TavernMenu()
                 }
 }
 
-byte index[] = {2, 7, 5, 3};
+const byte predefcharindex[] = {2, 7, 5, 3};
 screenName DrawAddCharacterScreen()
 {
         nextScreen = EditParty;
@@ -669,7 +669,7 @@ screenName DrawAddCharacterScreen()
         DrawCharStats();
                         while(CountParty() < 4)
                         {
-                                while(!AddRandom(index[CountParty()], rand() % 8));
+                                while(!AddRandom(predefcharindex[CountParty()], rand() % 8));
                                 AddParty(CurrentCharacter);
                                 ListParty();
                                 DrawPartyStats();
