@@ -1,5 +1,4 @@
 #include "Xinaga.h"
-
 //Charset Desciption (16x32 blocks)
 //Map Characters 		Row 0
 //Punctuation/Numbers		Row 1
@@ -7,11 +6,9 @@
 //Lowercase Alphabet		Row 3 (NES/MSX/Apple II), Row 2 (C64)
 //Map Tiles			Row 4,5,6 (NES/MSX/Apple II), Row 3, 4, 5 (C64)
 //Interface/Minimap		Row 7
-
 #define ScreenCharSize ROWS*COLS
 #define fadeFrames 2
 #define mapFadeFrames 1
-
 const byte tileIndexes[64] =
 {
     0,   2,   4,   6,   8,  10,  12,  14,
@@ -29,11 +26,23 @@ byte arrowA;
 byte arrowB;
 byte arrowX;
 byte arrowY;
-
+//Tile Data
+#define TileCount 64
+#define TileSize 16
+byte tilesBlocked[TileCount];
+byte tilesOpaque[TileCount];
+byte tilesPalette[TileCount];
 #if defined (MSX)
 byte ScreenChars[ROWS*COLS];
+const int YColumnIndex[ROWS] =
+{
+    0,  40,  80, 120, 160,
+  200, 240, 280, 320, 360,
+  400, 440, 480, 520, 560,
+  600, 640, 680, 720, 760,
+  800, 840, 880, 920
+};
 #endif
-
 #if defined (__APPLE2__)
 #pragma code-name (push, "LOWCODE")
 const int YColumnIndex[ROWS] =
@@ -44,8 +53,13 @@ const int YColumnIndex[ROWS] =
   600, 640, 680, 720, 760,
   800, 840, 880, 920
 };
+byte* ScreenChars;// = (byte*)(0x0400);
+#pragma data-name (push, "HGR")
+char HGR[0x2000] = {};
+#pragma data-name (pop)
+//#define HGRBuffer (byte*)0x4000
+unsigned int RowsHGR[192];
 #endif
-
 #if defined (__NES__)
 #pragma code-name (push, "XINAGA_GRAPHICS")
 #pragma rodata-name (push, "XINAGA_GRAPHICS")
@@ -90,7 +104,6 @@ const unsigned char attributeset[256] = {
 const byte attributeset[256];
 byte ScreenChars[ROWS*COLS];
 #endif
-
 #if defined (__C64__)
 #pragma code-name (push, "XINAGA")
 //#pragma rodata-name (push, "XINAGA_RODATA")
@@ -106,14 +119,12 @@ const int YColumnIndex[ROWS] =
   600, 640, 680, 720, 760,
   800, 840, 880, 920, 960
 };
-
 //const byte const charset[2048];
 byte *ScreenChars;// = (byte*)0x0400;
 byte *ScreenColors;// = (byte *)0xD800;
 #define RASTERCOUNT (byte*)0xD012
 #define BORDER_REG (byte*)0xD020
 #define BG_REG (byte*)0xD021
-
 void SetBorder(byte color)
 {
   *BORDER_REG = color;
@@ -123,7 +134,6 @@ void SetBG(byte color)
   *BG_REG = color;
 }
 #endif
-
 // || (__APPLE2__)
 #if defined (__C64__) || (__NES__)
 #pragma bss-name (push, "ZEROPAGE")
@@ -138,12 +148,13 @@ byte DrawTileX;
 byte DrawTileY;
 byte DrawTileIndex;
 byte indexes[4];
-
+byte tilePosX;
+byte tilePosY;
+byte xA, yA, xB, yB, posX, posY;
 // || (__APPLE2__)
 #if defined (__C64__) || (__NES__)
 #pragma bss-name (pop)
 #endif
-
 static void getYCols()
 {
   //byte y;
@@ -158,16 +169,6 @@ static void getYCols()
     RowsHGR[y] = (y>>6)*0x28 + (y&7)*0x400 + ((y>>3)&7)*0x80;
   #endif
 }
-
-#if defined(__APPLE2__)
-byte* ScreenChars;// = (byte*)(0x0400);
-#pragma data-name (push, "HGR")
-char HGR[0x2000] = {};
-#pragma data-name (pop)
-//#define HGRBuffer (byte*)0x4000
-unsigned int RowsHGR[192];
-#endif
-
 void FadePalette(byte pals, byte delay)
 {
   #if defined(__NES__)
@@ -192,7 +193,6 @@ void FadePalette(byte pals, byte delay)
   #endif
   pals;delay;
 }
-
 void UnFadePalette(byte pals, byte delay)
 {
   #if defined(__NES__)
@@ -227,17 +227,14 @@ void UnFadePalette(byte pals, byte delay)
   #endif
   pals;delay;
 }
-
 void MapFadeOut()
 {
   FadePalette(0b1110, mapFadeFrames);
 }
-
 void MapFadeIn()
 {
   UnFadePalette(0b1110, mapFadeFrames);
 }
-
 void ScreenFadeOut(void)
 {
   #if defined (__NES__)
@@ -253,7 +250,6 @@ void ScreenFadeOut(void)
   #endif
   screenFaded = true;
 }
-
 void ScreenFadeIn(void)
 {
   #if defined (__NES__)
@@ -270,7 +266,6 @@ void ScreenFadeIn(void)
   #endif
   screenFaded = false;
 }
-
 void SetAttrib(byte x, byte y, byte pal, bool direct)
 {
   #if defined (__NES__)
@@ -288,7 +283,6 @@ void SetAttrib(byte x, byte y, byte pal, bool direct)
   return;
   x;y;pal;direct;
 }
-
 void UpdateAttributes(void)
 {
   #if defined (__NES__)
@@ -296,7 +290,6 @@ void UpdateAttributes(void)
   wait_vblank(1);
   #endif
 }
-
 void ClearScreen(void)
 {
 
@@ -330,7 +323,6 @@ void ClearScreen(void)
   FILVRM(0x1800, 768, ' ');
   #endif
 }
-
 void raster_wait(byte line)
 {
   #if defined(__C64__)
@@ -352,7 +344,6 @@ void raster_wait(byte line)
   line;
   #endif
 }
-
 void wait_vblank(byte frames)
 {
   byte count = frames;
@@ -375,7 +366,6 @@ void wait_vblank(byte frames)
     #endif
   }
 }
-
 void UploadCharPage(byte *source, byte page)
 {
   #if defined(__C64__)
@@ -391,10 +381,12 @@ void UploadCharPage(byte *source, byte page)
   #if defined(__NES__)
   source;page;
   #endif
+
+  #if defined(MSX)
+  source;page;
+  #endif
 }
-
   //memcpy((byte*)attributeset[256-32], source, 20); //Mega Man Credits Effect, what's it overwriting?
-
 void InitializeGraphics(void)
 {
   #if defined(__APPLE2__)
@@ -436,7 +428,6 @@ void InitializeGraphics(void)
   getYCols();
   ClearScreen();
 }
-
 #if defined(__APPLE2__)
 //#pragma bss-name (push, "ZEROPAGE")
 const byte* src;
@@ -466,7 +457,6 @@ void DrawChar(byte index, byte xpos, byte ypos)
   dest[0x1C00] = src[7];
 }
 #endif
-
 //Set Char Macro is in XINAGA.h - #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void _SetChar(void)
 {
@@ -507,7 +497,6 @@ void _SetChar(void)
   cputc(SetCharIndex);
   #endif
 }
-
 void SetColor(byte index, byte x, byte y)
 {
   #if defined(__APPLE2__)
@@ -531,12 +520,10 @@ void SetColor(byte index, byte x, byte y)
   index;x;y;
   #endif
 }
-
 byte GetChar(byte x, byte y)
 {
   return ScreenChars[x + YColumnIndex[y]];
 }
-
 void PrintString(char *text, byte posx, byte posy, bool fast)
 {
   byte i;
@@ -554,14 +541,12 @@ void PrintString(char *text, byte posx, byte posy, bool fast)
   }
   wait_vblank(1);
 }
-
 void SetTileOrigin(byte x, byte y)
 {
   //originOffset = YColumnIndex[y] + x;
   MapOriginX = x;
   MapOriginY = y;
 }
-
 /*void DrawTileSetup(void)
 {
 
@@ -574,14 +559,12 @@ void SetTileOrigin(byte x, byte y)
   DrawTileX = DrawTileX << 1;
   DrawTileY = DrawTileY << 1;
 }*/
-
 // Inline tile setup macro: computes tile indexes and converts tile coords to char coords
 #define DrawTileSetup() do { \
   DrawTileIndex = (DrawTileIndex << 1) + ((DrawTileIndex >> 3) << 4); \
   indexes[0] = DrawTileIndex; indexes[1] = DrawTileIndex + 1; indexes[2] = DrawTileIndex + 16; indexes[3] = DrawTileIndex + 17; \
   DrawTileX = DrawTileX << 1; DrawTileY = DrawTileY << 1; \
   } while(0)
-
 void DrawTile()
 {
   byte x = DrawTileX + MapOriginX;
@@ -592,18 +575,6 @@ void DrawTile()
   SetChar(indexes[2], x, y + 1);
   SetChar(indexes[3], x + 1, y + 1);
 }
- // || (__APPLE2__)
-#if defined(__C64__)|| (__NES__)
-#pragma bss-name (push, "ZEROPAGE")
-#endif
-byte tilePosX;
-byte tilePosY;
-byte xA, yA, xB, yB, posX, posY;
- // || (__APPLE2__)
-#if defined(__C64__) || (__NES__)
-#pragma bss-name (pop)
-#endif
-
 void DrawTileSeq(byte index)
 {
 
@@ -627,7 +598,6 @@ void DrawTileSeq(byte index)
   SetChar(index + 16, 	xA, yB);
   SetChar(index + 17, 	xB, yB);
 }
-
 void DrawTileDirectXY(byte index, byte x, byte y)
 {
   byte tempX = MapOriginX;
@@ -640,14 +610,6 @@ void DrawTileDirectXY(byte index, byte x, byte y)
 
   SetTileOrigin(tempX, tempY);
 }
-
-//Tile Data
-#define TileCount 64
-#define TileSize 16
-byte tilesBlocked[TileCount];
-byte tilesOpaque[TileCount];
-byte tilesPalette[TileCount];
-
 void FillViewport(byte index, byte width, byte height)
 {
   byte byte_x, byte_y;
@@ -660,7 +622,6 @@ void FillViewport(byte index, byte width, byte height)
     }
   UpdateAttributes();
 }
-
 void ReadyArrow(byte x, byte y)
 {
   x = x << 1;
@@ -687,7 +648,6 @@ void ClearArrow(void)
   SetChar(arrowB, arrowX + 1, arrowY);
   //wait_vblank(1);
 }
-
 void DrawLineH(byte index, byte x, byte y, byte length)
 {
   byte count;
@@ -721,7 +681,6 @@ void DrawLineV(byte index, byte x, byte y, byte length)
   }
   //wait_vblank(1);
 }
-
 void DrawCorners(byte xPos, byte yPos, byte widthInside1, byte heightInside1)
 {
   #define corner  0xEA

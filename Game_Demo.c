@@ -89,19 +89,20 @@ void SwitchScreen(screenName screen)
       currentScreen = MapUpdate();
       break;
     case Combat:
-      #if !MSX
+      //#if !MSX
       currentScreen = Update_Combat();
-      #endif
+      //#endif
       break;
     case MapGen:
+      //currentScreen = MapUpdate();
       //#if !MSX
       currentScreen = Update_MapGen();
       //#endif
       break;
     case Scenario:
-      #if !MSX
+      //#if !MSX
       //currentScreen = Update_Scenario();
-      #endif
+      //#endif
     default:
       currentScreen = DefaultScreen;
       break;

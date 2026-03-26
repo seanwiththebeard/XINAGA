@@ -28,6 +28,10 @@ void DrawInterface();
 extern byte SetPlayerPositionX;
 extern byte SetPlayerPositionY;
 extern const byte MiniMapGlyphs[64];
+extern const byte OverworldGeoMorphSet[256];
+extern const byte OverworldGeoMorphAttrib[32];
+extern const byte DungeonGeoMorphSet[256];
+extern const byte DungeonGeoMorphAttrib[32];
 #define MiniMapOffset 0xE0
 //Each mapQuad is a 16x16 area, corresponding to a 16x16 geomorph from the bitmap containing 64
 extern byte mapQuads[mapMatrixHeight * mapMatrixWidth];
@@ -72,7 +76,7 @@ extern struct Party;
 typedef struct
 {
   char
-    	NAME[8];
+    	NAME[10];
   byte
     	HITDICEMAX;
 }RaceDescriptionDef;
@@ -80,7 +84,7 @@ extern const RaceDescriptionDef const RaceDescription[8];
 
 typedef struct
 {
-  char NAME[8];
+  char NAME[10];
   byte HITDICE;
 }ClassDescriptionDef;
 extern const ClassDescriptionDef const ClassDescription[8];

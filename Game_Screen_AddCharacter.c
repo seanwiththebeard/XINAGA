@@ -46,7 +46,7 @@ byte HITDICE;
   {"Dracon", 6},
   {"Construct", 6}
 */
-const char namePrefixA[][8][] =
+const char namePrefixA[][8][4] =
 {
         {//Human
         "Hur",
@@ -129,7 +129,7 @@ const char namePrefixA[][8][] =
         "ZY"
         }
 };
-const char nameSuffixA[][8][] =
+const char nameSuffixA[][8][6] =
 {
         {//Human
         "kar@",
