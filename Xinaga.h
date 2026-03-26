@@ -198,7 +198,7 @@ void UpdateAttributes(void);
 void ScreenFadeOut(void);
 void ScreenFadeIn(void);
 
-extern int YColumnIndex[ROWS];
+//extern int YColumnIndex[ROWS];
 
 //	Drawing
 extern byte SetCharIndex;
