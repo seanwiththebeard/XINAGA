@@ -27,7 +27,6 @@ extern uint16_t randseed;
 extern const byte characterset[2048];
 extern const byte attributesDefault[256];
 
-
 #define viewportPosX 1
 #define viewportPosY 1
 #define viewportWidth 9
