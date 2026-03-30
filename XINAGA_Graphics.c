@@ -59,6 +59,10 @@ char HGR[0x2000] = {};
 #pragma data-name (pop)
 //#define HGRBuffer (byte*)0x4000
 unsigned int RowsHGR[192];
+//#pragma bss-name (push, "ZEROPAGE")
+const byte* src;
+byte* dest;
+//#pragma bss-name (pop)
 #endif
 #if defined (__NES__)
 #pragma code-name (push, "XINAGA_GRAPHICS")
@@ -429,10 +433,6 @@ void InitializeGraphics(void)
   ClearScreen();
 }
 #if defined(__APPLE2__)
-//#pragma bss-name (push, "ZEROPAGE")
-const byte* src;
-byte* dest;
-//#pragma bss-name (pop)
 void DrawChar(byte index, byte xpos, byte ypos)
 {
   //base = RowsHGR[ypos << 3] + xpos;

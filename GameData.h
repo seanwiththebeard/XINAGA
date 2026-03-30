@@ -16,8 +16,9 @@
 //extern screenName nextScreen;
 
 //Debug Functions
-void DebugMap();
-void DebugGraphics();
+//void DebugMap();
+//void DebugGraphics();
+
 void DrawInterface();
 
 #define mapMatrixWidth 16

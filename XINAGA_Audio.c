@@ -1,18 +1,18 @@
 #include "Xinaga.h"
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "LOWCODE")
+//#pragma code-name (push, "LOWCODE")
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "XINAGA_AUDIO")
-#pragma rodata-name (push, "XINAGA_AUDIO")
+//#pragma code-name (push, "XINAGA_AUDIO")
+//#pragma rodata-name (push, "XINAGA_AUDIO")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #endif
 
 #if defined (__C64__)
-#pragma code-name (push, "XINAGA")
+//#pragma code-name (push, "XINAGA")
 //#pragma rodata-name (push, "XINAGA_RODATA")
 #endif
 

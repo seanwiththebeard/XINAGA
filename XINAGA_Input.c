@@ -2,6 +2,10 @@
 
 #if defined(__APPLE2__)
 #pragma code-name (push, "LOWCODE")
+#define keycode ((byte*)0xC000)
+#define keyflag ((byte*)0xC010)
+//const byte* keycode = (byte*)0xC000;
+//const byte* keyflag = (byte*)0xC010;
 #endif
 
 #if defined (__NES__)
@@ -9,27 +13,6 @@
 #pragma rodata-name (push, "XINAGA_INPUT")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
-#endif
-
-#if defined (__C64__)
-#pragma code-name (push, "XINAGA")
-//#pragma rodata-name (push, "XINAGA_RODATA")
-#endif
-
-sbyte key;
-byte keyIgnore;
-bool ChangedState;
-
-#if __C64__
-#include <joystick.h>
-#include <conio.h>
-byte joyState;
-byte joyStateLast;
-byte joyTemp;
-#define keycode ((byte*)0x00C5)
-#endif
-
-#if (__NES__)
 // include CC65 NES Header (PPU)
 #include <nes.h>
 // include NESLIB header
@@ -37,6 +20,17 @@ byte joyTemp;
 char pad;
 char padTemp;
 char padStateLast;
+#endif
+
+#if defined (__C64__)
+#pragma code-name (push, "XINAGA")
+//#pragma rodata-name (push, "XINAGA_RODATA")
+#include <joystick.h>
+#include <conio.h>
+byte joyState;
+byte joyStateLast;
+byte joyTemp;
+#define keycode ((byte*)0x00C5)
 #endif
 
 #if (MSX)
@@ -49,20 +43,16 @@ char trigATemp;
 char trigAStateLast;
 #endif
 
+sbyte key;
+byte keyIgnore;
+bool ChangedState;
+
 void InitializeInput()
 {
   #if __C64__
   joy_install(joy_static_stddrv);
   #endif
 }
-#if (__APPLE2__)
-//Apple II
-#define keycode ((byte*)0xC000)
-#define keyflag ((byte*)0xC010)
-//const byte* keycode = (byte*)0xC000;
-//const byte* keyflag = (byte*)0xC010;
-#endif
-
 bool InputChanged(void)
 {
   #if defined(__APPLE2__)
@@ -76,8 +66,6 @@ bool InputChanged(void)
   #endif
   return ChangedState;
 }
-
-
 void UpdateInput(void)
 {
   //srand(++randseed);
@@ -150,7 +138,6 @@ void UpdateInput(void)
   }
   #endif
 }
-
 bool InputUp(void)
 {
   #if __C64__
@@ -176,7 +163,6 @@ bool InputUp(void)
 
   return false;
 }
-
 bool InputDown(void)
 {
   #if __C64__
@@ -199,7 +185,6 @@ bool InputDown(void)
 
   return false;
 }
-
 bool InputLeft(void)
 {
   #if __C64__
@@ -223,7 +208,6 @@ bool InputLeft(void)
 
   return false;
 }
-
 bool InputRight(void)
 {
   #if __C64__
@@ -247,7 +231,6 @@ bool InputRight(void)
 
   return false;
 }
-
 bool InputFire(void)
 {
   #if __C64__
@@ -273,7 +256,6 @@ bool InputFire(void)
 
   return false;
 }
-
 void WaitForInput(void)
 {
   bool ex = false;

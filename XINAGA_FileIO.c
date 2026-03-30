@@ -5,6 +5,8 @@
 #include <conio.h>
 #include <stdlib.h>
 //#include <cbm.h>
+#pragma code-name (push, "XINAGA")
+//#pragma rodata-name (push, "XINAGA_RODATA")
 #endif
 
 #if defined(__APPLE2__)
@@ -20,11 +22,6 @@
 #pragma rodata-name (push, "XINAGA_FILEIO")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
-#endif
-
-#if defined (__C64__)
-#pragma code-name (push, "XINAGA")
-//#pragma rodata-name (push, "XINAGA_RODATA")
 #endif
 
 void DiskSave(char *filename, byte *source, int size)

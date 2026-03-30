@@ -191,13 +191,11 @@ extern const char PALETTE_3[16];
 void InitializeGraphics(void);
 void UploadCharPage(byte *source, byte page);
 void wait_vblank(byte frames);
-void SetBorder(byte color);
-void SetBG(byte color);
+//void SetBorder(byte color);
+//void SetBG(byte color);
 void UpdateAttributes(void);
 void ScreenFadeOut(void);
 void ScreenFadeIn(void);
-
-//extern int YColumnIndex[ROWS];
 
 //	Drawing
 extern byte SetCharIndex;
@@ -214,7 +212,7 @@ void _SetChar(void);
 #define SetChar(charindex, x, y) do {SetCharIndex = (charindex); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void ClearScreen(void);
 void DrawLineH(byte index, byte x, byte y, byte length);
-void DrawLineV(byte index, byte x, byte y, byte length);
+//void DrawLineV(byte index, byte x, byte y, byte length);
 void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool fill);
 void DrawCharset(void);
 
@@ -241,7 +239,7 @@ extern byte tilePosY;
 #pragma zpsym ("DrawTileIndex")
 #endif
 //void DrawTileBuffer(bool drawChars);
-void DrawTileDirect(void);
+//void DrawTileDirect(void);
 void DrawTileDirectXY(byte index, byte x, byte y);
 void DrawTileSeq(byte index);
 void MapFadeOut(void);
@@ -270,7 +268,7 @@ void DiskLoad(char *filename, byte *dest, int size);
 void InitializeInput(void);
 void UpdateInput(void);
 bool InputChanged(void);
-bool NoInput(void);
+//bool NoInput(void);
 bool InputUp(void);
 bool InputDown(void);
 bool InputLeft(void);
@@ -278,7 +276,6 @@ bool InputRight(void);
 bool InputFire(void);
 
 //	Text
-//int sprintf (char* buf, const char* format, ...);
 void PrintString(char *text, byte posx, byte posy, bool fast);
 
 //Console
@@ -303,7 +300,7 @@ void SetMenuItem(byte index, char *value);
 void HighlightMenuItem(byte index);
 void DrawMenu(void);
 void ClearMenu(void);
-void ClearMenuContents();
+//void ClearMenuContents();
 byte IsMenuItemHighlighted(byte index);
 byte GetMenuSelection(void);
 void SetMenuSelect(byte sel);
