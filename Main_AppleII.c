@@ -14,6 +14,7 @@
 
 //#link "Game_Demo.c"
 //#link "Game_System.c"
+//#link "Game_RPGData.c"
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_MapGen.c"
 //#link "Game_Screen_Map.c"
@@ -27,7 +28,7 @@ void main()
   //while(1);
   //GFX_DEMO();
   //DrawMiniMap(false);
-  RunGame(EditParty);
+  RunGame(MapGen);
 }
 #pragma rodata-name (push, "LC")
 
