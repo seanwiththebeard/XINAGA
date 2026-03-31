@@ -59,9 +59,6 @@ void LoadMapQuads();
 //Combat
 screenName Update_Combat(void);
 
-//Credits
-screenName Update_Credits(void);
-
 //MapGen
 screenName Update_MapGen(void);
 
@@ -70,27 +67,8 @@ screenName Update_MapGen(void);
 
 void TickMoonPhase(void);
 
-//RPG Data
 byte RollDice(byte count, byte diceSize);
-extern struct Party;
-
-typedef struct
-{
-  char
-    	NAME[10];
-  byte
-    	HITDICEMAX;
-}RaceDescriptionDef;
-extern const RaceDescriptionDef const RaceDescription[8];
-
-typedef struct
-{
-  char NAME[10];
-  byte HITDICE;
-}ClassDescriptionDef;
-extern const ClassDescriptionDef const ClassDescription[8];
-
-extern const sbyte const AbilityModifier[];
+//extern struct Party;
 
 void create(void);
 void delete_pos(byte pos);
@@ -136,9 +114,30 @@ typedef struct Session
         //struct Session gameSessions[4];
 //};
 
-extern struct Session Sessions[4];
+extern struct Session Sessions[1];
 
 byte CountParty(void);
 
 struct playerChar *getPartyMember(byte index);
+
+//RPGData
+typedef struct
+{
+  char
+    	NAME[10];
+  byte
+    	HITDICEMAX;
+}RaceDescriptionDef;
+extern const RaceDescriptionDef const RaceDescription[8];
+
+typedef struct
+{
+  char NAME[10];
+  byte HITDICE;
+}ClassDescriptionDef;
+extern const ClassDescriptionDef const ClassDescription[8];
+
+extern const sbyte const AbilityModifier[];
+extern const char namePrefixA[][8][4];
+extern const char nameSuffixA[][8][6];
 #endif

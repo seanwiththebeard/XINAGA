@@ -19,35 +19,7 @@
 screenName currentScreen;
 byte strTemp[ConsoleBufferLength];
 
-struct Session Sessions[4];
-
-const RaceDescriptionDef const RaceDescription[8] =
-{
-  {"Human", 255},
-  {"Elf", 6},
-  {"Dwarf", 255},
-  {"Frobit", 6},
-  {"Orc", 6},
-  {"Fuzzer", 6},
-  {"Dracon", 6},
-  {"Construct", 6}
-  //{"Construct", 8} // Never levels up, strong early on but expensive to upgrade stats
-};
-
-
-const ClassDescriptionDef const ClassDescription[8]=
-{
-  {"Fighter", 8},
-  {"Ranger", 8},
-  {"Wizard", 4},
-  {"Paladin", 6},
-  {"Monk", 6},
-  {"Bard", 4},
-  {"Thief", 4},
-  {"Cleric", 6}
-};
-
-const sbyte const AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
+struct Session Sessions[1];
 
 #if defined (__NES__)
 
