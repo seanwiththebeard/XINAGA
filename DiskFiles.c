@@ -217,5 +217,10 @@ const byte characterset[2048] =
 };
 #endif
 
-
-
+#define MessageCount 5
+const char* const Messages[MessageCount]= {
+  "Hello there!@",
+  "This is a sign@",
+  "Wizard's Forest@",
+  "There's a feeling I get when I look to the west...@"
+};

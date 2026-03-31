@@ -9,28 +9,6 @@
 #define ScreenCharSize ROWS*COLS
 #define fadeFrames 2
 #define mapFadeFrames 1
-const byte tileIndexes[64] =
-{
-    0,   2,   4,   6,   8,  10,  12,  14,
-   32,  34,  36,  38,  40,  42,  44,  46,
-   64,  66,  68,  70,  72,  74,  76,  78,
-   96,  98, 100, 102, 104, 106, 108, 110,
-  128, 130, 132, 134, 136, 138, 140, 142,
-  160, 162, 164, 166, 168, 170, 172, 174,
-  192, 194, 196, 198, 200, 202, 204, 206,
-  224, 226, 228, 230, 232, 234, 236, 238
-};
-bool screenFaded;
-//byte DrawTilePalette;
-byte arrowA;
-byte arrowB;
-byte arrowX;
-byte arrowY;
-//Tile Data
-#define TileCount 64
-#define TileSize 16
-byte tilesBlocked[TileCount];
-byte tilesOpaque[TileCount];
 #if defined (MSX)
 byte ScreenChars[ROWS*COLS];
 const int YColumnIndex[ROWS] =
@@ -110,14 +88,14 @@ byte ScreenChars[ROWS*COLS];
 #endif
 #if defined (__C64__)
 #pragma code-name (push, "XINAGA")
-//#pragma rodata-name (push, "XINAGA_RODATA")
+#pragma rodata-name (push, "XINAGA")
 #define bank 3
 #define charpos 7
 #define screenpos 2
 byte *ScreenColors;// = (byte *)0xD800;
 byte *ScreenChars;// = (byte*)0x0400;
 byte attributeset[256];
-const int YColumnIndex[ROWS] =
+static const int YColumnIndex[ROWS] =
 {
     0,  40,  80, 120, 160,
   200, 240, 280, 320, 360,
@@ -159,6 +137,29 @@ byte xA, yA, xB, yB, posX, posY;
 #if defined (__C64__) || (__NES__)
 #pragma bss-name (pop)
 #endif
+
+const byte tileIndexes[64] =
+{
+    0,   2,   4,   6,   8,  10,  12,  14,
+   32,  34,  36,  38,  40,  42,  44,  46,
+   64,  66,  68,  70,  72,  74,  76,  78,
+   96,  98, 100, 102, 104, 106, 108, 110,
+  128, 130, 132, 134, 136, 138, 140, 142,
+  160, 162, 164, 166, 168, 170, 172, 174,
+  192, 194, 196, 198, 200, 202, 204, 206,
+  224, 226, 228, 230, 232, 234, 236, 238
+};
+bool screenFaded;
+//byte DrawTilePalette;
+byte arrowA;
+byte arrowB;
+byte arrowX;
+byte arrowY;
+//Tile Data
+#define TileCount 64
+#define TileSize 16
+byte tilesBlocked[TileCount];
+byte tilesOpaque[TileCount];
 static void getYCols()
 {
   //byte y;
