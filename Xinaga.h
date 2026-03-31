@@ -128,7 +128,7 @@ extern byte attributeset[256];
 
 #if defined(__NES__)
 #include <peekpoke.h>
-extern byte tilesPalette[TileCount];
+extern byte tilesPalette[64];
 extern const byte attributeset[256];
 
 #define COLS 32
