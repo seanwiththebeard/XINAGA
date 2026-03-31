@@ -48,13 +48,12 @@ byte MenuPosY;
 byte MenuCount;
 sbyte MenuSelection;
 char *menutitle;
-#define menuItemsCount 16
+#define menuItemsCount contextMenuHeight
 char *MenuItems[menuItemsCount];
 bool MenuHighlight[menuItemsCount];
 void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, bool clear);
 void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();
-
 
 void ConsoleBufferReset()
 {

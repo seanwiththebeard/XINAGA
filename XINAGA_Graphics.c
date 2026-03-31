@@ -31,7 +31,6 @@ byte arrowY;
 #define TileSize 16
 byte tilesBlocked[TileCount];
 byte tilesOpaque[TileCount];
-byte tilesPalette[TileCount];
 #if defined (MSX)
 byte ScreenChars[ROWS*COLS];
 const int YColumnIndex[ROWS] =
@@ -72,6 +71,7 @@ byte* dest;
 #include "neslib.h"
 #include "vrambuf.h"
 //#link "vrambuf.c"
+byte tilesPalette[TileCount];
 const int YColumnIndex[ROWS] =
 {
     0,  32,  64,  96, 128,
@@ -114,6 +114,8 @@ byte ScreenChars[ROWS*COLS];
 #define bank 3
 #define charpos 7
 #define screenpos 2
+byte *ScreenColors;// = (byte *)0xD800;
+byte *ScreenChars;// = (byte*)0x0400;
 byte attributeset[256];
 const int YColumnIndex[ROWS] =
 {
@@ -124,8 +126,6 @@ const int YColumnIndex[ROWS] =
   800, 840, 880, 920, 960
 };
 //const byte const charset[2048];
-byte *ScreenChars;// = (byte*)0x0400;
-byte *ScreenColors;// = (byte *)0xD800;
 #define RASTERCOUNT (byte*)0xD012
 #define BORDER_REG (byte*)0xD020
 #define BG_REG (byte*)0xD021
