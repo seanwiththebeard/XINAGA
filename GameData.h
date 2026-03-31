@@ -19,6 +19,13 @@
 //void DebugMap();
 //void DebugGraphics();
 
+#define ATTRIB_STR 0
+#define ATTRIB_CON 1
+#define ATTRIB_DEX 2
+#define ATTRIB_INT 3
+#define ATTRIB_WIS 4
+#define ATTRIB_CHA 5
+
 void DrawInterface();
 
 #define mapMatrixWidth 16
@@ -123,17 +130,22 @@ struct playerChar *getPartyMember(byte index);
 //RPGData
 typedef struct
 {
-  char
-    	NAME[10];
-  byte
-    	HITDICEMAX;
+  char *NAME;
+  byte HITDICEMAX;
+  byte ATTRIB_BONUS;
+  byte ABILITY_PROF;
 }RaceDescriptionDef;
 extern const RaceDescriptionDef const RaceDescription[8];
 
 typedef struct
 {
-  char NAME[10];
+  char *NAME;
   byte HITDICE;
+  byte ATTRIB_DEP;
+  byte WEAPON_PROF;
+  byte ARMOR_PROF;
+  byte SPELLS_WIZ;
+  byte SPELLS_CLER;
 }ClassDescriptionDef;
 extern const ClassDescriptionDef const ClassDescription[8];
 

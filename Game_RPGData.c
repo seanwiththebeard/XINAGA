@@ -27,8 +27,8 @@ const RaceDescriptionDef const RaceDescription[8] =
   {"Orc", 6},
   {"Fuzzer", 6},
   {"Dracon", 6},
-  {"Construct", 6}
-  //{"Construct", 8} // Never levels up, strong early on but expensive to upgrade stats
+  {"Construct", 6} // Never levels up, strong early on but expensive to upgrade stats
+  //{"Construct", 8}
 };
 
 
