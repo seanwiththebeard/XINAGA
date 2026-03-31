@@ -8,12 +8,13 @@
 //#link "XINAGA_Console.c"
 //#link "Game_Demo.c"
 //#link "Game_System.c"
-//#link "Game_Screen_Title.c"
+//#link "Game_RPGData.c"
+//#link "DiskFiles.c"
+
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_Map.c"
 ////#link "Game_Screen_Combat.c"
 //#link "Game_Screen_MapGen.c"
-////#link "Game_Screen_Scenario.c"
 
 #include "msxbios.h"
 //#link "msxbios.c"
@@ -26,7 +27,6 @@ void SetCharPalette(byte index, byte fgColor, byte bgColor)
   bgColor;
   for (x = 0; x < 128; ++x)
     WRTVRM(0x2000 + x, 11);
-  
 }
 
 unsigned char MSX_CharSet[];
@@ -49,13 +49,12 @@ byte colorTable[] = {	//Matches indexes for C64?
   COLOR_LIGHT_GREEN,	//13 /D
   COLOR_CYAN,		//14 /E
   COLOR_GRAY,		//15 /F
-  
 };
 
 uint8_t __at(0xf3e2) VDP3;
 uint8_t __at(0xf3e3) VDP4;
 
-void SetupGraphics() 
+void SetupGraphics()
 {
   int x;
   byte y, z;
@@ -69,7 +68,6 @@ void SetupGraphics()
   LDIRVM(2048, &MSX_CharSet[0], 2048);
   LDIRVM(4096, &MSX_CharSet[0], 2048);
   FILVRM(0x2000, 0x800 * 3, 0);
-  
   for (y = 0; y < 3; ++y)
     for (x = 0; x < 256; ++x)
       for (z = 0; z < 8; ++z)
@@ -78,17 +76,11 @@ void SetupGraphics()
         //color = 0x0c;
         WRTVRM(0x2000 + x*8 + z + (2048*y), color);
       }
-      
   //FILVRM(0x2000, 0x800 * 3, 15<<4);
-  
   //DrawCharset();
- 
   //LDIRVM(0x2000, &MSX_CharSet[0], 2048);
-  
   //SetCharPalette(1, 12, 0);
-  
   //LDIRVM(0, (char*)0x1B80, 32);
-  
 }
 
 unsigned char find_rom_page_2() __naked
@@ -119,7 +111,6 @@ unsigned char find_rom_page_2() __naked
     ; El programa esta en RAM - no buscar
     ld (hl),b
     ret
-      
     5$: ; ----------- @@ROM:
     di
     ; Slot primario
@@ -148,7 +139,7 @@ unsigned char find_rom_page_2() __naked
     ; Habilitar permanentemente
     call #0x0024 ; call ENASLT
     ei
-    call gsinit ; Initialize global and static variables. (THIS FIXES THE HEAP/STACK)   
+    call gsinit ; Initialize global and static variables. (THIS FIXES THE HEAP/STACK)
     ret
     ;------------------------------------------------
   __endasm;
@@ -158,28 +149,20 @@ void main(void)
 {
   find_rom_page_2();
   SetupGraphics();
-  
   // Changes the screencolors
   //CHGCLR();
-  
   // Initialises all sprites
   //CLRSPR();
-  
   // Switches to SCREEN 0 (40x24 text mode)
   //INITXT();
-  
   // Switches to SCREEN 1 (text screen with 32*24 characters)
   //INIT32();
-  
   // Switches to SCREEN 2 (high resolution screen with 256*192 pixels)
   //INIGRP();
-  
   // Switches to SCREEN 3 (multi-color screen 64*48 pixels)
   //INIMLT();
-  
   //DebugGraphics();
   RunGame(EditParty);
-  
   while(1);
 }
 
