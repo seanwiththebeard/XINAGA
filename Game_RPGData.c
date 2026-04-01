@@ -212,3 +212,23 @@ const char nameSuffixA[][8][6] =
         "-H@"
         }
 };
+
+//Weapons
+//Type = Slash, Bludgeon, Pierce, Casting
+//Length = Claw, Short, Medium, Long
+//Quality = Normal, +1, +2, +3
+//Condition = Normal, -1, -2, -3
+
+//Armor
+//Type = Cloth, Leather, Metal, 
+//Weight = Mithril, Clothes, Light, Heavy
+//Enchantment
+
+//Skills
+#define SKILL_TURNUNDEAD
+#define SKILL_PICKLOCK
+#define SKILL_TURNANIMAL
+#define SKILL_SING
+#define SKILL_CASTMAGE
+#define SKILL_CASTCLERIC
+#define SKILL_IDENTIFY
