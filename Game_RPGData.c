@@ -18,7 +18,7 @@
 #pragma rodata-name (push, "GAME_RPGDATA")
 #endif
 
-const RaceDescriptionDef const RaceDescription[8] =
+const RaceDescriptionDef RaceDescription[8] =
 {
   {"Human", 255},
   {"Elf", 6},
@@ -32,7 +32,7 @@ const RaceDescriptionDef const RaceDescription[8] =
 };
 
 
-const ClassDescriptionDef const ClassDescription[8]=
+const ClassDescriptionDef ClassDescription[8]=
 {
   {"Fighter", 8},
   {"Ranger", 8},
@@ -44,7 +44,7 @@ const ClassDescriptionDef const ClassDescription[8]=
   {"Cleric", 6}
 };
 
-const sbyte const AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
+const sbyte AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 
 const char namePrefixA[][8][4] =
 {
@@ -215,20 +215,25 @@ const char nameSuffixA[][8][6] =
 
 //Weapons
 //Type = Slash, Bludgeon, Pierce, Casting
-//Length = Claw, Short, Medium, Long
+//Length = Small, One-Handed, Two-Handed, Ranged
 //Quality = Normal, +1, +2, +3
 //Condition = Normal, -1, -2, -3
 
+//Small - Knife, Club, Dagger, Spellbook
+//One-Handed - Shortsword, Stick, Spear, Wand
+//Two-Handed - Greatsword, Hammer, Halberd, Device
+//Ranged - Star, Sling, Bow, Staff
+
 //Armor
-//Type = Cloth, Leather, Metal, 
+//Type = Cloth, Leather, Metal,
 //Weight = Mithril, Clothes, Light, Heavy
-//Enchantment
+//Enchantment 0-16
 
 //Skills
 #define SKILL_TURNUNDEAD
 #define SKILL_PICKLOCK
 #define SKILL_TURNANIMAL
-#define SKILL_SING
+#define SKILL_CASTBARD
 #define SKILL_CASTMAGE
 #define SKILL_CASTCLERIC
 #define SKILL_IDENTIFY
