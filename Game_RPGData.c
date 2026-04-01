@@ -28,7 +28,6 @@ const RaceDescriptionDef RaceDescription[8] =
   {"Fuzzer", 6},
   {"Dracon", 6},
   {"Construct", 6} // Never levels up, strong early on but expensive to upgrade stats
-  //{"Construct", 8}
 };
 
 
@@ -46,7 +45,7 @@ const ClassDescriptionDef ClassDescription[8]=
 
 const sbyte AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 
-const char namePrefixA[][8][4] =
+const char *namePrefixA[8][8] =
 {
         {//Human
         "Hur",
@@ -129,7 +128,7 @@ const char namePrefixA[][8][4] =
         "ZY"
         }
 };
-const char nameSuffixA[][8][6] =
+const char *nameSuffixA[8][8] =
 {
         {//Human
         "kar@",
@@ -219,21 +218,47 @@ const char nameSuffixA[][8][6] =
 //Quality = Normal, +1, +2, +3
 //Condition = Normal, -1, -2, -3
 
-//Small - Knife, Club, Dagger, Spellbook
-//One-Handed - Shortsword, Stick, Spear, Wand
-//Two-Handed - Greatsword, Hammer, Halberd, Device
-//Ranged - Star, Sling, Bow, Staff
+const char *WeaponName[] =
+{
+  //Small
+  "Knife", "Club", "Dagger", "Spellbook",
+  //One-Handed
+  "Shortsword", "Stick", "Spear", "Wand",
+  //Two-Handed
+  "Greatsword", "Hammer", "Halberd", "Device",
+  //Ranged
+  "Star", "Sling", "Bow", "Staff"
+};
+
+const byte WeaponHitDice[] =
+{
+  4, 4, 4, 0,
+  6, 4, 6, 0,
+  8, 6, 8, 0,
+  6, 4, 8, 4
+};
+
 
 //Armor
-//Type = Cloth, Leather, Metal,
-//Weight = Mithril, Clothes, Light, Heavy
+const char *ArmorName[] =
+{
+  //Weight = Mithril, Clothes, Light, Heavy
+  //Cloth
+  "Mithril Tunic", "Clothes", "Robe", "Overcoat"
+  //Plant
+  "Goldflower Tunic", "Cornhusk Robe", "Coconut Plate", "Shale Plate",
+  //Leather
+  "Fine Pelt", "Fur Pelt", "Studded Hide", "Leathermail",
+  //Metal
+  "Mithril Mail", "Construct Frame", "Chainmail", "Platemail", 
+};
 //Enchantment 0-16
 
 //Skills
-#define SKILL_TURNUNDEAD
-#define SKILL_PICKLOCK
-#define SKILL_TURNANIMAL
-#define SKILL_CASTBARD
-#define SKILL_CASTMAGE
-#define SKILL_CASTCLERIC
-#define SKILL_IDENTIFY
+#define SKILL_PICKLOCK 0
+#define SKILL_IDENTIFY 1
+#define SKILL_TURNANIMAL 2
+#define SKILL_TURNUNDEAD 3
+#define SKILL_CASTCLERIC 4
+#define SKILL_CASTMAGE 5
+#define SKILL_CASTBARD 6

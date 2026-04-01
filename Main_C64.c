@@ -23,5 +23,5 @@
 void main(void)
 {
   //DiskSave("hello.bin", &attributeset[0], 256);
-  RunGame(MapGen);
+  RunGame(EditParty);
 }
