@@ -28,7 +28,7 @@ void main()
   //while(1);
   //GFX_DEMO();
   //DrawMiniMap(false);
-  RunGame(MapGen);
+  RunGame(EditParty);
 }
 #pragma rodata-name (push, "LC")
 

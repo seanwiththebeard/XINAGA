@@ -3,6 +3,7 @@
 
 #if defined(__APPLE2__)
 //#pragma code-name (push, "CODE")
+//#pragma code-name (push, "LC")
 #endif
 
 #if defined (__NES__)

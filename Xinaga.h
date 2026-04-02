@@ -49,6 +49,8 @@ extern const byte attributesDefault[256];
 
 //Screen Layout
 #if defined(__APPLE2__)
+#pragma rodata-name (push, "LC")
+
 #define COLS 40
 #define ROWS 24
 

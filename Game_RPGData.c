@@ -2,13 +2,13 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-//#pragma code-name (push, "LOWCODE")
+//#pragma rodata-name (push, "LC")
 //#pragma code-name (push, "CODE")
 #endif
 
 #if defined (__NES__)
 //#pragma code-name (push, "XINAGA_CONSOLE")
-#pragma rodata-name (push, "XINAGA")
+//#pragma rodata-name (push, "XINAGA")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #endif
