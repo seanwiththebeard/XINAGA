@@ -102,7 +102,9 @@ typedef struct playerChar
         SUBCLASS,
   	ARMOR,
         WEAPON,
-  	LEVEL,
+  	LEVEL_MAIN,
+        LEVEL_SUB,
+        ELEMENT,
   	HOMEWORLD;
 };
 
@@ -133,8 +135,8 @@ typedef struct
   byte ATTRIB_BONUS;
   byte ATTRIB_PENALTY;
   byte TRAITS;
-  byte ELEMENT_WEAK;
-  byte ELEMENT_STRONG;
+  byte ELEMENT_WEAKNESS;
+  byte ELEMENT_RESIST;
   byte CONDITION_RESIST;
 }RaceDescriptionDef;
 extern const RaceDescriptionDef const RaceDescription[8];
