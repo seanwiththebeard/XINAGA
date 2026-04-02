@@ -19,6 +19,7 @@
 //void DebugMap();
 //void DebugGraphics();
 
+#define ATTRIB_NONE -1
 #define ATTRIB_STR 0
 #define ATTRIB_CON 1
 #define ATTRIB_DEX 2
@@ -96,13 +97,12 @@ typedef struct playerChar
         INT,
   	WIS,
         CHR,
-  	RACE,
-  	CLASS,
+        RACE,
+        CLASS,
+        SUBCLASS,
   	ARMOR,
         WEAPON,
   	LEVEL,
-  	CARRYING_WEIGHT,
-  	CARRYING_CAPACITY,
   	HOMEWORLD;
 };
 
@@ -111,10 +111,8 @@ struct playerChar *getPlayerChar(byte index);
 typedef struct Session
 {
         struct playerChar RosterChars[12];
-        int GOLD;
-        int STEPS;
+        int GOLD, STEPS, CARRYING_WEIGHT, CARRYING_CAPACITY;
         byte PartyChars[4], SOLAR, LUNAR, MINAR;
-        //byte CARRYING_WEIGHT, CARRYING_CAPACITY;
 };
 //typedef struct SavedGame
 //{
@@ -133,7 +131,8 @@ typedef struct
   char *NAME;
   byte HITDICEMAX;
   byte ATTRIB_BONUS;
-  byte ABILITY_PROF;
+  byte ATTRIB_PENALTY;
+  byte TRAITS;
   byte ELEMENT_WEAK;
   byte ELEMENT_STRONG;
   byte CONDITION_RESIST;
@@ -149,6 +148,7 @@ typedef struct
   byte ARMOR_PROF;
   byte SPELLS_WIZ;
   byte SPELLS_CLER;
+  byte SONGS_BARD;
 }ClassDescriptionDef;
 extern const ClassDescriptionDef const ClassDescription[8];
 

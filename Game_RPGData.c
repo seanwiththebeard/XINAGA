@@ -17,30 +17,48 @@
 //#pragma code-name (push, "XINAGA")
 #pragma rodata-name (push, "GAME_RPGDATA")
 #endif
-
+/*
+  char *NAME;
+  byte HITDICEMAX;
+  byte ATTRIB_BONUS;
+  byte ATTRIB_PENALTY;
+  byte TRAITS;
+  byte ELEMENT_WEAK;
+  byte ELEMENT_STRONG;
+  byte CONDITION_RESIST;
+  */
 const RaceDescriptionDef RaceDescription[8] =
 {
-  {"Human", 255},
-  {"Elf", 6},
-  {"Dwarf", 255},
-  {"Frobit", 6},
-  {"Orc", 6},
-  {"Fuzzer", 6},
-  {"Dracon", 6},
-  {"Construct", 6} // Never levels up, strong early on but expensive to upgrade stats
+  {"Human", 10, ATTRIB_NONE, ATTRIB_NONE, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+  {"Effel", 8, ATTRIB_WIS, ATTRIB_CON, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+  {"Duerf", 12, ATTRIB_CON, ATTRIB_WIS, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+  {"Lefling", 6, ATTRIB_CHA, ATTRIB_STR, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+  {"Mork", 12, ATTRIB_STR, ATTRIB_WIS, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+  {"Fosz", 8, ATTRIB_DEX, ATTRIB_INT, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+  {"Drecon", 12, ATTRIB_INT, ATTRIB_CHA, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+  {"Construct", 10, ATTRIB_STR, ATTRIB_DEX, 0b00000000, 0b00000000, 0b00000000, 0b00000000} // Never levels up, strong early on but expensive to upgrade stats
 };
 
-
+/*
+  char *NAME;
+  byte HITDICE;
+  byte ATTRIB_DEP;
+  byte WEAPON_PROF;
+  byte ARMOR_PROF;
+  byte SPELLS_WIZ;
+  byte SPELLS_CLER;
+  byte SONGS_BARD;
+  */
 const ClassDescriptionDef ClassDescription[8]=
 {
-  {"Fighter", 8},
-  {"Ranger", 8},
-  {"Wizard", 4},
-  {"Paladin", 6},
-  {"Monk", 6},
-  {"Bard", 4},
-  {"Thief", 4},
-  {"Cleric", 6}
+  {"Fighter", 8, ATTRIB_STR, 255, 255, 0, 0, 0},
+  {"Ranger", 8, ATTRIB_WIS, 0, 0, 0, 0, 0},
+  {"Wizard", 4, ATTRIB_INT, 0, 0, 255, 0, 0},
+  {"Barbarian", 6, ATTRIB_CON, 0, 0, 0, 0, 0},
+  {"Monk", 6, ATTRIB_CON, 0, 0, 0, 0, 0},
+  {"Bard", 4, ATTRIB_CHA, 0, 0, 0, 0, 255},
+  {"Thief", 4, ATTRIB_DEX, 0, 0, 0, 0, 0},
+  {"Cleric", 6, ATTRIB_WIS, 0, 0, 0, 0, 0}
 };
 
 const sbyte AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
@@ -71,7 +89,7 @@ const byte WeaponHitDice[] =
   6, 4, 8, 4
 };
 
-const byte WeaponPrice[] = 
+const byte WeaponPrice[] =
 {
   10, 5, 10, 250,
   20, 15, 15, 250,
@@ -90,7 +108,7 @@ const char *ArmorName[] =
   //Leather
   "Kitsune Pelt", "Fur Pelt", "Studded Hide", "Leathermail",
   //Metal
-  "Mithril Mail", "Construct Frame", "Chainmail", "Platemail", 
+  "Mithril Mail", "Construct Frame", "Chainmail", "Platemail",
 };
 //Enchantment 0-16
 const byte ArmorAC[] =
@@ -101,7 +119,7 @@ const byte ArmorAC[] =
   8, 2, 4, 5
 };
 
-const byte ArmorPrice[] = 
+const byte ArmorPrice[] =
 {
   250, 1, 4, 20,
   250, 8, 12, 24,
@@ -110,10 +128,23 @@ const byte ArmorPrice[] =
 };
 
 //Skills
-#define SKILL_PICKLOCK 0
-#define SKILL_IDENTIFY 1
-#define SKILL_TURNANIMAL 2
-#define SKILL_TURNUNDEAD 3
+#define SKILL_INVESTIGATE 0
+#define SKILL_HIDE 1
+#define SKILL_CALMANIMAL 2
+#define SKILL_CALMUNDEAD 3
 #define SKILL_CASTCLERIC 4
 #define SKILL_CASTMAGE 5
 #define SKILL_CASTBARD 6
+
+//Traits
+#define TRAIT_DARKVISION
+
+//Conditions
+#define CONDITION_POISON
+#define CONDITION_STONE
+#define CONDITION_PARALYSIS
+#define CONDITION_BLIND
+#define CONDITION_SILENCE
+#define CONDITION_BERSERK
+#define CONDITION_ZOMBIE
+#define CONDITION_
