@@ -45,173 +45,6 @@ const ClassDescriptionDef ClassDescription[8]=
 
 const sbyte AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
 
-const char *namePrefixA[8][8] =
-{
-        {//Human
-        "Hur",
-        "Dur",
-        "Ran",
-        "Mal",
-        "Fal",
-        "Lir",
-        "Gaf",
-        "Jex"
-        },
-        {//Elf
-        "Lis",
-        "Kes",
-        "Sz'",
-        "Th'",
-        "Yli",
-        "Lwi",
-        "Eol",
-        "Rys"
-        },
-        {//Dwarf
-        "Muh",
-        "Dov",
-        "Sha",
-        "Ste",
-        "Sfo",
-        "Yeg",
-        "Gos",
-        "Woz"
-        },
-        {//Halfling
-        "Flo",
-        "Bli",
-        "Man",
-        "Tem",
-        "Huw",
-        "Jle",
-        "Nel",
-        "Sul"
-        },
-        {//Orc
-        "Mor",
-        "Far",
-        "Hir",
-        "Gha",
-        "Mal",
-        "Ral",
-        "Dan",
-        "Pol"
-        },
-        {//Fuzzer
-        "Uwe",
-        "Reu",
-        "Bes",
-        "Kle",
-        "Uye",
-        "Xes",
-        "Ztu",
-        "Hsa"
-        },
-        {//Dracon
-        "Fah",
-        "Sza",
-        "Oha",
-        "Wah",
-        "Lah",
-        "Rah",
-        "Qua",
-        "Pla"
-        },
-        {//Construct
-        "AP",
-        "ZI",
-        "OP",
-        "UO",
-        "GH",
-        "QK",
-        "MN",
-        "ZY"
-        }
-};
-const char *nameSuffixA[8][8] =
-{
-        {//Human
-        "kar@",
-        "roth@",
-        "mar@",
-        "par@",
-        "dak@",
-        "eos@",
-        "nast@",
-        "stle@"
-        },
-        {//Elf
-        "leu@",
-        "ious@",
-        "yir@",
-        "thel@",
-        "aeu@",
-        "ndir@",
-        "brae@",
-        "owas@"
-        },
-        {//Dwarf
-        "yen@",
-        "ama@",
-        "ral@",
-        "apa@",
-        "oru@",
-        "eke@",
-        "hest@",
-        "julo@"
-        },
-        {//Halfling
-        "bo@",
-        "blib@",
-        "mak@",
-        "bar@",
-        "est@",
-        "nlo@",
-        "kle@",
-        "hoh@"
-        },
-        {//Orc
-        "gen@",
-        "nir@",
-        "aar@",
-        "air@",
-        "olen@",
-        "geth@",
-        "menk@",
-        "fhan@"
-        },
-        {//Fuzzer
-        "papa@",
-        "riga@",
-        "gisa@",
-        "huer@",
-        "fath@",
-        "mner@",
-        "uiop@",
-        "fust@"
-        },
-        {//Dracon
-        "fir@",
-        "nir@",
-        "lir@",
-        "kir@",
-        "hir@",
-        "mir@",
-        "wir@",
-        "zir@"
-        },
-        {//Construct
-        "-A@",
-        "-B@",
-        "-C@",
-        "-D@",
-        "-E@",
-        "-F@",
-        "-G@",
-        "-H@"
-        }
-};
-
 //Weapons
 //Type = Slash, Bludgeon, Pierce, Casting
 //Length = Small, One-Handed, Two-Handed, Ranged
@@ -227,7 +60,7 @@ const char *WeaponName[] =
   //Two-Handed
   "Greatsword", "Hammer", "Halberd", "Device",
   //Ranged
-  "Star", "Sling", "Bow", "Staff"
+  "Star Glove", "Sling", "Bow", "Staff"
 };
 
 const byte WeaponHitDice[] =
@@ -238,21 +71,43 @@ const byte WeaponHitDice[] =
   6, 4, 8, 4
 };
 
+const byte WeaponPrice[] = 
+{
+  10, 5, 10, 250,
+  20, 15, 15, 250,
+  100, 20, 30, 250,
+  1, 3, 30, 250
+};
 
 //Armor
 const char *ArmorName[] =
 {
-  //Weight = Mithril, Clothes, Light, Heavy
+  //Weight = Magic, Clothes, Light, Heavy
   //Cloth
-  "Mithril Tunic", "Clothes", "Robe", "Overcoat"
+  "Regal Tunic", "Clothes", "Robe", "Overcoat"
   //Plant
-  "Goldflower Tunic", "Cornhusk Robe", "Coconut Plate", "Shale Plate",
+  "Goldflower Tunic", "Flax Robe", "Coconut Plate", "Shale Plate",
   //Leather
-  "Fine Pelt", "Fur Pelt", "Studded Hide", "Leathermail",
+  "Kitsune Pelt", "Fur Pelt", "Studded Hide", "Leathermail",
   //Metal
   "Mithril Mail", "Construct Frame", "Chainmail", "Platemail", 
 };
 //Enchantment 0-16
+const byte ArmorAC[] =
+{
+  2, 0, 1, 1,
+  4, 1, 2, 4,
+  5, 2, 3, 4,
+  8, 2, 4, 5
+};
+
+const byte ArmorPrice[] = 
+{
+  250, 1, 4, 20,
+  250, 8, 12, 24,
+  250, 16, 32, 96,
+  250, 90, 160, 225
+};
 
 //Skills
 #define SKILL_PICKLOCK 0

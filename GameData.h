@@ -44,7 +44,7 @@ extern const byte DungeonGeoMorphAttrib[32];
 //Each mapQuad is a 16x16 area, corresponding to a 16x16 geomorph from the bitmap containing 64
 extern byte mapQuads[mapMatrixHeight * mapMatrixWidth];
 
-extern byte followIndex;
+//extern byte followIndex;
 
 void RunGame(screenName startingScreen);
 void DrawMiniMap(bool highlightPlayer);
@@ -134,6 +134,9 @@ typedef struct
   byte HITDICEMAX;
   byte ATTRIB_BONUS;
   byte ABILITY_PROF;
+  byte ELEMENT_WEAK;
+  byte ELEMENT_STRONG;
+  byte CONDITION_RESIST;
 }RaceDescriptionDef;
 extern const RaceDescriptionDef const RaceDescription[8];
 
