@@ -791,6 +791,27 @@ void PlaceRoom()
                 clampPoint(&point);
                 }
 }
+
+#define ROOM_HALLWAY 0
+#define ROOM_SMALL 1
+#define ROOM_DOUBLE 2
+#define ROOM_TRIPLE 3
+#define ROOM_QUAD 4
+#define ROOM_LARGE 5
+#define ROOM_WINDING 6
+#define ROOM_SPECIAL 7
+
+//Roll d20
+//0-5 HALLWAY
+//5-9 SMALL
+//10-12 LARGE
+//13 DOUBLE
+//14 TRIPLE
+//15 QUAD
+//16 SPECIAL
+//17 WINDING
+//18-19 HALLWAY
+
 void GenerateDungeon(byte seed)
 {
         #define RoomCount 5

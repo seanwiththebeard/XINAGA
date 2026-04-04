@@ -35,6 +35,7 @@ byte RACE;
 byte CLASS;
 byte HITDICE;
 
+void DrawStatsSelected();
 
 /*
 {"Human", 255},
@@ -96,6 +97,7 @@ void AddToRoster()
   //ConsoleBufferPrintConsole(0);
   //AreYouSure();
   //sprintf(PlayerChar->NAME, strTemp);
+  DrawStatsSelected();
 }
 
 //#define DrawSelection() SetChar('>', windowX + 2, windowY + selection + 1)
@@ -240,6 +242,59 @@ void ListParty()
     }
   }
         //DrawMenu();
+}
+
+/*
+typedef struct
+  char *NAME;
+  byte HITDICEMAX;
+  byte ATTRIB_BONUS;
+  byte ATTRIB_PENALTY;
+  byte TRAITS;
+  byte ELEMENT_WEAKNESS;
+  byte ELEMENT_RESIST;
+  byte CONDITION_RESIST;
+}RaceDescriptionDef;
+
+  char *NAME;
+  byte HITDICE;
+  byte ATTRIB_DEP;
+  byte WEAPON_PROF;
+  byte ARMOR_PROF;
+  byte SPELLS_WIZ;
+  byte SPELLS_CLER;
+  byte SONGS_BARD;
+}ClassDescriptionDef;
+*/
+
+void DrawStatsSelected()
+{
+  //byte class = getPlayerChar(CurrentCharacter)->CLASS;
+  //byte race = getPlayerChar(CurrentCharacter)->RACE;
+
+  //Resize the console and just print all of this there
+  
+  ResetMenu("Selected@", 1, 10, viewportWidth * 2, viewportHeight, viewportHeight, true);
+  sprintf(strTemp, "%s@", RaceDescription[RACE].NAME);
+  ConsoleBufferPrint(1, 10);
+  sprintf(strTemp, "%s@ ", ClassDescription[CLASS].NAME);
+  ConsoleBufferPrint(2, 11);
+  sprintf(strTemp, "Traits %d@ ", RaceDescription[RACE].TRAITS);
+  ConsoleBufferPrint(2, 12);
+  sprintf(strTemp, "Element Weak %d@ ", RaceDescription[RACE].ELEMENT_WEAKNESS);
+  ConsoleBufferPrint(2, 13);
+  sprintf(strTemp, "Element Resist %d@ ", RaceDescription[RACE].ELEMENT_RESIST);
+  ConsoleBufferPrint(2, 14);
+  sprintf(strTemp, "Condition Resist %d@ ", RaceDescription[RACE].CONDITION_RESIST);
+  ConsoleBufferPrint(2, 15);
+  sprintf(strTemp, "Weapon Prof %d@ ", ClassDescription[CLASS].WEAPON_PROF);
+  ConsoleBufferPrint(2, 16);
+  sprintf(strTemp, "Armor Prof %d@ ", ClassDescription[CLASS].ARMOR_PROF);
+  ConsoleBufferPrint(2, 17);
+  
+  
+  
+  
 }
 
 void ListRoster()
