@@ -847,9 +847,9 @@ byte seed;
 
 void GetSeed()
 {
-  #define menuWidth 5
-  #define menuCount 4
-  ResetMenu("Seed@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, menuCount, true);
+  //#define menuWidth 5
+  //#define menuCount 4
+  ResetMenu("Seed@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6, true);
   SetMenuItem(0, "Next@");
   SetMenuItem(1, "Last@");
   SetMenuItem(2, "Overworld@");
