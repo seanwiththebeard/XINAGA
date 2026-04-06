@@ -108,8 +108,8 @@ const byte DungeonGeoMorphSet[256] =
 };
 /*{w:1, h:1, count:32, bpp:4, pal:"c64", layout:"c64"}*/
 const byte DungeonGeoMorphAttrib[32] = {
-  0x01, 0x01, 0x01, 0x01,
-  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x03,
+  0x0C, 0x0C, 0x0C, 0x0C,
+  0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x00,
   0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F,
   0x0F, 0x0F, 0x0F, 0x0F
   };
@@ -781,12 +781,12 @@ const byte RoomProbability[20] =
   ROOM_HALLWAY,
   ROOM_HALLWAY,
   ROOM_SMALL,
-  ROOM_SMALL,
-  ROOM_SMALL,
+  ROOM_HALLWAY,
+  ROOM_HALLWAY,
   ROOM_SMALL,
   ROOM_SMALL,
   ROOM_LARGE,
-  ROOM_LARGE,
+  ROOM_HALLWAY,
   ROOM_LARGE,
   ROOM_DOUBLE,
   ROOM_TRIPLE,
@@ -795,14 +795,13 @@ const byte RoomProbability[20] =
   ROOM_WINDING,
   ROOM_HALLWAY,
   ROOM_HALLWAY
-  
 };
 
 void PlaceRoom()
 {
-        #define sizeXMin 2
+        #define sizeXMin 5
         #define sizeXMax 7
-        #define sizeYMin 2
+        #define sizeYMin 5
         #define sizeYMax 7
         struct vector2 point;
         byte x, y;
@@ -817,8 +816,9 @@ void PlaceRoom()
                         for (x = 0; x < sizeX; ++x)
                         {
                                 byte roomNum = rand() % 20;
-                                mapQuads[point.x + (mapMatrixWidth * point.y)] = RoomProbability[roomNum];
-                                DrawPoint(point.x, point.y);
+                                attachRandomPoint(RoomProbability[roomNum], miniMapDungeonWall);
+                                //mapQuads[point.x + (mapMatrixWidth * point.y)] = RoomProbability[roomNum];
+                                //DrawPoint(point.x, point.y);
                                 ++point.x;
                                 clampPoint(&point);
                         }
@@ -830,9 +830,12 @@ void PlaceRoom()
 
 void GenerateDungeon(byte seed)
 {
-        #define RoomCount 5
+        #define RoomCount 1
         byte x,y;
         UploadCharPage((byte*)DungeonGeoMorphSet, 7);
+        clearPoints();
+        createPoint(RoomProbability[rand() % 20], 8, 8);
+
         for (y = 0; y < mapMatrixWidth; ++y)
                 for(x = 0; x < mapMatrixHeight; ++x)
                         {
@@ -842,6 +845,18 @@ void GenerateDungeon(byte seed)
         srand(seed);
         for (x = 0; x < RoomCount; ++x)
                 PlaceRoom();
+
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 16; ++x)
+    {
+      byte offset = x + (mapMatrixWidth * y);
+      byte index  = mapQuads[offset];
+      if ( index == ROOM_HALLWAY)
+      {
+        mapQuads[offset] += GetFringeMask(x, y, miniMapDungeonWall);
+      }
+        DrawPoint(x,y);
+    }
 }
 
 byte seed;
@@ -860,11 +875,12 @@ void GetSeed()
 
   //sprintf(strTemp, "Seed (%d)@", seed);
   //SetLineMessageWindow(strTemp, 0);
-  //while(1)
+  while(1)
   {
           //GenerateOverworld(seed);
           GenerateDungeon(seed);
-          //++seed;
+          ++seed;
+    WaitForInput();
     //return;
     //++seed;
   }
@@ -903,6 +919,8 @@ screenName Update_MapGen()
   //ClearScreen();
         MiniMapPosX = viewportPosX;
         MiniMapPosY = viewportPosY;
+  MiniMapWidth = 16;
+  MiniMapHeight = 16;
   //ResizeMessageWindow(COLS - 22, viewportPosY, 21, 8);
   ScreenFadeIn();
         DrawInterface();
