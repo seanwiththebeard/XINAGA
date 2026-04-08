@@ -556,15 +556,19 @@ screenName DrawAddCharacterScreen()
         DrawPartyStats();
         ListRoster();
         DrawCharStats();
-                        while(CountParty() < 4)
-                        {
-                                while(!AddRandom(predefcharindex[CountParty()], rand() % 8));
-                                AddParty(CurrentCharacter);
-                                ListParty();
-                                DrawPartyStats();
-                                ListRoster();
-                                DrawCharStats();
-                        }
+  if (CountParty() == 0)
+  {
+    while(CountParty() < 4)
+    {
+      while(!AddRandom(predefcharindex[CountParty()], rand() % 8));
+      AddParty(CurrentCharacter);
+      ListParty();
+      DrawPartyStats();
+      ListRoster();
+      DrawCharStats();
+    }
+    return MapGen;
+  }
         //while(CountParty() != 4)
         //
                 //ListParty();

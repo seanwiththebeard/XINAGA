@@ -93,7 +93,7 @@ const byte DungeonGeoMorphSet[256] =
 	0x7E, 0xB1, 0xEF, 0xB5, 0xAD, 0xB5, 0x6E, 0x7E, 0x10, 0x57, 0x7C, 0x30,
 	0xDC, 0x44, 0x7E, 0x04, 0x18, 0x18, 0xBD, 0xE7, 0xE7, 0xBD, 0x18, 0x18,
 	0xFF, 0xDB, 0xBD, 0xFF, 0xFF, 0xBD, 0xDB, 0xFF, 0xFF, 0xAA, 0xFF, 0xAA,
-	0xFF, 0xAA, 0xFF, 0xAA, 0x00, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE,
+	0xFF, 0xAA, 0xFF, 0xAA, 0x00, 0xFE, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
 	0x18, 0x18, 0x18, 0xFF, 0xFF, 0x18, 0x18, 0x18, 0x00, 0x00, 0x00, 0xFF,
 	0xFF, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0xFF, 0xFF, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x18, 0x18, 0x18, 0xF8,
@@ -108,10 +108,10 @@ const byte DungeonGeoMorphSet[256] =
 };
 /*{w:1, h:1, count:32, bpp:4, pal:"c64", layout:"c64"}*/
 const byte DungeonGeoMorphAttrib[32] = {
-  0x01, 0x01, 0x01, 0x01,
-  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00,
-  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-  0x01, 0x01, 0x01, 0x01
+  0x0F, 0x0F, 0x0F, 0x0F,
+  0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0F, 0x0B,
+  0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+  0x0C, 0x0C, 0x0C, 0x0C
   };
 
 /* World Seed Parameters
@@ -714,10 +714,10 @@ void GenerateOverworld(byte seed)
 
 
   srand(seed);
-  sprintf(strTemp, "Generating Seed:(%3d)@", seed);
+  sprintf(strTemp, "Overworld Seed:(%3d)@", seed);
+  SetLineMessageWindow(strTemp, 0);
   DrawScenario();
   checkLandlocked();
-  WriteLineMessageWindow(strTemp, 0);
   //return;
 
   for ( y = 0; y < continentsBase; ++y)
@@ -802,23 +802,26 @@ void PlaceRoom()
                 {
                         for (x = 0; x < sizeX; ++x)
                         {
-                                byte roomNum = RoomProbability[rand() % 20];
-                                if (roomNum < 15)
-                                {
-                                  roomNum += rand() % 1;
-                                }
-                                attachRandomPoint(roomNum, miniMapDungeonWall);
+                          byte roomNum = RoomProbability[rand() % 20];
+                          byte randomadd = rand() % 20;
+                          if (roomNum < ROOM_HALLWAY)
+                            if(randomadd > 10)
+                              ++roomNum;
+                          attachRandomPoint(roomNum, miniMapDungeonWall);
+                          attachRandomPoint(ROOM_HALLWAY, miniMapDungeonWall);
+                          
                         }
                 }
 }
 
 void GenerateDungeon(byte seed)
 {
-        #define RoomCount 1
+        //#define RoomCount 1
         byte x,y;
         UploadCharPage((byte*)DungeonGeoMorphSet, 7);
         clearPoints();
-        createPoint(RoomProbability[rand() % 20], 8, 8);
+        sprintf(strTemp, "Dungeon Seed (%d)@", seed);
+        SetLineMessageWindow(strTemp, 0);
 
         for (y = 0; y < mapMatrixWidth; ++y)
                 for(x = 0; x < mapMatrixHeight; ++x)
@@ -827,7 +830,8 @@ void GenerateDungeon(byte seed)
                                 DrawPoint(x,y);
                         }
         srand(seed);
-        for (x = 0; x < RoomCount; ++x)
+        createPoint(RoomProbability[rand() % 20], 8, 8);
+        //for (x = 0; x < RoomCount; ++x)
                 PlaceRoom();
 
   for (y = 0; y < 16; ++y)
@@ -861,12 +865,12 @@ void GetSeed()
   //SetLineMessageWindow(strTemp, 0);
   while(1)
   {
-          //GenerateOverworld(seed);
-          GenerateDungeon(seed);
-          ++seed;
+    GenerateOverworld(seed);
+    //GenerateDungeon(seed);
     //WaitForInput();
-    //return;
-    //++seed;
+    //WriteLineMessageWindow("@", 0);
+    ++seed;
+    return;
   }
 
   while (1)
