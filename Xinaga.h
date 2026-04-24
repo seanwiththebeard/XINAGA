@@ -32,20 +32,20 @@ extern const byte attributesDefault[256];
 #define viewportWidth 9
 #define viewportHeight 9
 
-#define consolePosX 1
-#define consolePosY 20
-#define consoleWidth COLS - contextMenuWidth - 3
-#define consoleHeight 3
+#define consolePosX 20
+#define consolePosY 1
+#define consoleWidth COLS - consolePosX - 1
+#define consoleHeight 11
 
 #define contextMenuPosX COLS - contextMenuWidth - 1
 #define contextMenuPosY 13
 #define contextMenuWidth 11
 #define contextMenuHeight 10
 
-#define PartyStatsX 19
-#define PartyStatsY 0
+#define PartyStatsX 0
+#define PartyStatsY 21
 #define PartyStatsWidth COLS - PartyStatsX
-#define PartyStatsHeight 13
+#define PartyStatsHeight 4
 
 //Screen Layout
 #if defined(__APPLE2__)

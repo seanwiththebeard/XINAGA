@@ -142,18 +142,23 @@ byte RollDice(byte count, byte diceSize)
 
 void DrawCharStatus(byte characterIndex)
 {
-  byte statY = PartyStatsY + 1 + characterIndex * (3);
+  //byte statY = PartyStatsY + 1 + characterIndex * (3);
+  byte statX = PartyStatsX + characterIndex * (8);
+  
   struct playerChar *PlayerChar = getPartyMember(characterIndex);
 
-  DrawBorder(PlayerChar->NAME, PartyStatsX, statY - 1, PartyStatsWidth, 4, true);
-  DrawTileDirectXY(PlayerChar->CLASS, PartyStatsX + 1, statY);
+  //DrawBorder(PlayerChar->NAME, statX, PartyStatsY - 1, 7, 4, true);
+  DrawTileDirectXY(PlayerChar->CLASS, statX + 1, PartyStatsY);
   ConsoleBufferReset();
-  ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
-  ConsoleBufferPrint(PartyStatsX + 3, statY);
-  ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
-  ConsoleBufferPrint(PartyStatsX + 3, statY+1);
-  sprintf(strTemp, "HP:%d/%d@", PlayerChar->HP, PlayerChar->HPMAX);
-  PrintString(strTemp, PartyStatsX + 10, statY + 1, true);
+  ConsoleBufferAdd(PlayerChar->NAME);
+  ConsoleBufferPrint(statX + 3, PartyStatsY);
+  
+  //ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
+  //ConsoleBufferPrint(statX + 3, PartyStatsY);
+  //ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
+  //ConsoleBufferPrint(statX + 3, PartyStatsY+1);
+  sprintf(strTemp, "%2d/%2d@", PlayerChar->HP, PlayerChar->HPMAX);
+  PrintString(strTemp, statX + 3, PartyStatsY + 1, true);
   ConsoleBufferReset();
 }
 
