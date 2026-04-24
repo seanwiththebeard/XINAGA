@@ -171,7 +171,7 @@ void DrawMoonPhase()
 {
   ConsoleBufferReset();
   sprintf(strTemp, "<%c||%c>@", phaseChar[moonA], phaseChar[moonB]);
-  PrintString(strTemp, viewportPosX + (viewportWidth / 2) + 2, viewportPosY -1, true);
+  PrintString(strTemp, 20, 11, true);
   ConsoleBufferReset();
 }
 void TickMoonPhase() //The SOLUS and the LUNUS and the MOONUS

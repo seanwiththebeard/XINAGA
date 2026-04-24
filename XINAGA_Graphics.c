@@ -649,7 +649,7 @@ void ClearArrow(void)
   SetChar(arrowB, arrowX + 1, arrowY);
   //wait_vblank(1);
 }
-void DrawLineH(byte index, byte x, byte y, byte length)
+void DrawLineH(byte index, sbyte x, sbyte y, byte length)
 {
   byte count;
   byte posX;
@@ -662,11 +662,13 @@ void DrawLineH(byte index, byte x, byte y, byte length)
     if (posX % 2 == 1 && index != ' ')
       ++tempIndex;
     #endif
-    SetChar(tempIndex, posX, y);
+    if((x >= 0) && (x < COLS))
+      if((y >= 0)&&(y < ROWS))
+        SetChar(tempIndex, posX, y);
   }
   //wait_vblank(1);
 }
-void DrawLineV(byte index, byte x, byte y, byte length)
+void DrawLineV(byte index, sbyte x, sbyte y, byte length)
 {
   byte count;
   byte tempIndex = index;
@@ -678,11 +680,13 @@ void DrawLineV(byte index, byte x, byte y, byte length)
   #endif
   for (count = 0; count < length; ++count)
   {
-    SetChar(tempIndex, x, y + count);
+    if((x >= 0) && (x < COLS))
+      if((y >= 0)&&(y < ROWS))
+        SetChar(tempIndex, x, y + count);
   }
   //wait_vblank(1);
 }
-void DrawCorners(byte xPos, byte yPos, byte widthInside1, byte heightInside1)
+void DrawCorners(sbyte xPos, sbyte yPos, byte widthInside1, byte heightInside1)
 {
   #define corner  0xEA
   char corner1 = corner;
@@ -693,13 +697,26 @@ void DrawCorners(byte xPos, byte yPos, byte widthInside1, byte heightInside1)
   if ((xPos + widthInside1) % 2 == 1)
     ++corner2;
   #endif
-  SetChar(corner1, xPos, yPos);
+
+  //These could be greatly simplified
+  if((xPos >= 0) && (xPos < COLS))
+      if((yPos >= 0)&&(yPos < ROWS))
+        SetChar(corner1, xPos, yPos);
+
+  if((xPos + widthInside1 >= 0) && (xPos + widthInside1 < COLS))
+      if((yPos >= 0)&&(yPos < ROWS))
   SetChar(corner2, xPos + widthInside1, yPos);
+
+  if((xPos >= 0) && (xPos < COLS))
+      if((yPos + heightInside1 >= 0)&&(yPos + heightInside1 < ROWS))
   SetChar(corner1, xPos, yPos + heightInside1);
+
+  if((xPos + widthInside1 >= 0) && (xPos + widthInside1 < COLS))
+      if((yPos + heightInside1 >= 0)&&(yPos + heightInside1 < ROWS))
   SetChar(corner2, xPos + widthInside1, yPos + heightInside1);
   //wait_vblank(1);
 }
-void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool fill)
+void DrawBorder(char *text, sbyte xPos, sbyte yPos, byte width, byte height, bool fill)
 {
   byte x;
   //byte offset = 0;

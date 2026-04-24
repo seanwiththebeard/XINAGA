@@ -27,8 +27,8 @@ extern uint16_t randseed;
 extern const byte characterset[2048];
 extern const byte attributesDefault[256];
 
-#define viewportPosX 1
-#define viewportPosY 1
+#define viewportPosX 0
+#define viewportPosY 0
 #define viewportWidth 9
 #define viewportHeight 9
 
@@ -214,9 +214,9 @@ extern byte SetCharY;
 void _SetChar(void);
 #define SetChar(charindex, x, y) do {SetCharIndex = (charindex); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void ClearScreen(void);
-void DrawLineH(byte index, byte x, byte y, byte length);
+void DrawLineH(byte index, sbyte x, sbyte y, byte length);
 //void DrawLineV(byte index, byte x, byte y, byte length);
-void DrawBorder(char *text, byte xPos, byte yPos, byte width, byte height, bool fill);
+void DrawBorder(char *text, sbyte xPos, sbyte yPos, byte width, byte height, bool fill);
 void DrawCharset(void);
 
 //	Tiles
