@@ -301,11 +301,12 @@ void DrawScenario()
       else
         scenarioPoints[x] = scenForest;
     }
-    SetChar('0'+x, PartyStatsX + 1  + 2*x, PartyStatsY + 1);
+    
+    SetChar('0'+x, PartyStatsX  + 2*x, PartyStatsY + 2);
 
-
-    DrawTileDirectXY(scenarioPoints[x], PartyStatsX +1 + 2*x,  PartyStatsY + 2);
-    SetChar(dirChar[scenarioDir[x]], PartyStatsX +1 + 2*x, PartyStatsY + 4);
+    DrawTileDirectXY(scenarioPoints[x], PartyStatsX + 2*x,  PartyStatsY);
+    
+    SetChar(dirChar[scenarioDir[x]], PartyStatsX +1 + 2*x, PartyStatsY + 2);
 
     scenPos.x += (distX[scenarioDir[x]] * distTravel);
     scenPos.y += (distY[scenarioDir[x]] * distTravel);
@@ -319,7 +320,7 @@ void DrawScenario()
       clampPoint(&scenPos);
       ++distTravel;
     }
-    SetChar('0' + distTravel, PartyStatsX + 2  + 2*x, PartyStatsY + 4);
+    SetChar('0' + distTravel, PartyStatsX  + 2*x, PartyStatsY + 2);
 
     if (x == 0)
     {
