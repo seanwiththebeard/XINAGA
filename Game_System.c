@@ -87,7 +87,7 @@ byte lastY;
 void DrawLocalMiniMap(bool checkLast)
 {
         #define radius 3
-        #define posX 20 //contextMenuPosX + 1
+        #define posX 19 //contextMenuPosX + 1
         #define posY contextMenuPosY
         sbyte sampleX, sampleY, sampleXX, sampleYY;
         byte offset;
@@ -152,7 +152,6 @@ void DrawCharStatus(byte characterIndex)
   ConsoleBufferReset();
   ConsoleBufferAdd(PlayerChar->NAME);
   ConsoleBufferPrint(statX, PartyStatsY);
-  
   //ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
   //ConsoleBufferPrint(statX + 3, PartyStatsY);
   //ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
@@ -171,7 +170,7 @@ void DrawMoonPhase()
 {
   ConsoleBufferReset();
   sprintf(strTemp, "<%c||%c>@", phaseChar[moonA], phaseChar[moonB]);
-  PrintString(strTemp, 20, 11, true);
+  PrintString(strTemp, 6, 19, true);
   ConsoleBufferReset();
 }
 void TickMoonPhase() //The SOLUS and the LUNUS and the MOONUS

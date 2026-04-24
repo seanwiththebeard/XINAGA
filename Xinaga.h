@@ -32,13 +32,13 @@ extern const byte attributesDefault[256];
 #define viewportWidth 9
 #define viewportHeight 9
 
-#define consolePosX 20
-#define consolePosY 1
+#define consolePosX 19
+#define consolePosY 0
 #define consoleWidth COLS - consolePosX - 1
 #define consoleHeight 10
 
 #define contextMenuPosX COLS - contextMenuWidth - 2
-#define contextMenuPosY 12
+#define contextMenuPosY 11
 #define contextMenuWidth 10
 #define contextMenuHeight 10
 

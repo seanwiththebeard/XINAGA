@@ -233,7 +233,7 @@ void ListParty()
   byte partyCount = CountParty();
         if(CurrentCharacter < 0)
         CurrentCharacter = 0;
-  ResetMenu("Party@", 1, 1, viewportWidth * 2, 4, partyCount, true);
+  ResetMenu("Party@", 1, 1, viewportWidth * 2 - 1, 4, partyCount, true);
   if (partyCount > 0)
   {
     for (x = 0; x < partyCount; ++x)
