@@ -43,7 +43,7 @@ extern const byte attributesDefault[256];
 #define contextMenuHeight 10
 
 #define PartyStatsX 0
-#define PartyStatsY 21
+#define PartyStatsY 20
 #define PartyStatsWidth COLS - PartyStatsX
 #define PartyStatsHeight 4
 
