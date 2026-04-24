@@ -18,7 +18,13 @@
 //#link "Game_Screen_AddCharacter.c"
 //#link "Game_Screen_MapGen.c"
 //#link "Game_Screen_Map.c"
-//#link "Game_Screen_Combat.c"
+////#link "Game_Screen_Combat.c"
+
+screenName Update_Combat(void)
+{
+  return Map;
+}
+
 
 void main()
 {
