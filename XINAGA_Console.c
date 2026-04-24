@@ -143,7 +143,7 @@ void SetMenuSelect(byte sel)
 void ClearMenuContents()
 {
         byte x;
-        DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
+        //DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
         for (x = 0; x < menuItemsCount; ++x)
                 {
                         MenuItems[x] = (char*)"";
@@ -196,7 +196,7 @@ byte IsMenuItemHighlighted(byte index)
 void DrawMenu()
 {
   byte x;
-  DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
+  //DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
   for (x = 0; x < MenuCount; ++x)
   {
     //ClearItem(x);

@@ -917,7 +917,8 @@ FillViewport(' ', viewportWidth, viewportHeight);
   GetSeed();
   //StoreMap();
   //ScreenFadeOut();
-  //ClearScreen();
+  ClearScreen();
+  DrawInterface();
   return Map;
 }
 

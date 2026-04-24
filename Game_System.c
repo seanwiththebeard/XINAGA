@@ -86,8 +86,8 @@ byte lastX;
 byte lastY;
 void DrawLocalMiniMap(bool checkLast)
 {
-        #define radius 4
-        #define posX contextMenuPosX + 1
+        #define radius 3
+        #define posX 20 //contextMenuPosX + 1
         #define posY contextMenuPosY
         sbyte sampleX, sampleY, sampleXX, sampleYY;
         byte offset;
@@ -143,15 +143,15 @@ byte RollDice(byte count, byte diceSize)
 void DrawCharStatus(byte characterIndex)
 {
   //byte statY = PartyStatsY + 1 + characterIndex * (3);
-  byte statX = PartyStatsX + characterIndex * (8);
+  byte statX = PartyStatsX + characterIndex * (7);
   
   struct playerChar *PlayerChar = getPartyMember(characterIndex);
 
   //DrawBorder(PlayerChar->NAME, statX, PartyStatsY - 1, 7, 4, true);
-  DrawTileDirectXY(PlayerChar->CLASS, statX , PartyStatsY);
+  DrawTileDirectXY(PlayerChar->CLASS, statX , PartyStatsY + 1);
   ConsoleBufferReset();
   ConsoleBufferAdd(PlayerChar->NAME);
-  ConsoleBufferPrint(statX + 2, PartyStatsY);
+  ConsoleBufferPrint(statX, PartyStatsY);
   
   //ConsoleBufferAdd(RaceDescription[PlayerChar->RACE].NAME);
   //ConsoleBufferPrint(statX + 3, PartyStatsY);

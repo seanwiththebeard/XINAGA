@@ -35,15 +35,15 @@ extern const byte attributesDefault[256];
 #define consolePosX 20
 #define consolePosY 1
 #define consoleWidth COLS - consolePosX - 1
-#define consoleHeight 11
+#define consoleHeight 10
 
-#define contextMenuPosX COLS - contextMenuWidth - 1
-#define contextMenuPosY 13
+#define contextMenuPosX COLS - contextMenuWidth
+#define contextMenuPosY 12
 #define contextMenuWidth 11
 #define contextMenuHeight 10
 
 #define PartyStatsX 0
-#define PartyStatsY 20
+#define PartyStatsY 22
 #define PartyStatsWidth COLS - PartyStatsX
 #define PartyStatsHeight 4
 
