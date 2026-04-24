@@ -33,6 +33,7 @@ void SelectBank()
 void DrawInterface()
 {
         DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+        DrawBorder("@", consolePosX - 1, consolePosY - 1, COLS - consolePosX + 1, viewportHeight * 2 + 2, true);
         //DrawCharStats();
         ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
         SetTileOrigin(viewportPosX, viewportPosY);
