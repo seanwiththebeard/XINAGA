@@ -218,7 +218,7 @@ void DrawCharStats()
 {
   byte i;
   DrawMoonPhase();
-  DrawBorder("@", PartyStatsX, PartyStatsY, PartyStatsWidth, PartyStatsHeight, true);
+  //DrawBorder("@", PartyStatsX, PartyStatsY, PartyStatsWidth, PartyStatsHeight, true);
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
 }
