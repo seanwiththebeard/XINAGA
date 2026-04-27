@@ -177,13 +177,13 @@ extern const char PALETTE_3[16];
 #define selectionWidth 6
 #define selectionHeight consoleHeight
 #define selectionCount 4
-#define viewportPosX 1
-#define viewportPosY 1
+//#define viewportPosX 1
+//#define viewportPosY 1
 #define viewportWidth 9
 #define viewportHeight 9
 //#define contextMenuPosX viewportPosX + (viewportWidth * 2) + 1
 //#define contextMenuPosY viewportPosY + 16
-#define contextMenuWidth 11
+//#define contextMenuWidth 11
 //#define contextMenuHeight (2 * viewportHeight)
 #endif
 
