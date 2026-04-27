@@ -9,6 +9,7 @@
 #define ScreenCharSize ROWS*COLS
 #define fadeFrames 2
 #define mapFadeFrames 1
+
 #if defined (MSX)
 byte ScreenChars[ROWS*COLS];
 const int YColumnIndex[ROWS] =
@@ -20,6 +21,7 @@ const int YColumnIndex[ROWS] =
   800, 840, 880, 920
 };
 #endif
+
 #if defined (__APPLE2__)
 #pragma code-name (push, "LOWCODE")
 const int YColumnIndex[ROWS] =
@@ -41,6 +43,7 @@ const byte* src;
 byte* dest;
 //#pragma bss-name (pop)
 #endif
+
 #if defined (__NES__)
 #pragma code-name (push, "XINAGA_GRAPHICS")
 #pragma rodata-name (push, "XINAGA_GRAPHICS")

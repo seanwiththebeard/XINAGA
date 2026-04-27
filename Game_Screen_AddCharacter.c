@@ -10,7 +10,7 @@
 #pragma code-name (push, "ADDCHAR")
 #pragma rodata-name (push, "ADDCHAR")
 //#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 #endif
 
 #if defined (__C64__)
@@ -590,7 +590,7 @@ screenName DrawAddCharacterScreen()
         return nextScreen;
 }
 
-const char *namePrefixA[8][8] =
+const char namePrefixA[8][8][8] =
 {
         {//Human
         "Hur",
@@ -673,7 +673,7 @@ const char *namePrefixA[8][8] =
         "ZY"
         }
 };
-const char *nameSuffixA[8][8] =
+const char nameSuffixA[8][8][8] =
 {
         {//Human
         "kar@",

@@ -8,8 +8,8 @@
 #if defined (__NES__)
 #pragma code-name (push, "MAP")
 #pragma rodata-name (push, "MAP")
-#pragma data-name (push, "XRAM")
-#pragma bss-name (push, "XRAM")
+//#pragma data-name (push, "XRAM")
+//#pragma bss-name (push, "XRAM")
 #endif
 
 #if defined (__C64__)
@@ -864,7 +864,7 @@ static void DrawCharacterCoordinates(byte index)
   CoordPosY += quadHeight*2*characters.quadPosY[index];
 
   sprintf(strTemp,"<%3i  %3i>@", CoordPosX, CoordPosY);
-  PrintString(strTemp, viewportPosX + (viewportWidth >> 1), viewportPosY + (viewportHeight << 1), true);
+  PrintString(strTemp, viewportPosX + (viewportWidth >> 1), 19, true);
         //UpdatePlayerOnMiniMap;
         //DrawMiniMap(true
         MiniMapHighlightX = CoordPosX / 16;

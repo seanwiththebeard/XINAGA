@@ -155,6 +155,6 @@ typedef struct
 extern const ClassDescriptionDef const ClassDescription[8];
 
 extern const sbyte const AbilityModifier[];
-extern const char *namePrefixA[8][8];
-extern const char *nameSuffixA[8][8];
+extern const char namePrefixA[8][8][8];
+extern const char nameSuffixA[8][8][8];
 #endif

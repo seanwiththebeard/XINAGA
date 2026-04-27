@@ -130,6 +130,7 @@ extern byte attributeset[256];
 
 #if defined(__NES__)
 #include <peekpoke.h>
+#pragma bss-name (push, "XRAM")
 extern byte tilesPalette[64];
 extern const byte attributeset[256];
 

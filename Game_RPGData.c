@@ -7,10 +7,10 @@
 #endif
 
 #if defined (__NES__)
-//#pragma code-name (push, "XINAGA_CONSOLE")
-#pragma rodata-name (push, "XINAGA")
+#pragma code-name (push, "GAME")
+#pragma rodata-name (push, "GAME")
 //#pragma data-name (push, "XRAM")
-//#pragma bss-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 #endif
 
 #if defined (__C64__)

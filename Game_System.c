@@ -9,6 +9,8 @@
 #if defined (__NES__)
 #pragma code-name (push, "GAME")
 #pragma rodata-name (push, "GAME")
+//#pragma data-name (push, "XRAM")
+#pragma bss-name (push, "XRAM")
 #endif
 
 #if defined (__C64__)
@@ -170,7 +172,7 @@ void DrawMoonPhase()
 {
   ConsoleBufferReset();
   sprintf(strTemp, "<%c||%c>@", phaseChar[moonA], phaseChar[moonB]);
-  PrintString(strTemp, 6, 19, true);
+  PrintString(strTemp, 6, 18, true);
   ConsoleBufferReset();
 }
 void TickMoonPhase() //The SOLUS and the LUNUS and the MOONUS
