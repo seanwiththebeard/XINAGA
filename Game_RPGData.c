@@ -69,7 +69,7 @@ const sbyte AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0,
 //Quality = Normal, +1, +2, +3
 //Condition = Normal, -1, -2, -3
 
-const char *WeaponName[] =
+const char WeaponName[][] =
 {
   //Small
   "Knife", "Club", "Dagger", "Spellbook",
@@ -98,7 +98,7 @@ const byte WeaponPrice[] =
 };
 
 //Armor
-const char *ArmorName[] =
+const char ArmorName[][] =
 {
   //Weight = Magic, Clothes, Light, Heavy
   //Cloth
