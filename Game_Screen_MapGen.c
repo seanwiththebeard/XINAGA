@@ -872,7 +872,7 @@ void GetSeed()
     //GenerateDungeon(seed);
     //WaitForInput();
     //WriteLineMessageWindow("@", 0);
-    ++seed;
+    //++seed;
     return;
   }
 

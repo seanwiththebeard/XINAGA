@@ -59,7 +59,9 @@ void SwitchScreen(screenName screen)
   switch (currentScreen)
   {
     case EditParty:
+      #if !MSX
       currentScreen = DrawAddCharacterScreen();
+      #endif
       break;
     case Map:
       //#if !MSX
@@ -73,9 +75,9 @@ void SwitchScreen(screenName screen)
       break;
     case MapGen:
       //currentScreen = MapUpdate();
-      #if !MSX
+      //#if !MSX
       currentScreen = Update_MapGen();
-      #endif
+      //#endif
       break;
     default:
       currentScreen = DefaultScreen;
@@ -96,7 +98,7 @@ void RunGame(screenName startingScreen)
   #endif
   LoadMap();
   currentScreen = startingScreen;
-DrawInterface();
+  DrawInterface();
 
         //WriteLineMessageWindow("Greetings from the librarian Soodo Nim@", 0);
         //WriteLineMessageWindow("..not to be confused with evil Anto Nim@", 0);

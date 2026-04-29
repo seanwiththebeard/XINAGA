@@ -69,7 +69,7 @@ const sbyte AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0,
 //Quality = Normal, +1, +2, +3
 //Condition = Normal, -1, -2, -3
 
-const char WeaponName[][] =
+const char WeaponName[16][11] =
 {
   //Small
   "Knife", "Club", "Dagger", "Spellbook",
@@ -98,17 +98,17 @@ const byte WeaponPrice[] =
 };
 
 //Armor
-const char ArmorName[][] =
+const char ArmorName[16][16] =
 {
   //Weight = Magic, Clothes, Light, Heavy
   //Cloth
-  "Regal Tunic", "Clothes", "Robe", "Overcoat"
+  "RegalTunic", "Clothes", "Robe", "Overcoat",
   //Plant
-  "Goldflower Tunic", "Flax Robe", "Coconut Plate", "Shale Plate",
+  "GoldflowerTunic", "Flax Robe", "CoconutPlate", "ShalePlate",
   //Leather
-  "Kitsune Pelt", "Fur Pelt", "Studded Hide", "Leathermail",
+  "KitsunePelt", "Fur Pelt", "Studded Hide", "Leathermail",
   //Metal
-  "Mithril Mail", "Construct Frame", "Chainmail", "Platemail",
+  "MithrilMail", "Constr Frame", "Chainmail", "Platemail"
 };
 //Enchantment 0-16
 const byte ArmorAC[] =

@@ -1,9 +1,9 @@
 #include "Xinaga.h"
 
 #if defined(__C64__)
-#include <stdio.h>
+//#include <stdio.h>
 #include <conio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 //#include <cbm.h>
 #pragma code-name (push, "XINAGA")
 //#pragma rodata-name (push, "XINAGA_RODATA")

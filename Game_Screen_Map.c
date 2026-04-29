@@ -959,6 +959,7 @@ screenName MapUpdate()
   ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 0, true);
   DrawMapViewport();
 
+
   while (!exitScreen)
   {
     UpdateInput();

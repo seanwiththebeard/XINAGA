@@ -26,7 +26,7 @@ char padStateLast;
 #pragma code-name (push, "XINAGA")
 //#pragma rodata-name (push, "XINAGA_RODATA")
 #include <joystick.h>
-#include <conio.h>
+//#include <conio.h>
 byte joyState;
 byte joyStateLast;
 byte joyTemp;
