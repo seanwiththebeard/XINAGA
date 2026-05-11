@@ -286,6 +286,7 @@ void PrintString(char *text, byte posx, byte posy, bool fast);
 extern byte strTemp[ConsoleBufferLength];
 extern const char* const Messages[];
 void ResizeMessageWindow (byte x, byte y, byte w, byte h);
+extern bool AreYouSure();
 void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
 void ConsoleBufferReset(void);

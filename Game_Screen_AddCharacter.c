@@ -20,7 +20,6 @@
 
 int rands;
 screenName nextScreen;
-bool AreYouSure();
 bool exitWindow;
 sbyte CurrentCharacter;
 byte HPMAX;
@@ -103,14 +102,6 @@ void AddToRoster()
 //#define DrawSelection() SetChar('>', windowX + 2, windowY + selection + 1)
 
 //#define DrawCurrentCharacter() SetChar('>', windowX + 2, windowY + rosterPos + CurrentCharacter)
-
-bool AreYouSure()
-{
-  ResetMenu("Sure?@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 2, true);
-  SetMenuItem(0, "No @");
-  SetMenuItem(1, "Yes@");
-  return (GetMenuSelection());
-}
 
 void RollStats()
 {

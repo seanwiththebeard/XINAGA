@@ -904,6 +904,9 @@ static void ActionMenu()
     case 0:
       break;
     case 1:
+      exitScreen = true;
+      ScreenFadeOut();
+      nextScreen = Combat;
       break;
     case 2:
       break;
@@ -924,6 +927,7 @@ static void ActionMenu()
       break;
     case 4:
       exitScreen = true;
+      nextScreen = EditParty;
       ScreenFadeOut();
       break;
     case 5:
@@ -985,5 +989,5 @@ screenName MapUpdate()
     }
   }
   ScreenFadeOut();
-  return EditParty;
+  return nextScreen;
 }

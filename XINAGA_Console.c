@@ -375,3 +375,11 @@ void WriteLineMessageWindow(char *message, byte delay)
   ScrollMessageWindowUp();
   SetLineMessageWindow(message, delay);
 }
+
+bool AreYouSure()
+{
+  ResetMenu("Sure?@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 2, true);
+  SetMenuItem(0, "No @");
+  SetMenuItem(1, "Yes@");
+  return (GetMenuSelection());
+}

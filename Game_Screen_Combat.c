@@ -20,6 +20,8 @@
 
 #define fillTile 36
 
+bool ContinuingCombat;
+
 sbyte SelectedCharacter;
 sbyte SelectedTarget;
 sbyte MovementRemaining;
@@ -104,6 +106,7 @@ void ClearRoster(void)
 void Initialize(void)
 {
   exitCombat = false;
+  ContinuingCombat = false;
   ClearScreen();
 
   //Malloc the combat data
@@ -262,9 +265,9 @@ void DoCombatRound()
 
   if (SelectNextCharacter())
     GetActionSelection();
-  else
+  //else
   {
-    exitCombat = true;
+    //exitCombat = true;
   }
 }
 
@@ -384,6 +387,16 @@ void MonsterWander()
   WriteRemainingMovement();
 }
 
+bool CheckEnemiesLeft()
+{
+  byte i;
+  for (i = 0; i < MaxCombatParticipants; ++i)
+        if ((combatParticipant.isPlayerChar[i] == false) && (combatParticipant.active[i] == true))
+          return true;
+
+  return false;
+}
+
 //Actions
 void SelectMonsterAction(void)
 {
@@ -392,6 +405,21 @@ void SelectMonsterAction(void)
   //WriteLineMessageWindow(strTemp, consoleDelay);
   MonsterWander();
 }
+
+void Flee()
+{
+  byte fleeRoll = rand() % 20;
+  sprintf(strTemp, "Flee attempt rolled %d against 12@", fleeRoll);
+      WriteLineMessageWindow(strTemp, 0);
+  if (fleeRoll > 12)
+  {
+      exitCombat = true;
+      WriteLineMessageWindow("Fled!@", 0);
+  }
+  else
+      WriteLineMessageWindow("Couldn't escape...@", 0);
+}
+
 void SelectPlayerAction(void)
 {
   byte tempTile;
@@ -399,12 +427,29 @@ void SelectPlayerAction(void)
   byte moveX = combatParticipant.posX[SelectedCharacter];
   byte moveY = combatParticipant.posY[SelectedCharacter];
 
-  ResetMenu("Action@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 5, true);
+  if(!ContinuingCombat)
+  {
+    if (!CheckEnemiesLeft())
+    {
+      WriteLineMessageWindow("No targets, continue?@",0);
+      if (!AreYouSure())
+      {
+        exitCombat = true;
+        nextScreen = Map;
+        return;
+      }
+      else
+        ContinuingCombat = true;
+    }
+  }
+
+  ResetMenu("Action@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6, true);
   SetMenuItem(0, "Move@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Magic@");
   SetMenuItem(3, "Item@");
-  SetMenuItem(4, "End@");
+  SetMenuItem(4, "Flee@");
+  SetMenuItem(5, "End Turn@");
 
   while (!finished)
   {
@@ -413,7 +458,7 @@ void SelectPlayerAction(void)
       DrawArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
     switch (GetMenuSelection())
     {
-      case 0:
+      case 0: // Move
         tempTile = combatParticipant.tileIndex[SelectedCharacter];
         combatParticipant.tileIndex[SelectedCharacter] = fillTile;
         DrawOneCharacter();
@@ -425,26 +470,37 @@ void SelectPlayerAction(void)
         MovementRemaining = combatParticipant.movement[SelectedCharacter];
         SelectionMoveCharacter();
         break;
-      case 1:
+      case 1: // Attack
         if (combatParticipant.active[SelectedCharacter])
         {
           GetTargetSelection();
           finished = true;
         }
         break;
-      case 2:
+      case 2: // Magic
         if (combatParticipant.active[SelectedCharacter])
         {
           finished = true;
         }
         break;
-      case 3:
+      case 3: // Item
         if (combatParticipant.active[SelectedCharacter])
         {
           finished = true;
         }
         break;
-      case 4:
+      case 4: // Flee
+        if(ContinuingCombat)
+        {
+          exitCombat = true;
+        }
+        else
+        {
+          Flee();
+        }
+          finished = true;
+        break;
+      case 5: // End Turn
         finished = true;
       default:
         break;

@@ -13,7 +13,7 @@
 #define MapGen 5
 #define Scenario 2
 //extern screenName currentScreen;
-//extern screenName nextScreen;
+extern screenName nextScreen;
 
 //Debug Functions
 //void DebugMap();
