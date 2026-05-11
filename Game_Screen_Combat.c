@@ -31,7 +31,7 @@ bool CombatSuccess;
 bool exitCombat;
 
 #define MaxCombatParticipants 12
-#define MonsterCount 8
+#define MonsterCount 1
 
 #define consoleDelay 1
 
@@ -81,7 +81,7 @@ struct
   byte initiative[MaxCombatParticipants];
   byte movement[MaxCombatParticipants];
   bool active[MaxCombatParticipants];
-  bool alive[MaxCombatParticipants];
+  bool incapacitated[MaxCombatParticipants];
   bool isPlayerChar[MaxCombatParticipants];
   sbyte posX[MaxCombatParticipants];
   sbyte posY[MaxCombatParticipants];
@@ -100,7 +100,7 @@ void ClearRoster(void)
     combatParticipant.posY[i] = 7;
     combatParticipant.initiative[i] = 0;
     combatParticipant.active[i] = false;
-    combatParticipant.alive[i] = false;
+    combatParticipant.incapacitated[i] = true;
     combatParticipant.movement[i] = 0;
   }
   SelectedCharacter = 0;
@@ -138,7 +138,7 @@ void GetCharacters(void)
     combatParticipant.initiative[i] = 0;
     combatParticipant.initiativeMod[i] = (getPartyMember(i)->DEX - 10) / 2;
     combatParticipant.active[i] = true;
-    combatParticipant.alive[i] = true;
+    combatParticipant.incapacitated[i] = false;
     combatParticipant.movement[i] = getPartyMember(i)->DEX / 2;
     combatParticipant.charPointer[i] = getPartyMember(i);
     ++SelectedCharacter;
@@ -167,7 +167,7 @@ void GetMonsters(void)
     combatParticipant.posY[i] = 2 + (i / CombatMapWidth);
     combatParticipant.initiativeMod[i] = 0;
     combatParticipant.active[i] = true;
-    combatParticipant.alive[i] = true;
+    combatParticipant.incapacitated[i] = false;
     combatParticipant.movement[i] = 4;
     combatParticipant.targetIndex[i] = rand() % CountParty();
 
@@ -268,7 +268,7 @@ bool SelectNextCharacter()
 
     //if (combatParticipant[SelectedCharacter].isPlayerChar)
     if (combatParticipant.active[SelectedCharacter])
-      if (combatParticipant.alive[SelectedCharacter])
+      if (!combatParticipant.incapacitated[SelectedCharacter])
         found = true;
 
     ++count;
@@ -294,7 +294,7 @@ void DoCombatRound()
   }
 }
 
-void Attack()
+void PhysicalAttack()
 {
   byte targetAC = combatParticipant.charPointer[SelectedTarget]->DEX;
   byte rollToHit = rand() % 20;
@@ -322,6 +322,7 @@ void Attack()
       targetHP = 0;
       sprintf(strTemp, "%s fell@", combatParticipant.charPointer[SelectedTarget]->NAME);
       WriteLineMessageWindow(strTemp, 0);
+      combatParticipant.incapacitated[SelectedTarget] = true;
     }
     combatParticipant.charPointer[SelectedTarget]->HP = targetHP;
     
@@ -465,6 +466,16 @@ bool CheckEnemiesLeft()
   return false;
 }
 
+
+bool CheckPlayersLeft()
+{
+  byte i;
+  for (i = 0; i < MaxCombatParticipants; ++i)
+        if ((combatParticipant.isPlayerChar[i] == true) && (combatParticipant.active[i] == true))
+          return true;
+
+  return false;
+}
 //Actions
 void SelectMonsterAction(void)
 {
@@ -542,7 +553,7 @@ void SelectPlayerAction(void)
         if (combatParticipant.active[SelectedCharacter])
         {
           GetTargetSelection();
-          Attack();
+          PhysicalAttack();
           finished = true;
         }
         break;
@@ -590,7 +601,7 @@ bool CheckCombatMapCollision(byte dir)
   {
     if (i != SelectedCharacter)
       if (combatParticipant.active[i])
-        if (combatParticipant.alive[i])
+        if (!combatParticipant.incapacitated[i])
           switch(dir)
           {
             case up:
@@ -751,8 +762,15 @@ screenName Update_Combat(void)
     ConsoleBufferReset();
     DoCombatRound();
     UpdateInput();
+    if(!CheckPlayersLeft())
+    {
+      exitCombat = true;
+      WriteLineMessageWindow("Defeated...@", consoleDelay);
+      nextScreen = EditParty;
+    }
+      
   }
-  WriteLineMessageWindow("Combat End, Press Space...@", consoleDelay);
+  WaitForInput();
   while (!InputFire())
   {
     UpdateInput();
