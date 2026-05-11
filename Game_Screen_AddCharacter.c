@@ -84,7 +84,7 @@ void AddToRoster()
   //ConsoleBufferAddNumber(CountRoster());
   for (i = 0; strTemp[i] != '\0'; ++i)
     PlayerChar->NAME[i] = strTemp[i];
-  PlayerChar->NAME[i] = '\0';
+  PlayerChar->NAME[i - 1] = '\0';
 
 
         sprintf(strTemp, "%s %s %s@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME, PlayerChar->NAME);

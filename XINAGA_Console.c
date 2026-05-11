@@ -374,6 +374,7 @@ void WriteLineMessageWindow(char *message, byte delay)
 {
   ScrollMessageWindowUp();
   SetLineMessageWindow(message, delay);
+  ConsoleBufferReset();
 }
 
 bool AreYouSure()

@@ -284,30 +284,23 @@ void Attack()
   {
     targetHP -= damage;
 
-    ConsoleBufferReset();
-
-    ConsoleBufferAdd("Attacker ");
-    ConsoleBufferAdd(combatParticipant.charPointer[SelectedCharacter]->NAME);
-    ConsoleBufferPrintConsole(0);
-    //sprintf(strTemp, "Attacker %s @", combatParticipant.charPointer[SelectedCharacter]->NAME);
-    //WriteLineMessageWindow(strTemp, 0);
     //ConsoleBufferReset();
-
-    //sprintf(strTemp, "hits %s @", combatParticipant.charPointer[SelectedTarget]->NAME);
-   // WriteLineMessageWindow(strTemp, 0);
-
-    //sprintf(strTemp, "for %d damage@", damage);
-    //WriteLineMessageWindow(strTemp, 0);
+    sprintf(strTemp, "Attacker %s hits target %s for %d damage@", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME, damage);
+    WriteLineMessageWindow(strTemp, 0);
 
     if(targetHP <= 0)
     {
       combatParticipant.active[SelectedTarget] = false;
       targetHP = 0;
+      sprintf(strTemp, "%s fell@", combatParticipant.charPointer[SelectedTarget]->NAME);
+    WriteLineMessageWindow(strTemp, 0);
     }
     combatParticipant.charPointer[SelectedTarget]->HP = targetHP;
-    if(combatParticipant.isPlayerChar[SelectedTarget])
-      DrawCharStats();
-    DrawCombatMap();
+    
+    //if(combatParticipant.isPlayerChar[SelectedTarget])
+      //DrawCharStats();
+    
+    //DrawCombatMap();
   }
   else
     //sprintf(strTemp, "Attacker %s @", combatParticipant.charPointer[SelectedCharacter]->NAME);
@@ -315,7 +308,6 @@ void Attack()
     sprintf(strTemp, "missed target @");
     WriteLineMessageWindow(strTemp, 0);
 
-  while(1);
 }
 
 void GetActionSelection(void)
@@ -426,8 +418,8 @@ void MonsterWander()
     if (failedWander >= 3)
     {
       MovementRemaining = 0;
-      sprintf(strTemp, "Wander Failed M#%d@", SelectedCharacter);
-      WriteLineMessageWindow(strTemp, 0);
+      //sprintf(strTemp, "Wander Failed M#%d@", SelectedCharacter);
+     // WriteLineMessageWindow(strTemp, 0);
     }
   }
   ClearArrow();
@@ -728,6 +720,7 @@ screenName Update_Combat(void)
 
   while (!exitCombat)
   {
+    ConsoleBufferReset();
     DoCombatRound();
     UpdateInput();
   }
