@@ -436,57 +436,65 @@ void InitializeGraphics(void)
   getYCols();
   ClearScreen();
 }
-#if defined(__APPLE2__)
-void DrawChar(byte index, byte xpos, byte ypos)
-{
-  //base = RowsHGR[ypos << 3] + xpos;
-  //src = &charset[index << 3];
-  src = charset + (index << 3);
-  dest = (byte*)HGR + RowsHGR[ypos << 3] + xpos;
-  //HGR[base + 0x0000] = src[0];
-  //HGR[base + 0x0400] = src[1];
-  //HGR[base + 0x0800] = src[2];
-  //HGR[base + 0x0C00] = src[3];
-  //HGR[base + 0x1000] = src[4];
-  //HGR[base + 0x1400] = src[5];
-  //HGR[base + 0x1800] = src[6];
-  //HGR[base + 0x1C00] = src[7];
-  dest[0x0000] = src[0];
-  dest[0x0400] = src[1];
-  dest[0x0800] = src[2];
-  dest[0x0C00] = src[3];
-  dest[0x1000] = src[4];
-  dest[0x1400] = src[5];
-  dest[0x1800] = src[6];
-  dest[0x1C00] = src[7];
-}
+#if defined(__C64__)
+#pragma bss-name(push, "ZEROPAGE")
+unsigned char* rowPtr;
+unsigned char* colPtr;
+#pragma bss-name(pop)
 #endif
-//Set Char Macro is in XINAGA.h - #define SetChar(index, x, y) do {SetCharIndex = (index); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
+
+//Set Char Macro is in XINAGA.h - #define SetChar(charindex, x, y) do {SetCharIndex = (charindex); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
 void _SetChar(void)
 {
-  int offset = SetCharX + YColumnIndex[SetCharY];
   #if defined(__APPLE2__)
+  int offset = SetCharX + YColumnIndex[SetCharY];
   if (ScreenChars[offset] != SetCharIndex)
   {
-    DrawChar(SetCharIndex, SetCharX, SetCharY);
+    //base = RowsHGR[ypos << 3] + xpos;
+    //src = &charset[index << 3];
+    src = charset + (SetCharIndex << 3);
+    dest = (byte*)HGR + RowsHGR[SetCharY << 3] + SetCharX;
+    //HGR[base + 0x0000] = src[0];
+    //HGR[base + 0x0400] = src[1];
+    //HGR[base + 0x0800] = src[2];
+    //HGR[base + 0x0C00] = src[3];
+    //HGR[base + 0x1000] = src[4];
+    //HGR[base + 0x1400] = src[5];
+    //HGR[base + 0x1800] = src[6];
+    //HGR[base + 0x1C00] = src[7];
+    dest[0x0000] = src[0];
+    dest[0x0400] = src[1];
+    dest[0x0800] = src[2];
+    dest[0x0C00] = src[3];
+    dest[0x1000] = src[4];
+    dest[0x1400] = src[5];
+    dest[0x1800] = src[6];
+    dest[0x1C00] = src[7];
+    ScreenChars[offset] = SetCharIndex;
   }
-        ScreenChars[offset] = SetCharIndex;
   #endif
+
   #if defined(__C64__)
-  ScreenChars[offset] = SetCharIndex;
-  ScreenColors[offset] = attributeset[SetCharIndex];
+  //int offset = SetCharX + YColumnIndex[SetCharY];
+  //ScreenChars[offset] = SetCharIndex;
+  //ScreenColors[offset] = attributeset[SetCharIndex];
+  int offset = YColumnIndex[SetCharY];
+  rowPtr = ScreenChars + offset;
+  colPtr = ScreenColors + offset;
+  rowPtr[SetCharX] = SetCharIndex;
+  colPtr[SetCharX] = attributeset[SetCharIndex];
+  //ScreenColors[rowPtr - ScreenChars + SetCharX] = attributeset[SetCharIndex];
   #endif
 
   #if defined (__NES__)
+  int offset = SetCharX + YColumnIndex[SetCharY];
   ScreenChars[offset] = SetCharIndex;
   vrambuf_put(NTADR_A(SetCharX,SetCharY), &SetCharIndex, 1);
-
   if (++charsDrawn >=21)
   {
     wait_vblank(1);
     charsDrawn = 0;
   }
-
   #endif
 
   #if defined(MSX)
@@ -494,11 +502,6 @@ void _SetChar(void)
   //CHPUT((int)SetCharIndex);
   SETWRT();
   WRTVRM(0x1800 + SetCharX +(SetCharY << 5), SetCharIndex);
-  #endif
-
-  #if defined(__ATARI__)
-  gotoxy(SetCharX,SetCharY);
-  cputc(SetCharIndex);
   #endif
 }
 void SetColor(byte index, byte x, byte y)
@@ -650,75 +653,74 @@ void ClearArrow(void)
 {
   SetChar(arrowA, arrowX, arrowY);
   SetChar(arrowB, arrowX + 1, arrowY);
-  //wait_vblank(1);
 }
 void DrawLineH(byte index, sbyte x, sbyte y, byte length)
 {
-  byte count;
-  byte posX;
-  byte tempIndex;
-  for (count = 0; count < length; ++count)
+  sbyte posX = x;
+  byte tempIndex = index;
+  
+  if((y < 0)||(y >= ROWS))
+    return;
+  
+  for (; posX < x+length; ++posX)
   {
-    tempIndex = index;
-    posX = x + count;
     #if defined (__APPLE2__)
+    tempIndex = index;
     if (posX % 2 == 1 && index != ' ')
       ++tempIndex;
     #endif
-    if((x >= 0) && (x < COLS))
-      if((y >= 0)&&(y < ROWS))
+    if((posX >= 0) && (posX < COLS))
         SetChar(tempIndex, posX, y);
   }
-  //wait_vblank(1);
 }
 void DrawLineV(byte index, sbyte x, sbyte y, byte length)
 {
-  byte count;
+  sbyte yPos = y;
   byte tempIndex = index;
-        if (x >= COLS)
-        return;
+
+  if ((x < 0)||(x >= COLS))
+    return;
+
   #if defined (__APPLE2__)
   if (x % 2 == 1)
     ++tempIndex;
   #endif
-  for (count = 0; count < length; ++count)
+  for (; yPos < y + length; ++yPos)
   {
-    if((x >= 0) && (x < COLS))
-      if((y >= 0)&&(y < ROWS))
-        SetChar(tempIndex, x, y + count);
+    //if((x >= 0) && (x < COLS))
+    if((yPos >= 0)&&(yPos < ROWS))
+      SetChar(tempIndex, x, yPos);
   }
-  //wait_vblank(1);
 }
+
 void DrawCorners(sbyte xPos, sbyte yPos, byte widthInside1, byte heightInside1)
 {
   #define corner  0xEA
   char corner1 = corner;
   char corner2 = corner;
+  sbyte xRight = xPos + widthInside1;
+  sbyte yBottom = yPos + heightInside1;
+
   #if defined (__APPLE2__)
-  if (xPos % 2 == 1)
+  if (xPos & 1)
     ++corner1;
-  if ((xPos + widthInside1) % 2 == 1)
+  if ((xPos + widthInside1) & 1)
     ++corner2;
   #endif
 
-  //These could be greatly simplified
-  if((xPos >= 0) && (xPos < COLS))
-      if((yPos >= 0)&&(yPos < ROWS))
+  if((xPos >= 0) && (xPos < COLS) && (yPos >= 0)&&(yPos < ROWS))
         SetChar(corner1, xPos, yPos);
 
-  if((xPos + widthInside1 >= 0) && (xPos + widthInside1 < COLS))
-      if((yPos >= 0)&&(yPos < ROWS))
-  SetChar(corner2, xPos + widthInside1, yPos);
+  if((xRight >= 0) && (xRight < COLS) && (yPos >= 0) && (yPos < ROWS))
+    SetChar(corner2, xRight, yPos);
 
-  if((xPos >= 0) && (xPos < COLS))
-      if((yPos + heightInside1 >= 0)&&(yPos + heightInside1 < ROWS))
-  SetChar(corner1, xPos, yPos + heightInside1);
+  if((xPos >= 0) && (xPos < COLS) && (yBottom >= 0) && (yBottom < ROWS))
+    SetChar(corner1, xPos, yBottom);
 
-  if((xPos + widthInside1 >= 0) && (xPos + widthInside1 < COLS))
-      if((yPos + heightInside1 >= 0)&&(yPos + heightInside1 < ROWS))
-  SetChar(corner2, xPos + widthInside1, yPos + heightInside1);
-  //wait_vblank(1);
+  if((xRight >= 0) && (xRight < COLS) && (yBottom >= 0) && (yBottom < ROWS))
+    SetChar(corner2, xRight, yBottom);
 }
+
 void DrawBorder(char *text, sbyte xPos, sbyte yPos, byte width, byte height, bool fill)
 {
   byte x;
