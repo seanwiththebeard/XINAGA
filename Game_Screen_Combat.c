@@ -20,6 +20,8 @@
 
 #define fillTile 36
 
+struct playerChar combatMonster[8];
+
 bool ContinuingCombat;
 
 sbyte SelectedCharacter;
@@ -29,7 +31,7 @@ bool CombatSuccess;
 bool exitCombat;
 
 #define MaxCombatParticipants 12
-#define MonsterCount 1
+#define MonsterCount 8
 
 #define consoleDelay 1
 
@@ -147,6 +149,7 @@ void GetMonsters(void)
 {
   byte i;
   byte LastMonster = SelectedCharacter + MonsterCount;
+  byte monstersSet = 0;
   //byte c = CountParty();
   //byte offset;
   //while (MonsterCount > (MaxCombatParticipants - c))
@@ -167,6 +170,23 @@ void GetMonsters(void)
     combatParticipant.alive[i] = true;
     combatParticipant.movement[i] = 4;
     combatParticipant.targetIndex[i] = rand() % CountParty();
+
+    combatParticipant.charPointer[i] = &combatMonster[monstersSet];
+
+    strcpy(combatMonster[monstersSet].NAME,  "Monster");
+    combatMonster[monstersSet].HP = 1;
+    combatMonster[monstersSet].HPMAX = 1;
+    combatMonster[monstersSet].STR = 10;
+    combatMonster[monstersSet].INT = 10;
+    combatMonster[monstersSet].WIS = 10;
+    combatMonster[monstersSet].DEX = 10;
+    combatMonster[monstersSet].CHR = 10;
+    combatMonster[monstersSet].CON = 10;
+    combatMonster[monstersSet].WEAPON = 1;
+    combatMonster[monstersSet].ARMOR = 1;    
+    
+    ++monstersSet;
+    
     ++SelectedCharacter;
   }
 }
@@ -280,12 +300,20 @@ void Attack()
   byte rollToHit = rand() % 20;
   byte damage = 5;
   int targetHP = combatParticipant.charPointer[SelectedTarget]->HP;
+
+  if (SelectedTarget < 0)
+  {
+    WriteLineMessageWindow("No target!@", 0);    
+    return;
+  }
+  
+  ConsoleBufferReset();
+  
   if (rollToHit >= targetAC)
   {
     targetHP -= damage;
 
-    //ConsoleBufferReset();
-    sprintf(strTemp, "Attacker %s hits target %s for %d damage@", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME, damage);
+    sprintf(strTemp, "%s hits %s for %d damage@", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME, damage);
     WriteLineMessageWindow(strTemp, 0);
 
     if(targetHP <= 0)
@@ -293,21 +321,20 @@ void Attack()
       combatParticipant.active[SelectedTarget] = false;
       targetHP = 0;
       sprintf(strTemp, "%s fell@", combatParticipant.charPointer[SelectedTarget]->NAME);
-    WriteLineMessageWindow(strTemp, 0);
+      WriteLineMessageWindow(strTemp, 0);
     }
     combatParticipant.charPointer[SelectedTarget]->HP = targetHP;
     
-    //if(combatParticipant.isPlayerChar[SelectedTarget])
-      //DrawCharStats();
+    if(combatParticipant.isPlayerChar[SelectedTarget])
+      DrawCharStats();
     
-    //DrawCombatMap();
+    DrawCombatMap();
   }
   else
-    //sprintf(strTemp, "Attacker %s @", combatParticipant.charPointer[SelectedCharacter]->NAME);
-    //WriteLineMessageWindow(strTemp, 0);
-    sprintf(strTemp, "missed target @");
+  {
+    sprintf(strTemp, "%s missed %s@", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME);
     WriteLineMessageWindow(strTemp, 0);
-
+  }
 }
 
 void GetActionSelection(void)
@@ -374,10 +401,11 @@ void GetTargetSelection(void)
       {
         if (combatParticipant.posX[i] == x)
           if(combatParticipant.posY[i] == y)
-          {
-            SelectedTarget = i;
-            i = MaxCombatParticipants;
-          }
+            if(combatParticipant.active[i])
+            {
+              SelectedTarget = i;
+              i = MaxCombatParticipants;
+            }
       }
     }
   }
@@ -387,6 +415,7 @@ void GetTargetSelection(void)
 void MonsterWander()
 {
   byte failedWander = 0;
+  
   MovementRemaining = combatParticipant.movement[SelectedCharacter];
   //DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   while(MovementRemaining > 0)
@@ -553,7 +582,6 @@ void SelectionAttackTargetPhysical(void);
 void SelectionAttackTargetSpell();
 void SelectionUseItem(void);
 void SelectionMoveCharacter(void);
-
 
 bool CheckCombatMapCollision(byte dir)
 {

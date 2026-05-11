@@ -62,7 +62,7 @@ void DrawPartyStats()
 void AddToRoster()
 {
   struct playerChar *PlayerChar;
-  byte i;
+  //byte i;
        //ConsoleBufferReset();
   create();
   PlayerChar = getPlayerChar(CountRoster() - 1);
@@ -82,9 +82,10 @@ void AddToRoster()
   //ConsoleBufferAdd("Hello @");
   //ConsoleBufferAdd(strTemp);
   //ConsoleBufferAddNumber(CountRoster());
-  for (i = 0; strTemp[i] != '\0'; ++i)
-    PlayerChar->NAME[i] = strTemp[i];
-  PlayerChar->NAME[i - 1] = '\0';
+  strncpy(PlayerChar->NAME, strTemp, 9);
+  //for (i = 0; strTemp[i] != '\0'; ++i)
+    //PlayerChar->NAME[i] = strTemp[i];
+  //PlayerChar->NAME[i - 1] = '\0';
 
 
         sprintf(strTemp, "%s %s %s@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME, PlayerChar->NAME);
