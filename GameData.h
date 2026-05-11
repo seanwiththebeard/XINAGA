@@ -88,7 +88,7 @@ typedef struct playerChar
 {
   struct playerChar *next;
   int	EXP;
-  char 	NAME[8];
+  char 	NAME[10];
   byte	HP,
   	HPMAX,
   	STR,

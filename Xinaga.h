@@ -291,10 +291,10 @@ void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
 void ConsoleBufferReset(void);
 void ConsoleBufferAdd(char *message);
-//void ConsoleBufferBackspace(void);
+void ConsoleBufferBackspace(void);
 //void ConsoleBufferAddNumber(int value);
 void ConsoleBufferPrint(byte x, byte y);
-//void ConsoleBufferPrintConsole(byte delay);
+void ConsoleBufferPrintConsole(byte delay);
 //void DrawConsoleContent(void);
 void DrawCharStats(void);
 

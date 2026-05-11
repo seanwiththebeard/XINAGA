@@ -52,7 +52,7 @@ void ConsoleBufferReset()
 {
   byte i;
   for (i = 0; i < ConsoleBufferLength; ++i)
-    strTemp[i] = ' ';
+    strTemp[i] = '\0';
   StringLength = 0;
 }
 

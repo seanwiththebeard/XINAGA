@@ -63,7 +63,7 @@ void AddToRoster()
 {
   struct playerChar *PlayerChar;
   byte i;
-       ConsoleBufferReset();
+       //ConsoleBufferReset();
   create();
   PlayerChar = getPlayerChar(CountRoster() - 1);
   PlayerChar->HPMAX = HPMAX;
@@ -78,13 +78,13 @@ void AddToRoster()
   PlayerChar->CLASS = CLASS;
   ConsoleBufferReset();
   //sprintf(strTemp, "%s %c%c%c %x@", ClassDescription[CLASS].NAME, RaceDescription[RACE].NAME[0], RaceDescription[RACE].NAME[1], RaceDescription[RACE].NAME[2], &PlayerChar[0]);
-  sprintf(strTemp, "%s%s @",namePrefixA[RACE][rand()%8], nameSuffixA[RACE][rand()%8] );
+  sprintf(strTemp, "%s%s ",namePrefixA[RACE][rand()%8], nameSuffixA[RACE][rand()%8] );
   //ConsoleBufferAdd("Hello @");
   //ConsoleBufferAdd(strTemp);
   //ConsoleBufferAddNumber(CountRoster());
-  for (i = 0; strTemp[i] != '@'; ++i)
+  for (i = 0; strTemp[i] != '\0'; ++i)
     PlayerChar->NAME[i] = strTemp[i];
-  PlayerChar->NAME[i] = '@';
+  PlayerChar->NAME[i] = '\0';
 
 
         sprintf(strTemp, "%s %s %s@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME, PlayerChar->NAME);
@@ -667,83 +667,83 @@ const char namePrefixA[8][8][8] =
 const char nameSuffixA[8][8][8] =
 {
         {//Human
-        "kar@",
-        "roth@",
-        "mar@",
-        "par@",
-        "dak@",
-        "eos@",
-        "nast@",
-        "stle@"
+        "kar",
+        "roth",
+        "mar",
+        "par",
+        "dak",
+        "eos",
+        "nast",
+        "stle"
         },
         {//Elf
-        "leu@",
-        "ious@",
-        "yir@",
-        "thel@",
-        "aeu@",
-        "ndir@",
-        "brae@",
-        "owas@"
+        "leu",
+        "ious",
+        "yir",
+        "thel",
+        "aeu",
+        "ndir",
+        "brae",
+        "owas"
         },
         {//Dwarf
-        "yen@",
-        "ama@",
-        "ral@",
-        "apa@",
-        "oru@",
-        "eke@",
-        "hest@",
-        "julo@"
+        "yen",
+        "ama",
+        "ral",
+        "apa",
+        "oru",
+        "eke",
+        "hest",
+        "julo"
         },
         {//Halfling
-        "bo@",
-        "blib@",
-        "mak@",
-        "bar@",
-        "est@",
-        "nlo@",
-        "kle@",
-        "hoh@"
+        "bo",
+        "blib",
+        "mak",
+        "bar",
+        "est",
+        "nlo",
+        "kle",
+        "hoh"
         },
         {//Orc
-        "gen@",
-        "nir@",
-        "aar@",
-        "air@",
-        "olen@",
-        "geth@",
-        "menk@",
-        "fhan@"
+        "gen",
+        "nir",
+        "aar",
+        "air",
+        "olen",
+        "geth",
+        "menk",
+        "fhan"
         },
         {//Fuzzer
-        "papa@",
-        "riga@",
-        "gisa@",
-        "huer@",
-        "fath@",
-        "mner@",
-        "uiop@",
-        "fust@"
+        "papa",
+        "riga",
+        "gisa",
+        "huer",
+        "fath",
+        "mner",
+        "uiop",
+        "fust"
         },
         {//Dracon
-        "fir@",
-        "nir@",
-        "lir@",
-        "kir@",
-        "hir@",
-        "mir@",
-        "wir@",
-        "zir@"
+        "fir",
+        "nir",
+        "lir",
+        "kir",
+        "hir",
+        "mir",
+        "wir",
+        "zir"
         },
         {//Construct
-        "-A@",
-        "-B@",
-        "-C@",
-        "-D@",
-        "-E@",
-        "-F@",
-        "-G@",
-        "-H@"
+        "-A",
+        "-B",
+        "-C",
+        "-D",
+        "-E",
+        "-F",
+        "-G",
+        "-H"
         }
 };

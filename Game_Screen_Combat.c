@@ -84,6 +84,7 @@ struct
   sbyte posX[MaxCombatParticipants];
   sbyte posY[MaxCombatParticipants];
   sbyte initiativeMod[MaxCombatParticipants];
+  struct playerChar *charPointer[MaxCombatParticipants];
 }combatParticipant;
 
 void ClearRoster(void)
@@ -137,6 +138,7 @@ void GetCharacters(void)
     combatParticipant.active[i] = true;
     combatParticipant.alive[i] = true;
     combatParticipant.movement[i] = getPartyMember(i)->DEX / 2;
+    combatParticipant.charPointer[i] = getPartyMember(i);
     ++SelectedCharacter;
   }
 }
@@ -183,14 +185,14 @@ void WriteRemainingMovement()
   if (MovementRemaining > 0)
   {
     sprintf(strTemp, "Movement Left:%dof%d@", MovementRemaining, combatParticipant.movement[SelectedCharacter]);
-    SetLineMessageWindow(strTemp, 0);
+    WriteLineMessageWindow(strTemp, 0);
   }
   else
   {
     if (combatParticipant.isPlayerChar[SelectedCharacter])
-      SetLineMessageWindow("Moved, press space@", 0);
+      WriteLineMessageWindow("Moved, press space@", 0);
     else
-      SetLineMessageWindow("Monster moved@", 0);
+      WriteLineMessageWindow("Monster moved@", 0);
   }
 }
 
@@ -230,7 +232,7 @@ void SelectionMoveCharacter(void)
 
   }
   DrawOneCharacter();
-  SetLineMessageWindow("@",0);
+  WriteLineMessageWindow("@",0);
 }
 
 bool SelectNextCharacter()
@@ -253,6 +255,7 @@ bool SelectNextCharacter()
     if (count > MaxCombatParticipants)
     {
       WriteLineMessageWindow("No Entities@", consoleDelay);
+      exitCombat = true;
       return false;
     }
   }
@@ -271,6 +274,50 @@ void DoCombatRound()
   }
 }
 
+void Attack()
+{
+  byte targetAC = combatParticipant.charPointer[SelectedTarget]->DEX;
+  byte rollToHit = rand() % 20;
+  byte damage = 5;
+  int targetHP = combatParticipant.charPointer[SelectedTarget]->HP;
+  if (rollToHit >= targetAC)
+  {
+    targetHP -= damage;
+
+    ConsoleBufferReset();
+
+    ConsoleBufferAdd("Attacker ");
+    ConsoleBufferAdd(combatParticipant.charPointer[SelectedCharacter]->NAME);
+    ConsoleBufferPrintConsole(0);
+    //sprintf(strTemp, "Attacker %s @", combatParticipant.charPointer[SelectedCharacter]->NAME);
+    //WriteLineMessageWindow(strTemp, 0);
+    //ConsoleBufferReset();
+
+    //sprintf(strTemp, "hits %s @", combatParticipant.charPointer[SelectedTarget]->NAME);
+   // WriteLineMessageWindow(strTemp, 0);
+
+    //sprintf(strTemp, "for %d damage@", damage);
+    //WriteLineMessageWindow(strTemp, 0);
+
+    if(targetHP <= 0)
+    {
+      combatParticipant.active[SelectedTarget] = false;
+      targetHP = 0;
+    }
+    combatParticipant.charPointer[SelectedTarget]->HP = targetHP;
+    if(combatParticipant.isPlayerChar[SelectedTarget])
+      DrawCharStats();
+    DrawCombatMap();
+  }
+  else
+    //sprintf(strTemp, "Attacker %s @", combatParticipant.charPointer[SelectedCharacter]->NAME);
+    //WriteLineMessageWindow(strTemp, 0);
+    sprintf(strTemp, "missed target @");
+    WriteLineMessageWindow(strTemp, 0);
+
+  while(1);
+}
+
 void GetActionSelection(void)
 {
   ReadyArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
@@ -285,7 +332,7 @@ void GetTargetSelection(void)
   byte i;
   sbyte x = combatParticipant.posX[SelectedCharacter];
   sbyte y = combatParticipant.posY[SelectedCharacter];
-  SetLineMessageWindow("Select Target@",0);
+  WriteLineMessageWindow("Select Target@",0);
 
   ClearArrow();
   DrawArrow(x, y);
@@ -380,7 +427,7 @@ void MonsterWander()
     {
       MovementRemaining = 0;
       sprintf(strTemp, "Wander Failed M#%d@", SelectedCharacter);
-      SetLineMessageWindow(strTemp, 0);
+      WriteLineMessageWindow(strTemp, 0);
     }
   }
   ClearArrow();
@@ -453,7 +500,7 @@ void SelectPlayerAction(void)
 
   while (!finished)
   {
-    SetLineMessageWindow("Command?@",0);
+    WriteLineMessageWindow("Command?@",0);
     if(combatParticipant.active[SelectedCharacter])
       DrawArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
     switch (GetMenuSelection())
@@ -474,6 +521,7 @@ void SelectPlayerAction(void)
         if (combatParticipant.active[SelectedCharacter])
         {
           GetTargetSelection();
+          Attack();
           finished = true;
         }
         break;
