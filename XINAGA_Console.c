@@ -44,7 +44,6 @@ char *menutitle;
 #define menuItemsCount contextMenuHeight
 char *MenuItems[menuItemsCount];
 bool MenuHighlight[menuItemsCount];
-void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, bool clear);
 void SetMenuItem(byte index, char *value);
 byte GetMenuSelection();
 
@@ -59,13 +58,13 @@ void ConsoleBufferReset()
 void ConsoleBufferAdd(char *message)
 {
   byte i;
-  for (i = 0; message[i] != '@' && message[i] != 0; ++i)
+  for (i = 0; message[i] != '\0' && message[i] != 0; ++i)
   {
     strTemp[StringLength] = message[i];
     ++StringLength;
   }
   strTemp[StringLength] = ' ';
-  strTemp[StringLength + 1] = '@';
+  //strTemp[StringLength + 1] = '@';
   ++StringLength;
 }
 
@@ -85,7 +84,7 @@ void ConsoleBufferEndline()
 {
   while (strTemp[StringLength] == ' ')
     --StringLength;
-  strTemp[StringLength - 1] = '@';
+  strTemp[StringLength - 1] = '\0';
 }
 
 void ConsoleBufferPrint(byte x, byte y) //Prints the contents of the buffer to a screen position
@@ -100,7 +99,7 @@ void ConsoleBufferPrintConsole(byte delay) //Prints the contents of the buffer t
   ConsoleBufferEndline();
   WriteLineMessageWindow(strTemp, delay);
   ConsoleBufferReset();
-  WriteLineMessageWindow("@", delay);
+  WriteLineMessageWindow("", delay);
 }
 
 void ClearItem(byte index)
@@ -124,12 +123,12 @@ void DrawItem(byte index)
 
   if (MenuHighlight[index] == true)
   {
-    ConsoleBufferAdd("+@");
+    ConsoleBufferAdd("+");
     ConsoleBufferBackspace();
   }
 
   ConsoleBufferAdd(MenuItems[index]);
-  ConsoleBufferAdd("@");
+  ConsoleBufferAdd("");
 
   ConsoleBufferPrint(MenuPosX, MenuPosY + index);
   //wait_vblank(1);
@@ -151,7 +150,23 @@ void ClearMenuContents()
                 }
 }
 
-void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte clear)
+//void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte clear)
+void ResetMenu(char *title, byte c, byte clear)
+{
+  //byte x;
+  menutitle = title;
+  MenuPosX = contextMenuPosX;
+  MenuPosY = contextMenuPosY;
+  MenuWidth = contextMenuWidth;
+  MenuHeight = contextMenuHeight;
+  MenuCount = c;
+  MenuSelection = menuSel;
+  menuSel = 0; //Reset for next draw if we don't keep it
+        if(clear)
+  ClearMenuContents();
+}
+
+void MovableMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte clear)
 {
   //byte x;
   menutitle = title;
@@ -164,13 +179,6 @@ void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte c
   menuSel = 0; //Reset for next draw if we don't keep it
         if(clear)
   ClearMenuContents();
-
-  //DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, false);
-  //for (x = 0; x < menuItemsCount; ++x)
-  //{
-    //MenuItems[x] = (char*)"";
-    //MenuHighlight[x] = false;
-  //}
 }
 
 void SetMenuItem(byte index, char *value)
@@ -288,7 +296,7 @@ void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
 
   contentOffset = Width * (Height - 1);
 
-  DrawBorder("@",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
+  DrawBorder(" ",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
   ClearConsoleContent();
   DrawConsoleContent();
 }
@@ -311,7 +319,7 @@ void SetLineMessageWindow(char *message, byte delay)
 {
   byte x;
   byte length = 0;
-  for (;message[length] != '@' && length < ConsoleBufferLength; ++length);
+  for (;message[length] != '\0' && length < ConsoleBufferLength; ++length);
   ++length;
   for (x = 0; x < Width; ++x)
     //if (GetChar(PosX + x, PosY + Height - 1) != message[x])
@@ -321,7 +329,7 @@ void SetLineMessageWindow(char *message, byte delay)
     }
   for(x = 0; x < length; ++x)
   {
-    if (message[x] == '@')
+    if (message[x] == '\0')
     {
       while (x < Width)
       {
@@ -349,11 +357,11 @@ void SetLineMessageWindow(char *message, byte delay)
         byte wordStart = x + 1;
         char temp[128];
         byte i = 0;
-        while (message[wordStart + wordLength] != ' ' && message[wordStart + wordLength] != '@')
+        while (message[wordStart + wordLength] != ' ' && message[wordStart + wordLength] != '\0')
         {
           ++wordLength;
         }
-        if(x + wordLength > Width - 1)
+        if(x + wordLength >= Width)
         {
           ++x; //Skips the space
           while (x < length)
@@ -379,8 +387,8 @@ void WriteLineMessageWindow(char *message, byte delay)
 
 bool AreYouSure()
 {
-  ResetMenu("Sure?@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 2, true);
-  SetMenuItem(0, "No @");
-  SetMenuItem(1, "Yes@");
+  ResetMenu("Sure?", 2, true);
+  SetMenuItem(0, "No ");
+  SetMenuItem(1, "Yes");
   return (GetMenuSelection());
 }

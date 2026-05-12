@@ -531,7 +531,7 @@ void SelectPlayerAction(void)
     }
   }
 
-  ResetMenu("Action@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6, true);
+  ResetMenu("Action@", 6, true);
   SetMenuItem(0, "Move@");
   SetMenuItem(1, "Attack@");
   SetMenuItem(2, "Magic@");

@@ -49,13 +49,13 @@ void DrawStatsSelected();
 
 void DrawPartyStats()
 {
-        DrawBorder("Stats@", viewportPosX - 1 , viewportPosY + 4, viewportWidth * 2 + 2, 5, true);
+        DrawBorder("Stats ", viewportPosX - 1 , viewportPosY + 4, viewportWidth * 2 + 2, 5, true);
         ConsoleBufferReset();
-        sprintf(strTemp, "GOLD:        %05u@", Sessions[0].GOLD);
+        sprintf(strTemp, "GOLD:        %05u", Sessions[0].GOLD);
         ConsoleBufferPrint(viewportPosX, viewportPosY + 5);
-        sprintf(strTemp, "STEPS:       %05u@", Sessions[0].STEPS);
+        sprintf(strTemp, "STEPS:       %05u", Sessions[0].STEPS);
         ConsoleBufferPrint(viewportPosX, viewportPosY + 6);
-        sprintf(strTemp, "YEAR%02i MON%02i DAY%02i@", Sessions[0].SOLAR, Sessions[0].LUNAR, Sessions[0].MINAR);
+        sprintf(strTemp, "YEAR%02i MON%02i DAY%02i", Sessions[0].SOLAR, Sessions[0].LUNAR, Sessions[0].MINAR);
         ConsoleBufferPrint(viewportPosX, viewportPosY + 7);
 }
 
@@ -77,9 +77,9 @@ void AddToRoster()
   PlayerChar->RACE = RACE;
   PlayerChar->CLASS = CLASS;
   ConsoleBufferReset();
-  //sprintf(strTemp, "%s %c%c%c %x@", ClassDescription[CLASS].NAME, RaceDescription[RACE].NAME[0], RaceDescription[RACE].NAME[1], RaceDescription[RACE].NAME[2], &PlayerChar[0]);
-  sprintf(strTemp, "%s%s ",namePrefixA[RACE][rand()%8], nameSuffixA[RACE][rand()%8] );
-  //ConsoleBufferAdd("Hello @");
+  //sprintf(strTemp, "%s %c%c%c %x ", ClassDescription[CLASS].NAME, RaceDescription[RACE].NAME[0], RaceDescription[RACE].NAME[1], RaceDescription[RACE].NAME[2], &PlayerChar[0]);
+  sprintf(strTemp, "%s%s",namePrefixA[RACE][rand()%8], nameSuffixA[RACE][rand()%8] );
+  //ConsoleBufferAdd("Hello  ");
   //ConsoleBufferAdd(strTemp);
   //ConsoleBufferAddNumber(CountRoster());
   strncpy(PlayerChar->NAME, strTemp, 9);
@@ -88,11 +88,11 @@ void AddToRoster()
   //PlayerChar->NAME[i - 1] = '\0';
 
 
-        sprintf(strTemp, "%s %s %s@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME, PlayerChar->NAME);
+        sprintf(strTemp, "%s %s %s", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME, PlayerChar->NAME);
             WriteLineMessageWindow(strTemp, 0);
         //WriteLineMessageWindow(PlayerChar->NAME, 0);
   //ConsoleBufferReset();
-  //sprintf(strTemp, "Address: %X@", &PlayerChar[0]);
+  //sprintf(strTemp, "Address: %X ", &PlayerChar[0]);
   //ConsoleBufferAdd(strTemp);
   //ConsoleBufferPrintConsole(0);
   //AreYouSure();
@@ -113,16 +113,16 @@ void RollStats()
   INT = RollDice(3, 6);
   CHR = RollDice(3, 6);
 
-  //WriteLineMessageWindow("Rolled Stats:@", 0);
-  WriteLineMessageWindow("@", 0);
-  sprintf(strTemp, "STR:%2i CON:%2i DEX:%2i WIS:%2i INT:%2i CHR:%2i@", STR, CON, DEX, WIS, INT, CHR);
+  //WriteLineMessageWindow("Rolled Stats: ", 0);
+  WriteLineMessageWindow(" ", 0);
+  sprintf(strTemp, "STR:%2i CON:%2i DEX:%2i WIS:%2i INT:%2i CHR:%2i", STR, CON, DEX, WIS, INT, CHR);
   WriteLineMessageWindow(strTemp, 0);
 }
 
 void MenuGetClassPrimeStats()
 {
   byte x;
-  ResetMenu("Class@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 10, true);
+  ResetMenu("Class", 10, true);
   for (x = 0; x < 8; ++x)
   {
     SetMenuItem(x, ClassDescription[x].NAME);
@@ -135,8 +135,8 @@ void MenuGetClassPrimeStats()
     HighlightMenuItem(2);
   if (DEX >= 9)
     HighlightMenuItem(3);
-  SetMenuItem(8, "Reroll@");
-  SetMenuItem(9, "Exit@");
+  SetMenuItem(8, "Reroll ");
+  SetMenuItem(9, "Exit ");
 }
 
 void MenuGetClass()
@@ -150,7 +150,7 @@ void MenuGetClass()
   {
     if (CLASS < 8)
     {
-      WriteLineMessageWindow("Prime stat low@", 0);
+      WriteLineMessageWindow("Prime stat low", 0);
       CLASS = GetMenuSelection();
     }
     else
@@ -165,7 +165,7 @@ void MenuGetClass()
         return;
     }
   }
-        sprintf(strTemp, "Class Confirmed: %s @", ClassDescription[CLASS].NAME, 0);
+        sprintf(strTemp, "Class Confirmed: %s", ClassDescription[CLASS].NAME, 0);
         WriteLineMessageWindow(strTemp, 0);
 
 
@@ -175,13 +175,13 @@ void MenuGetClass()
       HITDICE = ClassDescription[CLASS].HITDICE;
 
     hitdice = RollDice(1, HITDICE);
-    sprintf(strTemp, "Hit Dice: 1d%i@", HITDICE);
+    sprintf(strTemp, "Hit Dice: 1d%i", HITDICE);
     WriteLineMessageWindow(strTemp, 0);
-    sprintf(strTemp, "Roll: %i + MOD %i@", hitdice, AbilityModifier[CON]);
+    sprintf(strTemp, "Roll: %i + MOD %i", hitdice, AbilityModifier[CON]);
     WriteLineMessageWindow(strTemp, 0);
     if (hitdice + AbilityModifier[CON] < 1)
     {
-      WriteLineMessageWindow("Died, no HP@", 0);
+      WriteLineMessageWindow("Died, no HP", 0);
     }
     else
     {
@@ -194,7 +194,7 @@ void MenuGetClass()
 
 void MenuGetRace()
 {
-  ResetMenu("Race@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 9, true);
+  ResetMenu("Race", 9, true);
   SetMenuItem(0, RaceDescription[0].NAME);
   SetMenuItem(1, RaceDescription[1].NAME);
   SetMenuItem(2, RaceDescription[2].NAME);
@@ -203,17 +203,17 @@ void MenuGetRace()
   SetMenuItem(5, RaceDescription[5].NAME);
   SetMenuItem(6, RaceDescription[6].NAME);
   SetMenuItem(7, RaceDescription[7].NAME);
-  SetMenuItem(8, "Exit@");
+  SetMenuItem(8, "Exit");
   RACE = GetMenuSelection();
   if (RACE == 8)
     ClearMenu();
   else
   {
     ConsoleBufferReset();
-    //ConsoleBufferAdd("Race Confirmed: %s@");
+    //ConsoleBufferAdd("Race Confirmed: %s ");
     //ConsoleBufferAdd(RaceDescription[RACE].NAME);
     //ConsoleBufferPrintConsole(0);
-    //sprintf(strTemp, "Race Confirmed: %s@ @", RaceDescription[RACE].NAME);
+    //sprintf(strTemp, "Race Confirmed: %s   ", RaceDescription[RACE].NAME);
     //WriteLineMessageWindow(strTemp, 0);
     MenuGetClass();
   }
@@ -225,7 +225,7 @@ void ListParty()
   byte partyCount = CountParty();
         if(CurrentCharacter < 0)
         CurrentCharacter = 0;
-  ResetMenu("Party@", 1, 1, viewportWidth * 2 - 1, 4, partyCount, true);
+  MovableMenu("Party", 1, 1, viewportWidth * 2 - 1, 4, partyCount, true);
   if (partyCount > 0)
   {
     for (x = 0; x < partyCount; ++x)
@@ -265,28 +265,23 @@ void DrawStatsSelected()
   //byte race = getPlayerChar(CurrentCharacter)->RACE;
 
   //Resize the console and just print all of this there
-  
-  ResetMenu("Selected@", 1, 10, viewportWidth * 2, viewportHeight, viewportHeight, true);
-  sprintf(strTemp, "%s@", RaceDescription[RACE].NAME);
+  MovableMenu("Selected", 1, 10, viewportWidth * 2, viewportHeight, viewportHeight, true);
+  sprintf(strTemp, "%s", RaceDescription[RACE].NAME);
   ConsoleBufferPrint(1, 10);
-  sprintf(strTemp, "%s@ ", ClassDescription[CLASS].NAME);
+  sprintf(strTemp, "%s ", ClassDescription[CLASS].NAME);
   ConsoleBufferPrint(2, 11);
-  sprintf(strTemp, "Traits %d@ ", RaceDescription[RACE].TRAITS);
+  sprintf(strTemp, "Traits %d ", RaceDescription[RACE].TRAITS);
   ConsoleBufferPrint(2, 12);
-  sprintf(strTemp, "Element Weak %d@ ", RaceDescription[RACE].ELEMENT_WEAKNESS);
+  sprintf(strTemp, "Element Weak %d ", RaceDescription[RACE].ELEMENT_WEAKNESS);
   ConsoleBufferPrint(2, 13);
-  sprintf(strTemp, "Element Resist %d@ ", RaceDescription[RACE].ELEMENT_RESIST);
+  sprintf(strTemp, "Element Resist %d ", RaceDescription[RACE].ELEMENT_RESIST);
   ConsoleBufferPrint(2, 14);
-  sprintf(strTemp, "Condition Resist %d@ ", RaceDescription[RACE].CONDITION_RESIST);
+  sprintf(strTemp, "Condition Resist %d ", RaceDescription[RACE].CONDITION_RESIST);
   ConsoleBufferPrint(2, 15);
-  sprintf(strTemp, "Weapon Prof %d@ ", ClassDescription[CLASS].WEAPON_PROF);
+  sprintf(strTemp, "Weapon Prof %d ", ClassDescription[CLASS].WEAPON_PROF);
   ConsoleBufferPrint(2, 16);
-  sprintf(strTemp, "Armor Prof %d@ ", ClassDescription[CLASS].ARMOR_PROF);
+  sprintf(strTemp, "Armor Prof %d ", ClassDescription[CLASS].ARMOR_PROF);
   ConsoleBufferPrint(2, 17);
-  
-  
-  
-  
 }
 
 void ListRoster()
@@ -296,7 +291,7 @@ void ListRoster()
 
         if(CurrentCharacter < 0)
         CurrentCharacter = 0;
-        ResetMenu("Roster@", 1, 10, viewportWidth * 2, viewportHeight, rosterCount, true);
+        MovableMenu("Roster", 1, 10, viewportWidth * 2, viewportHeight, rosterCount, true);
         if (rosterCount > 0)
         {
                 for (x = 0; x < rosterCount; ++x)
@@ -319,7 +314,7 @@ bool AddRandom(byte class, byte race)
     hitdice = RollDice(1, HITDICE);
     if (hitdice + AbilityModifier[CON] < 1)
     {
-        sprintf(strTemp, "%s %s died, no HP@", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME);
+        sprintf(strTemp, "%s %s died, no HP", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME);
         WriteLineMessageWindow(strTemp, 0);
         return false;
     }
@@ -334,13 +329,13 @@ bool AddRandom(byte class, byte race)
 
 void MenuParty(bool clear)
 {
-        ResetMenu("Party@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6, clear);
-                SetMenuItem(0, "Next@");
-                SetMenuItem(1, "Last@");
-                SetMenuItem(2, "Edit@");
-                SetMenuItem(3, "Remove@");
-                SetMenuItem(4, "Begin@");
-                SetMenuItem(5, "Back@");
+        ResetMenu("Party", 6, clear);
+                SetMenuItem(0, "Next");
+                SetMenuItem(1, "Last");
+                SetMenuItem(2, "Edit");
+                SetMenuItem(3, "Remove");
+                SetMenuItem(4, "Begin");
+                SetMenuItem(5, "Back");
 }
 
 void EditPartyMenu()
@@ -414,14 +409,14 @@ void EditPartyMenu()
 
 void MenuRoster(bool clear)
 {
-        ResetMenu("Roster@",contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 7, clear);
-        SetMenuItem(0, "Next@");
-        SetMenuItem(1, "Last@");
-        SetMenuItem(2, "Create@");
-        SetMenuItem(3, "Random@");
-        SetMenuItem(4, "Delete@");
-        SetMenuItem(5, "Join@");
-        SetMenuItem(6, "Back@");
+        ResetMenu("Roster", 7, clear);
+        SetMenuItem(0, "Next");
+        SetMenuItem(1, "Last");
+        SetMenuItem(2, "Create");
+        SetMenuItem(3, "Random");
+        SetMenuItem(4, "Delete");
+        SetMenuItem(5, "Join");
+        SetMenuItem(6, "Back");
 }
 void EditRosterMenu()
 {
@@ -514,11 +509,11 @@ void EditRosterMenu()
 
 void TavernMenu()
 {
-        ResetMenu("Tavern@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 4, true);
-        SetMenuItem(0, "Party@");
-        SetMenuItem(1, "Roster@");
-        SetMenuItem(2, "Save Game@");
-        SetMenuItem(3, "Load Game@");
+        ResetMenu("Tavern", 4, true);
+        SetMenuItem(0, "Party");
+        SetMenuItem(1, "Roster");
+        SetMenuItem(2, "Save Game");
+        SetMenuItem(3, "Load Game");
         switch(GetMenuSelection())
                 {
                         case 0: //Edit Party
@@ -536,6 +531,14 @@ void TavernMenu()
                 }
 }
 
+  void DrawStuff()
+  {
+      ListParty();
+      ListRoster();
+      DrawCharStats();
+      DrawPartyStats();
+  }
+
 const byte predefcharindex[] = {2, 7, 5, 3};
 screenName DrawAddCharacterScreen()
 {
@@ -544,20 +547,14 @@ screenName DrawAddCharacterScreen()
         CurrentCharacter = 0;
         srand(477);
         ScreenFadeIn();
-        ListParty();
-        DrawPartyStats();
-        ListRoster();
-        DrawCharStats();
+        DrawStuff();
   if (CountParty() == 0)
   {
     while(CountParty() < 4)
     {
       while(!AddRandom(predefcharindex[CountParty()], rand() % 8));
       AddParty(CurrentCharacter);
-      ListParty();
-      DrawPartyStats();
-      ListRoster();
-      DrawCharStats();
+      DrawStuff();
     }
     return MapGen;
   }

@@ -30,7 +30,7 @@ void DiskSave(char *filename, byte *source, int size)
   /*
   //Append the save and replace prefix
   char name[16];
-  sprintf(name, "@0:%s", filename);
+  sprintf(name, "0:%s", filename);
 
   cbm_k_setlfs(0, 8, 0);
   cbm_k_setnam(name);
@@ -44,12 +44,12 @@ void DiskSave(char *filename, byte *source, int size)
 
   //https://retrocomputing.stackexchange.com/questions/25240/how-do-i-save-data-from-a-program-with-cc65
   FILE *fp;
-  //char data_out[] = "This is my data to save.@";
+  //char data_out[] = "This is my data to save.";
 
   //Saving
   _filetype = 's';
   if ((fp = fopen (filename, "w")) == 0) {
-    WriteLineMessageWindow("File could not be opened@", 0);
+    WriteLineMessageWindow("File could not be opened", 0);
     exit (1);
   }
   fwrite (source, 1, size, fp);
@@ -99,7 +99,7 @@ void DiskLoad(char *filename, byte *dest, int size)
   //Reading
   _filetype = 's';
   if ((fp = fopen (filename, "r")) == 0) {
-    WriteLineMessageWindow ("File could not be opened@",0);
+    WriteLineMessageWindow ("File could not be opened",0);
     exit (1);
   }
 

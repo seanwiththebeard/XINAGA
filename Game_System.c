@@ -39,11 +39,11 @@ void DebugGraphics()
 {
   DrawCharset();
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
-  WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ@", 0);
-  WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz@", 0);
-  WriteLineMessageWindow("01234567890 !#$%^&@", 0);
-  WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
+  WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog", 0);
+  WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0);
+  WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz", 0);
+  WriteLineMessageWindow("01234567890 !#$%^&", 0);
+  WriteLineMessageWindow("*()-=[];':<>,./?", 0);
   while(1);
 }
 
@@ -66,7 +66,7 @@ byte MiniMapHighlightY;
 void DrawMiniMap(bool highlightPlayer)
 {
   byte x, y, tile = 0;
-  //DrawBorder("Minimap@", MiniMapPosX - 1, MiniMapPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
+  //DrawBorder("Minimap", MiniMapPosX - 1, MiniMapPosY- 1, mapMatrixWidth + 2, mapMatrixHeight + 2, false);
   UpdateAttributes();
   for (y = 0; y < MiniMapHeight; ++y)
   {
@@ -158,7 +158,7 @@ void DrawCharStatus(byte characterIndex)
   //ConsoleBufferPrint(statX + 3, PartyStatsY);
   //ConsoleBufferAdd(ClassDescription[PlayerChar->CLASS].NAME);
   //ConsoleBufferPrint(statX + 3, PartyStatsY+1);
-  sprintf(strTemp, "%2d/%2d@", PlayerChar->HP, PlayerChar->HPMAX);
+  sprintf(strTemp, "%2d/%2d", PlayerChar->HP, PlayerChar->HPMAX);
   PrintString(strTemp, statX + 2, PartyStatsY + 1, true);
   ConsoleBufferReset();
 }
@@ -171,7 +171,7 @@ byte moonTick;
 void DrawMoonPhase()
 {
   ConsoleBufferReset();
-  sprintf(strTemp, "<%c||%c>@", phaseChar[moonA], phaseChar[moonB]);
+  sprintf(strTemp, "<%c||%c>", phaseChar[moonA], phaseChar[moonB]);
   PrintString(strTemp, 6, 18, true);
   ConsoleBufferReset();
 }
@@ -219,7 +219,7 @@ void DrawCharStats()
 {
   byte i;
   DrawMoonPhase();
-  //DrawBorder("@", PartyStatsX, PartyStatsY, PartyStatsWidth, PartyStatsHeight, true);
+  //DrawBorder(" ", PartyStatsX, PartyStatsY, PartyStatsWidth, PartyStatsHeight, true);
   for (i = 0; i < CountParty(); ++i)
     DrawCharStatus(i);
 }

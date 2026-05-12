@@ -538,7 +538,7 @@ void PrintString(char *text, byte posx, byte posy, bool fast)
     posy -= ROWS;
   for(i = 0; i < COLS; ++i)
   {
-    if (text[i] == '@' ||  text[i] == '\n')
+    if (text[i] == '\0' ||  text[i] == '\n')
       break;
     if (!fast)
       wait_vblank(1);

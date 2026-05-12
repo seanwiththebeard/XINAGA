@@ -259,7 +259,7 @@ bool InputFire(void)
 void WaitForInput(void)
 {
   bool ex = false;
-  WriteLineMessageWindow("Press space to continue@", 0);
+  WriteLineMessageWindow("Press space to continue", 0);
 
   while (!ex)
   {

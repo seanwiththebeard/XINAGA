@@ -265,7 +265,7 @@ void DrawScenario()
   char scenChar;
   char pathIndex;
 
-  //DrawBorder("Scenario Path@", originX, originY , PartyStatsWidth, PartyStatsHeight, false);
+  //DrawBorder("Scenario Path", originX, originY , PartyStatsWidth, PartyStatsHeight, false);
 
   scenPos.x = originX;
   scenPos.y = originY;
@@ -535,7 +535,7 @@ void deletePoint(int pos)
         ptr=ptr->next;
         if(ptr==NULL)
         {
-          WriteLineMessageWindow("Position not Found:@", 0);
+          WriteLineMessageWindow("Position not Found:", 0);
           return;
         }
       }
@@ -679,7 +679,7 @@ void attachRandomPoint(byte index, byte antiIndex)
     ++failure;
     if (failure == 48)
     {
-      sprintf(strTemp, "Removing point (%d), continent %d can't add@", i, countContinents);
+      sprintf(strTemp, "Removing point (%d), continent %d can't add", i, countContinents);
       WriteLineMessageWindow(strTemp, 0);
       deletePoint(i);
       if (totalPoints >= 1)
@@ -692,7 +692,7 @@ void attachRandomPoint(byte index, byte antiIndex)
     }
     if (points == NULL)
     {
-      sprintf(strTemp, "Moving on@");
+      sprintf(strTemp, "Moving on");
       WriteLineMessageWindow(strTemp, 0);
       return;
     }
@@ -717,7 +717,7 @@ void GenerateOverworld(byte seed)
 
 
   srand(seed);
-  sprintf(strTemp, "Overworld Seed:(%3d)@", seed);
+  sprintf(strTemp, "Overworld Seed:(%3d)", seed);
   SetLineMessageWindow(strTemp, 0);
   DrawScenario();
   checkLandlocked();
@@ -745,7 +745,7 @@ void GenerateOverworld(byte seed)
   }
   TranslateQuadIndices();
   DrawMiniMap(false);
-  sprintf(strTemp, "Points Placed:  (%3d)@", totalPointsPlaced);
+  sprintf(strTemp, "Points Placed:  (%3d)", totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
 }
 
@@ -823,7 +823,7 @@ void GenerateDungeon(byte seed)
         byte x,y;
         UploadCharPage((byte*)DungeonGeoMorphSet, 7);
         clearPoints();
-        sprintf(strTemp, "Dungeon Seed (%d)@", seed);
+        sprintf(strTemp, "Dungeon Seed (%d)", seed);
         SetLineMessageWindow(strTemp, 0);
 
         for (y = 0; y < mapMatrixWidth; ++y)
@@ -856,29 +856,29 @@ void GetSeed()
 {
   //#define menuWidth 5
   //#define menuCount 4
-  ResetMenu("Seed@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6, true);
-  SetMenuItem(0, "Next@");
-  SetMenuItem(1, "Last@");
-  SetMenuItem(2, "Overworld@");
-  SetMenuItem(3, "Town@");
-  SetMenuItem(4, "Dungeon@");
-  SetMenuItem(5, "End@");
+  ResetMenu("Seed", 6, true);
+  SetMenuItem(0, "Next");
+  SetMenuItem(1, "Last");
+  SetMenuItem(2, "Overworld");
+  SetMenuItem(3, "Town");
+  SetMenuItem(4, "Dungeon");
+  SetMenuItem(5, "End");
 
-  //sprintf(strTemp, "Seed (%d)@", seed);
+  //sprintf(strTemp, "Seed (%d)", seed);
   //SetLineMessageWindow(strTemp, 0);
   while(1)
   {
     GenerateOverworld(seed);
     //GenerateDungeon(seed);
     //WaitForInput();
-    //WriteLineMessageWindow("@", 0);
+    //WriteLineMessageWindow("", 0);
     //++seed;
     return;
   }
 
   while (1)
   {
-    sprintf(strTemp, "Seed (%d)@", seed);
+    sprintf(strTemp, "Seed (%d)", seed);
     SetLineMessageWindow(strTemp, 0);
     switch (GetMenuSelection())
     {
@@ -938,11 +938,11 @@ FillViewport(' ', viewportWidth, viewportHeight);
             createPoint(x, y);
             map[y][x] = grass;
             SetChar(grass, posX + x, posY + y);
-            //sprintf(strTemp, "Filled (%d, %d)@", x, y);
+            //sprintf(strTemp, "Filled (%d, %d)", x, y);
             //WriteLineMessageWindow(strTemp, 0);
           }
       }
-    sprintf(strTemp, "Pass %d done@", i + 1);
+    sprintf(strTemp, "Pass %d done", i + 1);
     WriteLineMessageWindow(strTemp, 0);
   }
 }*/
@@ -958,11 +958,11 @@ FillViewport(' ', viewportWidth, viewportHeight);
         {
           map[y][x] = water;
           SetChar(water, posX + x, posY + y);
-          sprintf(strTemp, "Removed (%d, %d)@", x, y);
+          sprintf(strTemp, "Removed (%d, %d)", x, y);
           WriteLineMessageWindow(strTemp, 0);
         }
     }
-  sprintf(strTemp, "Islands Removed@");
+  sprintf(strTemp, "Islands Removed");
   WriteLineMessageWindow(strTemp, 0);
 }*/
 

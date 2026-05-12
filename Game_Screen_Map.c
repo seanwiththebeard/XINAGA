@@ -589,7 +589,7 @@ static bool CheckCollision(byte charIndex, direction dir)
   //Check the tile we're already standing on
   if(ReadBit(tilesBlocked[mapData[xPos + (mapWidth * yPos)]], dir))
   {
-    //WriteLineMessageWindow("Standing on blocked@", 0);
+    //WriteLineMessageWindow("Standing on blocked ", 0);
     return true;
   }
 
@@ -617,12 +617,12 @@ static bool CheckCollision(byte charIndex, direction dir)
 
   if(ReadBit(tilesBlocked[mapData[xPos + (mapWidth *yPos)]], dir))
   {
-    /*WriteLineMessageWindow("Entry blocked@", 1);
-    sprintf(str, "Index: %d@", tiles[mapData[xPos][yPos]].index);
+    /*WriteLineMessageWindow("Entry blocked ", 1);
+    sprintf(str, "Index: %d ", tiles[mapData[xPos][yPos]].index);
     WriteLineMessageWindow(str, 1);
-    sprintf(str, "Data: %d@", tiles[mapData[xPos][yPos]].blocked);
+    sprintf(str, "Data: %d ", tiles[mapData[xPos][yPos]].blocked);
     WriteLineMessageWindow(str, 1);
-    sprintf(str, "position: %d,%d@", xPos, yPos);
+    sprintf(str, "position: %d,%d ", xPos, yPos);
     WriteLineMessageWindow(str, 1);*/
     return true;
   }
@@ -863,7 +863,7 @@ static void DrawCharacterCoordinates(byte index)
     CoordPosY -= quadHeight * 2;
   CoordPosY += quadHeight*2*characters.quadPosY[index];
 
-  sprintf(strTemp,"<%3i  %3i>@", CoordPosX, CoordPosY);
+  sprintf(strTemp,"<%3i  %3i> ", CoordPosX, CoordPosY);
   PrintString(strTemp, viewportPosX + (viewportWidth >> 1), 19, true);
         //UpdatePlayerOnMiniMap;
         //DrawMiniMap(true
@@ -889,13 +889,13 @@ static void DrawScreen(void)
 static void ActionMenu()
 {
   byte action;
-  ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 6, true);
-  SetMenuItem(0, "Search@");
-  SetMenuItem(1, "Attack@");
-  SetMenuItem(2, "Party@");
-  SetMenuItem(3, "Map@");
-  SetMenuItem(4, "Exit@");
-  SetMenuItem(5, "Charset@");
+  ResetMenu(" ", 6, true);
+  SetMenuItem(0, "Search");
+  SetMenuItem(1, "Attack");
+  SetMenuItem(2, "Party");
+  SetMenuItem(3, "Map");
+  SetMenuItem(4, "Exit");
+  SetMenuItem(5, "Charset");
 
   action = GetMenuSelection();
   ClearMenu();
@@ -943,7 +943,7 @@ void DrawMap()
 {
 
   //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  //DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+  //DrawBorder(" ", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawScreen();
 }
 screenName MapUpdate()
@@ -954,13 +954,13 @@ screenName MapUpdate()
         characters.tile[followIndex] = getPartyMember(0)->CLASS;
 
   //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  //DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+  //DrawBorder(" ", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
   DrawCharStats();
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
   //FillViewport(32, viewportWidth, viewportHeight);
   ScreenFadeIn();
-  ResetMenu("@", contextMenuPosX, contextMenuPosY, contextMenuWidth, contextMenuHeight, 0, true);
+  ResetMenu(" ", 0, true);
   DrawMapViewport();
 
 

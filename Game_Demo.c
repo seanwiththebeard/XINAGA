@@ -34,8 +34,8 @@ void SelectBank()
 
 void DrawInterface()
 {
-        DrawBorder("@", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
-        DrawBorder("@", consolePosX - 1, consolePosY - 1, COLS - consolePosX + 1, viewportHeight * 2 + 2, true);
+        DrawBorder(" ", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+        DrawBorder(" ", consolePosX - 1, consolePosY - 1, COLS - consolePosX + 1, viewportHeight * 2 + 2, true);
         //DrawCharStats();
         ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
         SetTileOrigin(viewportPosX, viewportPosY);
@@ -44,7 +44,7 @@ void DrawInterface()
 void SwitchScreen(screenName screen)
 {
   //ResizeMessageWindow(1, 1, 10, 15);
-  //WriteLineMessageWindow("Hello@", 0);
+  //WriteLineMessageWindow("Hello", 0);
   //ScreenDisable();
   //ClearScreen();
   //DrawInterface();
@@ -100,16 +100,16 @@ void RunGame(screenName startingScreen)
   currentScreen = startingScreen;
   DrawInterface();
 
-        //WriteLineMessageWindow("Greetings from the librarian Soodo Nim@", 0);
-        //WriteLineMessageWindow("..not to be confused with evil Anto Nim@", 0);
+        //WriteLineMessageWindow("Greetings from the librarian Soodo Nim", 0);
+        //WriteLineMessageWindow("..not to be confused with evil Anto Nim", 0);
         //WaitForInput();
-  //DrawBorder("@", 12, 19, 16, 5, true);
-  //PrintString("Press Space@", 14, 21, true);
+  //DrawBorder(" ", 12, 19, 16, 5, true);
+  //PrintString("Press Space", 14, 21, true);
   while(1)
   {
     SwitchScreen(currentScreen);
-    //DrawBorder("@", 12, 19, 16, 5, true);
-  //PrintString("Press Space@", 14, 21, true);
+    //DrawBorder(" ", 12, 19, 16, 5, true);
+  //PrintString("Press Space", 14, 21, true);
 
   while (1)
   {
@@ -197,7 +197,7 @@ void delete_pos(byte pos)
         ptr=ptr->next ;
         if(ptr==NULL)
         {
-          WriteLineMessageWindow("Position not Found:@", 0);
+          WriteLineMessageWindow("Position not Found:", 0);
           return;
         }
       }
@@ -288,7 +288,7 @@ void DeleteParty(byte pos)
         ptr=ptr->next ;
         if(ptr==NULL)
         {
-          WriteLineMessageWindow("Position not Found:@", 0);
+          WriteLineMessageWindow("Position not Found:", 0);
           return;
         }
       }

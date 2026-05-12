@@ -299,7 +299,8 @@ void ConsoleBufferPrintConsole(byte delay);
 void DrawCharStats(void);
 
 //Selection Menu
-void ResetMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, bool clear);
+void MovableMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, bool clear);
+void ResetMenu(char *title, byte c, byte clear);
 void SetMenuItem(byte index, char *value);
 void HighlightMenuItem(byte index);
 void DrawMenu(void);
