@@ -44,6 +44,7 @@ void ClearRoster(void);
 void GetCharacters(void);
 void GetMonsters(void);
 void RollInitiative(void);
+bool CheckPlayersLeft(void);
 
 void DoCombatRound(void);
 void GetActionSelection(void);
@@ -284,6 +285,14 @@ bool SelectNextCharacter()
 
 void DoCombatRound()
 {
+  if(!CheckPlayersLeft())
+    {
+      exitCombat = true;
+      WriteLineMessageWindow("Defeated...@", consoleDelay);
+      nextScreen = EditParty;
+      return;
+    }
+  
   RollInitiative();
 
   if (SelectNextCharacter())
@@ -762,13 +771,6 @@ screenName Update_Combat(void)
     ConsoleBufferReset();
     DoCombatRound();
     UpdateInput();
-    if(!CheckPlayersLeft())
-    {
-      exitCombat = true;
-      WriteLineMessageWindow("Defeated...@", consoleDelay);
-      nextScreen = EditParty;
-    }
-      
   }
   WaitForInput();
   while (!InputFire())
@@ -778,5 +780,5 @@ screenName Update_Combat(void)
 
   //Malloc free combat data
   ScreenFadeOut();
-  return Map;
+  return nextScreen;
 }
