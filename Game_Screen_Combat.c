@@ -119,7 +119,7 @@ void Initialize(void)
   GetCharacters();
   GetMonsters();
 
-  DrawBorder("Combat@",viewportPosX - 1, viewportPosY - 1, 2 + 2*CombatMapWidth, 2 + 2*CombatMapHeight, true);
+  DrawBorder("Combat",viewportPosX - 1, viewportPosY - 1, 2 + 2*CombatMapWidth, 2 + 2*CombatMapHeight, true);
   DrawCharStats();
   DrawCombatMap();
 
@@ -138,10 +138,19 @@ void GetCharacters(void)
     combatParticipant.posY[i] = 6;
     combatParticipant.initiative[i] = 0;
     combatParticipant.initiativeMod[i] = (getPartyMember(i)->DEX - 10) / 2;
-    combatParticipant.active[i] = true;
-    combatParticipant.incapacitated[i] = false;
     combatParticipant.movement[i] = getPartyMember(i)->DEX / 2;
     combatParticipant.charPointer[i] = getPartyMember(i);
+
+    if(combatParticipant.charPointer[i]->HP > 0)
+    {
+      combatParticipant.active[i] = true;
+      combatParticipant.incapacitated[i] = false;
+    }
+    else
+    {
+      combatParticipant.active[i] = false;
+      combatParticipant.incapacitated[i] = true;
+    }
     ++SelectedCharacter;
   }
 }
@@ -184,10 +193,9 @@ void GetMonsters(void)
     combatMonster[monstersSet].CHR = 10;
     combatMonster[monstersSet].CON = 10;
     combatMonster[monstersSet].WEAPON = 1;
-    combatMonster[monstersSet].ARMOR = 1;    
-    
+    combatMonster[monstersSet].ARMOR = 1;
     ++monstersSet;
-    
+
     ++SelectedCharacter;
   }
 }
@@ -205,15 +213,15 @@ void WriteRemainingMovement()
 {
   if (MovementRemaining > 0)
   {
-    sprintf(strTemp, "Movement Left:%dof%d@", MovementRemaining, combatParticipant.movement[SelectedCharacter]);
+    sprintf(strTemp, "Movement Left:%dof%d", MovementRemaining, combatParticipant.movement[SelectedCharacter]);
     WriteLineMessageWindow(strTemp, 0);
   }
   else
   {
     if (combatParticipant.isPlayerChar[SelectedCharacter])
-      WriteLineMessageWindow("Moved, press space@", 0);
+      WriteLineMessageWindow("Moved, press space", 0);
     else
-      WriteLineMessageWindow("Monster moved@", 0);
+      WriteLineMessageWindow("Monster moved", 0);
   }
 }
 
@@ -253,7 +261,7 @@ void SelectionMoveCharacter(void)
 
   }
   DrawOneCharacter();
-  WriteLineMessageWindow("@",0);
+  WriteLineMessageWindow(" ",0);
 }
 
 bool SelectNextCharacter()
@@ -275,7 +283,7 @@ bool SelectNextCharacter()
     ++count;
     if (count > MaxCombatParticipants)
     {
-      WriteLineMessageWindow("No Entities@", consoleDelay);
+      WriteLineMessageWindow("No Entities", consoleDelay);
       exitCombat = true;
       return false;
     }
@@ -288,7 +296,7 @@ void DoCombatRound()
   if(!CheckPlayersLeft())
     {
       exitCombat = true;
-      WriteLineMessageWindow("Defeated...@", consoleDelay);
+      WriteLineMessageWindow("Defeated...", consoleDelay);
       nextScreen = EditParty;
       return;
     }
@@ -312,7 +320,7 @@ void PhysicalAttack()
 
   if (SelectedTarget < 0)
   {
-    WriteLineMessageWindow("No target!@", 0);    
+    WriteLineMessageWindow("No target!", 0);    
     return;
   }
   
@@ -322,14 +330,14 @@ void PhysicalAttack()
   {
     targetHP -= damage;
 
-    sprintf(strTemp, "%s hits %s for %d damage@", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME, damage);
+    sprintf(strTemp, "%s hits %s for %d damage", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME, damage);
     WriteLineMessageWindow(strTemp, 0);
 
     if(targetHP <= 0)
     {
       combatParticipant.active[SelectedTarget] = false;
       targetHP = 0;
-      sprintf(strTemp, "%s fell@", combatParticipant.charPointer[SelectedTarget]->NAME);
+      sprintf(strTemp, "%s fell", combatParticipant.charPointer[SelectedTarget]->NAME);
       WriteLineMessageWindow(strTemp, 0);
       combatParticipant.incapacitated[SelectedTarget] = true;
     }
@@ -342,7 +350,7 @@ void PhysicalAttack()
   }
   else
   {
-    sprintf(strTemp, "%s missed %s@", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME);
+    sprintf(strTemp, "%s missed %s", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME);
     WriteLineMessageWindow(strTemp, 0);
   }
 }
@@ -361,7 +369,7 @@ void GetTargetSelection(void)
   byte i;
   sbyte x = combatParticipant.posX[SelectedCharacter];
   sbyte y = combatParticipant.posY[SelectedCharacter];
-  WriteLineMessageWindow("Select Target@",0);
+  WriteLineMessageWindow("Select Target",0);
 
   ClearArrow();
   DrawArrow(x, y);
@@ -457,7 +465,7 @@ void MonsterWander()
     if (failedWander >= 3)
     {
       MovementRemaining = 0;
-      //sprintf(strTemp, "Wander Failed M#%d@", SelectedCharacter);
+      //sprintf(strTemp, "Wander Failed M#%d", SelectedCharacter);
      // WriteLineMessageWindow(strTemp, 0);
     }
   }
@@ -489,7 +497,7 @@ bool CheckPlayersLeft()
 void SelectMonsterAction(void)
 {
   //SelectPlayerAction();
-  //sprintf(strTemp, "Monster Action %d@", SelectedCharacter);
+  //sprintf(strTemp, "Monster Action %d", SelectedCharacter);
   //WriteLineMessageWindow(strTemp, consoleDelay);
   MonsterWander();
 }
@@ -497,15 +505,16 @@ void SelectMonsterAction(void)
 void Flee()
 {
   byte fleeRoll = rand() % 20;
-  sprintf(strTemp, "Flee attempt rolled %d against 12@", fleeRoll);
+  sprintf(strTemp, "Flee attempt rolled %d against 12", fleeRoll);
       WriteLineMessageWindow(strTemp, 0);
   if (fleeRoll > 12)
   {
       exitCombat = true;
-      WriteLineMessageWindow("Fled!@", 0);
+      nextScreen = Map;
+      WriteLineMessageWindow("Fled!", 0);
   }
   else
-      WriteLineMessageWindow("Couldn't escape...@", 0);
+      WriteLineMessageWindow("Couldn't escape...", 0);
 }
 
 void SelectPlayerAction(void)
@@ -519,7 +528,7 @@ void SelectPlayerAction(void)
   {
     if (!CheckEnemiesLeft())
     {
-      WriteLineMessageWindow("No targets, continue?@",0);
+      WriteLineMessageWindow("No targets, continue?",0);
       if (!AreYouSure())
       {
         exitCombat = true;
@@ -531,17 +540,17 @@ void SelectPlayerAction(void)
     }
   }
 
-  ResetMenu("Action@", 6, true);
-  SetMenuItem(0, "Move@");
-  SetMenuItem(1, "Attack@");
-  SetMenuItem(2, "Magic@");
-  SetMenuItem(3, "Item@");
-  SetMenuItem(4, "Flee@");
-  SetMenuItem(5, "End Turn@");
+  ResetMenu("Action", 6, true);
+  SetMenuItem(0, "Move");
+  SetMenuItem(1, "Attack");
+  SetMenuItem(2, "Magic");
+  SetMenuItem(3, "Item");
+  SetMenuItem(4, "Flee");
+  SetMenuItem(5, "End Turn");
 
   while (!finished)
   {
-    WriteLineMessageWindow("Command?@",0);
+    WriteLineMessageWindow("Command?",0);
     if(combatParticipant.active[SelectedCharacter])
       DrawArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
     switch (GetMenuSelection())
