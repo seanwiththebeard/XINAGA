@@ -60,7 +60,6 @@ char ATTRIBUTE_TABLE[0x40] = {
 
 /*{pal:"nes",layout:"nes"}*/
 const char PALETTE_0[16] = {
-  
   0x0F,			// screen color
 
   0x26,0x1C,0x30,0x00,	// background palette 0
@@ -109,13 +108,11 @@ void UploadCharset()
   vram_write(&chrdata[x], 0x2000);
   //vram_adr(NTADR_A(0,0));
   //vram_fill(0, ROWS*COLS);
-  
 
   ppu_on_all();
   pal_col(0, 0x0f);
-  
   //vrambuf_put(NTADR_A(0,0)+(ROWS*COLS), &ATTRIBUTE_TABLE[0], 64);
-  wait_vblank(1);  
+  wait_vblank(1);
 }
 
 
@@ -172,7 +169,7 @@ void main(void) //Must be in $E000-$FFFF??
   0 - 8000-9FFFh and A000-BFFFh can be swapped out while C000-FFFFh is fixed.
   1 - A000-BFFFh and C000-DFFFh can be swapped out while 8000-9FFFh is fixed.
   When S = 0, C000-DFFF will contain the second to last bank of ROM.
-  When S = 1, 8000-9FFF will contain the second to last bank of ROM.  
+  When S = 1, 8000-9FFF will contain the second to last bank of ROM.
   E000-FFFF is always fixed to the last bank of ROM.
   */
 
@@ -186,17 +183,16 @@ void main(void) //Must be in $E000-$FFFF??
   MMC3_CHR_1800(6); 	//PPU $1800-$1BFF (or $0800-$0BFF): 1 KB switchable CHR bank
   MMC3_CHR_1C00(7);	//PPU $1C00-$1FFF (or $0C00-$0FFF): 1 KB switchable CHR bank
 
-  heaporg[0] = 0x7000; //heaporg
+  heaporg[0] = 0x7D00; //heaporg - Where does the heap begin? Must be after BSS
   heapptr[0] = heaporg[0]; //heapptr
   heapend[0] = 0x8000; //heapend
-  //memset((int*)heaporg[0], 0, heapend[0] - heaporg[0]); 
+  //memset((int*)heaporg[0], 0, heapend[0] - heaporg[0]);
 
   //InitializeGraphics();
   UploadCharset();
   RunGame(EditParty);
 
   //PPU_Color(0, 0, 1, 0);
-  
   //DebugGraphics();
         //DebugMap();
   //DrawCharset();
@@ -205,10 +201,9 @@ void main(void) //Must be in $E000-$FFFF??
 
   //ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
 
-  //SetAttrib(0, 0, 2);  
+  //SetAttrib(0, 0, 2);
   //SetAttrib(2, 2, 2);
   //SetAttrib(4, 4, 2);
-  
   //SetAttrib(12, 0, 2);
   //SetAttrib(20, 0, 2);
   //SetAttrib(24, 0, 2);
@@ -224,7 +219,6 @@ void main(void) //Must be in $E000-$FFFF??
       UpdateAttributes();
       wait_vblank(7);
     }
-    
 
     //WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
     //WriteLineMessageWindow("ABCDEFGHIJKL MNOPQRSTUVWXYZ@", 0);
