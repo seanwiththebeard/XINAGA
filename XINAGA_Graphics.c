@@ -119,8 +119,9 @@ void SetBG(byte color)
   *BG_REG = color;
 }
 #endif
-// || (__APPLE2__)
-#if defined (__C64__) || (__NES__)
+//
+#if defined (__C64__) || (__APPLE2__)
+//|| (__NES__)
 #pragma bss-name (push, "ZEROPAGE")
 #endif
 byte MapOriginX;
@@ -136,8 +137,9 @@ byte indexes[4];
 byte tilePosX;
 byte tilePosY;
 byte xA, yA, xB, yB, posX, posY;
-// || (__APPLE2__)
-#if defined (__C64__) || (__NES__)
+//
+#if defined (__C64__) || (__APPLE2__)
+//|| (__NES__)
 #pragma bss-name (pop)
 #endif
 
