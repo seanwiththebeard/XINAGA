@@ -253,8 +253,8 @@ bool CheckOverlap(byte x, byte y)
   return false;
 }
 
-#define ScenarioDescX 0
-#define ScenarioDescY 16
+#define ScenarioDescX 19
+#define ScenarioDescY 15
 
 void DrawScenario()
 {
@@ -306,7 +306,7 @@ void DrawScenario()
       else
         scenarioPoints[x] = scenForest;
     }
-    SetChar('0'+x, ScenarioDescX  + 2*x, ScenarioDescY + 2);
+    SetChar('0'+x, ScenarioDescX  + 2*x, ScenarioDescY);
     DrawTileDirectXY(scenarioPoints[x], ScenarioDescX + 2*x,  ScenarioDescY);
     SetChar(dirChar[scenarioDir[x]], ScenarioDescX +1 + 2*x, ScenarioDescY + 2);
     scenPos.x += (distX[scenarioDir[x]] * distTravel);
@@ -321,7 +321,7 @@ void DrawScenario()
       clampPoint(&scenPos);
       ++distTravel;
     }
-    SetChar('0' + distTravel, ScenarioDescX  + 2*x, ScenarioDescY + 3);
+    SetChar('0' + distTravel, ScenarioDescX  + 2*x, ScenarioDescY + 2);
 
     if (x == 0)
     {

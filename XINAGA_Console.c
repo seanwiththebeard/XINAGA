@@ -107,7 +107,7 @@ void ClearItem(byte index)
   byte x;
   for (x = 0; x < MenuWidth; ++x)
   {
-    SetChar(' ', MenuPosX + x, MenuPosY + index);
+    SetChar(' ', MenuPosX - 1 + x, MenuPosY + index);
   }
 }
 
@@ -127,6 +127,8 @@ void DrawItem(byte index)
     ConsoleBufferBackspace();
   }
 
+  
+
   ConsoleBufferAdd(MenuItems[index]);
   ConsoleBufferAdd("");
 
@@ -143,10 +145,11 @@ void ClearMenuContents()
 {
         byte x;
         //DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
-        for (x = 0; x < menuItemsCount; ++x)
+        for (x = 0; x < menuItemsCount - 2; ++x)
                 {
                         MenuItems[x] = (char*)"";
                         MenuHighlight[x] = false;
+                        //ClearItem(x);
                 }
 }
 
@@ -177,8 +180,9 @@ void MovableMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte
   MenuCount = c;
   MenuSelection = menuSel;
   menuSel = 0; //Reset for next draw if we don't keep it
-        if(clear)
+        if(clear);
   ClearMenuContents();
+  //ClearBorder(posX - 2, posY - 1, w+2, h+1);
 }
 
 void SetMenuItem(byte index, char *value)
@@ -207,7 +211,7 @@ void DrawMenu()
   //DrawBorder(menutitle, MenuPosX - 1, MenuPosY - 1, MenuWidth + 2, MenuHeight + 2, true);
   for (x = 0; x < MenuCount; ++x)
   {
-    //ClearItem(x);
+    ClearItem(x);
     DrawItem(x);
   }
 }

@@ -49,7 +49,7 @@ void DrawStatsSelected();
 
 void DrawPartyStats()
 {
-        DrawBorder("Stats ", viewportPosX - 1 , viewportPosY + 4, viewportWidth * 2 + 2, 5, true);
+        //DrawBorder("Stats ", viewportPosX - 1 , viewportPosY + 4, viewportWidth * 2 + 2, 5, true);
         ConsoleBufferReset();
         sprintf(strTemp, "GOLD:        %05u", Sessions[0].GOLD);
         ConsoleBufferPrint(viewportPosX, viewportPosY + 5);
@@ -258,30 +258,30 @@ typedef struct
   byte SONGS_BARD;
 }ClassDescriptionDef;
 */
-
+#define statsX 0
+#define statsY 0
 void DrawStatsSelected()
 {
   //byte class = getPlayerChar(CurrentCharacter)->CLASS;
   //byte race = getPlayerChar(CurrentCharacter)->RACE;
-
-  //Resize the console and just print all of this there
-  MovableMenu("Selected", 1, 10, viewportWidth * 2, viewportHeight, viewportHeight, true);
+  
+  MovableMenu("Selected", statsX, 10, viewportWidth * 2, viewportHeight, viewportHeight, true);
   sprintf(strTemp, "%s", RaceDescription[RACE].NAME);
-  ConsoleBufferPrint(1, 10);
-  sprintf(strTemp, "%s ", ClassDescription[CLASS].NAME);
-  ConsoleBufferPrint(2, 11);
-  sprintf(strTemp, "Traits %d ", RaceDescription[RACE].TRAITS);
-  ConsoleBufferPrint(2, 12);
-  sprintf(strTemp, "Element Weak %d ", RaceDescription[RACE].ELEMENT_WEAKNESS);
-  ConsoleBufferPrint(2, 13);
-  sprintf(strTemp, "Element Resist %d ", RaceDescription[RACE].ELEMENT_RESIST);
-  ConsoleBufferPrint(2, 14);
-  sprintf(strTemp, "Condition Resist %d ", RaceDescription[RACE].CONDITION_RESIST);
-  ConsoleBufferPrint(2, 15);
+  ConsoleBufferPrint(statsX, 10);
+  sprintf(strTemp, "%s", ClassDescription[CLASS].NAME);
+  ConsoleBufferPrint(statsX, 11);
+  sprintf(strTemp, "Traits %d", RaceDescription[RACE].TRAITS);
+  ConsoleBufferPrint(statsX, 12);
+  sprintf(strTemp, "Element Weak %d", RaceDescription[RACE].ELEMENT_WEAKNESS);
+  ConsoleBufferPrint(statsX, 13);
+  sprintf(strTemp, "Element Resist %d", RaceDescription[RACE].ELEMENT_RESIST);
+  ConsoleBufferPrint(statsX, 14);
+  sprintf(strTemp, "Condition Resist %d", RaceDescription[RACE].CONDITION_RESIST);
+  ConsoleBufferPrint(statsX, 15);
   sprintf(strTemp, "Weapon Prof %d ", ClassDescription[CLASS].WEAPON_PROF);
-  ConsoleBufferPrint(2, 16);
+  ConsoleBufferPrint(statsX, 16);
   sprintf(strTemp, "Armor Prof %d ", ClassDescription[CLASS].ARMOR_PROF);
-  ConsoleBufferPrint(2, 17);
+  ConsoleBufferPrint(statsX, 17);
 }
 
 void ListRoster()
