@@ -253,6 +253,9 @@ bool CheckOverlap(byte x, byte y)
   return false;
 }
 
+#define ScenarioDescX 0
+#define ScenarioDescY 16
+
 void DrawScenario()
 {
   byte x;
@@ -303,13 +306,9 @@ void DrawScenario()
       else
         scenarioPoints[x] = scenForest;
     }
-    
-    SetChar('0'+x, PartyStatsX  + 2*x, PartyStatsY + 2);
-
-    DrawTileDirectXY(scenarioPoints[x], PartyStatsX + 2*x,  PartyStatsY);
-    
-    SetChar(dirChar[scenarioDir[x]], PartyStatsX +1 + 2*x, PartyStatsY + 2);
-
+    SetChar('0'+x, ScenarioDescX  + 2*x, ScenarioDescY + 2);
+    DrawTileDirectXY(scenarioPoints[x], ScenarioDescX + 2*x,  ScenarioDescY);
+    SetChar(dirChar[scenarioDir[x]], ScenarioDescX +1 + 2*x, ScenarioDescY + 2);
     scenPos.x += (distX[scenarioDir[x]] * distTravel);
     scenPos.y += (distY[scenarioDir[x]] * distTravel);
     clampPoint(&scenPos);
@@ -322,7 +321,7 @@ void DrawScenario()
       clampPoint(&scenPos);
       ++distTravel;
     }
-    SetChar('0' + distTravel, PartyStatsX  + 2*x, PartyStatsY + 2);
+    SetChar('0' + distTravel, ScenarioDescX  + 2*x, ScenarioDescY + 3);
 
     if (x == 0)
     {
@@ -914,13 +913,13 @@ screenName Update_MapGen()
   MiniMapHeight = 16;
   //ResizeMessageWindow(COLS - 22, viewportPosY, 21, 8);
   ScreenFadeIn();
-        DrawInterface();
+        ClearInterface();
 FillViewport(' ', viewportWidth, viewportHeight);
   GetSeed();
   //StoreMap();
   //ScreenFadeOut();
-  ClearScreen();
-  DrawInterface();
+  //ClearScreen();
+  ClearInterface();
   return Map;
 }
 

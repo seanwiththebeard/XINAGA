@@ -23,6 +23,5 @@
 void main(void)
 {
   nextScreen = EditParty;
-  //DiskSave("hello.bin", &attributeset[0], 256);
   RunGame(nextScreen);
 }

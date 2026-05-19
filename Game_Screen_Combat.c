@@ -111,7 +111,7 @@ void Initialize(void)
 {
   exitCombat = false;
   ContinuingCombat = false;
-  ClearScreen();
+//  ClearScreen();
 
   //Malloc the combat data
 

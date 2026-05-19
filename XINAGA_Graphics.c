@@ -766,3 +766,20 @@ void DrawBorder(char *text, sbyte xPos, sbyte yPos, byte width, byte height, boo
 
   wait_vblank(1);
 }
+
+void ClearBorder(sbyte xPos, sbyte yPos, byte width, byte height)
+{
+  byte x;
+  //byte offset = 0;
+  byte widthInside2 = width - 2;
+  byte widthInside1 = width - 1;
+  byte heightInside1 = height - 1;
+  byte heightInside2 = height - 2;
+  byte yPos1 = yPos + 1;
+  byte xPos1 = xPos + 1;
+  
+  for (x = 0; x < heightInside2; ++x)
+    {
+      DrawLineH(' ', xPos1, yPos1 + x, widthInside2);
+    }
+}

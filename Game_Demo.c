@@ -41,6 +41,16 @@ void DrawInterface()
         SetTileOrigin(viewportPosX, viewportPosY);
 }
 
+void ClearInterface()
+{
+        ClearBorder(viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2);
+        ClearBorder(consolePosX - 1, 10, consoleWidth + 1, 9);
+        //ClearBorder(consolePosX - 1, consolePosY - 1, COLS - consolePosX + 1, viewportHeight * 2 + 2);
+        //DrawCharStats();
+        //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+        SetTileOrigin(viewportPosX, viewportPosY);
+}
+
 void SwitchScreen(screenName screen)
 {
   //ResizeMessageWindow(1, 1, 10, 15);
@@ -83,6 +93,7 @@ void SwitchScreen(screenName screen)
       currentScreen = DefaultScreen;
       break;
   }
+  ClearInterface();
   SwitchScreen(currentScreen);
 }
 
@@ -91,7 +102,7 @@ void RunGame(screenName startingScreen)
   srand(0);
   InitializeInput();
   InitializeGraphics();
-  ClearScreen();
+  //ClearScreen();
   ScreenFadeOut();
   #if defined(__NES__)
   MMC3_PRG_8000(0);

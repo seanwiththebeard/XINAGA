@@ -215,10 +215,11 @@ extern byte SetCharY;
 
 void _SetChar(void);
 #define SetChar(charindex, x, y) do {SetCharIndex = (charindex); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
-void ClearScreen(void);
+//void ClearScreen(void);
 void DrawLineH(byte index, sbyte x, sbyte y, byte length);
 //void DrawLineV(byte index, byte x, byte y, byte length);
 void DrawBorder(char *text, sbyte xPos, sbyte yPos, byte width, byte height, bool fill);
+void ClearBorder(sbyte xPos, sbyte yPos, byte width, byte height);
 void DrawCharset(void);
 
 //	Tiles
@@ -234,7 +235,7 @@ extern byte tilesOpaque[TileCount];
 void SetTileOrigin(byte x, byte y);
 extern byte tilePosX;
 extern byte tilePosY;
-// 
+//
 #if defined(__C64__) || defined(__APPLE2__)
 //|| defined(__NES__)
 #pragma zpsym ("tilePosX")

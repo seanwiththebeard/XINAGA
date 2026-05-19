@@ -149,8 +149,11 @@ void DrawCharStatus(byte characterIndex)
   
   struct playerChar *PlayerChar = getPartyMember(characterIndex);
 
+  if (PlayerChar != NULL)
+  {
   //DrawBorder(PlayerChar->NAME, statX, PartyStatsY - 1, 7, 4, true);
   DrawTileDirectXY(PlayerChar->CLASS, statX , PartyStatsY + 1);
+  PrintString("       ", statX, PartyStatsY, true);
   ConsoleBufferReset();
   ConsoleBufferAdd(PlayerChar->NAME);
   ConsoleBufferPrint(statX, PartyStatsY);
@@ -161,6 +164,9 @@ void DrawCharStatus(byte characterIndex)
   sprintf(strTemp, "%2d/%2d", PlayerChar->HP, PlayerChar->HPMAX);
   PrintString(strTemp, statX + 2, PartyStatsY + 1, true);
   ConsoleBufferReset();
+  }
+  else
+  ClearBorder(statX-1, PartyStatsY-1, 9, 5);
 }
 
 byte moonA;
@@ -220,6 +226,6 @@ void DrawCharStats()
   byte i;
   DrawMoonPhase();
   //DrawBorder(" ", PartyStatsX, PartyStatsY, PartyStatsWidth, PartyStatsHeight, true);
-  for (i = 0; i < CountParty(); ++i)
+  for (i = 0; i < 4; ++i)
     DrawCharStatus(i);
 }

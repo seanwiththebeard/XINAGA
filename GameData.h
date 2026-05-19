@@ -27,7 +27,8 @@ extern screenName nextScreen;
 #define ATTRIB_WIS 4
 #define ATTRIB_CHA 5
 
-void DrawInterface();
+//void DrawInterface();
+void ClearInterface();
 
 #define mapMatrixWidth 16
 #define mapMatrixHeight 16
