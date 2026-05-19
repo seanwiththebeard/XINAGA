@@ -267,24 +267,21 @@ void DrawStatsSelected()
   MovableMenu("Selected", statsX, 10, viewportWidth * 2, viewportHeight, viewportHeight, true);
 
   //Here
-  ClearBorder(statsX - 1, 10, viewportWidth * 2 + 1, viewportHeight);
-  
-  sprintf(strTemp, "%s", RaceDescription[RACE].NAME);
-  ConsoleBufferPrint(statsX, 10);
-  sprintf(strTemp, "%s", ClassDescription[CLASS].NAME);
-  ConsoleBufferPrint(statsX, 11);
+  ClearBorder(statsX - 1, 9, viewportWidth * 2 + 1, viewportHeight + 1);
+  sprintf(strTemp, "%s %s", RaceDescription[RACE].NAME, ClassDescription[CLASS].NAME);
+  PrintString(strTemp, statsX, 10, true);
   sprintf(strTemp, "Traits %d", RaceDescription[RACE].TRAITS);
-  ConsoleBufferPrint(statsX, 12);
-  sprintf(strTemp, "Element Weak %d", RaceDescription[RACE].ELEMENT_WEAKNESS);
-  ConsoleBufferPrint(statsX, 13);
+  PrintString(strTemp, statsX, 11, true);
+  sprintf(strTemp, "Element Weak: %d", RaceDescription[RACE].ELEMENT_WEAKNESS);
+  PrintString(strTemp, statsX, 12, true);
   sprintf(strTemp, "Element Resist %d", RaceDescription[RACE].ELEMENT_RESIST);
-  ConsoleBufferPrint(statsX, 14);
+  PrintString(strTemp, statsX, 13, true);
   sprintf(strTemp, "Condition Resist %d", RaceDescription[RACE].CONDITION_RESIST);
-  ConsoleBufferPrint(statsX, 15);
+  PrintString(strTemp, statsX, 14, true);
   sprintf(strTemp, "Weapon Prof %d ", ClassDescription[CLASS].WEAPON_PROF);
-  ConsoleBufferPrint(statsX, 16);
+  PrintString(strTemp, statsX, 15, true);
   sprintf(strTemp, "Armor Prof %d ", ClassDescription[CLASS].ARMOR_PROF);
-  ConsoleBufferPrint(statsX, 17);
+  PrintString(strTemp, statsX, 16, true);
 }
 
 void ListRoster()

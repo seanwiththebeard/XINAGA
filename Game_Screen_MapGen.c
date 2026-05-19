@@ -744,7 +744,7 @@ void GenerateOverworld(byte seed)
   }
   TranslateQuadIndices();
   DrawMiniMap(false);
-  sprintf(strTemp, "Points Placed:  (%3d)", totalPointsPlaced);
+  sprintf(strTemp, "Points Placed:(%3d)", totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
 }
 
