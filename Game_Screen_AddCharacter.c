@@ -264,8 +264,11 @@ void DrawStatsSelected()
 {
   //byte class = getPlayerChar(CurrentCharacter)->CLASS;
   //byte race = getPlayerChar(CurrentCharacter)->RACE;
-  
   MovableMenu("Selected", statsX, 10, viewportWidth * 2, viewportHeight, viewportHeight, true);
+
+  //Here
+  ClearBorder(statsX - 1, 10, viewportWidth * 2 + 1, viewportHeight);
+  
   sprintf(strTemp, "%s", RaceDescription[RACE].NAME);
   ConsoleBufferPrint(statsX, 10);
   sprintf(strTemp, "%s", ClassDescription[CLASS].NAME);
