@@ -889,13 +889,15 @@ static void DrawScreen(void)
 static void ActionMenu()
 {
   byte action;
-  ResetMenu(" ", 6, true);
+  ResetMenu(" ", 7, true);
   SetMenuItem(0, "Search");
   SetMenuItem(1, "Attack");
   SetMenuItem(2, "Party");
   SetMenuItem(3, "Map");
   SetMenuItem(4, "Exit");
   SetMenuItem(5, "Charset");
+  SetMenuItem(6, "...");
+  
 
   action = GetMenuSelection();
   ClearMenu();
@@ -935,6 +937,8 @@ static void ActionMenu()
       WaitForInput();
       DrawMapViewport();
       break;
+    default:
+    break;
   }
   DrawCharStats();
 DrawLocalMiniMap(false);
