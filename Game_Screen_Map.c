@@ -966,6 +966,7 @@ screenName MapUpdate()
   ScreenFadeIn();
   ResetMenu(" ", 0, true);
   DrawMapViewport();
+  DrawLocalMiniMap(false);
 
 
   while (!exitScreen)

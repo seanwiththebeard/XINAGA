@@ -591,6 +591,7 @@ void SelectPlayerAction(void)
         if(ContinuingCombat)
         {
           exitCombat = true;
+          nextScreen = Map;
         }
         else
         {
