@@ -52,7 +52,6 @@ void RunGame(screenName startingScreen);
 void DrawMiniMap(bool highlightPlayer);
 void WaitForInput(void);
 void LoadMap(void);
-void DrawMap(void);
 
 extern byte MiniMapHighlightX;
 extern byte MiniMapHighlightY;

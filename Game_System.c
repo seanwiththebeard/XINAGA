@@ -53,7 +53,7 @@ void DebugMap()
   memset(&mapQuads[0], 0x02, mapMatrixHeight * mapMatrixWidth);
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
-  DrawMap();
+  //DrawMap();
   DrawCharStats();
   while(1);
 }

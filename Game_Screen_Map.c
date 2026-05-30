@@ -58,68 +58,21 @@
 //Tiles (Landmarks):
 //NPCs:
 
-//Prototypes
-//      Map Functions
-screenName MapUpdate(void);
-static bool exitScreen;
-static void DrawScreen(void);
-static void ActionMenu(void);
-static void InitializeMapData(void);
-void LoadMap(void);
-static void DrawMapViewport(void);
-static void DrawEntireMap(void);
-//void UpdateLocalMiniMap();
-#define wrapX(v) do { if ((v) < 0) (v) = mapWidth - 1; else if ((v) >= mapWidth) (v) = 0; } while(0)
-#define wrapY(v) do { if ((v) < 0) (v) = mapHeight - 1; else if ((v) >= mapHeight) (v) = 0; } while(0)
-//void DrawSquare(sbyte xOrigin, sbyte yOrigin, sbyte xSize, sbyte ySize);
-static void ApplyLOS(void);
-static void CameraFollow(void);
-static void BufferCharacters(void);
-static void MoveCharacter(byte index, byte dir);
-static bool CheckCollision(byte charIndex, byte Direction);
-static void DrawCharacterCoordinates(byte index);
-//static void UpdatePlayerOnMiniMap(void);
-//      Quad Functions
-static void FillQuadBuffer(void);
-static void LoadQuadrant(byte quadIndex, byte quad);
-void LoadMapQuads(void);
-static byte GetPlayerQuad(void); //Returns the viewport quadrant of the player character
-static byte GetQuadInRelation(sbyte v, sbyte h);
-static void QuadScroll(byte direction);
-//Globals
-#define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
-#define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
-#define viewportSize viewportHeight * viewportWidth
-static byte viewportBuffer[viewportSize];
-static byte viewportBufferLast[viewportSize];
-byte followIndex;
-byte SetPlayerPositionX;
-byte SetPlayerPositionY;
-//Camera Position
-static sbyte offsetX;
-static sbyte offsetY;
-static byte CoordPosX;
-static byte CoordPosY;
-//Map Data
-static bool LOSEnabled;
 #define EmptyTile 32
 #define mapHeight 32
 #define mapWidth 32
-static byte mapData[mapWidth * mapHeight];
-//Quad Data
-byte mapQuads[mapMatrixHeight * mapMatrixWidth];  //These are the quad-tile references that make up the map
-static struct
-{ //These are the quad indexes referenced in mapQuads[y][x]
-  #define ScreenQuadCount 64
-  byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
-  byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
-  byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
-}ScreenQuad;
-byte quadBuffer[4];
+
 #define quadWidth 8
 #define quadHeight 8
 #define quadWidthDouble 16
 #define quadHeightDouble 16
+
+#define wrapX(v) do { if ((v) < 0) (v) = mapWidth - 1; else if ((v) >= mapWidth) (v) = 0; } while(0)
+#define wrapY(v) do { if ((v) < 0) (v) = mapHeight - 1; else if ((v) >= mapHeight) (v) = 0; } while(0)
+#define playerX ((viewportWidth - 1) >> 1) //Viewport Center used in line-of-sight calculations
+#define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
+#define viewportSize viewportHeight * viewportWidth
+
 static const byte MapSet[] = { /*{w:8,h:8,bpp:1,count:256,brev:1,pal:"c64",np:1}*/
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0xFF,0xFF,0x7E,0x00,0x00,0x00,0x00,0x00,0xFF,0xFF,0x7E,0x00,0x00,0x00,0x00,0x00
@@ -249,6 +202,15 @@ static const byte MapSet[] = { /*{w:8,h:8,bpp:1,count:256,brev:1,pal:"c64",np:1}
     ,0xE0,0xC0,0x80,0x00,0x00,0x01,0x03,0x07,0x07,0x03,0x01,0x00,0x00,0x80,0xC0,0xE0
     ,0x08,0x08,0x48,0x4E,0x40,0x40,0x7C,0x00,0x10,0x10,0x12,0x72,0x02,0x02,0x3E,0x00
     ,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+
+static struct
+{ //These are the quad indexes referenced in mapQuads[y][x]
+  #define ScreenQuadCount 64
+  byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
+  byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
+  byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
+}ScreenQuad;
+
 static struct
 {
   #define charactersCount 8
@@ -262,6 +224,29 @@ static struct
   sbyte quadPosX[charactersCount];
   sbyte quadPosY[charactersCount];
 }characters;
+
+//Globals
+bool exitScreen;
+bool LOSEnabled;
+
+byte viewportBuffer[viewportSize];
+byte viewportBufferLast[viewportSize];
+byte followIndex;
+byte SetPlayerPositionX;
+byte SetPlayerPositionY;
+
+//Camera Position
+sbyte CameraOffsetX;
+sbyte CameraOffsetY;
+byte CoordPosX;
+byte CoordPosY;
+
+//Map Data
+byte mapData[mapWidth * mapHeight];
+
+//Quad Data
+byte mapQuads[mapMatrixHeight * mapMatrixWidth];  //These are the quad-tile references that make up the map
+byte quadBuffer[4];
 static const byte quadOriginsX[4] = 	{0, quadWidthDouble, 		0, 		quadWidthDouble}; 		//Tile Origin
 static const byte quadOriginsY[4] = 	{0, 0, 				quadHeightDouble, 	quadHeightDouble};
 static const byte quadOffsetX[4] = 	{0, quadWidth, 			0, 			quadWidth};		//Subchars
@@ -280,132 +265,9 @@ static const QuadRel quadRel[8] = {
 //Quad positions in the matrix for which way we're moving
 static const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
 static const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
-static void CameraFollow()
+
+void LoadMap()
 {
-  offsetX = characters.posX[followIndex] - playerX;
-  if (offsetX < 0) offsetX += mapWidth;
-
-  offsetY = characters.posY[followIndex] - playerY;
-  if (offsetY < 0) offsetY += mapHeight;
-}
-static void BufferCharacters()
-{
-  byte i;
-  sbyte rx, ry;
-  for (i = 0; i < charactersCount; ++i)
-  {
-    if (!characters.visible[i]) continue;
-
-    rx = characters.posX[i] - offsetX;
-    if (rx < 0) rx += mapWidth;
-    if (rx >= viewportWidth) continue;
-
-    ry = characters.posY[i] - offsetY;
-    if (ry < 0) ry += mapHeight;
-    if (ry >= viewportHeight) continue;
-
-    viewportBuffer[rx + ry * viewportWidth] = characters.tile[i];
-  }
-}
-static void FillQuadBuffer()
-{
-  byte quadX = characters.quadPosX[followIndex];
-  byte quadY = characters.quadPosY[followIndex];
-  byte byte_x = (quadX + 1) & (quadWidth - 1);
-  byte byte_y = (quadY + 1) & (quadHeight - 1);
-  byte row0 = mapMatrixWidth * quadY;
-  byte row1 = mapMatrixWidth * byte_y;
-  quadBuffer[0] = mapQuads[quadX + row0];
-  quadBuffer[1] = mapQuads[byte_x + row0];
-  quadBuffer[2] = mapQuads[quadX + row1];
-  quadBuffer[3] = mapQuads[byte_x + row1];
-}
-static void LoadQuadrant(byte quadIndex, byte quad)
-{
-  byte byte_y, byte_z, QuadOriginX, QuadOriginY, charByte;
-  byte *out;
-  const byte *tilePtr;
-  const byte *chars = ScreenQuad.Chars[quadIndex];
-  int rowStart;
-
-  quadBuffer[quad] = quadIndex;
-
-  for (byte_z = 0; byte_z < 4; ++byte_z)
-  {
-    QuadOriginX = quadOriginsX[quad] + quadOffsetX[byte_z];
-    QuadOriginY = quadOriginsY[quad] + quadOffsetY[byte_z];
-    // Precompute tile base pointer once per tile
-    tilePtr = &MapSet[ScreenQuad.CharIndex[quadIndex][byte_z] << 3];
-    rowStart = mapWidth * (QuadOriginY);
-    for (byte_y = 0; byte_y < quadHeight; ++byte_y)
-    {
-      charByte = tilePtr[byte_y];
-      out = &mapData[QuadOriginX + rowStart];
-      *out++ = chars[(charByte >> 7) & 1];
-      *out++ = chars[(charByte >> 6) & 1];
-      *out++ = chars[(charByte >> 5) & 1];
-      *out++ = chars[(charByte >> 4) & 1];
-      *out++ = chars[(charByte >> 3) & 1];
-      *out++ = chars[(charByte >> 2) & 1];
-      *out++ = chars[(charByte >> 1) & 1];
-      *out++ = chars[ charByte	     & 1];
-      rowStart += mapWidth;
-    }
-  }
-}
-void LoadMapQuads()
-{
-  //byte x;
-  FillQuadBuffer();
-  LoadQuadrant(quadBuffer[0], 0);
-  LoadQuadrant(quadBuffer[1], 1);
-  LoadQuadrant(quadBuffer[2], 2);
-  LoadQuadrant(quadBuffer[3], 3);
-}
-static void QuadScroll(direction dir)
-{
-  byte quadA, quadB;
-  byte indexA, indexB;
-
-  // Fast bit tests: (pos & 8) == 0 means "in left/top half of tile"
-  byte posX = characters.posX[followIndex];
-  byte posY = characters.posY[followIndex];
-
-  bool charPosX = !(posX & 8);
-  bool charPosY = !(posY & 8);
-
-  // relH / relV selection
-  byte relH = dir | (charPosX ? 0 : 4);
-  byte relV = dir | (charPosY ? 0 : 4);
-
-  // Compute compareQuad without branches
-  byte compareQuad =
-    ((posX >> 4) & 1) |
-    (((posY >> 4) & 1) << 1) |
-    ((dir > 1) << 2);
-
-  // Inline GetQuadInRelation() using bitmask wrap (matrix is 16×16)
-  byte qx = characters.quadPosX[followIndex];
-  byte qy = characters.quadPosY[followIndex];
-
-  indexA = mapQuads[((qx + quadRel[relH].hA) & 15)
-                    + (((qy + quadRel[relV].vA) & 15) << 4)];
-
-  indexB = mapQuads[((qx + quadRel[relH].hB) & 15)
-                    + (((qy + quadRel[relV].vB) & 15) << 4)];
-
-  quadA = CompareQuadValueA[compareQuad];
-  quadB = CompareQuadValueB[compareQuad];
-
-  if (quadBuffer[quadA] != indexA)
-    LoadQuadrant(indexA, quadA);
-
-  if (quadBuffer[quadB] != indexB)
-    LoadQuadrant(indexB, quadB);
-}
-static void InitializeMapData()
-{
-
   byte byte_x;
   byte byte_y;
   byte byte_i;
@@ -580,6 +442,62 @@ static void InitializeMapData()
   LoadMapQuads();
   LOSEnabled = true;
 }
+
+static void LoadQuadrant(byte quadIndex, byte quad)
+{
+  int rowStart;
+  const byte *tilePtr;
+  const byte *chars = ScreenQuad.Chars[quadIndex];
+  byte byte_y, byte_z, QuadOriginX, QuadOriginY, charByte;
+  byte *out;  
+
+  quadBuffer[quad] = quadIndex;
+
+  for (byte_z = 0; byte_z < 4; ++byte_z)
+  {
+    QuadOriginX = quadOriginsX[quad] + quadOffsetX[byte_z];
+    QuadOriginY = quadOriginsY[quad] + quadOffsetY[byte_z];
+    // Precompute tile base pointer once per tile
+    tilePtr = &MapSet[ScreenQuad.CharIndex[quadIndex][byte_z] << 3];
+    rowStart = mapWidth * (QuadOriginY);
+    for (byte_y = 0; byte_y < quadHeight; ++byte_y)
+    {
+      charByte = tilePtr[byte_y];
+      out = &mapData[QuadOriginX + rowStart];
+      *out++ = chars[(charByte >> 7) & 1];
+      *out++ = chars[(charByte >> 6) & 1];
+      *out++ = chars[(charByte >> 5) & 1];
+      *out++ = chars[(charByte >> 4) & 1];
+      *out++ = chars[(charByte >> 3) & 1];
+      *out++ = chars[(charByte >> 2) & 1];
+      *out++ = chars[(charByte >> 1) & 1];
+      *out++ = chars[ charByte	     & 1];
+      rowStart += mapWidth;
+    }
+  }
+}
+
+void LoadMapQuads()
+{
+  //Fill Buffer
+  byte quadX = characters.quadPosX[followIndex];
+  byte quadY = characters.quadPosY[followIndex];
+  byte byte_x = (quadX + 1) & (quadWidth - 1);
+  byte byte_y = (quadY + 1) & (quadHeight - 1);
+  byte row0 = mapMatrixWidth * quadY;
+  byte row1 = mapMatrixWidth * byte_y;
+  quadBuffer[0] = mapQuads[quadX + row0];
+  quadBuffer[1] = mapQuads[byte_x + row0];
+  quadBuffer[2] = mapQuads[quadX + row1];
+  quadBuffer[3] = mapQuads[byte_x + row1];
+
+  //Assemble quads from buffer
+  LoadQuadrant(quadBuffer[0], 0);
+  LoadQuadrant(quadBuffer[1], 1);
+  LoadQuadrant(quadBuffer[2], 2);
+  LoadQuadrant(quadBuffer[3], 3);
+}
+
 static bool CheckCollision(byte charIndex, direction dir)
 {
   byte byte_i;
@@ -639,6 +557,7 @@ static bool CheckCollision(byte charIndex, direction dir)
 
   return false;
 }
+
 static void DrawSquare(byte xOrigin, byte yOrigin, byte xSize, byte ySize) //LOS Blocking
 {
   byte yEnd, row, offset;
@@ -649,6 +568,7 @@ static void DrawSquare(byte xOrigin, byte yOrigin, byte xSize, byte ySize) //LOS
   offset = (row * viewportWidth) + xOrigin;
   do { memset(&viewportBuffer[offset], EmptyTile, xSize); ++row; offset += viewportWidth; } while (row < yEnd);
 }
+
 static void ApplyLOS()
 {
   byte pX = playerX;
@@ -692,26 +612,56 @@ static void ApplyLOS()
     rowBase += viewportWidth;
   }
 }
-static void DrawEntireMap()
+
+static void DrawEntireMap(bool clearBuffer)
 {
+  int mapOffset;
   byte byte_x;
   byte byte_y;
   byte viewportOffset = 0;
   byte offset;
-  int mapOffset;
-  CameraFollow();
+  sbyte cx, cy;
+
+  if (clearBuffer)
+    memset(&viewportBufferLast, 255, viewportSize);
+
+  //Camera Follow
+  CameraOffsetX = characters.posX[followIndex] - playerX;
+  if (CameraOffsetX < 0) CameraOffsetX += mapWidth;
+  CameraOffsetY = characters.posY[followIndex] - playerY;
+  if (CameraOffsetY < 0) CameraOffsetY += mapHeight;
+
+  //Tiles
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {
-    mapOffset = (mapWidth * ((offsetY + byte_y) & 31));
+    mapOffset = (mapWidth * ((CameraOffsetY + byte_y) & 31));
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
-      viewportBuffer[byte_x + viewportOffset] = mapData[((offsetX + byte_x) & 31) + mapOffset];
+      viewportBuffer[byte_x + viewportOffset] = mapData[((CameraOffsetX + byte_x) & 31) + mapOffset];
     }
     viewportOffset += viewportWidth;
   }
-  BufferCharacters();
+
+  //Characters
+  for (byte_x = 0; byte_x < charactersCount; ++byte_x)
+  {
+    if (!characters.visible[byte_x]) continue;
+
+    cx = characters.posX[byte_x] - CameraOffsetX;
+    if (cx < 0) cx += mapWidth;
+    if (cx >= viewportWidth) continue;
+
+    cy = characters.posY[byte_x] - CameraOffsetY;
+    if (cy < 0) cy += mapHeight;
+    if (cy >= viewportHeight) continue;
+
+    viewportBuffer[cx + cy * viewportWidth] = characters.tile[byte_x];
+  }
+
+  //LOS
   if(LOSEnabled)
     ApplyLOS();
+  
   MapFadeOut();
   offset = 0;
   tilePosY = 0;
@@ -731,10 +681,30 @@ static void DrawEntireMap()
     }
     ++tilePosY;
   }
-  DrawCharacterCoordinates(followIndex);
+
+  CoordPosX = characters.posX[followIndex];
+  CoordPosY = characters.posY[followIndex];
+
+  if (CoordPosX >= quadWidth * 2)
+    CoordPosX -= quadWidth * 2;
+  CoordPosX += quadWidth*2*characters.quadPosX[followIndex];
+
+  if (CoordPosY >= quadHeight * 2)
+    CoordPosY -= quadHeight * 2;
+  CoordPosY += quadHeight*2*characters.quadPosY[followIndex];
+
+  sprintf(strTemp,"<%3i  %3i> ", CoordPosX, CoordPosY);
+  PrintString(strTemp, viewportPosX + (viewportWidth >> 1), 19, true);
+        //UpdatePlayerOnMiniMap;
+        //DrawMiniMap(true
+        MiniMapHighlightX = CoordPosX / 16;
+        MiniMapHighlightY = CoordPosY / 16;
+        DrawLocalMiniMap(true);
+  
   UpdateAttributes();
   MapFadeIn();
 }
+
 static void MoveCharacter(byte index, byte dir)
 {
   bool scrollQuads = false;
@@ -839,135 +809,59 @@ static void MoveCharacter(byte index, byte dir)
       }
       if (scrollQuads)
       {
-        //SetBG(0x0b);
-        //SetBorder(0x0b);
-        QuadScroll(dir);
-        //SetBG(0);
-        //SetBorder(0);
+        byte quadA, quadB;
+        byte indexA, indexB;
+        
+        // Fast bit tests: (pos & 8) == 0 means "in left/top half of tile"
+        byte posX = characters.posX[followIndex];
+        byte posY = characters.posY[followIndex];
+        
+        bool charPosX = !(posX & 8);
+        bool charPosY = !(posY & 8);
+        // relH / relV selection
+        byte relH = dir | (charPosX ? 0 : 4);
+        byte relV = dir | (charPosY ? 0 : 4);
+        
+        // Compute compareQuad without branches
+        byte compareQuad =
+        ((posX >> 4) & 1) |
+        (((posY >> 4) & 1) << 1) |
+        ((dir > 1) << 2);
+        
+        // Inline GetQuadInRelation() using bitmask wrap (matrix is 16×16)
+        byte qx = characters.quadPosX[followIndex];
+        byte qy = characters.quadPosY[followIndex];
+        indexA = mapQuads[((qx + quadRel[relH].hA) & 15) + (((qy + quadRel[relV].vA) & 15) << 4)];
+        indexB = mapQuads[((qx + quadRel[relH].hB) & 15) + (((qy + quadRel[relV].vB) & 15) << 4)];
+        
+        quadA = CompareQuadValueA[compareQuad];
+        quadB = CompareQuadValueB[compareQuad];
+        
+        if (quadBuffer[quadA] != indexA)
+          LoadQuadrant(indexA, quadA);
+        if (quadBuffer[quadB] != indexB)
+          LoadQuadrant(indexB, quadB);
       }
-            ++Sessions[0].STEPS;
+      ++Sessions[0].STEPS;
     }
-    DrawEntireMap();
+    DrawEntireMap(false);
   }
 }
-static void DrawCharacterCoordinates(byte index)
-{
-  CoordPosX = characters.posX[index];
-  CoordPosY = characters.posY[index];
 
-  if (CoordPosX >= quadWidth * 2)
-    CoordPosX -= quadWidth * 2;
-  CoordPosX += quadWidth*2*characters.quadPosX[index];
-
-  if (CoordPosY >= quadHeight * 2)
-    CoordPosY -= quadHeight * 2;
-  CoordPosY += quadHeight*2*characters.quadPosY[index];
-
-  sprintf(strTemp,"<%3i  %3i> ", CoordPosX, CoordPosY);
-  PrintString(strTemp, viewportPosX + (viewportWidth >> 1), 19, true);
-        //UpdatePlayerOnMiniMap;
-        //DrawMiniMap(true
-        MiniMapHighlightX = CoordPosX / 16;
-        MiniMapHighlightY = CoordPosY / 16;
-        DrawLocalMiniMap(true);
-}
-void LoadMap()
-{
-  InitializeMapData();
-}
-static void DrawMapViewport(void)
-{
-  memset(&viewportBufferLast, 255, viewportSize);
-  DrawEntireMap();
-  //DrawCharacterCoordinates(followIndex);
-}
-static void DrawScreen(void)
-{
-  DrawMapViewport();
-  DrawCharStats();
-}
-static void ActionMenu()
-{
-  byte action;
-  ResetMenu(" ", 7, true);
-  SetMenuItem(0, "Search");
-  SetMenuItem(1, "Attack");
-  SetMenuItem(2, "Party");
-  SetMenuItem(3, "Map");
-  SetMenuItem(4, "Exit");
-  SetMenuItem(5, "Charset");
-  SetMenuItem(6, "...");
-  
-
-  action = GetMenuSelection();
-  ClearMenu();
-  switch (action)
-  {
-    case 0:
-      break;
-    case 1:
-      exitScreen = true;
-      ScreenFadeOut();
-      nextScreen = Combat;
-      break;
-    case 2:
-      break;
-    case 3:
-//ScreenFadeOut();
-            MiniMapPosX = 2;
-        MiniMapPosY = 2;
-        MiniMapWidth = 16;
-        MiniMapHeight = 16;
-      //ClearScreen();
-      DrawMiniMap(true);
-      WaitForInput();
-      ScreenFadeOut();
-      DrawMap();
-      //ScreenFadeIn();
-        //UpdateLocalMiniMap();
-      //DrawMapViewport();
-      break;
-    case 4:
-      exitScreen = true;
-      nextScreen = EditParty;
-      ScreenFadeOut();
-      break;
-    case 5:
-      DrawCharset();
-      WaitForInput();
-      DrawMapViewport();
-      break;
-    default:
-    break;
-  }
-  DrawCharStats();
-DrawLocalMiniMap(false);
-}
-void DrawMap()
-{
-
-  //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  //DrawBorder(" ", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
-  DrawScreen();
-}
 screenName MapUpdate()
 {
   exitScreen = false;
   characters.quadPosX[0]  = SetPlayerPositionX;
   characters.quadPosY[0]  = SetPlayerPositionY;
-        characters.tile[followIndex] = getPartyMember(0)->CLASS;
-
-  //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  //DrawBorder(" ", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
-  DrawCharStats();
+  characters.tile[followIndex] = getPartyMember(0)->CLASS;
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
-  //FillViewport(32, viewportWidth, viewportHeight);
   ScreenFadeIn();
   ResetMenu(" ", 0, true);
-  DrawMapViewport();
-  DrawLocalMiniMap(false);
 
+  DrawEntireMap(true);
+  DrawCharStats();
+  DrawLocalMiniMap(false);
 
   while (!exitScreen)
   {
@@ -983,14 +877,56 @@ screenName MapUpdate()
         Dir = left;
       if (InputRight())
         Dir = right;
-      if (InputFire())
-        if (InputChanged())
-          ActionMenu();
       if (Dir < 4)
       {
         MoveCharacter(followIndex, Dir);
-        DrawCharacterCoordinates(followIndex);
+        continue;
       }
+      
+      if (InputFire())
+        if (InputChanged())
+        {
+          byte action;
+          ResetMenu(" ", 6, true);
+          SetMenuItem(0, "Search");
+          SetMenuItem(1, "Attack");
+          SetMenuItem(2, "Party");
+          SetMenuItem(3, "Map");
+          SetMenuItem(4, "Exit");
+          SetMenuItem(5, "...");
+          
+        
+          action = GetMenuSelection();
+          ClearMenu();
+          switch (action)
+          {
+            case 0:
+              break;
+            case 1:
+              exitScreen = true;
+              ScreenFadeOut();
+              nextScreen = Combat;
+              break;
+            case 2:
+              break;
+            case 3:
+              MiniMapPosX = 2;
+              MiniMapPosY = 2;
+              MiniMapWidth = 16;
+              MiniMapHeight = 16;
+              DrawMiniMap(true);
+              WaitForInput();DrawEntireMap(true);
+              ScreenFadeOut();
+              break;
+            case 4:
+              exitScreen = true;
+              nextScreen = EditParty;
+              ScreenFadeOut();
+              break;
+            default:
+              break;
+          }
+        }
     }
   }
   ScreenFadeOut();
