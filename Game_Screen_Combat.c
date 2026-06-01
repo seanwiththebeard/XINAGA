@@ -88,6 +88,9 @@ struct
   sbyte posY[MaxCombatParticipants];
   sbyte initiativeMod[MaxCombatParticipants];
   struct playerChar *charPointer[MaxCombatParticipants];
+  sbyte effectSpell;
+  sbyte effectPotion;
+  sbyte effectAbility;
 }combatParticipant;
 
 void ClearRoster(void)

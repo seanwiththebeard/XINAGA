@@ -164,7 +164,10 @@ void ResetMenu(char *title, byte c, byte clear)
   MenuSelection = menuSel;
   menuSel = 0; //Reset for next draw if we don't keep it
         if(clear)
-  ClearMenuContents();
+        {
+          ClearMenu();
+          ClearMenuContents();
+        }
 }
 
 void MovableMenu(char *title, byte posX, byte posY, byte w, byte h, byte c, byte clear)
@@ -221,7 +224,7 @@ void ClearMenu()
   byte yPos = MenuPosY;
 
     for (x = 1; x < MenuHeight - 2; ++x)
-      DrawLineH(' ', xPos, yPos + x - 1, MenuWidth);
+      DrawLineH(' ', xPos, yPos + x - 1, contextMenuWidth);
 }
 
 byte GetMenuSelection()

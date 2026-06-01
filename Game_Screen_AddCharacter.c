@@ -47,7 +47,7 @@ void DrawStatsSelected();
   {"Construct", 6}
 */
 
-void DrawPartyStats()
+void DrawPartyStats() //Gold, steps, time
 {
         //DrawBorder("Stats ", viewportPosX - 1 , viewportPosY + 4, viewportWidth * 2 + 2, 5, true);
         ConsoleBufferReset();
@@ -194,7 +194,7 @@ void MenuGetClass()
 
 void MenuGetRace()
 {
-  ResetMenu("Race", 9, true);
+  ResetMenu("Race", 8, true);
   SetMenuItem(0, RaceDescription[0].NAME);
   SetMenuItem(1, RaceDescription[1].NAME);
   SetMenuItem(2, RaceDescription[2].NAME);
@@ -203,11 +203,11 @@ void MenuGetRace()
   SetMenuItem(5, RaceDescription[5].NAME);
   SetMenuItem(6, RaceDescription[6].NAME);
   SetMenuItem(7, RaceDescription[7].NAME);
-  SetMenuItem(8, "Exit");
+  //SetMenuItem(8, "Exit");
   RACE = GetMenuSelection();
-  if (RACE == 8)
-    ClearMenu();
-  else
+  //if (RACE == 8)
+  //{}//ClearMenu();
+  //else
   {
     ConsoleBufferReset();
     //ConsoleBufferAdd("Race Confirmed: %s ");
@@ -226,13 +226,18 @@ void ListParty()
         if(CurrentCharacter < 0)
         CurrentCharacter = 0;
   MovableMenu("Party", 1, 1, viewportWidth * 2 - 1, 4, partyCount, true);
-  if (partyCount > 0)
+  //if (partyCount > 0)
   {
-    for (x = 0; x < partyCount; ++x)
+    for (x = 0; x < 4; ++x)
     {
-      SetMenuItem(x, getPartyMember(x)->NAME);
+      if (x < partyCount)
+        SetMenuItem(x, getPartyMember(x)->NAME);
+      else
+        SetMenuItem(x, "<Empty>");
     }
   }
+      DrawCharStats();
+  
         //DrawMenu();
 }
 
@@ -292,10 +297,15 @@ void ListRoster()
         if(CurrentCharacter < 0)
         CurrentCharacter = 0;
         MovableMenu("Roster", 1, 10, viewportWidth * 2, viewportHeight, rosterCount, true);
-        if (rosterCount > 0)
+        //if (rosterCount > 0)
         {
-                for (x = 0; x < rosterCount; ++x)
-                SetMenuItem(x, getPlayerChar(x)->NAME);
+                for (x = 0; x < 8; ++x)
+                  {
+                    if (x < rosterCount)
+                      SetMenuItem(x, getPlayerChar(x)->NAME);
+                    else
+                      SetMenuItem(x, "<Empty>");
+                  }
         }
         //DrawMenu();
 }
@@ -426,11 +436,11 @@ void EditRosterMenu()
         CurrentCharacter = 0;
         //ListParty();
         ListRoster();
-        MenuRoster(true);
+        //MenuRoster(true);
         while(!exit)
         {
         SetMenuSelect(selection);
-        MenuRoster(false);
+        MenuRoster(true);
         selection = GetMenuSelection();
         switch(selection)
         {
