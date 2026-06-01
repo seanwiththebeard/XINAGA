@@ -37,6 +37,16 @@
 #define TRAIT_AFFABLE 6 //+2 for all CHR rolls
 #define TRAIT_LUNACY 7 //+2 for all rolls for each full moon
   */
+
+#define ELEMENT_FIRE 0
+#define ELEMENT_WATER 1
+#define ELEMENT_ICE 2
+#define ELEMENT_WIND 3
+#define ELEMENT_HOPE 4
+#define ELEMENT_EARTH 5
+#define ELEMENT_DARK 6
+#define ELEMENT_ETHEREAL 7
+
 const RaceDescriptionDef RaceDescription[8] =
 {
   {"Human",
@@ -44,17 +54,17 @@ const RaceDescriptionDef RaceDescription[8] =
    ATTRIB_NONE, //ATTRIB_BONUS
    ATTRIB_NONE, //ATTRIB_PENALTY
    0b00001000, //TRAITS Topsider
-   0b00000000, //ELEMENT_WEAKNESS
-   0b00000000, //ELEMENT_RESIST
-   0b00000000}, //CONDITION_RESIST
+   0b00000000, //ELEMENT_WEAKNESS None
+   0b00000000, //ELEMENT_RESIST None
+   0b00000000}, //CONDITION_RESIST None
 
   {"Effel",
    8,
    ATTRIB_WIS, //ATTRIB_BONUS
    ATTRIB_CON, //ATTRIB_PENALTY
    0b00001001, //TRAITS Topsider, Lunacy
-   0b00000000, //ELEMENT_WEAKNESS
-   0b00000000, //ELEMENT_RESIST
+   0b00010010, //ELEMENT_WEAKNESS Wind, Dark
+   0b01000100, //ELEMENT_RESIST Earth, Water
    0b00000000}, //CONDITION_RESIST
 
   {"Duerf",
@@ -62,8 +72,8 @@ const RaceDescriptionDef RaceDescription[8] =
    ATTRIB_CON, //ATTRIB_BONUS
    ATTRIB_WIS, //ATTRIB_PENALTY
    0b10010000, //TRAITS Darkvision, Subterranean
-   0b00000000, //ELEMENT_WEAKNESS
-   0b00000000, //ELEMENT_RESIST
+   0b01100000, //ELEMENT_WEAKNESS Water, Ice
+   0b10000100, //ELEMENT_RESIST Earth, Fire
    0b00000000}, //CONDITION_RESIST
 
   {"Lefling",
@@ -71,8 +81,8 @@ const RaceDescriptionDef RaceDescription[8] =
    ATTRIB_CHA, //ATTRIB_BONUS
    ATTRIB_STR, //ATTRIB_PENALTY
    0b00000110, //TRAITS Nimble, Affable
-   0b00000000, //ELEMENT_WEAKNESS
-   0b00000000, //ELEMENT_RESIST
+   0b10000010, //ELEMENT_WEAKNESS Fire, Dark
+   0b01100000, //ELEMENT_RESIST Water, Ice
    0b00000000}, //CONDITION_RESIST
 
   {"Mork", //Not quite a puppet, not quite pork
@@ -80,8 +90,8 @@ const RaceDescriptionDef RaceDescription[8] =
    ATTRIB_STR, //ATTRIB_BONUS
    ATTRIB_WIS, //ATTRIB_PENALTY
    0b00101000, //TRAITS Toughskin, Topsider
-   0b00000000, //ELEMENT_WEAKNESS
-   0b00000000, //ELEMENT_RESIST
+   0b00100001, //ELEMENT_WEAKNESS Ice, Ethereal
+   0b00001100, //ELEMENT_RESIST Hope, Earth
    0b00000000}, //CONDITION_RESIST
 
   {"Fosz", //Sort of like a rakshasa, but more chill
@@ -98,8 +108,8 @@ const RaceDescriptionDef RaceDescription[8] =
    ATTRIB_INT, //ATTRIB_BONUS
    ATTRIB_CHA, //ATTRIB_PENALTY
    0b10010001, //TRAITS BreathWeapon, Subterranean, Lunacy
-   0b11111111, //ELEMENT_WEAKNESS All
-   0b00000000, //ELEMENT_RESIST Fire
+   0b11111111, //ELEMENT_WEAKNESS All but fire
+   0b00000000, //ELEMENT_RESIST Hope, Fire
    0b00000000}, //CONDITION_RESIST
 
   {"Construct", // Never levels up, strong early on but expensive to upgrade stats
@@ -107,9 +117,9 @@ const RaceDescriptionDef RaceDescription[8] =
    ATTRIB_STR, //ATTRIB_BONUS
    ATTRIB_DEX, //ATTRIB_PENALTY
    0b00000000, //TRAITS
-   0b00000000, //ELEMENT_WEAKNESS
+   0b00000000, //ELEMENT_WEAKNESS None
    0b11111111, //ELEMENT_RESIST All
-   0b11111111}, //CONDITION_RESIST All
+   0b11111111} //CONDITION_RESIST All
 };
 
 /*
