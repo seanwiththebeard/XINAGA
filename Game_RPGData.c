@@ -26,6 +26,16 @@
   byte ELEMENT_WEAKNESS;
   byte ELEMENT_RESIST;
   byte CONDITION_RESIST;
+
+  //Traits
+#define TRAIT_DARKVISION 0 //See without fire in combat in low-light environments
+#define TRAIT_BREATHWEAPON 1 //Create fire projectile adjacent to character for current turn
+#define TRAIT_TOUGHSKIN 2 //-4 on evasion rolls but halves physical damage
+#define TRAIT_SUBTERRANEAN 3 //+1 for all rolls below ground
+#define TRAIT_TOPSIDER 4 //+1 for all rolls above ground
+#define TRAIT_NIMBLE 5 //+2 for all DEX rolls
+#define TRAIT_AFFABLE 6 //+2 for all CHR rolls
+#define TRAIT_LUNACY 7 //+2 for all rolls for each full moon
   */
 const RaceDescriptionDef RaceDescription[8] =
 {
@@ -33,7 +43,7 @@ const RaceDescriptionDef RaceDescription[8] =
    10, //HITDICEMAX
    ATTRIB_NONE, //ATTRIB_BONUS
    ATTRIB_NONE, //ATTRIB_PENALTY
-   0b00000000, //TRAITS
+   0b00001000, //TRAITS Topsider
    0b00000000, //ELEMENT_WEAKNESS
    0b00000000, //ELEMENT_RESIST
    0b00000000}, //CONDITION_RESIST
@@ -42,7 +52,7 @@ const RaceDescriptionDef RaceDescription[8] =
    8,
    ATTRIB_WIS, //ATTRIB_BONUS
    ATTRIB_CON, //ATTRIB_PENALTY
-   0b00000000, //TRAITS
+   0b00001001, //TRAITS Topsider, Lunacy
    0b00000000, //ELEMENT_WEAKNESS
    0b00000000, //ELEMENT_RESIST
    0b00000000}, //CONDITION_RESIST
@@ -51,30 +61,55 @@ const RaceDescriptionDef RaceDescription[8] =
    12,
    ATTRIB_CON, //ATTRIB_BONUS
    ATTRIB_WIS, //ATTRIB_PENALTY
-   0b00000000, //TRAITS
+   0b10010000, //TRAITS Darkvision, Subterranean
    0b00000000, //ELEMENT_WEAKNESS
    0b00000000, //ELEMENT_RESIST
    0b00000000}, //CONDITION_RESIST
 
   {"Lefling",
    6,
-   ATTRIB_CHA, ATTRIB_STR, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+   ATTRIB_CHA, //ATTRIB_BONUS
+   ATTRIB_STR, //ATTRIB_PENALTY
+   0b00000110, //TRAITS Nimble, Affable
+   0b00000000, //ELEMENT_WEAKNESS
+   0b00000000, //ELEMENT_RESIST
+   0b00000000}, //CONDITION_RESIST
 
-  {"Mork",
+  {"Mork", //Not quite a puppet, not quite pork
    12,
-   ATTRIB_STR, ATTRIB_WIS, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+   ATTRIB_STR, //ATTRIB_BONUS
+   ATTRIB_WIS, //ATTRIB_PENALTY
+   0b00101000, //TRAITS Toughskin, Topsider
+   0b00000000, //ELEMENT_WEAKNESS
+   0b00000000, //ELEMENT_RESIST
+   0b00000000}, //CONDITION_RESIST
 
-  {"Fosz", //Sort of like a rakshasa
+  {"Fosz", //Sort of like a rakshasa, but more chill
    8,
-   ATTRIB_DEX, ATTRIB_INT, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+   ATTRIB_DEX, //ATTRIB_BONUS
+   ATTRIB_INT, //ATTRIB_PENALTY
+   0b00001010, //TRAITS Topsider, Affable
+   0b00000000, //ELEMENT_WEAKNESS
+   0b00000000, //ELEMENT_RESIST
+   0b00000000}, //CONDITION_RESIST
 
-  {"Drecon",
+  {"Drecon", //Poser, tryhard, stand-in for regular orcs
    12,
-   ATTRIB_INT, ATTRIB_CHA, 0b00000000, 0b00000000, 0b00000000, 0b00000000},
+   ATTRIB_INT, //ATTRIB_BONUS
+   ATTRIB_CHA, //ATTRIB_PENALTY
+   0b10010001, //TRAITS BreathWeapon, Subterranean, Lunacy
+   0b11111111, //ELEMENT_WEAKNESS All
+   0b00000000, //ELEMENT_RESIST Fire
+   0b00000000}, //CONDITION_RESIST
 
-  {"Construct",
+  {"Construct", // Never levels up, strong early on but expensive to upgrade stats
    10,
-   ATTRIB_STR, ATTRIB_DEX, 0b00000000, 0b00000000, 0b00000000, 0b00000000} // Never levels up, strong early on but expensive to upgrade stats
+   ATTRIB_STR, //ATTRIB_BONUS
+   ATTRIB_DEX, //ATTRIB_PENALTY
+   0b00000000, //TRAITS
+   0b00000000, //ELEMENT_WEAKNESS
+   0b11111111, //ELEMENT_RESIST All
+   0b11111111}, //CONDITION_RESIST All
 };
 
 /*
@@ -173,14 +208,16 @@ const byte ArmorPrice[] =
 #define SKILL_CASTCLERIC 4
 #define SKILL_CASTMAGE 5
 #define SKILL_CASTBARD 6
-#define SKILL_BREATHWEAPON 7
 
 //Traits
-#define TRAIT_DARKVISION
-#define TRAIT_BREATHWEAPON
-#define TRAIT_TOUGHSKIN
-#define TRAIT_SUBTERRANEAN
-#define TRAIT_TOPSIDER
+#define TRAIT_DARKVISION 0 //See without fire in combat in low-light environments
+#define TRAIT_BREATHWEAPON 1 //Create fire projectile adjacent to character for current turn
+#define TRAIT_TOUGHSKIN 2 //-4 on evasion rolls but halves physical damage
+#define TRAIT_SUBTERRANEAN 3 //+1 for all rolls below ground
+#define TRAIT_TOPSIDER 4 //+1 for all rolls above ground
+#define TRAIT_NIMBLE 5 //+2 for all DEX rolls
+#define TRAIT_AFFABLE 6 //+2 for all CHR rolls
+#define TRAIT_LUNACY 7 //+2 for all rolls for each full moon
 
 //Conditions
 #define CONDITION_POISON 0
@@ -188,7 +225,7 @@ const byte ArmorPrice[] =
 #define CONDITION_PARALYSIS 2
 #define CONDITION_BLIND 3
 #define CONDITION_SILENCE 4
-#define CONDITION_BERSERK 5
+#define CONDITION_BERSERK 5 //Barbarians enter combat with status of berserk for first 4 turns
 #define CONDITION_ZOMBIE 6
 #define CONDITION_VAMPIRE 7
 
