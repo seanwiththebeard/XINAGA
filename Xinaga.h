@@ -11,6 +11,12 @@ typedef int8_t sbyte;	// 8-bit signed
 #define bool byte
 #define false 0
 #define true 1
+  typedef struct vector2
+{
+  sbyte x;
+  sbyte y;
+  struct vector2 *next;
+};
 #define direction byte
 #define up 0
 #define down 1
@@ -22,7 +28,7 @@ extern byte MiniMapWidth;
 extern byte MiniMapHeight;
 
 extern uint16_t randseed;
-#define ReadBit(b, n) (((b) >> (n)) & 1)
+#define ReadBit(b, n) (b >> n) & 1
 
 extern const byte characterset[2048];
 extern const byte attributesDefault[256];

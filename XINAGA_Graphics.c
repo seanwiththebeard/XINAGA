@@ -91,7 +91,7 @@ byte ScreenChars[ROWS*COLS];
 #endif
 #if defined (__C64__)
 #pragma code-name (push, "XINAGA")
-#pragma rodata-name (push, "XINAGA")
+//#pragma rodata-name (push, "XINAGA")
 #define bank 3
 #define charpos 7
 #define screenpos 2

@@ -147,13 +147,6 @@ Traversal challenge locations
 What about a sky world and an underworld? One mega-ruin with lots of exits?
 */
 
-typedef struct vector2
-{
-  sbyte x;
-  sbyte y;
-  struct vector2 *next;
-};
-
 struct vector2 *points;
 void createPoint(byte index, byte x, byte y);
 void clampPoint(struct vector2 *clmpt);

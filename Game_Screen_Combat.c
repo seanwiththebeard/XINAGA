@@ -32,6 +32,7 @@ bool exitCombat;
 
 #define MaxCombatParticipants 12
 #define MonsterCount 1
+#define MagicParticleCount 12
 
 #define consoleDelay 1
 
@@ -69,7 +70,7 @@ void SetCharacterDead(void);
 void DrawCombatMap(void);
 void DrawCharacters(void);
 void DrawOneCharacter(void);
-void DrawSpellEffect(void);
+//void DrawSpellEffect(void);
 
 void ApplyCombatRewards();
 //Combat Session Data
@@ -92,6 +93,14 @@ struct
   sbyte effectPotion;
   sbyte effectAbility;
 }combatParticipant;
+
+struct
+{
+  struct vector2 pos[MagicParticleCount];
+  sbyte effect[MagicParticleCount];
+  sbyte tile[MagicParticleCount];
+  sbyte turnsRemaining[MagicParticleCount];
+}magicParticle;
 
 void ClearRoster(void)
 {
@@ -158,6 +167,17 @@ void GetCharacters(void)
   }
 }
 
+void BufferName(byte index)
+{
+  if (combatParticipant.isPlayerChar[index])
+        ConsoleBufferAdd(combatParticipant.charPointer[index]->NAME);
+    else
+      {
+      ConsoleBufferAdd(RaceDescription[combatMonster[index].RACE].NAME);
+      ConsoleBufferAdd(ClassDescription[combatMonster[index].CLASS].NAME);
+    }
+}
+
 void GetMonsters(void)
 {
   byte i;
@@ -186,7 +206,9 @@ void GetMonsters(void)
 
     combatParticipant.charPointer[i] = &combatMonster[monstersSet];
 
-    strcpy(combatMonster[monstersSet].NAME,  "Monster");
+    combatMonster[monstersSet].RACE = 0;
+    combatMonster[monstersSet].CLASS = 0;
+
     combatMonster[monstersSet].HP = 1;
     combatMonster[monstersSet].HPMAX = 1;
     combatMonster[monstersSet].STR = 10;
@@ -323,38 +345,46 @@ void PhysicalAttack()
 
   if (SelectedTarget < 0)
   {
-    WriteLineMessageWindow("No target!", 0);    
+    WriteLineMessageWindow("No target!", 0);
     return;
   }
-  
   ConsoleBufferReset();
-  
   if (rollToHit >= targetAC)
   {
     targetHP -= damage;
 
-    sprintf(strTemp, "%s hits %s for %d damage", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME, damage);
+    BufferName(SelectedCharacter);
+    ConsoleBufferAdd("hits");
+    BufferName(SelectedTarget);
+    WriteLineMessageWindow(strTemp, 0);
+
+    sprintf(strTemp, "for %d damage", damage);
     WriteLineMessageWindow(strTemp, 0);
 
     if(targetHP <= 0)
     {
       combatParticipant.active[SelectedTarget] = false;
       targetHP = 0;
-      sprintf(strTemp, "%s fell", combatParticipant.charPointer[SelectedTarget]->NAME);
+      //sprintf(strTemp, "%s fell", combatParticipant.charPointer[SelectedTarget]->NAME);
+      //WriteLineMessageWindow(strTemp, 0);
+      BufferName(SelectedTarget);
+      ConsoleBufferAdd("fell");
       WriteLineMessageWindow(strTemp, 0);
       combatParticipant.incapacitated[SelectedTarget] = true;
     }
     combatParticipant.charPointer[SelectedTarget]->HP = targetHP;
-    
     if(combatParticipant.isPlayerChar[SelectedTarget])
       DrawCharStats();
-    
     DrawCombatMap();
   }
   else
   {
-    sprintf(strTemp, "%s missed %s", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME);
+    BufferName(SelectedCharacter);
+    ConsoleBufferAdd("missed");
+    BufferName(SelectedTarget);
     WriteLineMessageWindow(strTemp, 0);
+    //sprintf(strTemp, "%s missed %s", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME);
+    //WriteLineMessageWindow(strTemp, 0);
   }
 }
 
