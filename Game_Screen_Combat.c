@@ -352,6 +352,11 @@ void PhysicalAttack()
     WriteLineMessageWindow("No target!", 0);
     return;
   }
+  BufferName(SelectedCharacter);
+  ConsoleBufferAdd("rolls to hit");
+    BufferName(SelectedTarget);
+    WriteLineMessageWindow(strTemp, 0);
+    sprintf(strTemp, "%d + %s mod %d", rollToHit, AttributeName[ATTRIB_DEX], AbilityModifier[combatParticipant.charPointer[SelectedCharacter]->DEX]);
   ConsoleBufferReset();
   if (rollToHit >= targetAC)
   {

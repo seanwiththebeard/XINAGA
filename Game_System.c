@@ -39,11 +39,11 @@ void DebugGraphics()
 {
   DrawCharset();
   ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-  WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog", 0);
-  WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0);
-  WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz", 0);
-  WriteLineMessageWindow("01234567890 !#$%^&", 0);
-  WriteLineMessageWindow("*()-=[];':<>,./?", 0);
+  //WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog", 0);
+  //WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0);
+  //WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz", 0);
+  //WriteLineMessageWindow("01234567890 !#$%^&", 0);
+  //WriteLineMessageWindow("*()-=[];':<>,./?", 0);
   while(1);
 }
 
