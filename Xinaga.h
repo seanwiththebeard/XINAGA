@@ -291,7 +291,7 @@ bool InputFire(void);
 void PrintString(char *text, byte posx, byte posy, bool fast);
 
 //Console
-#define ConsoleBufferLength 64
+#define ConsoleBufferLength 128
 extern byte strTemp[ConsoleBufferLength];
 extern const char* const Messages[];
 void ResizeMessageWindow (byte x, byte y, byte w, byte h);

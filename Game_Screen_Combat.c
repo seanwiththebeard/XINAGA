@@ -340,24 +340,43 @@ void DoCombatRound()
   }
 }
 
+void ConsoleBufferAddDigit(int value)
+{
+  char digitString[6] = "     ";
+  sprintf(digitString, "%d", value);
+  ConsoleBufferAdd(digitString);
+}
+
 void PhysicalAttack()
 {
-  byte targetAC = combatParticipant.charPointer[SelectedTarget]->DEX;
-  byte rollToHit = rand() % 20;
+  char digitString[4] = "    ";
+  byte targetAC = 10;
+  byte rollToHit = 1 + rand() % 20;
   byte damage = 5;
   int targetHP = combatParticipant.charPointer[SelectedTarget]->HP;
 
+  targetAC += AbilityModifier[combatParticipant.charPointer[SelectedTarget]->DEX];
+  
   if (SelectedTarget < 0)
   {
     WriteLineMessageWindow("No target!", 0);
     return;
   }
-  BufferName(SelectedCharacter);
-  ConsoleBufferAdd("rolls to hit");
-    BufferName(SelectedTarget);
-    WriteLineMessageWindow(strTemp, 0);
-    sprintf(strTemp, "%d + %s mod %d", rollToHit, AttributeName[ATTRIB_DEX], AbilityModifier[combatParticipant.charPointer[SelectedCharacter]->DEX]);
+  
+  //Verbose RollToHit
   ConsoleBufferReset();
+  BufferName(SelectedCharacter);
+  ConsoleBufferAdd("rolls");
+  ConsoleBufferAddDigit(rollToHit);
+  ConsoleBufferAdd((char*)AttributeName[ATTRIB_DEX]);
+  ConsoleBufferAdd("mod");
+  ConsoleBufferAddDigit(AbilityModifier[combatParticipant.charPointer[SelectedCharacter]->DEX]);
+  ConsoleBufferAdd("to hit target");
+  BufferName(SelectedTarget);
+  ConsoleBufferAdd("AC");
+  ConsoleBufferAddDigit(targetAC);
+  WriteLineMessageWindow(strTemp, 0);
+  
   if (rollToHit >= targetAC)
   {
     targetHP -= damage;

@@ -27,8 +27,6 @@ extern screenName nextScreen;
 #define ATTRIB_WIS 4
 #define ATTRIB_CHA 5
 
-
-
 //void DrawInterface();
 void ClearInterface();
 
@@ -160,7 +158,7 @@ extern const ClassDescriptionDef const MonsterClass[];
 
 
 extern const sbyte const AbilityModifier[];
-extern const char AttributeName[8][3];
+extern const char AttributeName[6][4];
 
 extern const char namePrefixA[8][8][8];
 extern const char nameSuffixA[8][8][8];

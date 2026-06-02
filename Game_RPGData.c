@@ -145,7 +145,7 @@ const ClassDescriptionDef ClassDescription[8]=
 };
 
 const sbyte AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
-const char AttributeName[8][3] = {"STR", "CON", "DEX", "INT", "WIS", "CHA"};
+const char AttributeName[6][4] = {"STR", "CON", "DEX", "INT", "WIS", "CHA"};
 
 //Weapons
 //Type = Slash, Bludgeon, Pierce, Casting
