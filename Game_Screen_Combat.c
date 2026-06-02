@@ -31,7 +31,7 @@ bool CombatSuccess;
 bool exitCombat;
 
 #define MaxCombatParticipants 12
-#define MonsterCount 1
+#define MonsterCount 8
 #define MagicParticleCount 12
 
 #define consoleDelay 1
@@ -206,8 +206,8 @@ void GetMonsters(void)
 
     combatParticipant.charPointer[i] = &combatMonster[monstersSet];
 
-    combatMonster[monstersSet].RACE = 0;
-    combatMonster[monstersSet].CLASS = 0;
+    combatMonster[monstersSet].RACE = i;
+    combatMonster[monstersSet].CLASS = i;
 
     combatMonster[monstersSet].HP = 1;
     combatMonster[monstersSet].HPMAX = 1;
@@ -239,7 +239,7 @@ void WriteRemainingMovement()
   if (MovementRemaining > 0)
   {
     sprintf(strTemp, "Movement Left:%dof%d", MovementRemaining, combatParticipant.movement[SelectedCharacter]);
-    WriteLineMessageWindow(strTemp, 0);
+    SetLineMessageWindow(strTemp, 0);
   }
   else
   {
@@ -247,6 +247,7 @@ void WriteRemainingMovement()
       WriteLineMessageWindow("Moved, press space", 0);
     else
     {
+      //SetLineMessageWindow(" ", 0);
       BufferName(SelectedCharacter);
       ConsoleBufferAdd("moved");
       WriteLineMessageWindow(strTemp, 0);
@@ -290,7 +291,7 @@ void SelectionMoveCharacter(void)
 
   }
   DrawOneCharacter();
-  WriteLineMessageWindow(" ",0);
+  //WriteLineMessageWindow(" ",0);
 }
 
 bool SelectNextCharacter()
@@ -469,8 +470,8 @@ void GetTargetSelection(void)
 void MonsterWander()
 {
   byte failedWander = 0;
-  
   MovementRemaining = combatParticipant.movement[SelectedCharacter];
+  WriteLineMessageWindow(" ", 0);
   //DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   while(MovementRemaining > 0)
   {

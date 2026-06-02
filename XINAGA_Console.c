@@ -90,6 +90,7 @@ void ConsoleBufferEndline()
 void ConsoleBufferPrint(byte x, byte y) //Prints the contents of the buffer to a screen position
 {
   ConsoleBufferEndline();
+  ConsoleBufferBackspace();
   PrintString(strTemp, x, y, true);
   ConsoleBufferReset();
 }
