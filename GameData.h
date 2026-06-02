@@ -140,6 +140,7 @@ typedef struct
   byte CONDITION_RESIST;
 }RaceDescriptionDef;
 extern const RaceDescriptionDef const RaceDescription[8];
+extern const RaceDescriptionDef const MonsterRace[];
 
 typedef struct
 {
@@ -153,6 +154,8 @@ typedef struct
   byte SONGS_BARD;
 }ClassDescriptionDef;
 extern const ClassDescriptionDef const ClassDescription[8];
+extern const ClassDescriptionDef const MonsterClass[];
+
 
 extern const sbyte const AbilityModifier[];
 extern const char namePrefixA[8][8][8];

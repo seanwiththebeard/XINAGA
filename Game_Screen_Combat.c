@@ -173,9 +173,9 @@ void BufferName(byte index)
         ConsoleBufferAdd(combatParticipant.charPointer[index]->NAME);
     else
       {
-      ConsoleBufferAdd(RaceDescription[combatMonster[index].RACE].NAME);
-      ConsoleBufferAdd(ClassDescription[combatMonster[index].CLASS].NAME);
-    }
+        ConsoleBufferAdd(MonsterClass[combatMonster[index].CLASS].NAME);
+        ConsoleBufferAdd(MonsterRace[combatMonster[index].RACE].NAME);
+      }
 }
 
 void GetMonsters(void)
@@ -246,7 +246,11 @@ void WriteRemainingMovement()
     if (combatParticipant.isPlayerChar[SelectedCharacter])
       WriteLineMessageWindow("Moved, press space", 0);
     else
-      WriteLineMessageWindow("Monster moved", 0);
+    {
+      BufferName(SelectedCharacter);
+      ConsoleBufferAdd("moved");
+      WriteLineMessageWindow(strTemp, 0);
+    }
   }
 }
 
@@ -325,7 +329,6 @@ void DoCombatRound()
       nextScreen = EditParty;
       return;
     }
-  
   RollInitiative();
 
   if (SelectNextCharacter())
