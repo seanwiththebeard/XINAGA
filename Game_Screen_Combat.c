@@ -240,7 +240,7 @@ void WriteRemainingMovement()
 {
   if (MovementRemaining > 0)
   {
-    sprintf(strTemp, "Movement Left:%dof%d", MovementRemaining, combatParticipant.movement[SelectedCharacter]);
+    sprintf(strTemp, "Movement Left:%d of %d", MovementRemaining, combatParticipant.movement[SelectedCharacter]);
     SetLineMessageWindow(strTemp, 0);
   }
   else
@@ -250,9 +250,10 @@ void WriteRemainingMovement()
     else
     {
       //SetLineMessageWindow(" ", 0);
-      BufferName(SelectedCharacter);
-      ConsoleBufferAdd("moved");
-      SetLineMessageWindow(strTemp, 0);
+      WriteLineMessageWindow(" ", 0);
+      //BufferName(SelectedCharacter);
+      //ConsoleBufferAdd("moved");
+      //SetLineMessageWindow(strTemp, 0);
     }
   }
 }
@@ -368,6 +369,7 @@ void PhysicalAttack()
   BufferName(SelectedCharacter);
   ConsoleBufferAdd("rolls");
   ConsoleBufferAddDigit(rollToHit);
+  ConsoleBufferAdd("with");  
   ConsoleBufferAdd((char*)AttributeName[ATTRIB_DEX]);
   ConsoleBufferAdd("mod");
   ConsoleBufferAddDigit(mod);
@@ -419,7 +421,11 @@ void PhysicalAttack()
 
 void GetActionSelection(void)
 {
+  WriteLineMessageWindow(" ", 0); 
   ReadyArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
+  BufferName(SelectedCharacter);
+  ConsoleBufferAdd("turn");
+  WriteLineMessageWindow(strTemp, 0);
   if(combatParticipant.isPlayerChar[SelectedCharacter])
     SelectPlayerAction();
   else
@@ -431,11 +437,11 @@ void ConsoleTarget()
   if(lastTarget != SelectedTarget)
   {
     ConsoleBufferReset();
-    ConsoleBufferAdd("Target:");
     if (SelectedTarget != -1)
       BufferName(SelectedTarget);
     else
-    ConsoleBufferAdd("Terrain");
+      ConsoleBufferAdd("Terrain");
+
     SetLineMessageWindow(strTemp, 0);
       lastTarget = SelectedTarget;
   }
@@ -449,6 +455,8 @@ void GetTargetSelection(void)
   //WriteLineMessageWindow("Select Target",0);
   lastTarget = -1;
   SelectedTarget = SelectedCharacter;
+  SetLineMessageWindow("Attacking Target:", 0);  
+  WriteLineMessageWindow("", 0);
   ConsoleTarget();
 
   ClearArrow();
@@ -508,6 +516,7 @@ void GetTargetSelection(void)
       ConsoleTarget();
     }
   }
+  WriteLineMessageWindow(" ", 0); 
   ClearArrow();
 }
 

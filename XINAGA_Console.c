@@ -28,7 +28,7 @@ byte menuSel;
 
 //Console
 byte Height;
-byte Width;
+//byte Width;
 byte PosX;
 byte PosY;
 
@@ -275,7 +275,7 @@ void ClearConsoleContent()
   consoleContents = malloc(Width * Height);
   memset(&consoleContents[0], ' ', Width*Height);*/
 
-  int size = Width * Height;
+  int size = consoleWidth * Height;
   if (consoleContents == NULL)
     consoleContents = (byte*)malloc(size);
   else
@@ -289,20 +289,20 @@ void DrawConsoleContent()
 {
   byte x, y;
   for (y = 0; y < Height; ++y)
-    for (x = 0; x < Width; ++x)
-      SetChar(consoleContents[x + y*Width], PosX + x, PosY + y);
+    for (x = 0; x < consoleWidth; ++x)
+      SetChar(consoleContents[x + y*consoleWidth], PosX + x, PosY + y);
 }
 
 void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
 {
   PosX = xPos;
   PosY = yPos;
-  Width = w;
+  w;//Width = w;
   Height = h;
 
-  contentOffset = Width * (Height - 1);
+  contentOffset = consoleWidth * (Height - 1);
 
-  DrawBorder(" ",PosX - 1, PosY - 1, Width + 2, Height + 2, true);
+  DrawBorder(" ",PosX - 1, PosY - 1, consoleWidth + 2, Height + 2, true);
   ClearConsoleContent();
   DrawConsoleContent();
 }
@@ -313,9 +313,9 @@ void ScrollMessageWindowUp()
   int y;
 
   for (y = 0; y < contentOffset; ++y)
-    consoleContents[y] = consoleContents[y + Width];
+    consoleContents[y] = consoleContents[y + consoleWidth];
 
-  for (x = 0; x < (Width); ++x)
+  for (x = 0; x < (consoleWidth); ++x)
     consoleContents[contentOffset + x] = ' ';
 
   DrawConsoleContent();
@@ -327,19 +327,19 @@ void SetLineMessageWindow(char *message, byte delay)
   byte length = 0;
   for (;message[length] != '\0' && length < ConsoleBufferLength; ++length);
   ++length;
-  for (x = 0; x < Width; ++x)
+  for (x = 0; x < consoleWidth; ++x)
     {
-      SetChar(' ', PosX + x, PosY + Height - 1);
       consoleContents[contentOffset + x] = ' ';
+      SetChar(consoleContents[contentOffset + x], PosX + x, PosY + Height - 1);
     }
   for(x = 0; x < length; ++x)
   {
-    if (message[x] == '\0')
+    if (message[x] == '\0' || message[x] == 0)
     {
-      while (x < Width)
+      while (x < consoleWidth)
       {
-        SetChar(' ', PosX + x, PosY + Height - 1);
         consoleContents[contentOffset + x] = ' ';
+        SetChar(consoleContents[contentOffset + x], PosX + x, PosY + Height - 1);
         ++x;
       }
       x = length;
@@ -355,7 +355,7 @@ void SetLineMessageWindow(char *message, byte delay)
           wait_vblank(delay);
       }
     }
-    if (length > Width)
+    if (length > consoleWidth)
       if (message[x] == ' ')
       {
         byte wordLength = 0;
@@ -366,7 +366,7 @@ void SetLineMessageWindow(char *message, byte delay)
         {
           ++wordLength;
         }
-        if(x + wordLength >= Width)
+        if(x + wordLength >= consoleWidth)
         {
           ++x; //Skips the space
           while (x < length)
@@ -379,7 +379,7 @@ void SetLineMessageWindow(char *message, byte delay)
           //break;
         }
       }
-  }
+  }  
   wait_vblank(1);
 }
 
