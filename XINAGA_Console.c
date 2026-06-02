@@ -328,7 +328,6 @@ void SetLineMessageWindow(char *message, byte delay)
   for (;message[length] != '\0' && length < ConsoleBufferLength; ++length);
   ++length;
   for (x = 0; x < Width; ++x)
-    //if (GetChar(PosX + x, PosY + Height - 1) != message[x])
     {
       SetChar(' ', PosX + x, PosY + Height - 1);
       consoleContents[contentOffset + x] = ' ';

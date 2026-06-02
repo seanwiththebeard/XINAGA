@@ -566,9 +566,8 @@ screenName DrawAddCharacterScreen()
       AddParty(CurrentCharacter);
       DrawStuff();
     }
-    //return MapGen;
-    return Combat;
-    
+    return MapGen;
+    //return Combat;
   }
         //while(CountParty() != 4)
         //

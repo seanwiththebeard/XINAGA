@@ -215,8 +215,8 @@ static struct
 {
   #define charactersCount 8
   byte tile[charactersCount];
-  byte combat[charactersCount];
-  byte message[charactersCount];
+  sbyte combat[charactersCount];
+  sbyte message[charactersCount];
   bool visible[charactersCount];
   bool collide[charactersCount];
   sbyte posX[charactersCount];
@@ -416,6 +416,7 @@ void LoadMap()
     characters.quadPosY[byte_i] = byte_i;
     characters.visible[byte_i] = false;
     characters.collide[byte_i] = false;
+    characters.combat[byte_i] = -1;
   }
   characters.visible[0] = true;
   characters.posX[0]  = 8;
@@ -428,7 +429,8 @@ void LoadMap()
 
   characters.visible[1] = true;
   characters.collide[1] = true;
-  characters.message[1] = 0;
+  characters.combat[1] = 1;
+  characters.message[1] = 2;
 
   characters.tile[2] = signpost;
   characters.visible[2] = true;
@@ -551,7 +553,27 @@ static bool CheckCollision(byte charIndex, direction dir)
       if (characters.posX[byte_i] == xPos)
         if (characters.posY[byte_i] == yPos)
         {
-          WriteLineMessageWindow((char*)Messages[characters.message[byte_i]], 1);
+          //Message
+          if(characters.message[byte_i] != -1)
+          {
+            ConsoleBufferReset();
+            ConsoleBufferAdd("\"");
+            ConsoleBufferBackspace();
+            ConsoleBufferAdd((char*)Messages[characters.message[byte_i]]);
+            ConsoleBufferBackspace();
+            ConsoleBufferAdd("\"");
+            //ConsoleBufferBackspace();
+            WriteLineMessageWindow(strTemp, 1);
+            ConsoleBufferReset();
+          }
+          //Combat
+          if(characters.combat[byte_i] != -1)
+          {
+            nextScreen = Combat;
+            exitScreen = true;
+            WriteLineMessageWindow("Enemy attacks!", 1);
+            WaitForInput();
+          }
           return true;
         }
 
