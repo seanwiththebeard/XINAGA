@@ -22,13 +22,14 @@
 
 struct playerChar combatMonster[8];
 
-bool ContinuingCombat;
 
 sbyte SelectedCharacter;
 sbyte SelectedTarget;
 sbyte MovementRemaining;
+sbyte lastTarget;
 bool CombatSuccess;
 bool exitCombat;
+bool ContinuingCombat;
 
 #define MaxCombatParticipants 12
 #define MonsterCount 8
@@ -123,6 +124,7 @@ void Initialize(void)
 {
   exitCombat = false;
   ContinuingCombat = false;
+  lastTarget = -1;
 //  ClearScreen();
 
   //Malloc the combat data
@@ -424,12 +426,30 @@ void GetActionSelection(void)
     SelectMonsterAction();
 }
 
+void ConsoleTarget()
+{
+  if(lastTarget != SelectedTarget)
+  {
+    ConsoleBufferReset();
+    ConsoleBufferAdd("Target:");
+    if (SelectedTarget != -1)
+      BufferName(SelectedTarget);
+    else
+    ConsoleBufferAdd("Terrain");
+    SetLineMessageWindow(strTemp, 0);
+      lastTarget = SelectedTarget;
+  }
+}
+
 void GetTargetSelection(void)
 {
   byte i;
   sbyte x = combatParticipant.posX[SelectedCharacter];
   sbyte y = combatParticipant.posY[SelectedCharacter];
-  WriteLineMessageWindow("Select Target",0);
+  //WriteLineMessageWindow("Select Target",0);
+  lastTarget = -1;
+  SelectedTarget = SelectedCharacter;
+  ConsoleTarget();
 
   ClearArrow();
   DrawArrow(x, y);
@@ -485,6 +505,7 @@ void GetTargetSelection(void)
               i = MaxCombatParticipants;
             }
       }
+      ConsoleTarget();
     }
   }
   ClearArrow();
