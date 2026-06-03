@@ -58,8 +58,10 @@ void ConsoleBufferAdd(char *message)
     strTemp[StringLength] = message[i];
     ++StringLength;
   }
-  strTemp[StringLength] = '\0';
+  strTemp[StringLength] = ' ';
   //strTemp[StringLength + 1] = '@';
+  ++StringLength;
+  strTemp[StringLength] = ' ';
   ++StringLength;
 }
 
@@ -77,9 +79,12 @@ void ConsoleBufferBackspace()
 
 void ConsoleBufferEndline()
 {
-  while (strTemp[StringLength] == ' ')
-    --StringLength;
-  strTemp[StringLength - 1] = '\0';
+  //strTemp[StringLength] = '\0';
+  while (strTemp[StringLength - 1] == ' ')
+    {
+      strTemp[StringLength - 1] = '\0';
+      --StringLength;
+    }
 }
 
 void ConsoleBufferPrint(byte x, byte y) //Prints the contents of the buffer to a screen position
@@ -325,6 +330,7 @@ void SetLineMessageWindow(char *message, byte delay)
   byte length = 0;
   for (;message[length] != '\0' && length < ConsoleBufferLength; ++length);
   ++length;
+  ConsoleBufferEndline();
   for (x = 0; x < consoleWidth; ++x)
     {
       consoleContents[contentOffset + x] = ' ';
