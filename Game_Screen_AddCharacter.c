@@ -114,7 +114,7 @@ void RollStats()
   CHR = RollDice(3, 6);
 
   //WriteLineMessageWindow("Rolled Stats: ", 0);
-  WriteLineMessageWindow(" ", 0);
+  SkipLineMessageWindow();
   sprintf(strTemp, "STR:%2i CON:%2i DEX:%2i WIS:%2i INT:%2i CHR:%2i", STR, CON, DEX, WIS, INT, CHR);
   WriteLineMessageWindow(strTemp, 0);
 }

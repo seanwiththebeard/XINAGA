@@ -250,7 +250,7 @@ void WriteRemainingMovement()
     else
     {
       //SetLineMessageWindow(" ", 0);
-      WriteLineMessageWindow(" ", 0);
+      SkipLineMessageWindow();
       //BufferName(SelectedCharacter);
       //ConsoleBufferAdd("moved");
       //SetLineMessageWindow(strTemp, 0);
@@ -421,7 +421,7 @@ void PhysicalAttack()
 
 void GetActionSelection(void)
 {
-  WriteLineMessageWindow(" ", 0);
+  SkipLineMessageWindow();
   ReadyArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
   BufferName(SelectedCharacter);
   ConsoleBufferAdd("turn");
@@ -519,7 +519,7 @@ void GetTargetSelection(void)
       ConsoleTarget();
     }
   }
-  WriteLineMessageWindow(" ", 0); 
+  SkipLineMessageWindow();
   ClearArrow();
 }
 
@@ -527,7 +527,7 @@ void MonsterWander()
 {
   byte failedWander = 0;
   MovementRemaining = combatParticipant.movement[SelectedCharacter];
-  WriteLineMessageWindow(" ", 0);
+  SkipLineMessageWindow();
   //DrawArrow(combatParticipant[SelectedCharacter].posX, combatParticipant[SelectedCharacter].posY);
   while(MovementRemaining > 0)
   {

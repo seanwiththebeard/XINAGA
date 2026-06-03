@@ -388,6 +388,10 @@ void WriteLineMessageWindow(char *message, byte delay)
   ConsoleBufferReset();
 }
 
+void SkipLineMessageWindow()
+{
+  WriteLineMessageWindow(" ", 0);
+}
 bool AreYouSure()
 {
   ResetMenu("Sure?", 2, true);
