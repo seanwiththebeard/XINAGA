@@ -13,25 +13,18 @@
 #endif
 
 #if defined (__C64__)
-#pragma code-name (push, "XINAGA")
+#pragma code-name (push, "XINAGA_CONSOLE")
 //#pragma rodata-name (push, "GAME_RODATA")
 #endif
 
 //Console Buffer
 int contentOffset; //Offset of Last Line
-byte* consoleContents;
+byte consoleContents[consoleHeight * consoleWidth];
 
 //StringBuilder
 byte StringLength;
 
 byte menuSel;
-
-//Console
-byte Height;
-//byte Width;
-byte PosX;
-byte PosY;
-
 
 //Selection Menu
 byte MenuHeight;
@@ -58,12 +51,14 @@ void ConsoleBufferReset()
 void ConsoleBufferAdd(char *message)
 {
   byte i;
+  if(StringLength > 1)
+    --StringLength;
   for (i = 0; message[i] != '\0' && message[i] != 0; ++i)
   {
     strTemp[StringLength] = message[i];
     ++StringLength;
   }
-  strTemp[StringLength] = ' ';
+  strTemp[StringLength] = '\0';
   //strTemp[StringLength + 1] = '@';
   ++StringLength;
 }
@@ -275,11 +270,11 @@ void ClearConsoleContent()
   consoleContents = malloc(Width * Height);
   memset(&consoleContents[0], ' ', Width*Height);*/
 
-  int size = consoleWidth * Height;
-  if (consoleContents == NULL)
-    consoleContents = (byte*)malloc(size);
-  else
-    consoleContents = (byte*)realloc(consoleContents, size);
+  int size = consoleWidth * consoleHeight;
+  //if (consoleContents == NULL)
+    //consoleContents = (byte*)malloc(size);
+  //else
+    //consoleContents = (byte*)realloc(consoleContents, size);
 
   //if (consoleContents)
     memset(&consoleContents[0], ' ', size);
@@ -288,21 +283,21 @@ void ClearConsoleContent()
 void DrawConsoleContent()
 {
   byte x, y;
-  for (y = 0; y < Height; ++y)
+  for (y = 0; y < consoleHeight - 1; ++y)
     for (x = 0; x < consoleWidth; ++x)
-      SetChar(consoleContents[x + y*consoleWidth], PosX + x, PosY + y);
+      SetChar(consoleContents[x + y*consoleWidth], consolePosX + x, consolePosY + y);
 }
 
 void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
 {
-  PosX = xPos;
-  PosY = yPos;
+  xPos;//PosX = xPos;
+  yPos;//PosY = yPos;
   w;//Width = w;
-  Height = h;
+  h;//Height = h;
 
-  contentOffset = consoleWidth * (Height - 1);
+  contentOffset = consoleWidth * (consoleHeight - 1);
 
-  DrawBorder(" ",PosX - 1, PosY - 1, consoleWidth + 2, Height + 2, true);
+  DrawBorder(" ", consolePosX - 1, consolePosY - 1, consoleWidth + 2, consoleHeight + 2, true);
   ClearConsoleContent();
   DrawConsoleContent();
 }
@@ -316,7 +311,10 @@ void ScrollMessageWindowUp()
     consoleContents[y] = consoleContents[y + consoleWidth];
 
   for (x = 0; x < (consoleWidth); ++x)
-    consoleContents[contentOffset + x] = ' ';
+    {
+      consoleContents[contentOffset + x] = '\0';
+      //SetChar(consoleContents[contentOffset + x], consolePosX + x, consolePosY + consoleHeight - 1);
+    }
 
   DrawConsoleContent();
 }
@@ -330,7 +328,7 @@ void SetLineMessageWindow(char *message, byte delay)
   for (x = 0; x < consoleWidth; ++x)
     {
       consoleContents[contentOffset + x] = ' ';
-      SetChar(consoleContents[contentOffset + x], PosX + x, PosY + Height - 1);
+      SetChar(consoleContents[contentOffset + x], consolePosX + x, consolePosY + consoleHeight - 1);
     }
   for(x = 0; x < length; ++x)
   {
@@ -339,7 +337,7 @@ void SetLineMessageWindow(char *message, byte delay)
       while (x < consoleWidth)
       {
         consoleContents[contentOffset + x] = ' ';
-        SetChar(consoleContents[contentOffset + x], PosX + x, PosY + Height - 1);
+        SetChar(consoleContents[contentOffset + x], consolePosX + x, consolePosY + consoleHeight - 1);
         ++x;
       }
       x = length;
@@ -347,20 +345,21 @@ void SetLineMessageWindow(char *message, byte delay)
     }
     else
     {
-      if (message[x] != ' ')
+      //if (message[x] != ' ')
+      if (x < consoleWidth)
       {
-        SetChar(message[x], PosX + x, PosY + Height - 1);
+        SetChar(message[x], consolePosX + x, consolePosY + consoleHeight - 1);
         consoleContents[contentOffset + x] = message[x];
         if(delay)
           wait_vblank(delay);
       }
     }
-    if (length > consoleWidth)
+    if (length >= consoleWidth)
       if (message[x] == ' ')
       {
         byte wordLength = 0;
         byte wordStart = x + 1;
-        char temp[128];
+        char temp[ConsoleBufferLength];
         byte i = 0;
         while (message[wordStart + wordLength] != ' ' && message[wordStart + wordLength] != '\0')
         {
@@ -379,7 +378,7 @@ void SetLineMessageWindow(char *message, byte delay)
           //break;
         }
       }
-  }  
+  }
   wait_vblank(1);
 }
 

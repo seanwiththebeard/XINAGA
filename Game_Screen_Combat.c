@@ -367,15 +367,15 @@ void PhysicalAttack()
   //Verbose RollToHit
   ConsoleBufferReset();
   BufferName(SelectedCharacter);
-  ConsoleBufferAdd("rolls");
+  ConsoleBufferAdd(" rolls ");
   ConsoleBufferAddDigit(rollToHit);
-  ConsoleBufferAdd("with");  
+  ConsoleBufferAdd(" with ");  
   ConsoleBufferAdd((char*)AttributeName[ATTRIB_DEX]);
-  ConsoleBufferAdd("mod");
+  ConsoleBufferAdd(" mod ");
   ConsoleBufferAddDigit(mod);
-  ConsoleBufferAdd("to hit target");
+  ConsoleBufferAdd(" to hit target ");
   BufferName(SelectedTarget);
-  ConsoleBufferAdd("AC");
+  ConsoleBufferAdd(" AC");
   ConsoleBufferAddDigit(targetAC);
   WriteLineMessageWindow(strTemp, 0);
 
@@ -385,11 +385,11 @@ void PhysicalAttack()
     targetHP -= damage;
 
     BufferName(SelectedCharacter);
-    ConsoleBufferAdd("hits");
+    ConsoleBufferAdd(" hits ");
     BufferName(SelectedTarget);
     WriteLineMessageWindow(strTemp, 0);
 
-    sprintf(strTemp, "for %d damage", damage);
+    sprintf(strTemp, " for %d damage", damage);
     WriteLineMessageWindow(strTemp, 0);
 
     if(targetHP <= 0)
@@ -399,7 +399,7 @@ void PhysicalAttack()
       //sprintf(strTemp, "%s fell", combatParticipant.charPointer[SelectedTarget]->NAME);
       //WriteLineMessageWindow(strTemp, 0);
       BufferName(SelectedTarget);
-      ConsoleBufferAdd("fell");
+      ConsoleBufferAdd(" fell");
       WriteLineMessageWindow(strTemp, 0);
       combatParticipant.incapacitated[SelectedTarget] = true;
     }
@@ -411,7 +411,7 @@ void PhysicalAttack()
   else
   {
     BufferName(SelectedCharacter);
-    ConsoleBufferAdd("missed");
+    ConsoleBufferAdd(" missed ");
     BufferName(SelectedTarget);
     WriteLineMessageWindow(strTemp, 0);
     //sprintf(strTemp, "%s missed %s", combatParticipant.charPointer[SelectedCharacter]->NAME, combatParticipant.charPointer[SelectedTarget]->NAME);
@@ -421,15 +421,18 @@ void PhysicalAttack()
 
 void GetActionSelection(void)
 {
-  WriteLineMessageWindow(" ", 0); 
+  WriteLineMessageWindow(" ", 0);
   ReadyArrow(combatParticipant.posX[SelectedCharacter], combatParticipant.posY[SelectedCharacter]);
   BufferName(SelectedCharacter);
-  ConsoleBufferAdd("turn");
+  ConsoleBufferAdd(" turn");
   WriteLineMessageWindow(strTemp, 0);
   if(combatParticipant.isPlayerChar[SelectedCharacter])
     SelectPlayerAction();
   else
+  {
     SelectMonsterAction();
+    WaitForInput();
+  }
 }
 
 void ConsoleTarget()
@@ -455,7 +458,7 @@ void GetTargetSelection(void)
   //WriteLineMessageWindow("Select Target",0);
   lastTarget = -1;
   SelectedTarget = SelectedCharacter;
-  SetLineMessageWindow("Attacking Target:", 0);  
+  SetLineMessageWindow("Attacking Target:", 0);
   WriteLineMessageWindow("", 0);
   ConsoleTarget();
 
