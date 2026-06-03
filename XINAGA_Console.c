@@ -108,7 +108,8 @@ void ClearItem(byte index)
   byte x;
   for (x = 0; x < MenuWidth; ++x)
   {
-    SetChar(' ', MenuPosX - 1 + x, MenuPosY + index);
+    index;
+    SetChar(' ', MenuPosX + x, MenuPosY + index);
   }
 }
 
@@ -190,14 +191,14 @@ void SetMenuItem(byte index, char *value)
 {
   MenuItems[index] = value;
   MenuHighlight[index] = false;
-  ClearItem(index);
+  //ClearItem(index);
   DrawItem(index);
 }
 
 void HighlightMenuItem(byte index)
 {
   MenuHighlight[index] = true;
-  ClearItem(index);
+  //ClearItem(index);
   DrawItem(index);
 }
 
@@ -214,18 +215,15 @@ void DrawMenu()
   {
     ClearItem(x);
     if (x < MenuCount)
-    DrawItem(x);
+      DrawItem(x);
   }
 }
 
 void ClearMenu()
 {
   byte x;
-  byte xPos = MenuPosX;
-  byte yPos = MenuPosY;
-
     for (x = 1; x < MenuHeight - 2; ++x)
-      DrawLineH(' ', xPos, yPos + x - 1, contextMenuWidth);
+      DrawLineH(' ', MenuPosX, MenuPosY + x - 1, contextMenuWidth);
 }
 
 byte GetMenuSelection()
@@ -297,7 +295,7 @@ void ResizeMessageWindow ()
 {
   contentOffset = consoleWidth * (consoleHeight - 1);
 
-  DrawBorder(" ", consolePosX - 1, consolePosY - 1, consoleWidth + 2, consoleHeight + 2, true);
+  //DrawBorder(" ", consolePosX - 1, consolePosY - 1, consoleWidth + 2, consoleHeight + 2, true);
   ClearConsoleContent();
   DrawConsoleContent();
 }

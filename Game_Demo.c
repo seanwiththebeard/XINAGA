@@ -34,22 +34,32 @@ void SelectBank()
 
 void DrawInterface()
 {
-        DrawBorder(" ", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
-        DrawBorder(" ", consolePosX - 1, consolePosY - 1, COLS - consolePosX + 1, viewportHeight * 2 + 2, true);
-        DrawBorder(" ", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, contextMenuHeight - 1, true);
-        //DrawCharStats();
-        ResizeMessageWindow();
-        SetTileOrigin(viewportPosX, viewportPosY);
+  //Viewport
+  DrawBorder("", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+  //Console
+  DrawBorder("", consolePosX - 1, consolePosY - 1, consoleWidth + 2, consoleHeight + 2, true);
+  //Menu
+  DrawBorder("", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, contextMenuHeight - 1, true);
+  //Map
+  DrawBorder("", MiniMapPosXInit - 1, MiniMapPosYInit - 1, MiniMapWidthInit + 2, MiniMapHeightInit + 2, true);
+  //DrawCharStats();
+  ResizeMessageWindow();
+  SetTileOrigin(viewportPosX, viewportPosY);
 }
 
 void ClearInterface()
 {
-        ClearBorder(viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2);
-        ClearBorder(consolePosX - 1, 10, consoleWidth + 1, 9);
-        //ClearBorder(consolePosX - 1, consolePosY - 1, COLS - consolePosX + 1, viewportHeight * 2 + 2);
-        //DrawCharStats();
-        //ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
-        SetTileOrigin(viewportPosX, viewportPosY);
+  //Viewport
+  ClearBorder(viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2);
+  //Console
+  ClearBorder(consolePosX - 1, consolePosY - 1, consoleWidth + 2, consoleHeight + 2);
+  //Menu
+  ClearBorder(contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, contextMenuHeight - 1);
+  //Map
+  ClearBorder(MiniMapPosXInit - 1, MiniMapPosYInit - 1, MiniMapWidthInit + 2, MiniMapHeightInit + 2);
+  //DrawCharStats();
+  ResizeMessageWindow();
+  SetTileOrigin(viewportPosX, viewportPosY);
 }
 
 void SwitchScreen(screenName screen)

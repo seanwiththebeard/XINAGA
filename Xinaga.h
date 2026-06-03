@@ -22,6 +22,12 @@ typedef int8_t sbyte;	// 8-bit signed
 #define down 1
 #define left 2
 #define right 3
+
+#define MiniMapPosXInit 19
+#define MiniMapPosYInit 11
+#define MiniMapWidthInit 7
+#define MiniMapHeightInit 7
+
 extern byte MiniMapPosX;
 extern byte MiniMapPosY;
 extern byte MiniMapWidth;

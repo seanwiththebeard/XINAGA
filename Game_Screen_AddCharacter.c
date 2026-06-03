@@ -225,7 +225,7 @@ void ListParty()
   byte partyCount = CountParty();
         if(CurrentCharacter < 0)
         CurrentCharacter = 0;
-  MovableMenu("Party", 1, 1, viewportWidth * 2 - 1, 4, partyCount, true);
+  MovableMenu("Party", 0, 1, viewportWidth * 2, 4, partyCount, true);
   //if (partyCount > 0)
   {
     for (x = 0; x < 4; ++x)
@@ -296,7 +296,7 @@ void ListRoster()
 
         if(CurrentCharacter < 0)
         CurrentCharacter = 0;
-        MovableMenu("Roster", 1, 10, viewportWidth * 2, viewportHeight, rosterCount, true);
+        MovableMenu("Roster", 0, 10, viewportWidth * 2, viewportHeight, rosterCount, true);
         //if (rosterCount > 0)
         {
                 for (x = 0; x < 8; ++x)
@@ -642,7 +642,7 @@ const char namePrefixA[8][8][8] =
         "Dan",
         "Pol"
         },
-        {//Fuzzer
+        {//Fosz
         "Uwe",
         "Reu",
         "Bes",
@@ -725,7 +725,7 @@ const char nameSuffixA[8][8][8] =
         "menk",
         "fhan"
         },
-        {//Fuzzer
+        {//Fosz
         "papa",
         "riga",
         "gisa",

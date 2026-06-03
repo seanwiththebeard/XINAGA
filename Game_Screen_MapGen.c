@@ -191,6 +191,10 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 #define miniMapMountain 4
 #define miniMapWaterTravel 5
 
+#define ScenarioDescX 19
+#define ScenarioDescY 1
+
+
 //Town
 //Dungeon
 
@@ -245,9 +249,6 @@ bool CheckOverlap(byte x, byte y)
   }
   return false;
 }
-
-#define ScenarioDescX 19
-#define ScenarioDescY 15
 
 void DrawScenario()
 {
@@ -906,8 +907,8 @@ screenName Update_MapGen()
   MiniMapHeight = 16;
   ResizeMessageWindow();
   ScreenFadeIn();
-        ClearInterface();
-FillViewport(' ', viewportWidth, viewportHeight);
+  ClearInterface();
+  FillViewport(' ', viewportWidth, viewportHeight);
   GetSeed();
   //StoreMap();
   //ScreenFadeOut();
