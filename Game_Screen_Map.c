@@ -556,6 +556,7 @@ static bool CheckCollision(byte charIndex, direction dir)
           //Message
           if(characters.message[byte_i] != -1)
           {
+            SkipLineMessageWindow();
             ConsoleBufferReset();
             ConsoleBufferAdd("\"");
             ConsoleBufferBackspace();
@@ -564,14 +565,16 @@ static bool CheckCollision(byte charIndex, direction dir)
             ConsoleBufferAdd("\"");
             //ConsoleBufferBackspace();
             WriteLineMessageWindow(strTemp, 1);
-            ConsoleBufferReset();
+            //ConsoleBufferReset();
           }
           //Combat
           if(characters.combat[byte_i] != -1)
           {
             nextScreen = Combat;
             exitScreen = true;
+            SkipLineMessageWindow();
             WriteLineMessageWindow("Enemy attacks!", 1);
+            SkipLineMessageWindow();
             WaitForInput();
           }
           return true;

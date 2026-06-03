@@ -47,6 +47,31 @@ One byte describes 16x16 region
 #pragma rodata-name (push, "GAME_DISKDATA")
 #endif
 
+#define mapCount 10
+const struct{
+  byte Type[mapCount];
+  byte Seed[mapCount];
+  byte previousMap[mapCount];
+  byte previousMapDoor[mapCount];
+  byte nextMap[mapCount];
+  byte nextMapDoor[mapCount];
+}MapDescriptions;
+//Overworld
+//TownA
+//TownB
+//TownC
+//TownD
+//DungeonA1
+//DungeonA2
+//DungeonA3
+//DungeonA4
+//DungeonB1
+//DungeonB2
+//DungeonB3
+//DungeonB4
+//DungeonC
+//DungeonD
+
 /*{w:8, h:8, count:32, bpp:1, brev:1, pal:"c64", np:1}*/
 const byte OverworldGeoMorphSet[256] =
 {
