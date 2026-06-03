@@ -904,7 +904,7 @@ screenName Update_MapGen()
         MiniMapPosY = viewportPosY;
   MiniMapWidth = 16;
   MiniMapHeight = 16;
-  //ResizeMessageWindow(COLS - 22, viewportPosY, 21, 8);
+  ResizeMessageWindow();
   ScreenFadeIn();
         ClearInterface();
 FillViewport(' ', viewportWidth, viewportHeight);

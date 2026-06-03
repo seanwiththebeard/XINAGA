@@ -38,7 +38,7 @@ void DrawInterface()
         DrawBorder(" ", consolePosX - 1, consolePosY - 1, COLS - consolePosX + 1, viewportHeight * 2 + 2, true);
         DrawBorder(" ", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, contextMenuHeight - 1, true);
         //DrawCharStats();
-        ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+        ResizeMessageWindow();
         SetTileOrigin(viewportPosX, viewportPosY);
 }
 

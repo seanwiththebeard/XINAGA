@@ -878,6 +878,7 @@ screenName MapUpdate()
   characters.tile[followIndex] = getPartyMember(0)->CLASS;
   SetTileOrigin(viewportPosX, viewportPosY);
   LoadMapQuads();
+  ResizeMessageWindow();
   ScreenFadeIn();
   ResetMenu(" ", 0, true);
 

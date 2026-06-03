@@ -137,7 +137,7 @@ void Initialize(void)
   DrawCharStats();
   DrawCombatMap();
 
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  ResizeMessageWindow();
   }
 
 
@@ -865,6 +865,7 @@ void DrawCharacters(void)
 screenName Update_Combat(void)
 {
   Initialize();
+  ResizeMessageWindow();
   //randseed = 0;
   //srand(randseed);
   ScreenFadeIn();

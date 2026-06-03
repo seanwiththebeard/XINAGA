@@ -293,13 +293,8 @@ void DrawConsoleContent()
       SetChar(consoleContents[x + y*consoleWidth], consolePosX + x, consolePosY + y);
 }
 
-void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
+void ResizeMessageWindow ()
 {
-  xPos;//PosX = xPos;
-  yPos;//PosY = yPos;
-  w;//Width = w;
-  h;//Height = h;
-
   contentOffset = consoleWidth * (consoleHeight - 1);
 
   DrawBorder(" ", consolePosX - 1, consolePosY - 1, consoleWidth + 2, consoleHeight + 2, true);
@@ -309,16 +304,16 @@ void ResizeMessageWindow (byte xPos, byte yPos, byte w, byte h)
 
 void ScrollMessageWindowUp()
 {
-  byte x;
+  //byte x;
   int y;
 
   for (y = 0; y < contentOffset; ++y)
     consoleContents[y] = consoleContents[y + consoleWidth];
 
-  for (x = 0; x < (consoleWidth); ++x)
+  //for (x = 0; x < (consoleWidth); ++x)
     {
-      consoleContents[contentOffset + x] = '\0';
-      //SetChar(consoleContents[contentOffset + x], consolePosX + x, consolePosY + consoleHeight - 1);
+      //consoleContents[contentOffset + x] = '\0';
+      //SetChar(' ', consolePosX + x, consolePosY + consoleHeight - 1);
     }
 
   DrawConsoleContent();

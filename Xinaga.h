@@ -294,8 +294,8 @@ void PrintString(char *text, byte posx, byte posy, bool fast);
 #define ConsoleBufferLength 128
 extern byte strTemp[ConsoleBufferLength];
 extern const char* const Messages[];
-void ResizeMessageWindow (byte x, byte y, byte w, byte h);
-extern bool AreYouSure();
+void ResizeMessageWindow (void);
+extern bool AreYouSure(void);
 void WriteLineMessageWindow(char *message, byte delay);
 void SetLineMessageWindow(char *message, byte delay);
 void ConsoleBufferReset(void);

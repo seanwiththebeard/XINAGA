@@ -38,7 +38,7 @@ const byte MiniMapGlyphs[64] =
 void DebugGraphics()
 {
   DrawCharset();
-  ResizeMessageWindow(consolePosX, consolePosY, consoleWidth, consoleHeight);
+  ResizeMessageWindow();
   //WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog", 0);
   //WriteLineMessageWindow("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0);
   //WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz", 0);
