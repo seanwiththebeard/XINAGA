@@ -923,7 +923,7 @@ screenName MapUpdate()
         {
           byte action;
           ResetMenu(" ", 6, true);
-          SetMenuItem(0, "Search");
+          SetMenuItem(0, "Door Test");
           SetMenuItem(1, "Attack");
           SetMenuItem(2, "Party");
           SetMenuItem(3, "Map");
@@ -936,6 +936,10 @@ screenName MapUpdate()
           switch (action)
           {
             case 0:
+              GenerateMap(5);
+              exitScreen = true;
+              ScreenFadeOut();
+              nextScreen = Map;
               break;
             case 1:
               exitScreen = true;

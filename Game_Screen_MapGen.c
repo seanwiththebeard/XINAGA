@@ -1007,6 +1007,26 @@ void GetSeed()
   }
 }
 
+void GenerateMap(byte index)
+{
+  seed = MapDescriptions.seed[index];
+  switch (mapType[index])
+    {
+      case 0:
+        GenerateOverworld(seed);
+        break;
+      case 1:
+        GenerateTown(seed);
+        break;
+      case 2:
+        GenerateDungeon(seed);
+        break;
+      case 3:
+        //GenerateBoss()
+        break;
+    }
+}
+
 screenName Update_MapGen()
 {
   seed = 20;

@@ -69,6 +69,7 @@ screenName Update_Combat(void);
 
 //MapGen
 screenName Update_MapGen(void);
+void GenerateMap(byte index);
 
 //Scenario
 //screenName Update_Scenario(void);
