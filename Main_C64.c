@@ -22,6 +22,6 @@
 
 void main(void)
 {
-  nextScreen = EditParty;
+  nextScreen = Map;
   RunGame(nextScreen);
 }

@@ -243,12 +243,15 @@ byte viewportBufferLast[viewportSize];
 byte followIndex;
 byte SetPlayerPositionX;
 byte SetPlayerPositionY;
+int stepCount;
 
 //Camera Position
 sbyte CameraOffsetX;
 sbyte CameraOffsetY;
 byte CoordPosX;
 byte CoordPosY;
+byte lastQuadX;
+byte lastQuadY;
 
 //Map Data
 byte mapData[mapWidth * mapHeight];
@@ -507,6 +510,8 @@ void LoadMapQuads()
   LoadQuadrant(quadBuffer[1], 1);
   LoadQuadrant(quadBuffer[2], 2);
   LoadQuadrant(quadBuffer[3], 3);
+  lastQuadX = quadX;
+  lastQuadY = quadY;
 }
 
 static bool CheckCollision(byte charIndex, direction dir)
@@ -680,7 +685,7 @@ static void DrawEntireMap(bool clearBuffer)
   for (byte_x = 0; byte_x < charactersCount; ++byte_x)
   {
     if (!characters.visible[byte_x]) continue;
-
+    
     cx = characters.posX[byte_x] - CameraOffsetX;
     if (cx < 0) cx += mapWidth;
     if (cx >= viewportWidth) continue;
@@ -691,6 +696,30 @@ static void DrawEntireMap(bool clearBuffer)
 
     viewportBuffer[cx + cy * viewportWidth] = characters.tile[byte_x];
   }
+
+  #define doorTile 40
+  for (byte_x = 0; byte_x < doorCount; ++byte_x)
+    {
+      byte rx, ry;
+      byte qx, qy;
+      if (!Doors.doorActive[byte_x]) continue;
+      rx = Doors.posX[byte_x] % quadWidthDouble;
+      qx = Doors.posX[byte_x] / quadWidthDouble;
+      if (qx != lastQuadX) continue;
+      cx = rx - CameraOffsetX;
+      if (cx < 0)
+        cx += mapWidth;
+      if (cx >= viewportWidth) continue;
+      ry = Doors.posY[byte_x] % quadWidthDouble;
+      qy = Doors.posY[byte_x] / quadWidthDouble;
+      
+      cy = ry - CameraOffsetY;
+    //cy = Doors.posY[byte_x] - (16*(lastQuadY - 1)) - CameraOffsetY;
+    if (cy < 0) cy += mapHeight;
+    if (cy >= viewportHeight) continue;
+
+    viewportBuffer[cx + cy * viewportWidth] = doorTile;
+    }
 
   //LOS
   if(LOSEnabled)
@@ -737,6 +766,25 @@ static void DrawEntireMap(bool clearBuffer)
   
   UpdateAttributes();
   MapFadeIn();
+}
+
+void CheckDoor()
+{
+  byte x;
+  if (stepCount == 0)
+    return;
+  for (x = 0; x < doorCount; ++x)
+    if(Doors.doorActive[x])
+    {
+      if (CoordPosX == Doors.posX[x] && CoordPosY == Doors.posY[x])
+      {
+        GenerateMap(Doors.dest[x]);
+        exitScreen = true;
+        //ScreenFadeOut();
+        nextScreen = Map;
+        return;
+      }
+    }
 }
 
 static void MoveCharacter(byte index, byte dir)
@@ -877,6 +925,7 @@ static void MoveCharacter(byte index, byte dir)
           LoadQuadrant(indexB, quadB);
       }
       ++Sessions[0].STEPS;
+      ++stepCount;
     }
     DrawEntireMap(false);
   }
@@ -885,6 +934,7 @@ static void MoveCharacter(byte index, byte dir)
 screenName MapUpdate()
 {
   exitScreen = false;
+  stepCount = 0;
   characters.quadPosX[0]  = SetPlayerPositionX;
   characters.quadPosY[0]  = SetPlayerPositionY;
   characters.tile[followIndex] = getPartyMember(0)->CLASS;
@@ -893,15 +943,23 @@ screenName MapUpdate()
   ResizeMessageWindow();
   ScreenFadeIn();
   ResetMenu(" ", 0, true);
+  
+  Doors.doorActive[0] = true;
+  Doors.posX[0] = 138;
+  Doors.posY[0] = 138;
+  Doors.dest [0] = 5;
+  
 
   DrawEntireMap(true);
   DrawCharStats();
   DrawLocalMiniMap(false);
 
+  
+
   while (!exitScreen)
   {
     UpdateInput();
-    //if (InputChanged())
+    if (InputChanged())
     {
       direction Dir = 4;
       if (InputUp())
@@ -915,6 +973,7 @@ screenName MapUpdate()
       if (Dir < 4)
       {
         MoveCharacter(followIndex, Dir);
+        CheckDoor();
         continue;
       }
       
@@ -923,7 +982,7 @@ screenName MapUpdate()
         {
           byte action;
           ResetMenu(" ", 6, true);
-          SetMenuItem(0, "Door Test");
+          SetMenuItem(0, "Search");
           SetMenuItem(1, "Attack");
           SetMenuItem(2, "Party");
           SetMenuItem(3, "Map");
@@ -936,10 +995,6 @@ screenName MapUpdate()
           switch (action)
           {
             case 0:
-              GenerateMap(5);
-              exitScreen = true;
-              ScreenFadeOut();
-              nextScreen = Map;
               break;
             case 1:
               exitScreen = true;
