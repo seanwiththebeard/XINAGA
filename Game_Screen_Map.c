@@ -225,6 +225,15 @@ static struct
   sbyte quadPosY[charactersCount];
 }characters;
 
+#define doorCount 8
+struct
+{
+  byte posX[doorCount];
+  byte posY[doorCount];
+  byte dest[doorCount];
+  bool doorActive[doorCount];
+}Doors;
+
 //Globals
 bool exitScreen;
 bool LOSEnabled;

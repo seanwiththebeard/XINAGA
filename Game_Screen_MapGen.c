@@ -47,15 +47,13 @@ One byte describes 16x16 region
 #pragma rodata-name (push, "GAME_DISKDATA")
 #endif
 
-#define mapCount 10
-const struct{
-  byte Type[mapCount];
-  byte Seed[mapCount];
-  byte previousMap[mapCount];
-  byte previousMapDoor[mapCount];
-  byte nextMap[mapCount];
-  byte nextMapDoor[mapCount];
-}MapDescriptions;
+#define TYPE_OVERWORLD 0
+#define TYPE_TOWN 1
+#define TYPE_DUNGEON 2
+#define TYPE_BOSS 3
+
+#define mapCount 14
+#define treasurePerMap 5
 //Overworld
 //TownA
 //TownB
@@ -63,14 +61,101 @@ const struct{
 //TownD
 //DungeonA1
 //DungeonA2
-//DungeonA3
-//DungeonA4
 //DungeonB1
 //DungeonB2
-//DungeonB3
-//DungeonB4
-//DungeonC
-//DungeonD
+//DungeonC1
+//DungeonC2
+//Boss1
+//Boss2
+//Boss3
+const byte mapType[mapCount] =
+{
+  TYPE_OVERWORLD,
+  TYPE_TOWN, TYPE_TOWN, TYPE_TOWN,
+  TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON,
+  TYPE_BOSS
+};
+const byte previousMap[mapCount] =
+{
+  0, //Overworld
+  0, //TownA
+  0, //TownB
+  0, //TownC
+  0, //TownD
+  0, //DungeonA1
+  5, //DungeonA2
+  0, //DungeonB1
+  7, //DungeonB2
+  0, //DungeonC1
+  9, //DungeonC2
+  0, //Boss1
+  11,//Boss2
+  12 //Boss3
+};
+const byte previousMapDoor[mapCount] =
+{
+  0,
+  0, //TownA
+  1, //TownB
+  2, //TownC
+  3, //TownD
+  4, //DungeonA1
+  1, //DungeonA2,
+  5, //DungeonB1
+  1, //DungeonB2
+  6, //DungeonC1
+  1, //DungeonC3
+  7, //Boss1
+  1, //Boss2
+  1  //Boss3
+};
+const byte nextMap[mapCount] =
+{
+  0,
+  0, //TownA
+  0, //TownB
+  0, //TownC
+  0, //TownD
+  6, //DungeonA1
+  0, //DungeonA2,
+  8, //DungeonB1
+  0, //DungeonB2
+  10, //DungeonC1
+  0, //DungeonC3
+  12, //Boss1
+  13, //Boss2
+  0  //Boss3
+};
+const byte nextMapDoor = 0;
+const byte overworldDoorDest[8] =
+{
+  1, 2, 3, 4, //Towns
+  5, 7, 9, //Dungeons
+  11 //Boss
+};
+const byte monsterLevel[mapCount];
+
+struct{
+  byte seed[mapCount];
+  byte variation[mapCount];
+  byte monsterType[mapCount];
+  byte treasureContents[mapCount][treasurePerMap];
+}MapDescriptions;
+
+void FillMapDescriptions(int seed)
+{
+  byte x, y;
+  srand(seed);
+  MapDescriptions.seed[0] = seed;
+  for (x = 0; x < mapCount; ++x)
+    {
+      MapDescriptions.seed[x] = seed + (x * rand());
+      MapDescriptions.variation[x] = rand();
+      MapDescriptions.monsterType[x] = rand();
+      for(y = 0; y < treasurePerMap; ++y)
+        MapDescriptions.treasureContents[x][y] = rand();
+    }
+}
 
 /*{w:8, h:8, count:32, bpp:1, brev:1, pal:"c64", np:1}*/
 const byte OverworldGeoMorphSet[256] =
