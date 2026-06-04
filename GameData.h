@@ -46,6 +46,16 @@ extern const byte DungeonGeoMorphAttrib[32];
 //Each mapQuad is a 16x16 area, corresponding to a 16x16 geomorph from the bitmap containing 64
 extern byte mapQuads[mapMatrixHeight * mapMatrixWidth];
 
+#define doorCount 8
+struct doors
+{
+  byte posX[doorCount];
+  byte posY[doorCount];
+  byte dest[doorCount];
+  bool doorActive[doorCount];
+};
+extern struct doors Doors;
+
 //extern byte followIndex;
 
 void RunGame(screenName startingScreen);

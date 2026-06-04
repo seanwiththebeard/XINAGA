@@ -73,6 +73,8 @@
 #define playerY ((viewportHeight - 1) >> 1) //Viewport Center used in line-of-sight calculations
 #define viewportSize viewportHeight * viewportWidth
 
+struct doors Doors;
+
 static const byte MapSet[] = { /*{w:8,h:8,bpp:1,count:256,brev:1,pal:"c64",np:1}*/
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
     ,0xFF,0xFF,0x7E,0x00,0x00,0x00,0x00,0x00,0xFF,0xFF,0x7E,0x00,0x00,0x00,0x00,0x00
@@ -225,14 +227,7 @@ static struct
   sbyte quadPosY[charactersCount];
 }characters;
 
-#define doorCount 8
-struct
-{
-  byte posX[doorCount];
-  byte posY[doorCount];
-  byte dest[doorCount];
-  bool doorActive[doorCount];
-}Doors;
+struct Doors;
 
 //Globals
 bool exitScreen;
@@ -698,6 +693,10 @@ static void DrawEntireMap(bool clearBuffer)
   }
 
   #define doorTile 40
+  //Doors.doorActive[0] = true;
+    //Doors.posX[0] = 139;
+    //Doors.posY[0] = 59;
+    //Doors.dest[0] = 5;
   for (byte_x = 0; byte_x < doorCount; ++byte_x)
     {
       byte rx, ry;
@@ -943,18 +942,10 @@ screenName MapUpdate()
   ResizeMessageWindow();
   ScreenFadeIn();
   ResetMenu(" ", 0, true);
-  
-  Doors.doorActive[0] = true;
-  Doors.posX[0] = 138;
-  Doors.posY[0] = 138;
-  Doors.dest [0] = 5;
-  
 
   DrawEntireMap(true);
   DrawCharStats();
-  DrawLocalMiniMap(false);
-
-  
+  DrawLocalMiniMap(false);  
 
   while (!exitScreen)
   {

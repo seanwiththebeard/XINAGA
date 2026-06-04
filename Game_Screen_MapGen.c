@@ -127,6 +127,23 @@ const byte nextMap[mapCount] =
   0  //Boss3
 };
 const byte nextMapDoor = 0;
+const byte returnMapDoor[mapCount] =
+{
+  0,
+  0, //TownA
+  1, //TownB
+  2, //TownC
+  3, //TownD
+  4, //DungeonA1
+  1, //DungeonA2,
+  5, //DungeonB1
+  1, //DungeonB2
+  6, //DungeonC1
+  1, //DungeonC3
+  7, //Boss1
+  1, //Boss2
+  1  //Boss3
+};
 const byte overworldDoorDest[8] =
 {
   1, 2, 3, 4, //Towns
@@ -472,7 +489,12 @@ void DrawScenario()
     originPos.y = scenPos.y;
 
     createPoint(scenChar, scenPos.x, scenPos.y);
-
+    Doors.doorActive[x] = true;
+    Doors.posX[x] = scenPos.x * 16 + 8;
+    Doors.posY[x] = scenPos.y * 16 + 8;
+    Doors.dest[x] = overworldDoorDest[x];
+    sprintf(strTemp, "Door %d %d,%d to map %d", x, Doors.posX[x], Doors.posY[x], Doors.dest[x]);
+    WriteLineMessageWindow(strTemp, 0);
     SetChar('0' + x, scenPos.x + viewportPosX, scenPos.y + viewportPosY);
   }
 }
@@ -1007,9 +1029,18 @@ void GetSeed()
   }
 }
 
+const char *mapTypeName[] = 
+{
+  "OVERWORLD", "TOWN", "DUNGEON", "FINAL"
+};
+
 void GenerateMap(byte index)
 {
   seed = MapDescriptions.seed[index];
+  sprintf(strTemp, "Generating %s from seed %d", mapTypeName[mapType[index]], seed);
+  WriteLineMessageWindow(strTemp, 0);
+  SkipLineMessageWindow();
+  
   switch (mapType[index])
     {
       case 0:
