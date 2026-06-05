@@ -227,6 +227,8 @@ static struct
   sbyte posY[charactersCount];
   sbyte quadPosX[charactersCount];
   sbyte quadPosY[charactersCount];
+  byte absPosX[charactersCount];
+  byte absPosY[charactersCount];
 }characters;
 
 struct Doors;
@@ -426,6 +428,8 @@ void LoadMap()
     characters.visible[byte_i] = false;
     characters.collide[byte_i] = false;
     characters.combat[byte_i] = -1;
+    characters.absPosX[byte_i] = byte_i;
+    characters.absPosY[byte_i] = byte_i;
   }
   characters.visible[0] = true;
   characters.posX[0]  = 8;
@@ -447,6 +451,8 @@ void LoadMap()
   characters.message[2] = 1;
   characters.posX[2] = 10; //138
   characters.posY[2] = 10; //58
+  characters.absPosX[byte_i] = 138;
+  characters.absPosY[byte_i] = 58;
   characters.quadPosX[2]  = 1;
   characters.quadPosY[2]  = 0;
 
@@ -701,12 +707,29 @@ static void DrawEntireMap(bool clearBuffer)
     viewportOffset += viewportWidth;
   }
 
+  //Player Position used for object culling
+  CoordPosX = characters.posX[followIndex];
+  CoordPosY = characters.posY[followIndex];
+
+  if (CoordPosX >= quadWidth * 2)
+    CoordPosX -= quadWidth * 2;
+  CoordPosX += quadWidth*2*characters.quadPosX[followIndex];
+
+  if (CoordPosY >= quadHeight * 2)
+    CoordPosY -= quadHeight * 2;
+  CoordPosY += quadHeight*2*characters.quadPosY[followIndex];
+
+  sprintf(strTemp,"<%3i  %3i> ", CoordPosX, CoordPosY);
+  PrintString(strTemp, viewportPosX + (viewportWidth >> 1), 19, true);
+
+  characters.absPosX[2] = 138;
+  characters.absPosY[2] = 58;
+  
   //Characters
   for (byte_x = 0; byte_x < charactersCount; ++byte_x)
   {
-    if (!characters.visible[byte_x]) continue;
-    
-    //DrawObject(characters.posX[byte_x], characters.posY[byte_x], characters.tile[byte_x]);
+    //if (characters.visible[byte_x])
+      DrawObject(characters.absPosX[byte_x], characters.absPosY[byte_x], characters.tile[byte_x]);
 
     cx = characters.posX[byte_x] - CameraOffsetX;
     if (cx < 0) cx += mapWidth;
@@ -767,19 +790,6 @@ static void DrawEntireMap(bool clearBuffer)
     ++tilePosY;
   }
 
-  CoordPosX = characters.posX[followIndex];
-  CoordPosY = characters.posY[followIndex];
-
-  if (CoordPosX >= quadWidth * 2)
-    CoordPosX -= quadWidth * 2;
-  CoordPosX += quadWidth*2*characters.quadPosX[followIndex];
-
-  if (CoordPosY >= quadHeight * 2)
-    CoordPosY -= quadHeight * 2;
-  CoordPosY += quadHeight*2*characters.quadPosY[followIndex];
-
-  sprintf(strTemp,"<%3i  %3i> ", CoordPosX, CoordPosY);
-  PrintString(strTemp, viewportPosX + (viewportWidth >> 1), 19, true);
         //UpdatePlayerOnMiniMap;
         //DrawMiniMap(true
         MiniMapHighlightX = CoordPosX / 16;
@@ -976,12 +986,12 @@ screenName MapUpdate()
 
   DrawEntireMap(true);
   DrawCharStats();
-  DrawLocalMiniMap(false);  
+  DrawLocalMiniMap(false);
 
   while (!exitScreen)
   {
     UpdateInput();
-    if (InputChanged())
+    //if (InputChanged())
     {
       direction Dir = 4;
       if (InputUp())
@@ -998,9 +1008,8 @@ screenName MapUpdate()
         CheckDoor();
         continue;
       }
-      
       if (InputFire())
-        //if (InputChanged())
+        if (InputChanged())
         {
           byte action;
           ResetMenu(" ", 6, true);
@@ -1010,8 +1019,7 @@ screenName MapUpdate()
           SetMenuItem(3, "Map");
           SetMenuItem(4, "Exit");
           SetMenuItem(5, "...");
-          
-        
+
           action = GetMenuSelection();
           ClearMenu();
           switch (action)
