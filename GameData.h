@@ -55,7 +55,8 @@ struct doors
   bool doorActive[doorCount];
 };
 extern struct doors Doors;
-
+extern byte EnteringDoor;
+extern bool Entering;
 //extern byte followIndex;
 
 void RunGame(screenName startingScreen);

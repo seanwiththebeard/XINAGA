@@ -74,6 +74,8 @@
 #define viewportSize viewportHeight * viewportWidth
 
 struct doors Doors;
+byte EnteringDoor;
+bool Entering;
 
 static const byte MapSet[] = { /*{w:8,h:8,bpp:1,count:256,brev:1,pal:"c64",np:1}*/
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
@@ -443,8 +445,8 @@ void LoadMap()
   characters.visible[2] = true;
   characters.collide[2] = true;
   characters.message[2] = 1;
-  characters.posX[2] = 12;
-  characters.posY[2] = 11;
+  characters.posX[2] = 10; //138
+  characters.posY[2] = 10; //58
   characters.quadPosX[2]  = 1;
   characters.quadPosY[2]  = 0;
 
@@ -647,6 +649,29 @@ static void ApplyLOS()
   }
 }
 
+void DrawObject(byte posX, byte posY, byte index)
+{
+  byte qx, qy;
+  sbyte cx, cy;
+  //if(!Doors.doorActive[byte_x]) continue;
+
+  //Off Quad?
+  qx = (quadWidthDouble* (posX/quadWidthDouble));
+  if ((posX/quadWidthDouble) != (CoordPosX/quadWidthDouble)) return;
+  qy = (quadHeightDouble* (posY/quadHeightDouble));
+  if ((posY/quadHeightDouble) != (CoordPosY/quadWidthDouble)) return;
+
+  //Off Screen?
+  cx = (posX - qx) - (CameraOffsetX % quadWidthDouble);
+  if (cx < 0) return;
+  if (cx >= mapWidth) return;
+  cy = (posY - qy) - (CameraOffsetY % quadHeightDouble);
+  if (cy < 0) return;
+  if (cy >= mapWidth) return;
+
+  viewportBuffer[cx + cy * viewportWidth] = index;
+}
+
 static void DrawEntireMap(bool clearBuffer)
 {
   int mapOffset;
@@ -680,6 +705,8 @@ static void DrawEntireMap(bool clearBuffer)
   for (byte_x = 0; byte_x < charactersCount; ++byte_x)
   {
     if (!characters.visible[byte_x]) continue;
+    
+    //DrawObject(characters.posX[byte_x], characters.posY[byte_x], characters.tile[byte_x]);
 
     cx = characters.posX[byte_x] - CameraOffsetX;
     if (cx < 0) cx += mapWidth;
@@ -695,19 +722,25 @@ static void DrawEntireMap(bool clearBuffer)
   #define doorTile 40
   for (byte_x = 0; byte_x < doorCount; ++byte_x)
     {
-      byte qx, qy;
-      qx = (quadWidthDouble* (Doors.posX[byte_x]/quadWidthDouble));
-      if ((Doors.posX[byte_x]/quadWidthDouble) != (CoordPosX/quadWidthDouble)) continue;
-      qy = (quadHeightDouble* (Doors.posY[byte_x]/quadHeightDouble));
-      if ((Doors.posY[byte_x]/quadHeightDouble) != (CoordPosY/quadWidthDouble)) continue;
-      //if (qy != lastQuadY) continue;
-      cx = (Doors.posX[byte_x] - qx) - (CameraOffsetX % quadWidthDouble);
-      if (cx < 0) continue;//cx += mapWidth;
-      if (cx >= mapWidth) continue;
-      cy = (Doors.posY[byte_x] - qy) - (CameraOffsetY % quadHeightDouble);
-      if (cy < 0) continue;//cy += mapHeight;
-      if (cy >= mapWidth) continue;
-      viewportBuffer[cx + cy * viewportWidth] = doorTile;
+      //byte qx, qy;
+      if(Doors.doorActive[byte_x])
+        DrawObject(Doors.posX[byte_x], Doors.posY[byte_x], doorTile);
+
+      //Off Quad?
+      //qx = (quadWidthDouble* (Doors.posX[byte_x]/quadWidthDouble));
+      //if ((Doors.posX[byte_x]/quadWidthDouble) != (CoordPosX/quadWidthDouble)) continue;
+      //qy = (quadHeightDouble* (Doors.posY[byte_x]/quadHeightDouble));
+      //if ((Doors.posY[byte_x]/quadHeightDouble) != (CoordPosY/quadWidthDouble)) continue;
+
+      //Off Screen?
+      //x = (Doors.posX[byte_x] - qx) - (CameraOffsetX % quadWidthDouble);
+      //if (cx < 0) continue;
+      //if (cx >= mapWidth) continue;
+      //cy = (Doors.posY[byte_x] - qy) - (CameraOffsetY % quadHeightDouble);
+      //if (cy < 0) continue;
+      //if (cy >= mapWidth) continue;
+
+      //viewportBuffer[cx + cy * viewportWidth] = doorTile;
     }
 
   //LOS
@@ -933,6 +966,14 @@ screenName MapUpdate()
   ScreenFadeIn();
   ResetMenu(" ", 0, true);
 
+  EnteringDoor = 0;
+  if(Entering)
+  {
+    characters.posX[0]  = Doors.posX[EnteringDoor];
+    characters.posY[0]  = Doors.posY[EnteringDoor];
+  }
+  Entering = false;
+
   DrawEntireMap(true);
   DrawCharStats();
   DrawLocalMiniMap(false);  
@@ -959,7 +1000,7 @@ screenName MapUpdate()
       }
       
       if (InputFire())
-        if (InputChanged())
+        //if (InputChanged())
         {
           byte action;
           ResetMenu(" ", 6, true);
