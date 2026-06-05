@@ -489,11 +489,14 @@ void DrawScenario()
     originPos.y = scenPos.y;
 
     createPoint(scenChar, scenPos.x, scenPos.y);
-    Doors.doorActive[x] = true;
-    Doors.posX[x] = scenPos.x * 16 + 8;
-    Doors.posY[x] = scenPos.y * 16 + 8;
-    Doors.dest[x] = overworldDoorDest[x];
-    sprintf(strTemp, "Door %d %d,%d to map %d", x, Doors.posX[x], Doors.posY[x], Doors.dest[x]);
+    if(x < doorCount)
+    {
+      Doors.doorActive[x] = true;
+      Doors.posX[x] = scenPos.x * 16 + 8;
+      Doors.posY[x] = scenPos.y * 16 + 8;
+      Doors.dest[x] = overworldDoorDest[x];
+      sprintf(strTemp, "Door %d %d,%d to map %d", x, Doors.posX[x], Doors.posY[x], Doors.dest[x]);
+    }
     WriteLineMessageWindow(strTemp, 0);
     SetChar('0' + x, scenPos.x + viewportPosX, scenPos.y + viewportPosY);
   }

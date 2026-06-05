@@ -680,7 +680,7 @@ static void DrawEntireMap(bool clearBuffer)
   for (byte_x = 0; byte_x < charactersCount; ++byte_x)
   {
     if (!characters.visible[byte_x]) continue;
-    
+
     cx = characters.posX[byte_x] - CameraOffsetX;
     if (cx < 0) cx += mapWidth;
     if (cx >= viewportWidth) continue;
@@ -693,37 +693,27 @@ static void DrawEntireMap(bool clearBuffer)
   }
 
   #define doorTile 40
-  //Doors.doorActive[0] = true;
-    //Doors.posX[0] = 139;
-    //Doors.posY[0] = 59;
-    //Doors.dest[0] = 5;
   for (byte_x = 0; byte_x < doorCount; ++byte_x)
     {
-      byte rx, ry;
       byte qx, qy;
-      if (!Doors.doorActive[byte_x]) continue;
-      rx = Doors.posX[byte_x] % quadWidthDouble;
-      qx = Doors.posX[byte_x] / quadWidthDouble;
-      if (qx != lastQuadX) continue;
-      cx = rx - CameraOffsetX;
-      if (cx < 0)
-        cx += mapWidth;
-      if (cx >= viewportWidth) continue;
-      ry = Doors.posY[byte_x] % quadWidthDouble;
-      qy = Doors.posY[byte_x] / quadWidthDouble;
-      
-      cy = ry - CameraOffsetY;
-    //cy = Doors.posY[byte_x] - (16*(lastQuadY - 1)) - CameraOffsetY;
-    if (cy < 0) cy += mapHeight;
-    if (cy >= viewportHeight) continue;
-
-    viewportBuffer[cx + cy * viewportWidth] = doorTile;
+      qx = (quadWidthDouble* (Doors.posX[byte_x]/quadWidthDouble));
+      if ((Doors.posX[byte_x]/quadWidthDouble) != (CoordPosX/quadWidthDouble)) continue;
+      qy = (quadHeightDouble* (Doors.posY[byte_x]/quadHeightDouble));
+      if ((Doors.posY[byte_x]/quadHeightDouble) != (CoordPosY/quadWidthDouble)) continue;
+      //if (qy != lastQuadY) continue;
+      cx = (Doors.posX[byte_x] - qx) - (CameraOffsetX % quadWidthDouble);
+      if (cx < 0) continue;//cx += mapWidth;
+      if (cx >= mapWidth) continue;
+      cy = (Doors.posY[byte_x] - qy) - (CameraOffsetY % quadHeightDouble);
+      if (cy < 0) continue;//cy += mapHeight;
+      if (cy >= mapWidth) continue;
+      viewportBuffer[cx + cy * viewportWidth] = doorTile;
     }
 
   //LOS
   if(LOSEnabled)
     ApplyLOS();
-  
+
   MapFadeOut();
   offset = 0;
   tilePosY = 0;
