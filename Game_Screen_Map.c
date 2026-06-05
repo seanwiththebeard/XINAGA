@@ -687,33 +687,55 @@ static void DrawEntireMap(bool clearBuffer)
   int mapOffset;
   byte byte_x;
   byte byte_y;
+  byte byte_z;
   byte viewportOffset = 0;
   byte offset;
+  byte npcScanX, npcScanY;
   //sbyte cx, cy;
 
   if (clearBuffer)
     memset(&viewportBufferLast, 255, viewportSize);
 
+  //Player Position used for object culling
+  CoordPosX = characters.posX[followIndex];
+  CoordPosY = characters.posY[followIndex];
+  
   //Camera Follow
   CameraOffsetX = characters.posX[followIndex] - playerX;
   if (CameraOffsetX < 0) CameraOffsetX += mapWidth;
   CameraOffsetY = characters.posY[followIndex] - playerY;
   if (CameraOffsetY < 0) CameraOffsetY += mapHeight;
-
+  
+  npcScanX = characters.absPosX[followIndex] - playerX;
+  npcScanY = characters.absPosY[followIndex] - playerY;
+  #define doorTile 40
   //Tiles
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
   {
     mapOffset = (mapWidth * ((CameraOffsetY + byte_y) & 31));
+    
     for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
     {
       viewportBuffer[byte_x + viewportOffset] = mapData[((CameraOffsetX + byte_x) & 31) + mapOffset];
+      for (byte_z = 0; byte_z < 8; ++byte_z)
+        {
+          //Consolidate these two into TopLayerObjects
+          if(characters.visible[byte_z])
+            if(characters.absPosX[byte_z] == npcScanX)
+              if(characters.absPosY[byte_z] == npcScanY)
+                viewportBuffer[byte_x + viewportOffset] = characters.tile[byte_z];
+
+          //if(Doors.doorActive[byte_z])
+            if(Doors.posX[byte_z] == npcScanX)
+              if(Doors.posY[byte_z] == npcScanY)
+                viewportBuffer[byte_x + viewportOffset] = doorTile;
+        }
+      ++npcScanX;
     }
     viewportOffset += viewportWidth;
+    ++npcScanY;
+    npcScanX -= viewportWidth;
   }
-
-  //Player Position used for object culling
-  CoordPosX = characters.posX[followIndex];
-  CoordPosY = characters.posY[followIndex];
 
   if (CoordPosX >= quadWidth * 2)
     CoordPosX -= quadWidth * 2;
@@ -722,6 +744,28 @@ static void DrawEntireMap(bool clearBuffer)
   if (CoordPosY >= quadHeight * 2)
     CoordPosY -= quadHeight * 2;
   CoordPosY += quadHeight*2*characters.quadPosY[followIndex];
+  
+  for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
+    {
+    for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
+      {
+      for (byte_z = 0; byte_z < charactersCount; ++byte_z)
+        {
+          //if(characters.absPosX[byte_z] == npcScanX)
+           // if(characters.absPosY[byte_z] == npcScanY)
+              //DrawObject(characters.absPosX[byte_z], characters.absPosY[byte_z], characters.tile[byte_x]);
+              //viewportBuffer[byte_x + viewportWidth * byte_y] = characters.tile[byte_z];
+          
+          //sprintf(strTemp,"%d %d", npcScanX, npcScanY);
+          //WriteLineMessageWindow(strTemp, 0);
+        }
+        ++npcScanX;
+      }
+      ++npcScanY;
+      npcScanX -= viewportWidth;
+    }
+  //sprintf(strTemp,"%d %d", npcScanX, npcScanY);
+  //WriteLineMessageWindow(strTemp, 0);
 
   sprintf(strTemp,"<%3i  %3i> ", CoordPosX, CoordPosY);
   PrintString(strTemp, viewportPosX + (viewportWidth >> 1), 19, true);
@@ -730,10 +774,10 @@ static void DrawEntireMap(bool clearBuffer)
   //characters.absPosY[2] = 58;
   
   //Characters
-  for (byte_x = 0; byte_x < charactersCount; ++byte_x)
+  //for (byte_x = 0; byte_x < charactersCount; ++byte_x)
   {
-    if (characters.visible[byte_x])
-      DrawObject(characters.absPosX[byte_x], characters.absPosY[byte_x], characters.tile[byte_x]);
+    //if (characters.visible[byte_x])
+      //DrawObject(characters.absPosX[byte_x], characters.absPosY[byte_x], characters.tile[byte_x]);
 
     //cx = characters.posX[byte_x] - CameraOffsetX;
     //if (cx < 0) cx += mapWidth;
@@ -746,12 +790,11 @@ static void DrawEntireMap(bool clearBuffer)
     //viewportBuffer[cx + cy * viewportWidth] = characters.tile[byte_x];
   }
 
-  #define doorTile 40
-  for (byte_x = 0; byte_x < doorCount; ++byte_x)
+  //for (byte_x = 0; byte_x < doorCount; ++byte_x)
     {
       //byte qx, qy;
-      if(Doors.doorActive[byte_x])
-        DrawObject(Doors.posX[byte_x], Doors.posY[byte_x], doorTile);
+      //if(Doors.doorActive[byte_x])
+        //DrawObject(Doors.posX[byte_x], Doors.posY[byte_x], doorTile);
 
       //Off Quad?
       //qx = (quadWidthDouble* (Doors.posX[byte_x]/quadWidthDouble));
