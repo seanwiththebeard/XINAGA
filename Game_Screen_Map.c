@@ -421,21 +421,21 @@ void LoadMap()
   for (byte_i = 0; byte_i < charactersCount; ++byte_i)
   {
     characters.tile[byte_i] = byte_i;
-    characters.posX[byte_i] = byte_i;
-    characters.posY[byte_i] = byte_i;
-    characters.quadPosX[byte_i] = byte_i;
-    characters.quadPosY[byte_i] = byte_i;
+    characters.posX[byte_i] = 0;
+    characters.posY[byte_i] = 0;
+    characters.quadPosX[byte_i] = 0;
+    characters.quadPosY[byte_i] = 0;
     characters.visible[byte_i] = false;
     characters.collide[byte_i] = false;
     characters.combat[byte_i] = -1;
-    characters.absPosX[byte_i] = byte_i;
-    characters.absPosY[byte_i] = byte_i;
+    characters.absPosX[byte_i] = 0;
+    characters.absPosY[byte_i] = 0;
   }
   characters.visible[0] = true;
-  characters.posX[0]  = 8;
-  characters.posY[0]  = 8;
-  characters.quadPosX[0]  = SetPlayerPositionX;
-  characters.quadPosY[0]  = SetPlayerPositionY;
+  //characters.posX[0]  = 8;
+  //characters.posY[0]  = 8;
+  //characters.quadPosX[0]  = SetPlayerPositionX;
+  //characters.quadPosY[0]  = SetPlayerPositionY;
   //characters.quadPosX[0]  = 1;
   //characters.quadPosY[0]  = 0;
   characters.tile[0] = 2;
@@ -444,17 +444,15 @@ void LoadMap()
   characters.collide[1] = true;
   characters.combat[1] = 1;
   characters.message[1] = 2;
+  characters.absPosX[1] = 134;
+  characters.absPosY[1] = 60;
 
   characters.tile[2] = signpost;
   characters.visible[2] = true;
   characters.collide[2] = true;
   characters.message[2] = 1;
-  characters.posX[2] = 10; //138
-  characters.posY[2] = 10; //58
-  characters.absPosX[byte_i] = 138;
-  characters.absPosY[byte_i] = 58;
-  characters.quadPosX[2]  = 1;
-  characters.quadPosY[2]  = 0;
+  characters.absPosX[2] = 138;
+  characters.absPosY[2] = 60;
 
   LoadMapQuads();
   LOSEnabled = true;
@@ -466,7 +464,7 @@ static void LoadQuadrant(byte quadIndex, byte quad)
   const byte *tilePtr;
   const byte *chars = ScreenQuad.Chars[quadIndex];
   byte byte_y, byte_z, QuadOriginX, QuadOriginY, charByte;
-  byte *out;  
+  byte *out;
 
   quadBuffer[quad] = quadIndex;
 
@@ -522,6 +520,8 @@ static bool CheckCollision(byte charIndex, direction dir)
   byte byte_i;
   sbyte xPos = characters.posX[charIndex];
   sbyte yPos = characters.posY[charIndex]; //These need to be signed because they can wrap around the map
+  byte absXPos = characters.absPosX[charIndex];
+  byte absYPos = characters.absPosY[charIndex];
 
   //Check the tile we're already standing on
   if(ReadBit(tilesBlocked[mapData[xPos + (mapWidth * yPos)]], dir))
@@ -534,19 +534,23 @@ static bool CheckCollision(byte charIndex, direction dir)
   {
     case up:
       --yPos;
+      --absYPos;
       wrapY(yPos);
       break;
     case down:
       ++yPos;
+      ++absYPos;
       wrapY(yPos);
       break;
     case left:
       --xPos;
       wrapX(xPos);
+      --absXPos;
       break;
     case right:
       ++xPos;
       wrapX(xPos);
+      ++absXPos;
       break;
     default:
       return false;
@@ -567,8 +571,8 @@ static bool CheckCollision(byte charIndex, direction dir)
   //Call Messagebox from NPC
   for (byte_i = 0; byte_i < charactersCount; ++byte_i)
     if(characters.collide[byte_i])
-      if (characters.posX[byte_i] == xPos)
-        if (characters.posY[byte_i] == yPos)
+      if (characters.absPosX[byte_i] == absXPos)
+        if (characters.absPosY[byte_i] == absYPos)
         {
           //Message
           if(characters.message[byte_i] != -1)
@@ -663,15 +667,15 @@ void DrawObject(byte posX, byte posY, byte index)
 
   //Off Quad?
   qx = (quadWidthDouble* (posX/quadWidthDouble));
-  if ((posX/quadWidthDouble) != (CoordPosX/quadWidthDouble)) return;
+  //if ((posX/quadWidthDouble) != (CoordPosX/quadWidthDouble)) return;
   qy = (quadHeightDouble* (posY/quadHeightDouble));
-  if ((posY/quadHeightDouble) != (CoordPosY/quadWidthDouble)) return;
+  //if ((posY/quadHeightDouble) != (CoordPosY/quadWidthDouble)) return;
 
   //Off Screen?
-  cx = (posX - qx) - (CameraOffsetX % quadWidthDouble);
+  cx = (posX % quadWidthDouble) - (CameraOffsetX % quadWidthDouble);
   if (cx < 0) return;
   if (cx >= mapWidth) return;
-  cy = (posY - qy) - (CameraOffsetY % quadHeightDouble);
+  cy = (posY % quadWidthDouble) - (CameraOffsetY % quadHeightDouble);
   if (cy < 0) return;
   if (cy >= mapWidth) return;
 
@@ -685,7 +689,7 @@ static void DrawEntireMap(bool clearBuffer)
   byte byte_y;
   byte viewportOffset = 0;
   byte offset;
-  sbyte cx, cy;
+  //sbyte cx, cy;
 
   if (clearBuffer)
     memset(&viewportBufferLast, 255, viewportSize);
@@ -722,24 +726,24 @@ static void DrawEntireMap(bool clearBuffer)
   sprintf(strTemp,"<%3i  %3i> ", CoordPosX, CoordPosY);
   PrintString(strTemp, viewportPosX + (viewportWidth >> 1), 19, true);
 
-  characters.absPosX[2] = 138;
-  characters.absPosY[2] = 58;
+  //characters.absPosX[2] = 138;
+  //characters.absPosY[2] = 58;
   
   //Characters
   for (byte_x = 0; byte_x < charactersCount; ++byte_x)
   {
-    //if (characters.visible[byte_x])
+    if (characters.visible[byte_x])
       DrawObject(characters.absPosX[byte_x], characters.absPosY[byte_x], characters.tile[byte_x]);
 
-    cx = characters.posX[byte_x] - CameraOffsetX;
-    if (cx < 0) cx += mapWidth;
-    if (cx >= viewportWidth) continue;
+    //cx = characters.posX[byte_x] - CameraOffsetX;
+    //if (cx < 0) cx += mapWidth;
+    //if (cx >= viewportWidth) continue;
 
-    cy = characters.posY[byte_x] - CameraOffsetY;
-    if (cy < 0) cy += mapHeight;
-    if (cy >= viewportHeight) continue;
+    //cy = characters.posY[byte_x] - CameraOffsetY;
+    //if (cy < 0) cy += mapHeight;
+    //if (cy >= viewportHeight) continue;
 
-    viewportBuffer[cx + cy * viewportWidth] = characters.tile[byte_x];
+    //viewportBuffer[cx + cy * viewportWidth] = characters.tile[byte_x];
   }
 
   #define doorTile 40
@@ -893,6 +897,8 @@ static void MoveCharacter(byte index, byte dir)
     characters.posY[index] = posY;
     characters.quadPosX[index] = qPosX;
     characters.quadPosY[index] = qPosY;
+    characters.absPosX[index] = characters.posX[index] + (characters.quadPosX[index] * quadWidthDouble);
+    characters.absPosY[index] = characters.posY[index] + (characters.quadPosY[index] * quadHeightDouble);
 
     if (index == followIndex)
     {
@@ -967,22 +973,24 @@ screenName MapUpdate()
 {
   exitScreen = false;
   stepCount = 0;
-  characters.quadPosX[0]  = SetPlayerPositionX;
-  characters.quadPosY[0]  = SetPlayerPositionY;
+  characters.quadPosX[0]  = Doors.posX[EnteringDoor] / quadWidthDouble;
+  characters.quadPosY[0]  = Doors.posY[EnteringDoor] / quadHeightDouble;
   characters.tile[followIndex] = getPartyMember(0)->CLASS;
   SetTileOrigin(viewportPosX, viewportPosY);
-  LoadMapQuads();
-  ResizeMessageWindow();
-  ScreenFadeIn();
-  ResetMenu(" ", 0, true);
 
   EnteringDoor = 0;
   if(Entering)
   {
-    characters.posX[0]  = Doors.posX[EnteringDoor];
-    characters.posY[0]  = Doors.posY[EnteringDoor];
+    characters.absPosX[0]  = Doors.posX[EnteringDoor];
+    characters.absPosY[0]  = Doors.posY[EnteringDoor];
+    characters.posX[0]  = Doors.posX[EnteringDoor] % quadWidthDouble;
+    characters.posY[0]  = Doors.posY[EnteringDoor] % quadHeightDouble;
   }
   Entering = false;
+  LoadMapQuads();
+  ResizeMessageWindow();
+  ScreenFadeIn();
+  ResetMenu(" ", 0, true);
 
   DrawEntireMap(true);
   DrawCharStats();

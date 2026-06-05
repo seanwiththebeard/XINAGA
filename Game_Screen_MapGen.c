@@ -495,9 +495,9 @@ void DrawScenario()
       Doors.posX[x] = scenPos.x * 16 + 8;
       Doors.posY[x] = scenPos.y * 16 + 8;
       Doors.dest[x] = overworldDoorDest[x];
-      sprintf(strTemp, "Door %d %d,%d to map %d", x, Doors.posX[x], Doors.posY[x], Doors.dest[x]);
+      //sprintf(strTemp, "Door %d %d,%d to map %d", x, Doors.posX[x], Doors.posY[x], Doors.dest[x]);
     }
-    WriteLineMessageWindow(strTemp, 0);
+    //WriteLineMessageWindow(strTemp, 0);
     SetChar('0' + x, scenPos.x + viewportPosX, scenPos.y + viewportPosY);
   }
 }
@@ -1064,6 +1064,8 @@ void GenerateMap(byte index)
 screenName Update_MapGen()
 {
   seed = 20;
+  Entering = true;
+  EnteringDoor = 0;
   //ClearScreen();
         MiniMapPosX = viewportPosX;
         MiniMapPosY = viewportPosY;
