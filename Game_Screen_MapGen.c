@@ -1151,7 +1151,7 @@ void GenerateMap(byte index)
 screenName Update_MapGen()
 {
   seed = 20;
-  MapDescriptions.seed[0] = 20;
+  FillMapDescriptions(seed);
   Display = true;
   Entering = true;
   EnteringDoor = 0;
