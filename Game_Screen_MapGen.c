@@ -653,6 +653,7 @@ void createPoint(byte index, byte x, byte y)
   mapQuads[x + (mapMatrixWidth * y)] = index;
   if(Display)
     DrawPoint(x,y);
+  
   lastPointX = x;
   lastPointY = y;
 }
@@ -927,20 +928,33 @@ void ClearDoors()
 
 void PlaceEntrance(byte x, byte y)
 {
+  byte posX = x * 16 + 8;
+  byte posY = y * 16 + 8;
+  
   Doors.doorActive[0] = true;
-  Doors.posX[0] = x * 16 + 8;
-  Doors.posY[0] = y * 16 + 8;
+  Doors.posX[0] = posX;
+  Doors.posY[0] = posY;
   Doors.destMap[0] = previousMap[MapIndex];
   Doors.destDoor[0] = previousMapDoor[MapIndex];
+  
+  sprintf(strTemp, "Entrance %d %d", posX, posY);
+  WriteLineMessageWindow(strTemp, 0);
+  SkipLineMessageWindow();  
 }
 
 void PlaceExit(byte x, byte y)
 {
+  byte posX = x * 16 + 8;
+  byte posY = y * 16 + 8;
   Doors.doorActive[1] = true;
   Doors.posX[1] = x * 16 + 8;
   Doors.posY[1] = y * 16 + 8;
   Doors.destMap[1] = nextMap[MapIndex];
   Doors.destDoor[1] = nextMapDoor[MapIndex];
+
+  sprintf(strTemp, "Exit %d %d", posX, posY);
+  WriteLineMessageWindow(strTemp, 0);
+  SkipLineMessageWindow();  
 }
 
 void GenerateTown(byte seed)
@@ -1048,7 +1062,6 @@ void GenerateDungeon(byte seed)
         DrawPoint(x,y);
     }
   PlaceExit(lastPointX, lastPointY);
-  sprintf(strTemp, "Next Door %d %d", lastPointX, lastPointY);
 }
 
 byte seed;
