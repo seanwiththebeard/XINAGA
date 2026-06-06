@@ -248,8 +248,8 @@ sbyte CameraOffsetX;
 sbyte CameraOffsetY;
 byte CoordPosX;
 byte CoordPosY;
-byte lastQuadX;
-byte lastQuadY;
+//byte lastQuadX;
+//byte lastQuadY;
 
 //Map Data
 byte mapData[mapWidth * mapHeight];
@@ -505,8 +505,8 @@ void LoadMapQuads()
   LoadQuadrant(quadBuffer[1], 1);
   LoadQuadrant(quadBuffer[2], 2);
   LoadQuadrant(quadBuffer[3], 3);
-  lastQuadX = quadX;
-  lastQuadY = quadY;
+  //lastQuadX = quadX;
+  //lastQuadY = quadY;
 }
 
 static bool CheckCollision(byte charIndex, direction dir)
