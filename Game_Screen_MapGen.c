@@ -47,29 +47,15 @@ One byte describes 16x16 region
 #pragma rodata-name (push, "GAME_DISKDATA")
 #endif
 
-#define TYPE_OVERWORLD 0
-#define TYPE_TOWN 1
-#define TYPE_DUNGEON 2
-#define TYPE_BOSS 3
-
+//Read-Only Map Info
 #define mapCount 14
 #define treasurePerMap 5
-//Overworld
-//TownA
-//TownB
-//TownC
-//TownD
-//DungeonA1
-//DungeonA2
-//DungeonB1
-//DungeonB2
-//DungeonC1
-//DungeonC2
-//Boss1
-//Boss2
-//Boss3
 const byte mapType[mapCount] =
 {
+  #define TYPE_OVERWORLD 0
+  #define TYPE_TOWN 1
+  #define TYPE_DUNGEON 2
+  #define TYPE_BOSS 3
   TYPE_OVERWORLD,
   TYPE_TOWN, TYPE_TOWN, TYPE_TOWN,
   TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON,
@@ -111,7 +97,7 @@ const byte previousMapDoor[mapCount] =
 };
 const byte nextMap[mapCount] =
 {
-  0,
+  0, //Overworld
   0, //TownA
   0, //TownB
   0, //TownC
@@ -144,10 +130,9 @@ const byte nextMapDoor[mapCount] =
   0, //Boss2
   7  //Boss3
 };
-
 const byte returnMapDoor[mapCount] =
 {
-  0,
+  0, //Overworld
   0, //TownA
   1, //TownB
   2, //TownC
@@ -168,8 +153,25 @@ const byte overworldDoorDest[8] =
   5, 7, 9, //Dungeons
   11 //Boss
 };
-const byte monsterLevel[mapCount];
+const sbyte monsterLevelOverAverage[mapCount] =
+{
+  0, //Overworld
+  2, //TownA
+  2, //TownB
+  2, //TownC
+  2, //TownD
+  1, //DungeonA1
+  1, //DungeonA2,
+  1, //DungeonB1
+  2, //DungeonB2
+  2, //DungeonC1
+  3, //DungeonC3
+  3, //Boss1
+  3, //Boss2
+  4  //Boss3
+};
 
+//Variable Map Info
 struct{
   byte seed[mapCount];
   byte variation[mapCount];
