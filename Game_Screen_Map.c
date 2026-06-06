@@ -694,8 +694,8 @@ static void DrawEntireMap(bool clearBuffer)
               if(Doors.posY[byte_z] == npcScanY)
               {
                 viewportBuffer[byte_x + viewportOffset] = doorTile;
-                sprintf(strTemp,"Door %d at %d %d",byte_z, npcScanX, npcScanY);
-                SetLineMessageWindow(strTemp, 0);
+                //sprintf(strTemp,"Door %d at %d %d",byte_z, npcScanX, npcScanY);
+                //SetLineMessageWindow(strTemp, 0);
               }
         }
       ++npcScanX;

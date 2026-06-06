@@ -47,6 +47,8 @@ One byte describes 16x16 region
 #pragma rodata-name (push, "GAME_DISKDATA")
 #endif
 
+bool Display;
+
 //Read-Only Map Info
 #define mapCount 14
 #define treasurePerMap 5
@@ -447,9 +449,12 @@ void DrawScenario()
       else
         scenarioPoints[x] = scenForest;
     }
-    SetChar('0'+x, ScenarioDescX  + 2*x, ScenarioDescY);
-    DrawTileDirectXY(scenarioPoints[x], ScenarioDescX + 2*x,  ScenarioDescY);
-    SetChar(dirChar[scenarioDir[x]], ScenarioDescX +1 + 2*x, ScenarioDescY + 2);
+    if(Display)
+    {
+      SetChar('0'+x, ScenarioDescX  + 2*x, ScenarioDescY);
+      DrawTileDirectXY(scenarioPoints[x], ScenarioDescX + 2*x,  ScenarioDescY);
+      SetChar(dirChar[scenarioDir[x]], ScenarioDescX +1 + 2*x, ScenarioDescY + 2);
+    }
     scenPos.x += (distX[scenarioDir[x]] * distTravel);
     scenPos.y += (distY[scenarioDir[x]] * distTravel);
     clampPoint(&scenPos);
@@ -462,7 +467,8 @@ void DrawScenario()
       clampPoint(&scenPos);
       ++distTravel;
     }
-    SetChar('0' + distTravel, ScenarioDescX  + 2*x, ScenarioDescY + 2);
+    if(Display)
+      SetChar('0' + distTravel, ScenarioDescX  + 2*x, ScenarioDescY + 2);
 
     //if (x == 0)
     {
@@ -516,10 +522,11 @@ void DrawScenario()
       Doors.posY[x] = scenPos.y * 16 + 8;
       Doors.destMap[x] = overworldDoorDest[x];
       Doors.destDoor[x] = 0;
-      sprintf(strTemp, "Door %d at %d,%d", x, Doors.posX[x], Doors.posY[x]);
+      //sprintf(strTemp, "Door %d at %d,%d", x, Doors.posX[x], Doors.posY[x]);
+      //WriteLineMessageWindow(strTemp, 0);
     }
-    WriteLineMessageWindow(strTemp, 0);
-    SetChar('0' + x, scenPos.x + viewportPosX, scenPos.y + viewportPosY);
+    if(Display)
+      SetChar('0' + x, scenPos.x + viewportPosX, scenPos.y + viewportPosY);
   }
 }
 
@@ -642,7 +649,8 @@ void createPoint(byte index, byte x, byte y)
   ++totalPoints;
 
   mapQuads[x + (mapMatrixWidth * y)] = index;
-  DrawPoint(x,y);
+  if(Display)
+    DrawPoint(x,y);
 }
 
 struct vector2 *getPoint(byte index)
@@ -769,7 +777,8 @@ void checkLandlocked()
       if(mapQuads[x + (mapMatrixWidth * y)] == miniMapGrass)
       {
         mapQuads[x + (mapMatrixWidth * y)] = index;
-        DrawPoint(x,y);
+        if(Display)
+          DrawPoint(x,y);
       }
     }
   }
@@ -847,7 +856,6 @@ void attachRandomPoint(byte index, byte antiIndex)
     }
   }
   createPoint(index, x, y);
-
 }
 
 void GenerateOverworld(byte seed)
@@ -859,12 +867,13 @@ void GenerateOverworld(byte seed)
   countContinents = 0;
   forrestCount = 0;
   memset (&mapQuads[0], miniMapWater, mapMatrixHeight*mapMatrixWidth);
-  DrawMiniMap(false);
-  for (y = 0; y < mapMatrixHeight; ++y)
-    for (x = 0; x < mapMatrixWidth; ++x)
-      DrawPoint(x, y);
-
-
+  if(Display)
+  {
+    DrawMiniMap(false);
+    for (y = 0; y < mapMatrixHeight; ++y)
+      for (x = 0; x < mapMatrixWidth; ++x)
+        DrawPoint(x, y);
+  }
   srand(seed);
   sprintf(strTemp, "Overworld Seed:(%3d)", seed);
   SetLineMessageWindow(strTemp, 0);
@@ -893,7 +902,8 @@ void GenerateOverworld(byte seed)
     clearPoints();
   }
   TranslateQuadIndices();
-  DrawMiniMap(false);
+  if(Display)
+    DrawMiniMap(false);
   sprintf(strTemp, "Points Placed:(%3d)", totalPointsPlaced);
   WriteLineMessageWindow(strTemp, 0);
 }
@@ -1011,11 +1021,12 @@ void GenerateDungeon(byte seed)
   SetLineMessageWindow(strTemp, 0);
 
   for (y = 0; y < mapMatrixWidth; ++y)
-          for(x = 0; x < mapMatrixHeight; ++x)
-                  {
-                          mapQuads[x + (mapMatrixWidth * y)] = miniMapDungeonWall;
-                          DrawPoint(x,y);
-                  }
+    for(x = 0; x < mapMatrixHeight; ++x)
+      {
+        mapQuads[x + (mapMatrixWidth * y)] = miniMapDungeonWall;
+        if(Display)
+          DrawPoint(x,y);
+      }
   srand(seed);
   createPoint(RoomProbability[rand() % 20], 8, 8);
   //for (x = 0; x < RoomCount; ++x)
@@ -1030,6 +1041,7 @@ void GenerateDungeon(byte seed)
       {
         mapQuads[offset] += GetFringeMask(x, y, miniMapDungeonWall);
       }
+      if(Display)
         DrawPoint(x,y);
     }
 }
@@ -1099,6 +1111,7 @@ void GenerateMap(byte index)
   sprintf(strTemp, "Generating %s from seed %d", mapTypeName[mapType[index]], seed);
   WriteLineMessageWindow(strTemp, 0);
   SkipLineMessageWindow();
+  Display = false;
   
   switch (mapType[index])
     {
@@ -1121,6 +1134,7 @@ screenName Update_MapGen()
 {
   seed = 20;
   MapDescriptions.seed[0] = 20;
+  Display = true;
   Entering = true;
   EnteringDoor = 0;
   //ClearScreen();
@@ -1139,106 +1153,3 @@ screenName Update_MapGen()
   //ClearInterface();
   return Map;
 }
-
-/*void FillAdjacent(byte passes, byte threshold)
-{
-  byte x, y, i;
-  for (i = 0; i < passes; ++i)
-  {
-    for (y = 0; y < height; ++y)
-      for (x = 0; x < width; ++x)
-      {
-        if (map[y][x] != grass)
-          if (countAdjacent(x, y) >= threshold)
-          {
-            createPoint(x, y);
-            map[y][x] = grass;
-            SetChar(grass, posX + x, posY + y);
-            //sprintf(strTemp, "Filled (%d, %d)", x, y);
-            //WriteLineMessageWindow(strTemp, 0);
-          }
-      }
-    sprintf(strTemp, "Pass %d done", i + 1);
-    WriteLineMessageWindow(strTemp, 0);
-  }
-}*/
-
-/*void RemoveIslands()
-{
-  byte x, y;
-  for (y = 0; y < height; ++y)
-    for (x = 0; x < width; ++x)
-    {
-      if (map[y][x] == grass)
-        if (countAdjacent(x, y) == 0)
-        {
-          map[y][x] = water;
-          SetChar(water, posX + x, posY + y);
-          sprintf(strTemp, "Removed (%d, %d)", x, y);
-          WriteLineMessageWindow(strTemp, 0);
-        }
-    }
-  sprintf(strTemp, "Islands Removed");
-  WriteLineMessageWindow(strTemp, 0);
-}*/
-
-/*void Rotate(direction dir)
-{
-  byte h;
-  byte w;
-  byte tempRow[mapMatrixWidth];
-  byte tempCol[mapMatrixHeight];
-  switch (dir)
-  {
-    case up:
-      for (w = 0; w < mapMatrixWidth; ++w)
-        tempRow[w] = mapQuads[mapMatrixHeight - 1][w];
-      for (h = mapMatrixHeight - 1; h > 0; --h)  
-        for (w = 0; w < mapMatrixWidth; ++w)
-          mapQuads[h][w] = mapQuads[h - 1][w];
-      for (w = 0; w < mapMatrixWidth; ++w)
-        mapQuads[0][w] = tempRow[w];
-      break;
-    case down:
-      for (w = 0; w < mapMatrixWidth; ++w)
-        tempRow[w] = mapQuads[0][w];
-      for (h = 0; h < mapMatrixHeight; ++h)  
-        for (w = 0; w < mapMatrixWidth; ++w)
-          mapQuads[h][w] = mapQuads[h + 1][w];
-      for (w = 0; w < mapMatrixWidth; ++w)
-        mapQuads[mapMatrixHeight - 1][w] = tempRow[w];
-      break;
-    case left:
-      for (h = 0; h < mapMatrixHeight; ++h)
-        tempCol[h] = mapQuads[h][mapMatrixWidth - 1];
-      for (h = 0; h < mapMatrixHeight; ++h) 
-        for (w = mapMatrixWidth - 1; w > 0; --w)
-          mapQuads[h][w] = mapQuads[h][w - 1];
-      for (h = 0; h < mapMatrixHeight; ++h)
-        mapQuads[h][0] = tempCol[h];
-      break;
-    case right:
-      for (h = 0; h < mapMatrixHeight; ++h)
-        tempCol[h] = mapQuads[h][0];
-      for (h = 0; h < mapMatrixHeight; ++h) 
-        for (w = 0; w < mapMatrixWidth; ++w)
-          mapQuads[h][w] = mapQuads[h][w + 1];
-      for (h = 0; h < mapMatrixHeight; ++h)
-        mapQuads[h][mapMatrixWidth - 1] = tempCol[h];
-      break;
-    default:
-      break;
-  }
-  //DrawMap();
-}
-
-void RotateAround()
-{
-  byte y;
-  for (y = 0; y < mapMatrixHeight; ++y)
-  {
-    Rotate(left);
-    Rotate(up);
-    DrawMiniMap(false);
-  }
-}*/
