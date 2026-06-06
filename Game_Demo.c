@@ -35,30 +35,30 @@ void SelectBank()
 void DrawInterface()
 {
   //Viewport
-  DrawBorder("", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, true);
+  DrawBorder("", viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2, false);
   //Console
-  DrawBorder("", consolePosX - 1, consolePosY - 1, consoleWidth + 2, consoleHeight + 2, true);
+  DrawBorder("", consolePosX - 1, consolePosY - 1, consoleWidth + 2, consoleHeight + 2, false);
   //Menu
-  DrawBorder("", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, contextMenuHeight - 1, true);
+  DrawBorder("", contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, contextMenuHeight - 1, false);
   //Map
-  DrawBorder("", MiniMapPosXInit - 1, MiniMapPosYInit - 1, MiniMapWidthInit + 2, MiniMapHeightInit + 2, true);
+  DrawBorder("", MiniMapPosXInit - 1, MiniMapPosYInit - 1, MiniMapWidthInit + 2, MiniMapHeightInit + 2, false);
   //DrawCharStats();
-  ResizeMessageWindow();
+  //ResizeMessageWindow();
   SetTileOrigin(viewportPosX, viewportPosY);
 }
 
 void ClearInterface()
 {
   //Viewport
-  ClearBorder(viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2);
+  //ClearBorder(viewportPosX - 1, viewportPosY - 1, viewportWidth* 2 + 2, viewportHeight * 2 + 2);
   //Console
-  ClearBorder(consolePosX - 1, consolePosY - 1, consoleWidth + 2, consoleHeight + 2);
+  //ClearBorder(consolePosX - 1, consolePosY - 1, consoleWidth + 2, consoleHeight + 2);
   //Menu
-  ClearBorder(contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, contextMenuHeight - 1);
+  //ClearBorder(contextMenuPosX - 1, contextMenuPosY - 1, contextMenuWidth + 2, contextMenuHeight - 1);
   //Map
-  ClearBorder(MiniMapPosXInit - 1, MiniMapPosYInit - 1, MiniMapWidthInit + 2, MiniMapHeightInit + 2);
+  //ClearBorder(MiniMapPosXInit - 1, MiniMapPosYInit - 1, MiniMapWidthInit + 2, MiniMapHeightInit + 2);
   //DrawCharStats();
-  ResizeMessageWindow();
+  //ResizeMessageWindow();
   SetTileOrigin(viewportPosX, viewportPosY);
 }
 
@@ -104,7 +104,7 @@ void SwitchScreen(screenName screen)
       currentScreen = DefaultScreen;
       break;
   }
-  ClearInterface();
+  //ClearInterface();
   SwitchScreen(currentScreen);
 }
 
@@ -113,6 +113,7 @@ void RunGame(screenName startingScreen)
   srand(0);
   InitializeInput();
   InitializeGraphics();
+  ResizeMessageWindow();
   //ClearScreen();
   ScreenFadeOut();
   #if defined(__NES__)

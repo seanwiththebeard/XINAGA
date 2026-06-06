@@ -534,13 +534,13 @@ static bool CheckCollision(byte charIndex, direction dir)
   {
     case up:
       --yPos;
-      --absYPos;
       wrapY(yPos);
+      --absYPos;
       break;
     case down:
       ++yPos;
-      ++absYPos;
       wrapY(yPos);
+      ++absYPos;
       break;
     case left:
       --xPos;
@@ -659,29 +659,6 @@ static void ApplyLOS()
   }
 }
 
-void DrawObject(byte posX, byte posY, byte index)
-{
-  byte qx, qy;
-  sbyte cx, cy;
-  //if(!Doors.doorActive[byte_x]) continue;
-
-  //Off Quad?
-  qx = (quadWidthDouble* (posX/quadWidthDouble));
-  //if ((posX/quadWidthDouble) != (CoordPosX/quadWidthDouble)) return;
-  qy = (quadHeightDouble* (posY/quadHeightDouble));
-  //if ((posY/quadHeightDouble) != (CoordPosY/quadWidthDouble)) return;
-
-  //Off Screen?
-  cx = (posX % quadWidthDouble) - (CameraOffsetX % quadWidthDouble);
-  if (cx < 0) return;
-  if (cx >= mapWidth) return;
-  cy = (posY % quadWidthDouble) - (CameraOffsetY % quadHeightDouble);
-  if (cy < 0) return;
-  if (cy >= mapWidth) return;
-
-  viewportBuffer[cx + cy * viewportWidth] = index;
-}
-
 static void DrawEntireMap(bool clearBuffer)
 {
   int mapOffset;
@@ -700,14 +677,22 @@ static void DrawEntireMap(bool clearBuffer)
   CoordPosX = characters.posX[followIndex];
   CoordPosY = characters.posY[followIndex];
   
+  if (CoordPosX >= quadWidth * 2)
+    CoordPosX -= quadWidth * 2;
+  CoordPosX += quadWidth*2*characters.quadPosX[followIndex];
+
+  if (CoordPosY >= quadHeight * 2)
+    CoordPosY -= quadHeight * 2;
+  CoordPosY += quadHeight*2*characters.quadPosY[followIndex];
+
   //Camera Follow
   CameraOffsetX = characters.posX[followIndex] - playerX;
   if (CameraOffsetX < 0) CameraOffsetX += mapWidth;
   CameraOffsetY = characters.posY[followIndex] - playerY;
   if (CameraOffsetY < 0) CameraOffsetY += mapHeight;
   
-  npcScanX = characters.absPosX[followIndex] - playerX;
-  npcScanY = characters.absPosY[followIndex] - playerY;
+  npcScanX = CoordPosX - playerX;
+  npcScanY = CoordPosY - playerY;
   #define doorTile 40
   //Tiles
   for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
@@ -719,6 +704,9 @@ static void DrawEntireMap(bool clearBuffer)
       viewportBuffer[byte_x + viewportOffset] = mapData[((CameraOffsetX + byte_x) & 31) + mapOffset];
       for (byte_z = 0; byte_z < 8; ++byte_z)
         {
+          //characters.absPosX[byte_z] = characters.posX[byte_z] + (characters.quadPosX[byte_z] * quadWidthDouble);
+          //characters.absPosY[byte_z] = characters.posY[byte_z] + (characters.quadPosY[byte_z] * quadHeightDouble);
+          
           //Consolidate these two into TopLayerObjects
           if(characters.visible[byte_z])
             if(characters.absPosX[byte_z] == npcScanX)
@@ -730,8 +718,8 @@ static void DrawEntireMap(bool clearBuffer)
               if(Doors.posY[byte_z] == npcScanY)
               {
                 viewportBuffer[byte_x + viewportOffset] = doorTile;
-                sprintf(strTemp,"%d %d", npcScanX, npcScanY);
-                //WriteLineMessageWindow(strTemp, 0);
+                sprintf(strTemp,"Door %d at %d %d",byte_z, npcScanX, npcScanY);
+                SetLineMessageWindow(strTemp, 0);
               }
         }
       ++npcScanX;
@@ -740,36 +728,6 @@ static void DrawEntireMap(bool clearBuffer)
     ++npcScanY;
     npcScanX -= viewportWidth;
   }
-
-  if (CoordPosX >= quadWidth * 2)
-    CoordPosX -= quadWidth * 2;
-  CoordPosX += quadWidth*2*characters.quadPosX[followIndex];
-
-  if (CoordPosY >= quadHeight * 2)
-    CoordPosY -= quadHeight * 2;
-  CoordPosY += quadHeight*2*characters.quadPosY[followIndex];
-  
-  for(byte_y = 0; byte_y < viewportHeight; ++byte_y)
-    {
-    for(byte_x = 0; byte_x < viewportWidth; ++byte_x)
-      {
-      for (byte_z = 0; byte_z < charactersCount; ++byte_z)
-        {
-          //if(characters.absPosX[byte_z] == npcScanX)
-           // if(characters.absPosY[byte_z] == npcScanY)
-              //DrawObject(characters.absPosX[byte_z], characters.absPosY[byte_z], characters.tile[byte_x]);
-              //viewportBuffer[byte_x + viewportWidth * byte_y] = characters.tile[byte_z];
-          
-          //sprintf(strTemp,"%d %d", npcScanX, npcScanY);
-          //WriteLineMessageWindow(strTemp, 0);
-        }
-        ++npcScanX;
-      }
-      ++npcScanY;
-      npcScanX -= viewportWidth;
-    }
-  //sprintf(strTemp,"%d %d", npcScanX, npcScanY);
-  //WriteLineMessageWindow(strTemp, 0);
 
   sprintf(strTemp,"<%3i  %3i> ", CoordPosX, CoordPosY);
   PrintString(strTemp, viewportPosX + (viewportWidth >> 1), 19, true);
@@ -862,6 +820,7 @@ void CheckDoor()
       if (CoordPosX == Doors.posX[x] && CoordPosY == Doors.posY[x])
       {
         GenerateMap(Doors.dest[x]);
+        Entering = true;
         exitScreen = true;
         //ScreenFadeOut();
         nextScreen = Map;
@@ -887,6 +846,7 @@ static void MoveCharacter(byte index, byte dir)
     {
       case up:
         --posY;
+        --characters.absPosY[index];
         if (posY < 0)
           posY = mapHeight - 1;
         //if (posY == 15 || posY == 31)
@@ -900,6 +860,7 @@ static void MoveCharacter(byte index, byte dir)
         break;
       case down:
         ++posY;
+        ++characters.absPosY[index];
         if (posY >= mapHeight)
           posY = 0;
         //if (posY == 0 || posY == 16)
@@ -913,6 +874,7 @@ static void MoveCharacter(byte index, byte dir)
         break;
       case left:
         --posX;
+        --characters.absPosX[index];        
         if (posX < 0)
           posX = mapWidth - 1;
         //if (posX == 15 || posX == 31)
@@ -926,6 +888,7 @@ static void MoveCharacter(byte index, byte dir)
         break;
       case right:
         ++posX;
+        ++characters.absPosX[index];        
         if (posX >= mapWidth)
           posX = 0;
         //if (posX == 0 || posX == 16)
@@ -944,8 +907,8 @@ static void MoveCharacter(byte index, byte dir)
     characters.posY[index] = posY;
     characters.quadPosX[index] = qPosX;
     characters.quadPosY[index] = qPosY;
-    characters.absPosX[index] = characters.posX[index] + (characters.quadPosX[index] * quadWidthDouble);
-    characters.absPosY[index] = characters.posY[index] + (characters.quadPosY[index] * quadHeightDouble);
+    //characters.absPosX[index] = posX + (qPosX * quadWidthDouble);
+    //characters.absPosY[index] = posY + (qPosY * quadHeightDouble);
 
     if (index == followIndex)
     {
@@ -1028,16 +991,20 @@ screenName MapUpdate()
   EnteringDoor = 0;
   if(Entering)
   {
-    characters.absPosX[0]  = Doors.posX[EnteringDoor];
-    characters.absPosY[0]  = Doors.posY[EnteringDoor];
-    characters.posX[0]  = Doors.posX[EnteringDoor] % quadWidthDouble;
-    characters.posY[0]  = Doors.posY[EnteringDoor] % quadHeightDouble;
+    byte x = Doors.posX[EnteringDoor];
+    byte y = Doors.posY[EnteringDoor];
+    characters.absPosX[0]  = x;
+    characters.absPosY[0]  = y;
+    characters.posX[0]  = x % quadWidthDouble;
+    characters.posY[0]  = y % quadHeightDouble;
+    characters.quadPosX[0] = x / quadWidthDouble;
+    characters.quadPosY[0] = y / quadHeightDouble;
   }
   Entering = false;
   LoadMapQuads();
-  ResizeMessageWindow();
+  //ResizeMessageWindow();
   ScreenFadeIn();
-  ResetMenu(" ", 0, true);
+  //ResetMenu(" ", 0, true);
 
   DrawEntireMap(true);
   DrawCharStats();

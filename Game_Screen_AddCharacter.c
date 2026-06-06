@@ -543,10 +543,11 @@ void TavernMenu()
 
   void DrawStuff()
   {
-      ListParty();
-      ListRoster();
-      DrawCharStats();
-      DrawPartyStats();
+    FillViewport(' ', viewportWidth, viewportHeight);       
+    ListParty();
+    ListRoster();
+    DrawCharStats();
+    DrawPartyStats();
   }
 
 const byte predefcharindex[] = {2, 7, 5, 3};
