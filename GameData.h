@@ -35,8 +35,8 @@ void ClearInterface();
 
 //extern byte MiniMapPosX;
 //extern byte MiniMapPosY;
-extern byte SetPlayerPositionX;
-extern byte SetPlayerPositionY;
+//extern byte SetPlayerPositionX;
+//extern byte SetPlayerPositionY;
 extern const byte MiniMapGlyphs[64];
 extern const byte OverworldGeoMorphSet[256];
 extern const byte OverworldGeoMorphAttrib[32];
@@ -51,12 +51,14 @@ struct doors
 {
   byte posX[doorCount];
   byte posY[doorCount];
-  byte dest[doorCount];
+  byte destMap[doorCount];
+  byte destDoor[doorCount];
   bool doorActive[doorCount];
 };
 extern struct doors Doors;
 extern byte EnteringDoor;
 extern bool Entering;
+extern byte MapIndex;
 //extern byte followIndex;
 
 void RunGame(screenName startingScreen);

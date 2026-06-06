@@ -94,7 +94,7 @@ const byte previousMap[mapCount] =
 };
 const byte previousMapDoor[mapCount] =
 {
-  0,
+  0, //Overworld
   0, //TownA
   1, //TownB
   2, //TownC
@@ -126,7 +126,25 @@ const byte nextMap[mapCount] =
   13, //Boss2
   0  //Boss3
 };
-const byte nextMapDoor = 0;
+
+const byte nextMapDoor[mapCount] =
+{
+  0, //Overworld
+  0, //TownA
+  1, //TownB
+  2, //TownC
+  3, //TownD
+  4, //DungeonA1
+  4, //DungeonA2,
+  5, //DungeonB1
+  5, //DungeonB2
+  6, //DungeonC1
+  6, //DungeonC3
+  0, //Boss1
+  0, //Boss2
+  7  //Boss3
+};
+
 const byte returnMapDoor[mapCount] =
 {
   0,
@@ -444,10 +462,10 @@ void DrawScenario()
     }
     SetChar('0' + distTravel, ScenarioDescX  + 2*x, ScenarioDescY + 2);
 
-    if (x == 0)
+    //if (x == 0)
     {
-      SetPlayerPositionX = scenPos.x;
-      SetPlayerPositionY = scenPos.y;
+      //SetPlayerPositionX = scenPos.x;
+      //SetPlayerPositionY = scenPos.y;
     }
 
     while ((originPos.x != scenPos.x) || (originPos.y != scenPos.y))
@@ -494,7 +512,8 @@ void DrawScenario()
       Doors.doorActive[x] = true;
       Doors.posX[x] = scenPos.x * 16 + 8;
       Doors.posY[x] = scenPos.y * 16 + 8;
-      Doors.dest[x] = overworldDoorDest[x];
+      Doors.destMap[x] = overworldDoorDest[x];
+      Doors.destDoor[x] = 0;
       sprintf(strTemp, "Door %d at %d,%d", x, Doors.posX[x], Doors.posY[x]);
     }
     WriteLineMessageWindow(strTemp, 0);
@@ -877,9 +896,42 @@ void GenerateOverworld(byte seed)
   WriteLineMessageWindow(strTemp, 0);
 }
 
+void ClearDoors()
+{
+  byte x;
+  for (x = 0; x < doorCount; ++x)
+    {
+      Doors.doorActive[x] = false;
+      Doors.posX[x] = 0;
+      Doors.posY[x] = 0;
+      Doors.destMap[x] = 0;
+      Doors.destDoor[x] = 0;
+    }
+}
+
+void PlaceEntrance()
+{
+  Doors.doorActive[0] = true;
+  Doors.posX[0] = 0;
+  Doors.posY[0] = 0;
+  Doors.destMap[0] = previousMap[MapIndex];
+  Doors.destDoor[0] = previousMapDoor[MapIndex];
+}
+
+void PlaceExit()
+{
+  Doors.doorActive[1] = true;
+  Doors.posX[1] = 4;
+  Doors.posY[1] = 0;
+  Doors.destMap[1] = nextMap[MapIndex];
+  Doors.destDoor[1] = nextMapDoor[MapIndex];
+}
+
 void GenerateTown(byte seed)
 {
-        srand(seed);
+  srand(seed);
+  ClearDoors();
+  PlaceEntrance();
 }
 
 #define miniMapDungeonFloor 14
@@ -947,23 +999,25 @@ void PlaceRoom()
 
 void GenerateDungeon(byte seed)
 {
-        //#define RoomCount 1
-        byte x,y;
-        UploadCharPage((byte*)DungeonGeoMorphSet, 7);
-        clearPoints();
-        sprintf(strTemp, "Dungeon Seed (%d)", seed);
-        SetLineMessageWindow(strTemp, 0);
+  byte x,y;
+  ClearDoors();
+  PlaceEntrance();
+  PlaceExit();
+  UploadCharPage((byte*)DungeonGeoMorphSet, 7);
+  clearPoints();
+  sprintf(strTemp, "Dungeon Seed (%d)", seed);
+  SetLineMessageWindow(strTemp, 0);
 
-        for (y = 0; y < mapMatrixWidth; ++y)
-                for(x = 0; x < mapMatrixHeight; ++x)
-                        {
-                                mapQuads[x + (mapMatrixWidth * y)] = miniMapDungeonWall;
-                                DrawPoint(x,y);
-                        }
-        srand(seed);
-        createPoint(RoomProbability[rand() % 20], 8, 8);
-        //for (x = 0; x < RoomCount; ++x)
-                PlaceRoom();
+  for (y = 0; y < mapMatrixWidth; ++y)
+          for(x = 0; x < mapMatrixHeight; ++x)
+                  {
+                          mapQuads[x + (mapMatrixWidth * y)] = miniMapDungeonWall;
+                          DrawPoint(x,y);
+                  }
+  srand(seed);
+  createPoint(RoomProbability[rand() % 20], 8, 8);
+  //for (x = 0; x < RoomCount; ++x)
+          PlaceRoom();
 
   for (y = 0; y < 16; ++y)
     for (x = 0; x < 16; ++x)
@@ -1064,6 +1118,7 @@ void GenerateMap(byte index)
 screenName Update_MapGen()
 {
   seed = 20;
+  MapDescriptions.seed[0] = 20;
   Entering = true;
   EnteringDoor = 0;
   //ClearScreen();
