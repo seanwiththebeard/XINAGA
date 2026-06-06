@@ -817,7 +817,7 @@ void CheckDoor()
   for (x = 0; x < doorCount; ++x)
     if(Doors.doorActive[x])
     {
-      if (CoordPosX == Doors.posX[x] && CoordPosY == Doors.posY[x])
+      if (characters.absPosX[followIndex] == Doors.posX[x] && characters.absPosY[followIndex] == Doors.posY[x])
       {
         GenerateMap(Doors.dest[x]);
         Entering = true;
@@ -983,8 +983,7 @@ screenName MapUpdate()
 {
   exitScreen = false;
   stepCount = 0;
-  characters.quadPosX[0]  = Doors.posX[EnteringDoor] / quadWidthDouble;
-  characters.quadPosY[0]  = Doors.posY[EnteringDoor] / quadHeightDouble;
+  
   characters.tile[followIndex] = getPartyMember(0)->CLASS;
   SetTileOrigin(viewportPosX, viewportPosY);
 
