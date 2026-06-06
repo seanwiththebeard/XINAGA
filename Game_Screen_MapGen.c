@@ -59,8 +59,8 @@ const byte mapType[mapCount] =
   #define TYPE_DUNGEON 2
   #define TYPE_BOSS 3
   TYPE_OVERWORLD,
-  TYPE_TOWN, TYPE_TOWN, TYPE_TOWN,
-  TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON,
+  TYPE_TOWN, TYPE_TOWN, TYPE_TOWN, TYPE_TOWN,
+  TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON, TYPE_DUNGEON,
   TYPE_BOSS
 };
 const byte previousMap[mapCount] =
@@ -122,11 +122,11 @@ const byte nextMapDoor[mapCount] =
   1, //TownB
   2, //TownC
   3, //TownD
-  4, //DungeonA1
+  0, //DungeonA1
   4, //DungeonA2,
-  5, //DungeonB1
+  0, //DungeonB1
   5, //DungeonB2
-  6, //DungeonC1
+  0, //DungeonC1
   6, //DungeonC3
   0, //Boss1
   0, //Boss2
@@ -343,6 +343,8 @@ const static byte dist[5] = {4, 3, 3, 5, 2};
 #define ScenarioDescX 19
 #define ScenarioDescY 1
 
+byte lastPointX;
+byte lastPointY;
 
 //Town
 //Dungeon
@@ -651,6 +653,8 @@ void createPoint(byte index, byte x, byte y)
   mapQuads[x + (mapMatrixWidth * y)] = index;
   if(Display)
     DrawPoint(x,y);
+  lastPointX = x;
+  lastPointY = y;
 }
 
 struct vector2 *getPoint(byte index)
@@ -921,20 +925,20 @@ void ClearDoors()
     }
 }
 
-void PlaceEntrance()
+void PlaceEntrance(byte x, byte y)
 {
   Doors.doorActive[0] = true;
-  Doors.posX[0] = 0;
-  Doors.posY[0] = 0;
+  Doors.posX[0] = x * 16 + 8;
+  Doors.posY[0] = y * 16 + 8;
   Doors.destMap[0] = previousMap[MapIndex];
   Doors.destDoor[0] = previousMapDoor[MapIndex];
 }
 
-void PlaceExit()
+void PlaceExit(byte x, byte y)
 {
   Doors.doorActive[1] = true;
-  Doors.posX[1] = 4;
-  Doors.posY[1] = 0;
+  Doors.posX[1] = x * 16 + 8;
+  Doors.posY[1] = y * 16 + 8;
   Doors.destMap[1] = nextMap[MapIndex];
   Doors.destDoor[1] = nextMapDoor[MapIndex];
 }
@@ -943,7 +947,7 @@ void GenerateTown(byte seed)
 {
   srand(seed);
   ClearDoors();
-  PlaceEntrance();
+  PlaceEntrance(8, 8);
 }
 
 #define miniMapDungeonFloor 14
@@ -1004,7 +1008,6 @@ void PlaceRoom()
                               ++roomNum;
                           attachRandomPoint(roomNum, miniMapDungeonWall);
                           attachRandomPoint(ROOM_HALLWAY, miniMapDungeonWall);
-                          
                         }
                 }
 }
@@ -1013,8 +1016,6 @@ void GenerateDungeon(byte seed)
 {
   byte x,y;
   ClearDoors();
-  PlaceEntrance();
-  PlaceExit();
   UploadCharPage((byte*)DungeonGeoMorphSet, 7);
   clearPoints();
   sprintf(strTemp, "Dungeon Seed (%d)", seed);
@@ -1029,6 +1030,8 @@ void GenerateDungeon(byte seed)
       }
   srand(seed);
   createPoint(RoomProbability[rand() % 20], 8, 8);
+  PlaceEntrance(lastPointX, lastPointY);
+  
   //for (x = 0; x < RoomCount; ++x)
           PlaceRoom();
 
@@ -1044,6 +1047,8 @@ void GenerateDungeon(byte seed)
       if(Display)
         DrawPoint(x,y);
     }
+  PlaceExit(lastPointX, lastPointY);
+  sprintf(strTemp, "Next Door %d %d", lastPointX, lastPointY);
 }
 
 byte seed;
