@@ -221,11 +221,11 @@ static struct
   sbyte message[charactersCount];
   bool visible[charactersCount];
   bool collide[charactersCount];
-  sbyte posX[charactersCount];
-  sbyte posY[charactersCount];
+  sbyte posX[charactersCount]; //Position within the 32x32 matrix of loaded quads
+  sbyte posY[charactersCount]; //Position within the 32x32 matrix of loaded quads
   //sbyte quadPosX[charactersCount];
   //sbyte quadPosY[charactersCount];
-  byte absPosX[charactersCount];
+  byte absPosX[charactersCount]; //Logical position on the whole map
   byte absPosY[charactersCount];
 }characters;
 
@@ -373,7 +373,7 @@ void LoadMap()
   #define signpost 35
   #define tree 44
   #define rocks 42
-  #define road 46
+  #define road 38
   #define walls 46
   #define floor 38
 
@@ -450,6 +450,10 @@ void LoadMap()
   characters.absPosX[2] = 138;
   characters.absPosY[2] = 60;
 
+  tilesBlocked[46] = 255;
+  
+  
+
   LoadMapQuads();
   LOSEnabled = true;
 }
@@ -514,10 +518,11 @@ void LoadMapQuads()
 static bool CheckCollision(byte charIndex, direction dir)
 {
   byte byte_i;
-  sbyte xPos = characters.posX[charIndex];
-  sbyte yPos = characters.posY[charIndex]; //These need to be signed because they can wrap around the map
+  
   byte absXPos = characters.absPosX[charIndex];
   byte absYPos = characters.absPosY[charIndex];
+  sbyte xPos = characters.posX[charIndex];
+  sbyte yPos = characters.posY[charIndex]; //These need to be signed because they can wrap around the map
 
   //Check the tile we're already standing on
   if(ReadBit(tilesBlocked[mapData[xPos + (mapWidth * yPos)]], dir))
