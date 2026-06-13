@@ -172,6 +172,9 @@ const byte QuadCharIndex[ScreenQuadCount][4] =
 #define walls 46
 #define floor 38
 
+#define dungeonWall 41
+#define dungeonFloor 55
+
       //ScreenQuad.Chars[byte_index][0] = 32;
       //ScreenQuad.Chars[byte_index][1] = byte_index;
       //ScreenQuad.Chars[byte_index][0] = grass;
@@ -191,68 +194,67 @@ const byte QuadCharIndex[ScreenQuadCount][4] =
 struct ScreenQuadDef OverworldQuadDef = 
 {
   water, rocks, //0
-  grass, tree, 
-  grass, tree,
-  grass, tree, 
-  grass, tree, 
-  grass, tree, 
-  grass, tree, 
-  grass, tree, 
-  
+  grass, water, 
+  grass, water,
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
 
-  0, 0, //8
-  grass, tree, 
-  grass, tree,
-  grass, tree, 
-  grass, tree, 
-  grass, tree, 
-  grass, tree, 
-  grass, tree, 
+  grass, water, //8
+  grass, water, 
+  grass, water,
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
 
-  0, 0, //16
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
+  grass, water, //16
+  grass, water, 
+  grass, water,
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water,  
 
-  0, 0, //24
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
+  grass, water, //24
+  grass, water, 
+  grass, water,
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
 
   grass, road, //32
   grass, road, 
   grass, road, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
+  grass, water, 
+  grass, water,
+  grass, water, 
+  grass, water, 
+  grass, water, 
 
-  0, 0, //40
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
+  grass, water, //40
+  grass, water, 
+  grass, water,
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
 
-  0, 0, //48
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
-  0, 0, 
+  grass, water, //48
+  grass, water, 
+  grass, water,
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
+  grass, water, 
 
   water, rocks,  //56
   grass, road, 
@@ -261,82 +263,81 @@ struct ScreenQuadDef OverworldQuadDef =
   grass, rocks, 
   water, rocks, 
   floor, walls, 
-  0, 0  
+  grass, water  
 };
 
 struct ScreenQuadDef DungeonQuadDef = 
 {
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
 
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
 
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor,
-  walls, floor
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor,
+  dungeonWall, dungeonFloor
 };
 
 struct ScreenQuadDef *ScreenQuad;
@@ -410,8 +411,8 @@ void LoadMap()
   byte byte_x;
   byte byte_y;
   byte byte_i;
-  int byte_offset;
-  int byte_index = 0;
+  //int byte_offset;
+  //int byte_index = 0;
   //memset(&mapQuads[0], 0, 256);
   //SetPlayerPositionX = 8;
   //SetPlayerPositionY = 8;
@@ -435,11 +436,11 @@ void LoadMap()
   }
 
   //Quad definitions (64 tiles)
-  for (byte_y = 0; byte_y < 8; ++byte_y)
-    for (byte_x = 0; byte_x < 8; ++byte_x)
+  //for (byte_y = 0; byte_y < 8; ++byte_y)
+    //for (byte_x = 0; byte_x < 8; ++byte_x)
     {
-      byte_index = byte_x + (8* byte_y);
-      byte_offset = (byte_x << 1) + (byte_y << 5);
+      //byte_index = byte_x + (8* byte_y);
+      //byte_offset = (byte_x << 1) + (byte_y << 5);
 
       //ScreenQuad.CharIndex[byte_index][0] = byte_offset; // Init screen quad prefabs for 8x8
       //ScreenQuad.CharIndex[byte_index][1] = byte_offset + 1;
@@ -500,8 +501,10 @@ void LoadMap()
   */
 
 
-  tilesOpaque[tree] = true; //Trees
-  tilesOpaque[rocks] = true; //rocks
+  tilesOpaque[tree] = true;
+  tilesOpaque[rocks] = true;
+  tilesOpaque[dungeonWall] = true;
+  
 
   #if defined(__NES__)
   tilesPalette[tree] = 3; //Trees

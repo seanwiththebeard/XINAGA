@@ -43,7 +43,7 @@ extern const byte attributesDefault[256];
 typedef struct ScreenQuadDef
 {
   byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
-  byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
+  //byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
 };
 
 extern struct ScreenQuadDef *ScreenQuad;
