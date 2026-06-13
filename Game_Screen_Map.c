@@ -146,6 +146,7 @@ static const QuadRel quadRel[8] = {
 static const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
 static const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
 byte *MapSet;
+byte *MiniMapGlyphs;
 
 void LoadMap()
 {
@@ -604,7 +605,7 @@ static void DrawEntireMap(bool clearBuffer)
 
         MiniMapHighlightX = CoordPosX / 16;
         MiniMapHighlightY = CoordPosY / 16;
-        DrawLocalMiniMap(true);
+        DrawLocalMiniMap(true, false);
   
   UpdateAttributes();
   MapFadeIn();
@@ -778,7 +779,7 @@ screenName MapUpdate()
   ScreenFadeIn();
   DrawEntireMap(true);
   DrawCharStats();
-  DrawLocalMiniMap(false);
+  DrawLocalMiniMap(false, false);
 
   while (!exitScreen)
   {

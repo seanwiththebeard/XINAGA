@@ -798,7 +798,9 @@ void GenerateOverworld(byte seed)
 {
   byte x, y;
   byte totalPointsPlaced = 0;
+  
   MapSet = (byte*)&OverworldSet[0];
+  MiniMapGlyphs = (byte*)&OverworldGlyphs[0];
   UploadCharPage((byte*)OverworldGeoMorphSet, 7);
   clearPoints();
   countContinents = 0;
@@ -961,9 +963,12 @@ void PlaceRoom()
 void GenerateDungeon(byte seed)
 {
   byte x,y;
+  
   MapSet = (byte*)&DungeonSet[0];
-  ClearDoors();
+  MiniMapGlyphs = (byte*)&DungeonGlyphs[0];
   UploadCharPage((byte*)DungeonGeoMorphSet, 7);
+  
+  ClearDoors();
   clearPoints();
   sprintf(strTemp, "Dungeon Seed (%d)", seed);
   SetLineMessageWindow(strTemp, 0);
@@ -1063,6 +1068,8 @@ void GenerateMap(byte index)
   WriteLineMessageWindow(strTemp, 0);
   SkipLineMessageWindow();
   Display = false;
+  
+  DrawLocalMiniMap(false, true);
   
   switch (mapType[index])
     {

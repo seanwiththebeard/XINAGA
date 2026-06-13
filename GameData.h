@@ -37,7 +37,9 @@ void ClearInterface();
 //extern byte MiniMapPosY;
 //extern byte SetPlayerPositionX;
 //extern byte SetPlayerPositionY;
-extern const byte MiniMapGlyphs[64];
+extern const byte OverworldGlyphs[64];
+extern const byte DungeonGlyphs[64];
+extern byte *MiniMapGlyphs;
 extern const byte OverworldGeoMorphSet[256];
 extern const byte OverworldGeoMorphAttrib[32];
 extern const byte DungeonGeoMorphSet[256];
@@ -71,7 +73,7 @@ void LoadMap(void);
 
 extern byte MiniMapHighlightX;
 extern byte MiniMapHighlightY;
-void DrawLocalMiniMap(bool checkLast);
+void DrawLocalMiniMap(bool checkLast, bool clear);
 
 //Add Character
 screenName DrawAddCharacterScreen(void);

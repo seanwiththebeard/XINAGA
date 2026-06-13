@@ -23,7 +23,7 @@ byte MiniMapPosY;// = 2;
 byte MiniMapWidth;// = 16;
 byte MiniMapHeight;// = 16;
 
-const byte MiniMapGlyphs[64] =
+const byte OverworldGlyphs[64] =
 {
   0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7,
   0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff,
@@ -33,6 +33,12 @@ const byte MiniMapGlyphs[64] =
   0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0,
   0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe2, 0xe7
+};
+
+const byte DungeonGlyphs[64] =
+{
+  0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xef,
+  0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff
 };
 
 void DebugGraphics()
@@ -86,43 +92,45 @@ void DrawMiniMap(bool highlightPlayer)
 
 byte lastX;
 byte lastY;
-void DrawLocalMiniMap(bool checkLast)
+void DrawLocalMiniMap(bool checkLast, bool clear)
 {
-        #define radius 3
-        #define posX 19 //contextMenuPosX + 1
-        #define posY contextMenuPosY
-        sbyte sampleX, sampleY, sampleXX, sampleYY;
-        byte offset;
-        char target;
+  #define radius 3
+  #define posX 19 //contextMenuPosX + 1
+  #define posY contextMenuPosY
+  sbyte sampleX, sampleY, sampleXX, sampleYY;
+  byte offset;
+  char target;
 
-        if(checkLast)
-        if ((lastX == MiniMapHighlightX) && (lastY == MiniMapHighlightY))
-                return;
-        UpdateAttributes();
-        for (sampleY = -radius; sampleY <= radius; ++sampleY)
-                {
-                        sampleYY = sampleY + MiniMapHighlightY;
-                        if (sampleYY < 0)
-                                        sampleYY += mapMatrixHeight;
-                        if (sampleYY >= mapMatrixHeight)
-                                        sampleYY -= mapMatrixHeight;
-                for (sampleX = -radius; sampleX <= radius; ++sampleX)
-                        {
-                                sampleXX = sampleX + MiniMapHighlightX;
-                                if (sampleXX < 0)
-                                        sampleXX += mapMatrixWidth;
-                                if (sampleXX >= mapMatrixWidth)
-                                        sampleXX -= mapMatrixWidth;
-                                offset = sampleXX + mapMatrixWidth* sampleYY;
-                                if ((sampleX == 0) && (sampleY == 0))
-                                        target = 'X';
-                                else
-                                        target = MiniMapGlyphs[mapQuads[offset]];
-                                SetChar(target, sampleX + (posX + radius), sampleY + (posY + radius));
-                        }
-                }
-        lastX = MiniMapHighlightX;
-        lastY = MiniMapHighlightY;
+  if(checkLast)
+  if ((lastX == MiniMapHighlightX) && (lastY == MiniMapHighlightY))
+          return;
+  UpdateAttributes();
+  for (sampleY = -radius; sampleY <= radius; ++sampleY)
+    {
+      sampleYY = sampleY + MiniMapHighlightY;
+      if (sampleYY < 0)
+        sampleYY += mapMatrixHeight;
+      if (sampleYY >= mapMatrixHeight)
+        sampleYY -= mapMatrixHeight;
+      for (sampleX = -radius; sampleX <= radius; ++sampleX)
+        {
+          sampleXX = sampleX + MiniMapHighlightX;
+          if (sampleXX < 0)
+                  sampleXX += mapMatrixWidth;
+          if (sampleXX >= mapMatrixWidth)
+                  sampleXX -= mapMatrixWidth;
+          offset = sampleXX + mapMatrixWidth* sampleYY;
+          if ((sampleX == 0) && (sampleY == 0))
+                  target = 'X';
+          else
+                  target = MiniMapGlyphs[mapQuads[offset]];
+          if (clear)
+            target = ' ';
+          SetChar(target, sampleX + (posX + radius), sampleY + (posY + radius));
+        }
+      }
+  lastX = MiniMapHighlightX;
+  lastY = MiniMapHighlightY;
 }
 
 void DrawCharset()
