@@ -940,9 +940,9 @@ const byte RoomProbability[20] =
 void PlaceRoom()
 {
         #define sizeXMin 2
-        #define sizeXMax 4
-        #define sizeYMin 1
-        #define sizeYMax 3
+        #define sizeXMax 5
+        #define sizeYMin 2
+        #define sizeYMax 5
         byte x, y;
         byte sizeX = sizeXMin + (rand() % (sizeXMax - sizeXMin));
         byte sizeY = sizeYMin + (rand() % (sizeYMax - sizeYMin));
