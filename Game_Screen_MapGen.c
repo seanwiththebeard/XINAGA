@@ -798,6 +798,7 @@ void GenerateOverworld(byte seed)
 {
   byte x, y;
   byte totalPointsPlaced = 0;
+  MapSet = (byte*)&OverworldSet[0];
   UploadCharPage((byte*)OverworldGeoMorphSet, 7);
   clearPoints();
   countContinents = 0;
@@ -960,6 +961,7 @@ void PlaceRoom()
 void GenerateDungeon(byte seed)
 {
   byte x,y;
+  MapSet = (byte*)&DungeonSet[0];
   ClearDoors();
   UploadCharPage((byte*)DungeonGeoMorphSet, 7);
   clearPoints();

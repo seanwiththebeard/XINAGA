@@ -154,6 +154,7 @@ const byte tileIndexes[64] =
   192, 194, 196, 198, 200, 202, 204, 206,
   224, 226, 228, 230, 232, 234, 236, 238
 };
+
 bool screenFaded;
 //byte DrawTilePalette;
 byte arrowA;
@@ -697,7 +698,7 @@ void DrawLineV(byte index, sbyte x, sbyte y, byte length)
 
 void DrawCorners(sbyte xPos, sbyte yPos, byte widthInside1, byte heightInside1)
 {
-  #define corner  0xEA
+  #define corner  0x7B
   char corner1 = corner;
   char corner2 = corner;
   sbyte xRight = xPos + widthInside1;
@@ -755,10 +756,10 @@ void DrawBorder(char *text, sbyte xPos, sbyte yPos, byte width, byte height, boo
   #endif
 
   #if !defined(__APPLE2__)
-  DrawLineH(0xEC, xPos1, yPos, widthInside2);
-  DrawLineH(0xED, xPos1, yPos + heightInside1, widthInside2);
-  DrawLineV(0xEE, xPos, yPos1, heightInside1);
-  DrawLineV(0xEF, xPos + widthInside1, yPos1, heightInside2);
+  DrawLineH(0x7C, xPos1, yPos, widthInside2);
+  DrawLineH(0x7D, xPos1, yPos + heightInside1, widthInside2);
+  DrawLineV(0x7E, xPos, yPos1, heightInside1);
+  DrawLineV(0x7F, xPos + widthInside1, yPos1, heightInside2);
   #endif
 
   DrawCorners(xPos, yPos, widthInside1, heightInside1);

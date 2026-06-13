@@ -145,6 +145,7 @@ static const QuadRel quadRel[8] = {
 //Quad positions in the matrix for which way we're moving
 static const byte CompareQuadValueA[8] = {2, 3, 0, 1, 1, 0, 3, 2};
 static const byte CompareQuadValueB[8] = {3, 2, 1, 0, 3, 2, 1, 0};
+byte *MapSet;
 
 void LoadMap()
 {
