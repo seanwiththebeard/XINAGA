@@ -14,7 +14,7 @@
 
 #if defined (__C64__)
 #pragma code-name (push, "SCREEN_MAP")
-//#pragma rodata-name (push, "SCREEN_MAP")
+#pragma rodata-name (push, "SCREEN_MAP")
 #endif
 
 
@@ -76,13 +76,270 @@ byte EnteringDoor;
 bool Entering;
 byte MapIndex;
 
-static struct
-{ //These are the quad indexes referenced in mapQuads[y][x]
-  #define ScreenQuadCount 64
-  byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
-  byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
-  byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
-}ScreenQuad;
+//Replace this with a pointer to a ScreenQuadDef
+//struct
+//{ //These are the quad indexes referenced in mapQuads[y][x]
+
+  //Make this a const array QuadCharIndex
+  //byte CharIndex[ScreenQuadCount][4]; //The graphic characters that make up the tile placement
+  
+  //byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
+  //byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
+//}ScreenQuad;
+
+const byte QuadCharIndex[ScreenQuadCount][4] = 
+{
+  0, 1, 16, 17,
+  2, 3, 18, 19,
+  4, 5, 20, 21,
+  6, 7, 22, 23,
+  8, 9, 24, 25,
+  10, 11, 26, 27,
+  12, 13, 28, 29,
+  14, 15, 30, 31,
+
+  32, 33, 48, 49,
+  34, 35, 50, 51,
+  36, 37, 52, 53,
+  38, 39, 54, 55,
+  40, 41, 56, 57,
+  42, 43, 58, 59,
+  44, 45, 60, 61,
+  46, 47, 62, 63,
+
+  64, 65, 80, 81,
+  66, 67, 82, 83,
+  68, 69, 84, 85,
+  70, 71, 86, 87,
+  72, 73, 88, 89,
+  74, 75, 90, 91,
+  76, 77, 92, 93,
+  78, 79, 94, 95,
+
+  96, 97, 112, 113,
+  98, 99, 114, 115,
+  100, 101, 116, 117,
+  102, 103, 118, 119,
+  104, 105, 120, 121,
+  106, 107, 122, 123,
+  108, 109, 124, 125,
+  110, 111, 126, 127,
+
+  128, 129, 144, 145,
+  130, 131, 146, 147,
+  132, 133, 148, 149,
+  134, 135, 150, 151,
+  136, 137, 152, 153,
+  138, 139, 154, 155,
+  140, 141, 156, 157,
+  142, 143, 158, 159,
+
+  160, 161, 176, 177,
+  162, 163, 178, 179,
+  164, 165, 180, 181,
+  166, 167, 182, 183,
+  168, 169, 184, 185,
+  170, 171, 186, 187,
+  172, 173, 188, 189,
+  174, 175, 190, 191,
+
+  192, 193, 208, 209,
+  194, 195, 210, 211,
+  196, 197, 212, 213,
+  198, 199, 214, 215,
+  200, 201, 216, 217,
+  202, 204, 218, 219,
+  205, 206, 220, 221,
+  207, 208, 222, 223,
+
+  224, 225, 240, 241,
+  226, 227, 242, 243,
+  228, 229, 244, 245,
+  230, 231, 246, 247,
+  232, 233, 248, 249,
+  234, 235, 250, 251,
+  236, 237, 252, 253,
+  238, 239, 254, 255
+};
+
+
+#define grass 36
+#define water 34
+#define signpost 35
+#define tree 44
+#define rocks 42
+#define road 38
+#define walls 46
+#define floor 38
+
+      //ScreenQuad.Chars[byte_index][0] = 32;
+      //ScreenQuad.Chars[byte_index][1] = byte_index;
+      //ScreenQuad.Chars[byte_index][0] = grass;
+      //ScreenQuad.Chars[byte_index][1] = tree;
+
+      //ScreenQuad.Chars[byte_index][0] = 36;
+      //ScreenQuad.Chars[byte_index][1] = 34;
+
+  //ScreenQuad.Chars[63][0] = water;
+  //ScreenQuad.Chars[63][1] = water;
+  //ScreenQuad.Chars[62][0] = grass;
+  //ScreenQuad.Chars[62][1] = grass;
+
+  //ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
+  //ScreenQuad.Chars[2][1] = 44; // Set the wizard to trees on 1
+
+struct ScreenQuadDef OverworldQuadDef = 
+{
+  water, rocks, //0
+  grass, tree, 
+  grass, tree,
+  grass, tree, 
+  grass, tree, 
+  grass, tree, 
+  grass, tree, 
+  grass, tree, 
+  
+
+  0, 0, //8
+  grass, tree, 
+  grass, tree,
+  grass, tree, 
+  grass, tree, 
+  grass, tree, 
+  grass, tree, 
+  grass, tree, 
+
+  0, 0, //16
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+
+  0, 0, //24
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+
+  grass, road, //32
+  grass, road, 
+  grass, road, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+
+  0, 0, //40
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+
+  0, 0, //48
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+  0, 0, 
+
+  water, rocks,  //56
+  grass, road, 
+  grass, tree,
+  grass, tree, 
+  grass, rocks, 
+  water, rocks, 
+  floor, walls, 
+  0, 0  
+};
+
+struct ScreenQuadDef DungeonQuadDef = 
+{
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor,
+  walls, floor
+};
+
+struct ScreenQuadDef *ScreenQuad;
 
 static struct
 {
@@ -184,19 +441,20 @@ void LoadMap()
       byte_index = byte_x + (8* byte_y);
       byte_offset = (byte_x << 1) + (byte_y << 5);
 
-      ScreenQuad.CharIndex[byte_index][0] = byte_offset; // Init screen quad prefabs for 8x8
-      ScreenQuad.CharIndex[byte_index][1] = byte_offset + 1;
-      ScreenQuad.CharIndex[byte_index][2] = byte_offset + 16;
-      ScreenQuad.CharIndex[byte_index][3] = byte_offset + 17;
+      //ScreenQuad.CharIndex[byte_index][0] = byte_offset; // Init screen quad prefabs for 8x8
+      //ScreenQuad.CharIndex[byte_index][1] = byte_offset + 1;
+      //ScreenQuad.CharIndex[byte_index][2] = byte_offset + 16;
+      //ScreenQuad.CharIndex[byte_index][3] = byte_offset + 17;
+      
       //ScreenQuad.Chars[byte_index][0] = 32;
       //ScreenQuad.Chars[byte_index][1] = byte_index;
       //ScreenQuad.Chars[byte_index][0] = grass;
       //ScreenQuad.Chars[byte_index][1] = tree;
 
-      ScreenQuad.Chars[byte_index][0] = 36;
-      ScreenQuad.Chars[byte_index][1] = 34;
+      //ScreenQuad.Chars[byte_index][0] = 36;
+      //ScreenQuad.Chars[byte_index][1] = 34;
 
-      ScreenQuad.ScatterIndex[byte_index] = 0;
+      //ScreenQuad.ScatterIndex[byte_index] = 0;
       //++byte_index;
     }
 
@@ -241,14 +499,6 @@ void LoadMap()
   Index 61
   */
 
-  #define grass 36
-  #define water 34
-  #define signpost 35
-  #define tree 44
-  #define rocks 42
-  #define road 38
-  #define walls 46
-  #define floor 38
 
   tilesOpaque[tree] = true; //Trees
   tilesOpaque[rocks] = true; //rocks
@@ -260,6 +510,7 @@ void LoadMap()
   //ScreenQuad.Chars[0][0] = water;
   //ScreenQuad.Chars[0][1] = rocks;
 
+  /*
   ScreenQuad.Chars[32][0] = grass;
   ScreenQuad.Chars[32][1] = road;
   ScreenQuad.Chars[33][0] = grass;
@@ -287,6 +538,7 @@ void LoadMap()
 
   ScreenQuad.Chars[62][0] = floor;
   ScreenQuad.Chars[62][1] = walls;
+  */
 
   //Init Characters
   for (byte_i = 0; byte_i < charactersCount; ++byte_i)
@@ -328,7 +580,10 @@ static void LoadQuadrant(byte quadIndex, byte quad)
 {
   int rowStart;
   const byte *tilePtr;
-  const byte *chars = ScreenQuad.Chars[quadIndex];
+  
+  //const byte *chars = ScreenQuad.Chars[quadIndex];
+  const byte *chars = ScreenQuad->Chars[quadIndex];
+  
   byte byte_y, byte_z, QuadOriginX, QuadOriginY, charByte;
   byte *out;
 
@@ -339,7 +594,7 @@ static void LoadQuadrant(byte quadIndex, byte quad)
     QuadOriginX = quadOriginsX[quad] + quadOffsetX[byte_z];
     QuadOriginY = quadOriginsY[quad] + quadOffsetY[byte_z];
     // Precompute tile base pointer once per tile
-    tilePtr = &MapSet[ScreenQuad.CharIndex[quadIndex][byte_z] << 3];
+    tilePtr = &MapSet[QuadCharIndex[quadIndex][byte_z] << 3];
     rowStart = mapWidth * (QuadOriginY);
     for (byte_y = 0; byte_y < quadSize; ++byte_y)
     {

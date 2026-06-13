@@ -802,6 +802,8 @@ void GenerateOverworld(byte seed)
   MapSet = (byte*)&OverworldSet[0];
   MiniMapGlyphs = (byte*)&OverworldGlyphs[0];
   UploadCharPage((byte*)OverworldGeoMorphSet, 7);
+  ScreenQuad = (struct ScreenQuadDef*)&OverworldQuadDef;
+  
   clearPoints();
   countContinents = 0;
   forrestCount = 0;
@@ -967,7 +969,8 @@ void GenerateDungeon(byte seed)
   MapSet = (byte*)&DungeonSet[0];
   MiniMapGlyphs = (byte*)&DungeonGlyphs[0];
   UploadCharPage((byte*)DungeonGeoMorphSet, 7);
-  
+  ScreenQuad = (struct ScreenQuadDef*)&DungeonQuadDef;
+    
   ClearDoors();
   clearPoints();
   sprintf(strTemp, "Dungeon Seed (%d)", seed);

@@ -39,6 +39,16 @@ extern uint16_t randseed;
 extern const byte characterset[2048];
 extern const byte attributesDefault[256];
 
+#define ScreenQuadCount 64
+typedef struct ScreenQuadDef
+{
+  byte Chars[ScreenQuadCount][2]; //Which tiles for a zero or a 1 in the bits of a CharIndex
+  byte ScatterIndex[ScreenQuadCount]; //Which fluff arrangement to add on top of above?
+};
+
+extern struct ScreenQuadDef *ScreenQuad;
+
+
 #define viewportPosX 0
 #define viewportPosY 0
 #define viewportWidth 9
