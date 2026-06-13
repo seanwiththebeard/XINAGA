@@ -571,7 +571,8 @@ void LoadMap()
   characters.absPosX[2] = 138;
   characters.absPosY[2] = 60;
 
-  tilesBlocked[46] = 255;
+  tilesBlocked[walls] = 255;
+  tilesBlocked[dungeonWall] = 255;
 
   LoadMapQuads();
   LOSEnabled = true;
