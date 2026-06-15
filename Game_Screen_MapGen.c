@@ -38,15 +38,6 @@ One byte describes 16x16 region
 #pragma rodata-name (push, "SCREEN_MAPGEN")
 #endif
 
-//const byte OverworldGeoMorphSet[256];
-//const byte OverworldGeoMorphAttrib[32];
-//const byte DungeonGeoMorphSet[256];
-//const byte DungeonGeoMorphAttrib[32];
-
-#if defined(__C64__)
-#pragma rodata-name (push, "GAME_DISKDATA")
-#endif
-
 bool Display;
 
 //Read-Only Map Info
@@ -1059,7 +1050,7 @@ void GetSeed()
   }
 }
 
-const char *mapTypeName[] = 
+const char* const mapTypeName[] =
 {
   "OVERWORLD", "TOWN", "DUNGEON", "FINAL"
 };

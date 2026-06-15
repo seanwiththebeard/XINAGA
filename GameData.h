@@ -70,8 +70,8 @@ void RunGame(screenName startingScreen);
 void DrawMiniMap(bool highlightPlayer);
 void WaitForInput(void);
 void LoadMap(void);
-extern struct ScreenQuadDef OverworldQuadDef;
-extern struct ScreenQuadDef DungeonQuadDef;
+extern const struct ScreenQuadDef OverworldQuadDef;
+extern const struct ScreenQuadDef DungeonQuadDef;
 
 extern byte MiniMapHighlightX;
 extern byte MiniMapHighlightY;

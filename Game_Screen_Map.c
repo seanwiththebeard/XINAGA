@@ -191,7 +191,7 @@ const byte QuadCharIndex[ScreenQuadCount][4] =
   //ScreenQuad.Chars[2][0] = 36; // Set the wizard to grass on 0
   //ScreenQuad.Chars[2][1] = 44; // Set the wizard to trees on 1
 
-struct ScreenQuadDef OverworldQuadDef = 
+const struct ScreenQuadDef OverworldQuadDef = 
 {
   water, rocks, //0
   grass, water, 
@@ -266,7 +266,7 @@ struct ScreenQuadDef OverworldQuadDef =
   grass, water  
 };
 
-struct ScreenQuadDef DungeonQuadDef = 
+const struct ScreenQuadDef DungeonQuadDef = 
 {
   dungeonWall, dungeonFloor,
   dungeonWall, dungeonFloor,

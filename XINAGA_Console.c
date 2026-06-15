@@ -13,7 +13,7 @@
 #endif
 
 #if defined (__C64__)
-#pragma code-name (push, "XINAGA_CONSOLE")
+#pragma code-name (push, "XINAGA")
 //#pragma rodata-name (push, "GAME_RODATA")
 #endif
 
