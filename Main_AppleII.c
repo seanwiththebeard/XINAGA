@@ -16,19 +16,25 @@
 //#link "Game_System.c"
 //#link "Game_RPGData.c"
 //#link "Game_Screen_AddCharacter.c"
-//#link "Game_Screen_MapGen.c"
-//#link "Game_Screen_Map.c"
+////#link "Game_Screen_MapGen.c"
+////#link "Game_Screen_Map.c"
 ////#link "Game_Screen_Combat.c"
 
-screenName Update_Combat(void)
-{
-  return Map;
-}
+screenName Update_Combat(void){return EditParty;}
+screenName Update_Map(void){return EditParty;}
+screenName Update_MapGen(void){return EditParty;}
+screenName MapUpdate(void){return EditParty;}
+//screenName DrawAddCharacterScreen(void){return EditParty;}
+void LoadMap(void){};
+void LoadMapQuads(void){};
+byte *MiniMapGlyphs = (byte*)0x4000;
+byte mapQuads[mapMatrixHeight * mapMatrixWidth];
+
 
 
 void main()
 {
-  InitializeGraphics();
+  //InitializeGraphics();
   //DrawCharset();
   //DebugGraphics();
   //while(1);
@@ -36,7 +42,7 @@ void main()
   //DrawMiniMap(false);
   RunGame(EditParty);
 }
-#pragma rodata-name (push, "LC")
+//#pragma rodata-name (push, "LC")
 
 const byte const charset[2048] = {/*{w:8,h:8,count:256, bpp:1}*/
   0x00, 0x70, 0x18, 0x28, 0x68, 0x58, 0x6C, 0x04, 0x00, 0x07, 0x0C, 0x08,

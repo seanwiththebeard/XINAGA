@@ -23,7 +23,7 @@ const int YColumnIndex[ROWS] =
 #endif
 
 #if defined (__APPLE2__)
-#pragma code-name (push, "LOWCODE")
+//#pragma code-name (push, "LOWCODE")
 const int YColumnIndex[ROWS] =
 {
     0,  40,  80, 120, 160,
