@@ -549,8 +549,18 @@ void TavernMenu()
     DrawCharStats();
     DrawPartyStats();
   }
-
 const byte predefcharindex[] = {2, 7, 5, 3};
+
+  void FillParty()
+  {
+    while(CountParty() < 4)
+    {
+      while(!AddRandom(predefcharindex[CountParty()], rand() % 8));
+      AddParty(CurrentCharacter);
+      DrawStuff();
+    }
+  }
+
 screenName DrawAddCharacterScreen()
 {
         nextScreen = EditParty;
@@ -561,14 +571,8 @@ screenName DrawAddCharacterScreen()
         DrawStuff();
   if (CountParty() == 0)
   {
-    while(CountParty() < 4)
-    {
-      while(!AddRandom(predefcharindex[CountParty()], rand() % 8));
-      AddParty(CurrentCharacter);
-      DrawStuff();
-    }
-    return MapGen;
-    //return Combat;
+    //FillParty();
+    //return MapGen;
   }
         //while(CountParty() != 4)
         //

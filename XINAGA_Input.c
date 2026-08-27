@@ -25,12 +25,8 @@ char padStateLast;
 #if defined (__C64__)
 #pragma code-name (push, "XINAGA")
 //#pragma rodata-name (push, "XINAGA_RODATA")
-#include <joystick.h>
-//#include <conio.h>
-byte joyState;
-byte joyStateLast;
-byte joyTemp;
-#define keycode ((byte*)0x00C5)
+#include <conio.h>
+//#define keycode ((byte*)0x00C5)
 #endif
 
 #if (MSX)
@@ -43,14 +39,13 @@ char trigATemp;
 char trigAStateLast;
 #endif
 
-sbyte key;
+sbyte key, keyTemp;
 byte keyIgnore;
 bool ChangedState;
 
 void InitializeInput()
 {
-  #if __C64__
-  joy_install(joy_static_stddrv);
+  #if (__C64__)
   #endif
 }
 bool InputChanged(void)
@@ -68,39 +63,23 @@ bool InputChanged(void)
 }
 void UpdateInput(void)
 {
-  //srand(++randseed);
   #if __C64__
-  joyTemp = joy_read(0);
-
-  if (joyState == joyTemp)
+  if(kbhit())
   {
-    ChangedState = false;
+    key = cgetc();
+    ChangedState = true;
   }
   else
   {
-    joyState = joyTemp;
-    ChangedState = true;
-    joyStateLast = joyState;
-  }
-  //if (kbhit())
-  {
-    //if (key != keycode[0])
-    {
-    //key = keycode[0];
-      //SetChar(keycode[0], COLS - 1, 1);
-    //ChangedState = true;
-    }
-  }
-  //else
-  {
-    //key = 255;
-    //ChangedState = false;
+    key = 255;
+    ChangedState = false;
+    return;
   }
   #endif
 
   #if defined(__APPLE2__)
   if(kbhit())
-  cgetc();
+    cgetc();
   else
   {
     key = 255;
@@ -141,7 +120,7 @@ void UpdateInput(void)
 bool InputUp(void)
 {
   #if __C64__
-  if (JOY_UP(joyState) || (key == 'w' || key == 'W'))
+  if ((key == 'w' || key == 'W'))
     return true;
   #endif
 
@@ -166,7 +145,7 @@ bool InputUp(void)
 bool InputDown(void)
 {
   #if __C64__
-  if (JOY_DOWN(joyState))
+  if ((key == 's' || key == 'S'))
     return true;
   #endif
   #if defined(__APPLE2__)
@@ -188,7 +167,7 @@ bool InputDown(void)
 bool InputLeft(void)
 {
   #if __C64__
-  if (JOY_LEFT(joyState))
+  if ((key == 'a' || key == 'A'))
     return true;
   #endif
 
@@ -211,7 +190,7 @@ bool InputLeft(void)
 bool InputRight(void)
 {
   #if __C64__
-  if (JOY_RIGHT(joyState))
+  if ((key == 'd' || key == 'D'))
     return true;
   #endif
 
@@ -234,7 +213,7 @@ bool InputRight(void)
 bool InputFire(void)
 {
   #if __C64__
-  if (JOY_FIRE(joyState))
+  if (key == ' ')
     return true;
   #endif
   #if defined(__APPLE2__)
