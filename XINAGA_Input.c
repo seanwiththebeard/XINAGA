@@ -1,7 +1,9 @@
 #include "Xinaga.h"
 
 #if defined(__APPLE2__)
-//#pragma code-name (push, "LOWCODE")
+#pragma code-name (push, "XINAGA")
+#pragma rodata-name (push, "XINAGA")
+
 #define keycode ((byte*)0xC000)
 #define keyflag ((byte*)0xC010)
 //const byte* keycode = (byte*)0xC000;

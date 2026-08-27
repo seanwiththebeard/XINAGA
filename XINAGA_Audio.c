@@ -1,7 +1,8 @@
 #include "Xinaga.h"
 
 #if defined(__APPLE2__)
-#pragma code-name (push, "LOWCODE")
+#pragma code-name (push, "XINAGA")
+#pragma rodata-name (push, "XINAGA")
 #endif
 
 #if defined (__NES__)

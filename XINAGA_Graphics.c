@@ -23,7 +23,9 @@ const int YColumnIndex[ROWS] =
 #endif
 
 #if defined (__APPLE2__)
-//#pragma code-name (push, "LOWCODE")
+#pragma code-name (push, "XINAGA")
+#pragma rodata-name (push, "XINAGA")
+
 const int YColumnIndex[ROWS] =
 {
     0,  40,  80, 120, 160,
@@ -120,9 +122,11 @@ void SetBG(byte color)
 }
 #endif
 //
-#if defined (__C64__) || (__APPLE2__)
-//|| (__NES__)
+#if defined (__C64__)
 #pragma bss-name (push, "ZEROPAGE")
+#endif
+#if defined (__APPLE2__)
+//#pragma bss-name (push, "ZEROPAGE")
 #endif
 byte MapOriginX;
 byte MapOriginY;
@@ -137,10 +141,11 @@ byte indexes[4];
 byte tilePosX;
 byte tilePosY;
 byte xA, yA, xB, yB, posX, posY;
-//
-#if defined (__C64__) || (__APPLE2__)
-//|| (__NES__)
+#if defined (__C64__)
 #pragma bss-name (pop)
+#endif
+#if defined (__APPLE2__)
+//#pragma bss-name (pop)
 #endif
 
 const byte tileIndexes[64] =

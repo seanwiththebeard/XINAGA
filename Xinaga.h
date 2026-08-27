@@ -71,7 +71,7 @@ extern struct ScreenQuadDef *ScreenQuad;
 
 //Screen Layout
 #if defined(__APPLE2__)
-#pragma rodata-name (push, "LC")
+//#pragma rodata-name (push, "LC")
 
 #define COLS 40
 #define ROWS 24
@@ -228,11 +228,16 @@ extern byte SetCharIndex;
 extern byte SetCharX;
 extern byte SetCharY;
 //
-#if defined(__C64__) || defined(__APPLE2__)
-//|| defined(__NES__)
+#if defined(__C64__)
 #pragma zpsym ("SetCharIndex")
 #pragma zpsym ("SetCharX")
 #pragma zpsym ("SetCharY")
+#endif
+
+#if defined(__APPLE2__)
+//#pragma zpsym ("SetCharIndex")
+//#pragma zpsym ("SetCharX")
+//#pragma zpsym ("SetCharY")
 #endif
 
 void _SetChar(void);
@@ -258,14 +263,23 @@ void SetTileOrigin(byte x, byte y);
 extern byte tilePosX;
 extern byte tilePosY;
 //
-#if defined(__C64__) || defined(__APPLE2__)
-//|| defined(__NES__)
+#if defined(__C64__)
 #pragma zpsym ("tilePosX")
 #pragma zpsym ("tilePosY")
 #pragma zpsym ("DrawTileX")
 #pragma zpsym ("DrawTileY")
 #pragma zpsym ("DrawTileIndex")
 #endif
+
+#if defined(__APPLE2__)
+//#pragma zpsym ("tilePosX")
+//#pragma zpsym ("tilePosY")
+//#pragma zpsym ("DrawTileX")
+//#pragma zpsym ("DrawTileY")
+//#pragma zpsym ("DrawTileIndex")
+#endif
+
+
 //void DrawTileBuffer(bool drawChars);
 //void DrawTileDirect(void);
 void DrawTileDirectXY(byte index, byte x, byte y);

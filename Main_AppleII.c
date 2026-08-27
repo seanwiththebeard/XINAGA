@@ -2,7 +2,7 @@
 #include "GameData.h"
 //#resource "apple2-xinaga.cfg"
 #define CFGFILE apple2-xinaga.cfg
-//#resource "apple2.rom"
+////#resource "apple2.rom"
 
 //#link "DiskFiles.c"
 
@@ -15,35 +15,50 @@
 //#link "Game_Demo.c"
 //#link "Game_System.c"
 //#link "Game_RPGData.c"
+
 //#link "Game_Screen_AddCharacter.c"
-////#link "Game_Screen_MapGen.c"
-////#link "Game_Screen_Map.c"
-////#link "Game_Screen_Combat.c"
-
-screenName Update_Combat(void){return EditParty;}
-screenName Update_Map(void){return EditParty;}
-screenName Update_MapGen(void){return EditParty;}
-screenName MapUpdate(void){return EditParty;}
 //screenName DrawAddCharacterScreen(void){return EditParty;}
-void LoadMap(void){};
-void LoadMapQuads(void){};
-byte *MiniMapGlyphs = (byte*)0x4000;
-byte mapQuads[mapMatrixHeight * mapMatrixWidth];
 
+////#link "Game_Screen_MapGen.c"
+void GenerateMap(byte index){index;};
+screenName Update_MapGen(void){return EditParty;}
+
+
+//#link "Game_Screen_Map.c"
+//void LoadMap(void){};
+//void LoadMapQuads(void){};
+//screenName Update_Map(void){return EditParty;}
+
+////#link "Game_Screen_Combat.c"
+screenName Update_Combat(void){return EditParty;}
+
+//screenName MapUpdate(void){return EditParty;}
+
+//byte *MiniMapGlyphs = (byte*)0x4000;
+//byte *MapSet;
+//byte mapQuads[mapMatrixHeight * mapMatrixWidth];
+//struct doors Doors;
+//byte EnteringDoor;
+//bool Entering;
+//byte MapIndex;
+//const struct ScreenQuadDef DungeonQuadDef={};
+//const struct ScreenQuadDef OverworldQuadDef = {};
+//struct ScreenQuadDef *ScreenQuad;
+//byte mapQuads[mapMatrixHeight * mapMatrixWidth];  //These are the quad-tile references that make up the map
 
 
 void main()
 {
-  //InitializeGraphics();
-  //DrawCharset();
+  InitializeGraphics();
+  DrawCharset();
   //DebugGraphics();
   //while(1);
   //GFX_DEMO();
   //DrawMiniMap(false);
   RunGame(EditParty);
 }
-//#pragma rodata-name (push, "LC")
 
+//#pragma rodata-name (push, "LC")
 const byte const charset[2048] = {/*{w:8,h:8,count:256, bpp:1}*/
   0x00, 0x70, 0x18, 0x28, 0x68, 0x58, 0x6C, 0x04, 0x00, 0x07, 0x0C, 0x08,
 	0x08, 0x0D, 0x1B, 0x10, 0x00, 0x60, 0x70, 0x70, 0x50, 0x30, 0x48, 0x0C,
