@@ -3,7 +3,7 @@
 
 #if defined(__APPLE2__)
 #pragma code-name (push, "SCREEN_MAP")
-#pragma rodata-name (push, "SCREEN_MAP")
+//#pragma rodata-name (push, "SCREEN_MAP")
 #endif
 
 #if defined (__NES__)

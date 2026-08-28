@@ -2,8 +2,8 @@
 #include "GameData.h"
 
 #if defined(__APPLE2__)
-//#pragma code-name (push, "LC")
-//#pragma rodata-name (push, "LC4")
+//#pragma code-name (push, "SCREEN_COMBAT")
+//#pragma rodata-name (push, "SCREEN_COMBAT")
 #endif
 
 #if defined (__NES__)

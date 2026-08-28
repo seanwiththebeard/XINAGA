@@ -3,7 +3,7 @@
 
 #if defined(__APPLE2__)
 #pragma code-name (push, "SCREEN_ADDCHAR")
-#pragma rodata-name (push, "SCREEN_ADDCHAR")
+//#pragma rodata-name (push, "SCREEN_ADDCHAR")
 #endif
 
 #if defined (__NES__)
