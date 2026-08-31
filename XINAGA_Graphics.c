@@ -92,15 +92,15 @@ const byte attributeset[256];
 byte ScreenChars[ROWS*COLS];
 #endif
 #if defined (__C64__)
-#pragma code-name (push, "XINAGA")
-//#pragma rodata-name (push, "XINAGA")
+#pragma code-name (push, "XINAGA_GRAPHICS")
+#pragma rodata-name (push, "XINAGA_GRAPHICS")
 #define bank 3
 #define charpos 7
 #define screenpos 2
 byte *ScreenColors;// = (byte *)0xD800;
 byte *ScreenChars;// = (byte*)0x0400;
 byte attributeset[256];
-static const int YColumnIndex[ROWS] =
+const int YColumnIndex[ROWS] =
 {
     0,  40,  80, 120, 160,
   200, 240, 280, 320, 360,

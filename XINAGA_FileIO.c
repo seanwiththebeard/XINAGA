@@ -5,8 +5,8 @@
 #include <conio.h>
 //#include <stdlib.h>
 //#include <cbm.h>
-#pragma code-name (push, "XINAGA")
-//#pragma rodata-name (push, "XINAGA_RODATA")
+#pragma code-name (push, "XINAGA_FILEIO")
+#pragma rodata-name (push, "XINAGA_FILEIO")
 #endif
 
 #if defined(__APPLE2__)

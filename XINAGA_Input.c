@@ -25,8 +25,8 @@ char padStateLast;
 #endif
 
 #if defined (__C64__)
-#pragma code-name (push, "XINAGA")
-//#pragma rodata-name (push, "XINAGA_RODATA")
+#pragma code-name (push, "XINAGA_INPUT")
+#pragma rodata-name (push, "XINAGA_INPUT")
 #include <conio.h>
 //#define keycode ((byte*)0x00C5)
 #endif

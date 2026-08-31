@@ -13,8 +13,8 @@
 #endif
 
 #if defined (__C64__)
-#pragma code-name (push, "XINAGA")
-//#pragma rodata-name (push, "GAME_RODATA")
+#pragma code-name (push, "XINAGA_CONSOLE")
+#pragma rodata-name (push, "XINAGA_CONSOLE")
 #endif
 
 //Console Buffer
