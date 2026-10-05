@@ -20,6 +20,9 @@
 //#link "Game_Screen_Map.c"
 //#link "Game_Screen_Combat.c"
 
+//#resource "savegame"
+
+
 void main(void)
 {
   nextScreen = EditParty;

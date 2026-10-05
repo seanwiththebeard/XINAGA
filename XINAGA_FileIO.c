@@ -50,11 +50,18 @@ void DiskSave(char *filename, byte *source, int size)
   //Saving
   _filetype = 's';
   if ((fp = fopen (filename, "w")) == 0) {
-    WriteLineMessageWindow("File could not be opened", 0);
-    exit (1);
+    WriteLineMessageWindow("No file on disk, saving", 0);
+    //exit (1);
   }
+
   fwrite (source, 1, size, fp);
   fclose (fp);
+  
+  if ((fp = fopen (filename, "r")) != 0) {
+    WriteLineMessageWindow("Game Saved", 0);
+  fclose (fp);
+    //exit (1);
+  }
   #endif
 
   #if defined(__APPLE2__)
@@ -101,7 +108,8 @@ void DiskLoad(char *filename, byte *dest, int size)
   _filetype = 's';
   if ((fp = fopen (filename, "r")) == 0) {
     WriteLineMessageWindow ("File could not be opened",0);
-    exit (1);
+    //exit (1);
+    return;
   }
 
   while (x < size) {
@@ -112,6 +120,7 @@ void DiskLoad(char *filename, byte *dest, int size)
     }
   }
   fclose (fp);
+    WriteLineMessageWindow ("Game Loaded",0);
   #endif
 
   #if defined(__APPLE2__)
