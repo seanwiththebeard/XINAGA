@@ -2,9 +2,9 @@
 #if defined(__APPLE2__)
 //#pragma rodata-name (push, "LC")
 #endif
+#pragma rodata-name (push, "GAME_DISKDATA")
 
 #if defined(__C64__)
-#pragma rodata-name (push, "GAME_DISKDATA")
 
 /*{pal:"c64",layout:"c64"}*/
 const char PALETTE[16] = {

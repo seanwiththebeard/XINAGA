@@ -47,8 +47,8 @@ byte* dest;
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "XINAGA_GRAPHICS")
-#pragma rodata-name (push, "XINAGA_GRAPHICS")
+#pragma code-name (push, "XINAGA")
+#pragma rodata-name (push, "XINAGA")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #include "neslib.h"
@@ -89,7 +89,7 @@ const unsigned char attributeset[256] = {
   0x06, 0x06, 0x06, 0x06
   };
 const byte attributeset[256];
-byte ScreenChars[ROWS*COLS];
+//byte *ScreenChars[ROWS*COLS];
 #endif
 #if defined (__C64__)
 #pragma code-name (push, "XINAGA_GRAPHICS")
@@ -327,9 +327,10 @@ void ClearScreen(void)
   #if defined (__NES__)
   ppu_off();
   vrambuf_flush();
-  memset(ScreenChars, ' ', ScreenCharSize); // Clear Chars
+  //memset(ScreenChars, ' ', ScreenCharSize); // Clear Chars
   vram_adr(NTADR_A(0, 0));
-  vram_write(&ScreenChars[0], ScreenCharSize);
+  //vram_write(&ScreenChars[0], ScreenCharSize);
+  vram_fill(' ', ScreenCharSize);  
   memset(&ATTRIBUTE_TABLE[0], 0, 64);
   vram_write(&ATTRIBUTE_TABLE[0], 64);
   ppu_on_all();
@@ -496,7 +497,7 @@ void _SetChar(void)
 
   #if defined (__NES__)
   int offset = SetCharX + YColumnIndex[SetCharY];
-  ScreenChars[offset] = SetCharIndex;
+  //ScreenChars[offset] = SetCharIndex;
   vrambuf_put(NTADR_A(SetCharX,SetCharY), &SetCharIndex, 1);
   if (++charsDrawn >=21)
   {
@@ -537,7 +538,9 @@ void SetColor(byte index, byte x, byte y)
 }
 byte GetChar(byte x, byte y)
 {
+  #if !defined (__NES__)
   return ScreenChars[x + YColumnIndex[y]];
+  #endif
 }
 void PrintString(char *text, byte posx, byte posy, bool fast)
 {
@@ -788,4 +791,12 @@ void ClearBorder(sbyte xPos, sbyte yPos, byte width, byte height)
     {
       DrawLineH(' ', xPos1, yPos1 + x, widthInside2);
     }
+}
+
+void DrawCharset()
+{
+  byte x, y;
+  for (y = 0; y < 16; ++y)
+    for (x = 0; x < 16; ++x)
+      SetChar(x + (y<<4), x + viewportPosX, y + viewportPosY);
 }

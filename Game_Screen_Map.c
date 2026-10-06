@@ -8,7 +8,7 @@
 
 #if defined (__NES__)
 #pragma code-name (push, "MAP")
-#pragma rodata-name (push, "MAP")
+//#pragma rodata-name (push, "MAP")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #endif
@@ -1109,4 +1109,15 @@ screenName MapUpdate()
   }
   ScreenFadeOut();
   return nextScreen;
+}
+
+void DebugMap()
+{
+  LoadMap();
+  memset(&mapQuads[0], 0x02, mapMatrixHeight * mapMatrixWidth);
+  SetTileOrigin(viewportPosX, viewportPosY);
+  LoadMapQuads();
+  //DrawMap();
+  DrawCharStats();
+  while(1);
 }

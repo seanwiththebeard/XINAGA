@@ -1,6 +1,6 @@
+.segment "CODEB_0"
 ;.incbin "tileset.bin"
 
-.segment "CODEB_0"
 ;; Export path: CHR ROM BIN -> CharPad -> Export ASM
 ;;{w:8,h:8,bpp:1,count:512,brev:1,np:2,pofs:8,remap:[0,1,2,4,5,6,7,8,9,10,11,12]};;
 charset_data:
@@ -516,7 +516,6 @@ charset_data:
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-
 ;;
 
 ;.segment "CHARS"

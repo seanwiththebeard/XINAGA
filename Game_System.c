@@ -7,10 +7,10 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "GAME")
-#pragma rodata-name (push, "GAME")
+#pragma code-name (push, "XINAGA")
+//#pragma rodata-name (push, "GAME")
 //#pragma data-name (push, "XRAM")
-#pragma bss-name (push, "XRAM")
+//#pragma bss-name (push, "XRAM")
 #endif
 
 #if defined (__C64__)
@@ -50,17 +50,6 @@ void DebugGraphics()
   //WriteLineMessageWindow("abcdefghijklmnopqrstuvwxyz", 0);
   //WriteLineMessageWindow("01234567890 !#$%^&", 0);
   //WriteLineMessageWindow("*()-=[];':<>,./?", 0);
-  while(1);
-}
-
-void DebugMap()
-{
-  LoadMap();
-  memset(&mapQuads[0], 0x02, mapMatrixHeight * mapMatrixWidth);
-  SetTileOrigin(viewportPosX, viewportPosY);
-  LoadMapQuads();
-  //DrawMap();
-  DrawCharStats();
   while(1);
 }
 
@@ -131,14 +120,6 @@ void DrawLocalMiniMap(bool checkLast, bool clear)
       }
   lastX = MiniMapHighlightX;
   lastY = MiniMapHighlightY;
-}
-
-void DrawCharset()
-{
-  byte x, y;
-  for (y = 0; y < 16; ++y)
-    for (x = 0; x < 16; ++x)
-      SetChar(x + (y<<4), x + viewportPosX, y + viewportPosY);
 }
 
 byte RollDice(byte count, byte diceSize)

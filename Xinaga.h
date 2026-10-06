@@ -178,12 +178,17 @@ extern const byte attributeset[256];
 #define MMC3_WRAM_DISABLE() POKE(0xA001, 0x40)
 #define MMC3_WRAM_ENABLE() POKE(0xA001, 0x80)
 #define MMC3_WRAM_READ_ONLY() POKE(0xA001, 0xC0)
-extern byte ScreenChars[ROWS*COLS];
+//extern byte ScreenChars[ROWS*COLS];
 extern char ATTRIBUTE_TABLE[0x40];
 extern const char PALETTE_0[16];
 extern const char PALETTE_1[16];
 extern const char PALETTE_2[16];
 extern const char PALETTE_3[16];
+
+#undef consolePosX
+#define consolePosX 16
+#undef consoleWidth
+#define consoleWidth 15
 #endif
 
 #if defined(MSX)
@@ -242,7 +247,7 @@ extern byte SetCharY;
 
 void _SetChar(void);
 #define SetChar(charindex, x, y) do {SetCharIndex = (charindex); SetCharX = (x); SetCharY = (y); _SetChar();}while(0)
-//void ClearScreen(void);
+void ClearScreen(void);
 void DrawLineH(byte index, sbyte x, sbyte y, byte length);
 //void DrawLineV(byte index, byte x, byte y, byte length);
 void DrawBorder(char *text, sbyte xPos, sbyte yPos, byte width, byte height, bool fill);
