@@ -20,7 +20,7 @@
 //screenName DrawAddCharacterScreen(void){return EditParty;}
 
 ////#link "Game_Screen_MapGen.c"
-void GenerateMap(byte index){index;};
+void GenerateMap(byte index){index;}
 screenName Update_MapGen(void){return EditParty;}
 
 
