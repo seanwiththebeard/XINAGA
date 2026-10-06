@@ -47,8 +47,8 @@ byte* dest;
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "XINAGA")
-#pragma rodata-name (push, "XINAGA")
+//#pragma code-name (push, "XINAGA")
+//#pragma rodata-name (push, "XINAGA")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #include "neslib.h"

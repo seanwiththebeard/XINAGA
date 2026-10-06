@@ -2,10 +2,10 @@
 #if defined(__APPLE2__)
 //#pragma rodata-name (push, "LC")
 #endif
+
 #pragma rodata-name (push, "GAME_DISKDATA")
 
 #if defined(__C64__)
-
 /*{pal:"c64",layout:"c64"}*/
 const char PALETTE[16] = {
 //This has to be here or the colors aren't there in the 8BWS asset editor, they draw from these definitions

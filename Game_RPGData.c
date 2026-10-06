@@ -11,6 +11,7 @@
 //#pragma rodata-name (push, "GAME")
 //#pragma data-name (push, "XRAM")
 #pragma bss-name (push, "XRAM")
+#pragma rodata-name (push, "GAME_RPGDATA")
 #endif
 
 #if defined (__C64__)

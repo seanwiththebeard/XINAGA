@@ -7,8 +7,8 @@
 #endif
 
 #if defined (__NES__)
-#pragma code-name (push, "XINAGA")
-//#pragma rodata-name (push, "CODE")
+#pragma code-name (push, "GAME_RPGDATA")
+#pragma rodata-name (push, "GAME_RPGDATA")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
 #endif
@@ -20,7 +20,6 @@
 
 #define DefaultScreen Title
 screenName currentScreen;
-byte strTemp[ConsoleBufferLength];
 
 struct Session Sessions[1];
 

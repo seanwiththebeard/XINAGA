@@ -36,7 +36,6 @@
 
 //#pragma code-name (push, "STARTUP")
 //#pragma rodata-name (push, "STARTUP")
-byte strTemp[ConsoleBufferLength];
 
 void PPU_Color(byte monochrome, byte red, byte green, byte blue)
 {
@@ -107,16 +106,9 @@ void UploadCharset()
   ppu_off();
   vram_adr(0);
   vram_write(&chrdata[x], 0x2000);
-  //vram_write(0xff, 0x2000);
-  
-  
-  //vram_adr(NTADR_A(0,0));
-  //vram_fill(0, ROWS*COLS);
-
-  ppu_on_all();
   pal_col(0, 0x0f);
-  //vrambuf_put(NTADR_A(0,0)+(ROWS*COLS), &ATTRIBUTE_TABLE[0], 64);
-  
+  vrambuf_put(NTADR_A(0,0)+(ROWS*COLS), &ATTRIBUTE_TABLE[0], 64);
+  ppu_on_all();
   //wait_vblank(1);
 }
 
@@ -199,44 +191,7 @@ void main(void) //Must be in $E000-$FFFF??
   
   ResizeMessageWindow();  
   WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
-
+  while(1);
   
   //RunGame(EditParty);
-
-  //PPU_Color(0, 0, 1, 0);
-  //DebugGraphics();
-        //DebugMap();
-  //DrawCharset();
-  //LoadMap();
-  //DrawMiniMap(false);
-
-  //ResizeMessageWindow(consolePosX, ROWS - 9, consoleWidth, 6);
-
-  //SetAttrib(0, 0, 2);
-  //SetAttrib(2, 2, 2);
-  //SetAttrib(4, 4, 2);
-  //SetAttrib(12, 0, 2);
-  //SetAttrib(20, 0, 2);
-  //SetAttrib(24, 0, 2);
-  
-  while(1);
-  {
-    byte x, y, z;
-    for (z = 1; z < 4; ++z)
-    {
-      for (y = viewportPosY; y < viewportPosY + 16; y+=2)
-        for (x = viewportPosX; x < viewportPosX + 16; x+=2);
-          //SetAttrib(x, y, z, false);
-      //UpdateAttributes();
-      //wait_vblank(7);
-    }
-
-    //WriteLineMessageWindow("The Quick Brown Fox Jumps Over The Lazy Dog@", 0);
-    //WriteLineMessageWindow("ABCDEFGHIJKL MNOPQRSTUVWXYZ@", 0);
-    //WriteLineMessageWindow("abdefghijklmnopqrstuvwxyz@", 0);
-    //WriteLineMessageWindow("01234567890 !#$%^&@", 0);
-    //WriteLineMessageWindow("*()-=[];':<>,./?@", 0);
-  }
-  
-  //DebugGraphics();
 }

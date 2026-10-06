@@ -17,6 +17,8 @@
 #pragma rodata-name (push, "XINAGA_CONSOLE")
 #endif
 
+byte strTemp[ConsoleBufferLength];
+
 //Console Buffer
 int contentOffset; //Offset of Last Line
 byte consoleContents[consoleHeight * consoleWidth];
