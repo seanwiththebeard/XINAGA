@@ -108,9 +108,9 @@ const RaceDescriptionDef RaceDescription[8] =
    12,
    ATTRIB_INT, //ATTRIB_BONUS
    ATTRIB_CHA, //ATTRIB_PENALTY
-   0b10010001, //TRAITS BreathWeapon, Subterranean, Lunacy
-   0b11111111, //ELEMENT_WEAKNESS All but fire
-   0b00000000, //ELEMENT_RESIST Hope, Fire
+   0b01010001, //TRAITS BreathWeapon, Subterranean, Lunacy
+   0b01111111, //ELEMENT_WEAKNESS All but fire
+   0b10001000, //ELEMENT_RESIST Hope, Fire
    0b00000000}, //CONDITION_RESIST
 
   {"Construct", // Never levels up, strong early on but expensive to upgrade stats
@@ -127,22 +127,32 @@ const RaceDescriptionDef RaceDescription[8] =
   char *NAME;
   byte HITDICE;
   byte ATTRIB_DEP;
+
   byte WEAPON_PROF;
+  //Type = Slash, Bludgeon, Pierce, Casting
+  //Length = Small, One-Handed, Two-Handed, Ranged
+  //Slash Bludgeon Pierce Casting Small One-Handed Two-Handed Ranged
+
   byte ARMOR_PROF;
+  //Weight = Magic, Clothes, Light, Heavy
+  //Material = Cloth, Plant, Leather, Metal
+  //Magic Clothes Light Heavy Cloth Plant Leather Metal
+
   byte SPELLS_WIZ;
   byte SPELLS_CLER;
   byte SONGS_BARD;
+  byte ATTACKS_MULTIPLE;
   */
 const ClassDescriptionDef ClassDescription[8]=
 {
-  {"Fighter", 8, ATTRIB_STR, 255, 255, 0, 0, 0},
-  {"Ranger", 8, ATTRIB_WIS, 0, 0, 0, 0, 0},
-  {"Wizard", 4, ATTRIB_INT, 0, 0, 255, 0, 0},
-  {"Barbarian", 6, ATTRIB_CON, 0, 0, 0, 0, 0},
-  {"Monk", 6, ATTRIB_CON, 0, 0, 0, 0, 0},
-  {"Bard", 4, ATTRIB_CHA, 0, 0, 0, 0, 255},
-  {"Thief", 4, ATTRIB_DEX, 0, 0, 0, 0, 0},
-  {"Cleric", 6, ATTRIB_WIS, 0, 0, 0, 0, 0}
+  {"Fighter", 8, ATTRIB_STR, 0b11101111, 255, 0, 0, 0, 1},
+  {"Ranger", 8, ATTRIB_WIS, 0b10101101, 0b11101110, 0, 0, 0, 2},
+  {"Wizard", 4, ATTRIB_INT, 0b01111000, 0b11001100, 255, 0, 0, 1},
+  {"Barbarian", 6, ATTRIB_CON, 0b11100010, 0b00110110, 0, 0, 0, 2},
+  {"Monk", 6, ATTRIB_CON, 0b01000010, 0b11001000, 0, 0, 0, 4},
+  {"Bard", 4, ATTRIB_CHA, 0b11111100, 0b10001110, 0, 0, 255, 1},
+  {"Thief", 4, ATTRIB_DEX, 0b11101101, 0b11001000, 0, 0, 0, 2},
+  {"Cleric", 6, ATTRIB_WIS, 0b01011101, 0b11101010, 0, 255, 0, 1}
 };
 
 const sbyte AbilityModifier[20] = {-3, -3, -3, -3, -3, -2, -2, -1, -1, -1, 0, 0, 0, 0, +1, +1, +1, +2, +2, +3};
@@ -186,6 +196,7 @@ const byte WeaponPrice[] =
 const char ArmorName[16][16] =
 {
   //Weight = Magic, Clothes, Light, Heavy
+  //Material = Cloth, Plant, Leather, Metal
   //Cloth
   "RegalTunic", "Clothes", "Robe", "Overcoat",
   //Plant

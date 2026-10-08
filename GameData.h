@@ -173,6 +173,7 @@ typedef struct
   byte SPELLS_WIZ;
   byte SPELLS_CLER;
   byte SONGS_BARD;
+  byte ATTACKS_MULTIPLE;
 }ClassDescriptionDef;
 extern const ClassDescriptionDef const ClassDescription[8];
 extern const ClassDescriptionDef const MonsterClass[];
