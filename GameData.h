@@ -68,6 +68,7 @@ extern byte MapIndex;
 
 void RunGame(screenName startingScreen);
 void DrawMiniMap(bool highlightPlayer);
+void DrawInterface(void);
 void WaitForInput(void);
 void LoadMap(void);
 extern const struct ScreenQuadDef OverworldQuadDef;
@@ -76,6 +77,8 @@ extern const struct ScreenQuadDef DungeonQuadDef;
 extern byte MiniMapHighlightX;
 extern byte MiniMapHighlightY;
 void DrawLocalMiniMap(bool checkLast, bool clear);
+
+void DrawMoonPhase(void);
 
 //Add Character
 screenName DrawAddCharacterScreen(void);
