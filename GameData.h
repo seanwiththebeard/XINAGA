@@ -70,7 +70,6 @@ extern byte MapIndex;
 void RunGame(screenName startingScreen);
 void DrawMiniMap(bool highlightPlayer);
 void DrawInterface(void);
-void WaitForInput(void);
 void LoadMap(void);
 extern const struct ScreenQuadDef OverworldQuadDef;
 extern const struct ScreenQuadDef DungeonQuadDef;

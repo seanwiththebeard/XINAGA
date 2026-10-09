@@ -431,7 +431,7 @@ void GetActionSelection(void)
   else
   {
     SelectMonsterAction();
-    WaitForInput();
+    //WaitForInput();
   }
 }
 
@@ -876,7 +876,7 @@ screenName Update_Combat(void)
     DoCombatRound();
     UpdateInput();
   }
-  WaitForInput();
+  //WaitForInput();
   while (!InputFire())
   {
     UpdateInput();

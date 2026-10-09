@@ -723,7 +723,7 @@ static bool CheckCollision(byte charIndex, direction dir)
             SkipLineMessageWindow();
             WriteLineMessageWindow("Enemy attacks!", 1);
             SkipLineMessageWindow();
-            WaitForInput();
+            //WaitForInput();
           }
           return true;
         }
@@ -1093,7 +1093,7 @@ screenName MapUpdate()
               MiniMapWidth = 16;
               MiniMapHeight = 16;
               DrawMiniMap(true);
-              WaitForInput();DrawEntireMap(true);
+              //WaitForInput();DrawEntireMap(true);
               ScreenFadeOut();
               break;
             case 4:

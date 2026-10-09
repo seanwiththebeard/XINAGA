@@ -1,8 +1,4 @@
 #include "Xinaga.h"
-#if defined(__APPLE2__)
-//#pragma rodata-name (push, "LC")
-#endif
-
 #pragma rodata-name (push, "GAME_DISKDATA")
 
 #if defined(__C64__)

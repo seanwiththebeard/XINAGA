@@ -321,6 +321,7 @@ bool InputDown(void);
 bool InputLeft(void);
 bool InputRight(void);
 bool InputFire(void);
+//void WaitForInput(void);
 
 //	Text
 void PrintString(char *text, byte posx, byte posy, bool fast);

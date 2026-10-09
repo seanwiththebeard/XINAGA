@@ -188,7 +188,7 @@ void MenuGetClass()
       HP = HPMAX;
       AddToRoster();
     }
-      WaitForInput();
+      //WaitForInput();
 }
 
 void MenuGetRace()

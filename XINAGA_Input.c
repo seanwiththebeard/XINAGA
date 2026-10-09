@@ -237,6 +237,7 @@ bool InputFire(void)
 
   return false;
 }
+/*
 void WaitForInput(void)
 {
   bool ex = false;
@@ -248,4 +249,4 @@ void WaitForInput(void)
     if (InputFire())
       ex = true;
   }
-}
+}*/
