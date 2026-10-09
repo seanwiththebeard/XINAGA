@@ -421,7 +421,7 @@ void InitializeGraphics(void)
   SetBG(ColorBG);
   SetBorder(ColorBorder);
 
-  ScreenChars = (byte*)(bank * (16<<10) + (screenpos <<10));
+  ScreenChars = (byte*)(bank * (16 << 10) + (screenpos << 10));
   memcpy((byte*)(bank * (16<<10) + (charpos <<11)), (byte*)&characterset[0], 2048);
   memcpy(&attributeset[0], &attributesDefault[0], 256);
 
