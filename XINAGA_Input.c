@@ -15,9 +15,7 @@
 #pragma rodata-name (push, "XINAGA")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
-// include CC65 NES Header (PPU)
 #include <nes.h>
-// include NESLIB header
 #include "neslib_mod.h"
 char pad;
 char padTemp;
@@ -45,11 +43,6 @@ sbyte key, keyTemp;
 byte keyIgnore;
 bool ChangedState;
 
-void InitializeInput()
-{
-  #if (__C64__)
-  #endif
-}
 bool InputChanged(void)
 {
   #if defined(__APPLE2__)
@@ -150,6 +143,7 @@ bool InputDown(void)
   if ((key == 's' || key == 'S'))
     return true;
   #endif
+  
   #if defined(__APPLE2__)
   if (key == 's' || key == 'S')
     return true;
@@ -218,6 +212,7 @@ bool InputFire(void)
   if (key == ' ')
     return true;
   #endif
+  
   #if defined(__APPLE2__)
   if (key == ' ')
     return true;

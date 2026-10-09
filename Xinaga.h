@@ -312,7 +312,6 @@ void DiskSave(char *filename, byte *source, int size);
 void DiskLoad(char *filename, byte *dest, int size);
 
 //Input
-void InitializeInput(void);
 void UpdateInput(void);
 bool InputChanged(void);
 //bool NoInput(void);

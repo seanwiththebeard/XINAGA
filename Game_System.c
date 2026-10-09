@@ -107,7 +107,6 @@ void SwitchScreen(screenName screen)
 void RunGame(screenName startingScreen)
 {
   srand(0);
-  InitializeInput();
   InitializeGraphics();
   ResizeMessageWindow();
   //ClearScreen();
