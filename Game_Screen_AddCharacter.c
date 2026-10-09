@@ -19,7 +19,6 @@
 #endif
 
 int rands;
-screenName nextScreen;
 bool exitWindow;
 sbyte CurrentCharacter;
 byte HPMAX;

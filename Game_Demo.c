@@ -20,6 +20,7 @@
 
 #define DefaultScreen Title
 screenName currentScreen;
+screenName nextScreen;
 
 struct Session Sessions[1];
 
