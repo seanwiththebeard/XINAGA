@@ -1,4 +1,3 @@
-
 #include "Xinaga.h"
 #ifndef _NESLIB_H
 #define _NESLIB_H
