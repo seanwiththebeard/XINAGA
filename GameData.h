@@ -140,6 +140,7 @@ typedef struct Session
         int GOLD, STEPS, CARRYING_WEIGHT, CARRYING_CAPACITY;
         byte PartyChars[4], SOLAR, LUNAR, MINAR;
 };
+
 //typedef struct SavedGame
 //{
         //struct Session gameSessions[4];
@@ -150,6 +151,9 @@ extern struct Session Sessions[1];
 byte CountParty(void);
 
 struct playerChar *getPartyMember(byte index);
+
+extern struct playerChar *startRoster;
+extern struct playerChar *startParty;
 
 //RPGData
 typedef struct
