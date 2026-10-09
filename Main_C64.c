@@ -12,7 +12,6 @@
 //#link "XINAGA_Audio.c"
 //#link "XINAGA_Console.c"
 
-//#link "Game_Demo.c"
 //#link "Game_System.c"
 //#link "Game_RPGData.c"
 //#link "Game_Screen_AddCharacter.c"
@@ -20,11 +19,7 @@
 //#link "Game_Screen_Map.c"
 //#link "Game_Screen_Combat.c"
 
-//#resource "savegame"
-
-
 void main(void)
 {
-  nextScreen = EditParty;
-  RunGame(nextScreen);
+  RunGame(EditParty);
 }
