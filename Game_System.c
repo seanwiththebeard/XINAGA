@@ -351,15 +351,15 @@ void TickMoonPhase() //The SOLUS and the LUNUS and the MOONUS //The SUUN, LUUN, 
     if (moonA > 3)
     {
       moonA = 0;
-            ++Sessions[0].MINAR;
-            if (Sessions[0].MINAR == 24)
+            ++Sessions[0].SUUN;
+            if (Sessions[0].MUUN == 24)
             {
-                    Sessions[0].MINAR = 0;
-                    ++Sessions[0].LUNAR;
-                    if (Sessions[0].LUNAR == 10)
+                    Sessions[0].MUUN = 0;
+                    ++Sessions[0].LUUN;
+                    if (Sessions[0].LUUN == 10)
                     {
-                            Sessions[0].LUNAR = 0;
-                            ++Sessions[0].SOLAR;
+                            Sessions[0].LUUN = 0;
+                            ++Sessions[0].SUUN;
                     }
             }
     }

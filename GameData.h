@@ -138,7 +138,7 @@ typedef struct Session
 {
         struct playerChar RosterChars[12];
         int GOLD, STEPS, CARRYING_WEIGHT, CARRYING_CAPACITY;
-        byte PartyChars[4], SOLAR, LUNAR, MINAR;
+        byte PartyChars[4], SUUN, LUUN, MUUN;
 };
 
 //typedef struct SavedGame

@@ -54,7 +54,7 @@ void DrawPartyStats() //Gold, steps, time
         ConsoleBufferPrint(viewportPosX, viewportPosY + 5);
         sprintf(strTemp, "STEPS:       %05u", Sessions[0].STEPS);
         ConsoleBufferPrint(viewportPosX, viewportPosY + 6);
-        sprintf(strTemp, "YEAR%02i MON%02i DAY%02i", Sessions[0].SOLAR, Sessions[0].LUNAR, Sessions[0].MINAR);
+        sprintf(strTemp, "YEAR%02i MON%02i DAY%02i", Sessions[0].SUUN, Sessions[0].LUUN, Sessions[0].MUUN);
         ConsoleBufferPrint(viewportPosX, viewportPosY + 7);
 }
 
