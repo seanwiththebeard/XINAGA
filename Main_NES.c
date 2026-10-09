@@ -17,7 +17,7 @@
 ////#link "Game_Screen_Map.c"
 ////#link "Game_Screen_Combat.c"
 
-#include "neslib.h"
+#include "neslib_mod.h"
 // VRAM buffer module
 #include "vrambuf.h"
 //#link "vrambuf.c"

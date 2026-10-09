@@ -51,7 +51,7 @@ byte* dest;
 //#pragma rodata-name (push, "XINAGA")
 //#pragma data-name (push, "XRAM")
 //#pragma bss-name (push, "XRAM")
-#include "neslib.h"
+#include "neslib_mod.h"
 #include "vrambuf.h"
 //#link "vrambuf.c"
 byte tilesPalette[TileCount];

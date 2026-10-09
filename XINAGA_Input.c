@@ -18,7 +18,7 @@
 // include CC65 NES Header (PPU)
 #include <nes.h>
 // include NESLIB header
-#include "neslib.h"
+#include "neslib_mod.h"
 char pad;
 char padTemp;
 char padStateLast;
