@@ -27,26 +27,28 @@
   byte ELEMENT_WEAKNESS;
   byte ELEMENT_RESIST;
   byte CONDITION_RESIST;
-
-  //Traits
-#define TRAIT_DARKVISION 0 //See without fire in combat in low-light environments
-#define TRAIT_BREATHWEAPON 1 //Create fire projectile adjacent to character for current turn
-#define TRAIT_TOUGHSKIN 2 //-4 on evasion rolls but halves physical damage
-#define TRAIT_SUBTERRANEAN 3 //+1 for all rolls below ground
-#define TRAIT_TOPSIDER 4 //+1 for all rolls above ground
-#define TRAIT_NIMBLE 5 //+2 for all DEX rolls
-#define TRAIT_AFFABLE 6 //+2 for all CHR rolls
-#define TRAIT_LUNACY 7 //+2 for all rolls for each full moon
+  byte CLASS_ALLOW;
   */
 
-#define ELEMENT_FIRE 0
-#define ELEMENT_WATER 1
-#define ELEMENT_ICE 2
-#define ELEMENT_WIND 3
-#define ELEMENT_HOPE 4
-#define ELEMENT_EARTH 5
-#define ELEMENT_DARK 6
-#define ELEMENT_ETHEREAL 7
+/*
+  Traits
+  Darkvision, Breathweapon, Toughskin, Subterranean, Topsider, Nimble, Affable, Lunacy
+*/
+
+/*
+  Elements
+  Fire, Water, Ice, Wind, Hope, Earth, Dark, Ethereal
+*/
+
+/*
+  Classes
+  "Fighter", "Ranger", "Wizard", "Barbarian", "Monk", "Bard", "Thief", "Cleric"
+*/
+
+/*
+  Skills
+  Thievery, Hide, Calm Animal, Calm Undead, Calm Humanoid, Cast Cleric, Cast Mage, Cast Bard
+*/
 
 const RaceDescriptionDef RaceDescription[8] =
 {
@@ -57,7 +59,8 @@ const RaceDescriptionDef RaceDescription[8] =
    0b00001000, //TRAITS Topsider
    0b00000000, //ELEMENT_WEAKNESS None
    0b00000000, //ELEMENT_RESIST None
-   0b00000000}, //CONDITION_RESIST None
+   0b00000000, //CONDITION_RESIST None
+   0b11111111}, //CLASS_ALLOW All
 
   {"Effel",
    8,
@@ -66,7 +69,8 @@ const RaceDescriptionDef RaceDescription[8] =
    0b00001001, //TRAITS Topsider, Lunacy
    0b00010010, //ELEMENT_WEAKNESS Wind, Dark
    0b01000100, //ELEMENT_RESIST Earth, Water
-   0b00000000}, //CONDITION_RESIST
+   0b00000000, //CONDITION_RESIST
+   0b01101111}, //CLASS_ALLOW "Ranger", "Wizard", "Monk", "Bard", "Thief", "Cleric"
 
   {"Duerf",
    12,
@@ -75,7 +79,8 @@ const RaceDescriptionDef RaceDescription[8] =
    0b10010000, //TRAITS Darkvision, Subterranean
    0b01100000, //ELEMENT_WEAKNESS Water, Ice
    0b10000100, //ELEMENT_RESIST Earth, Fire
-   0b00000000}, //CONDITION_RESIST
+   0b00000000, //CONDITION_RESIST
+   0b10111101}, //CLASS_ALLOW "Fighter", "Wizard", "Barbarian", "Monk", "Bard", "Cleric"
 
   {"Lefling",
    6,
@@ -84,7 +89,8 @@ const RaceDescriptionDef RaceDescription[8] =
    0b00000110, //TRAITS Nimble, Affable
    0b10000010, //ELEMENT_WEAKNESS Fire, Dark
    0b01100000, //ELEMENT_RESIST Water, Ice
-   0b00000000}, //CONDITION_RESIST
+   0b00000000, //CONDITION_RESIST
+   0b11101110}, //CLASS_ALLOW "Fighter", "Ranger", "Barbarian", "Monk", "Bard", "Thief"
 
   {"Mork", //Not quite a puppet, not quite pork
    12,
@@ -93,16 +99,18 @@ const RaceDescriptionDef RaceDescription[8] =
    0b00101000, //TRAITS Toughskin, Topsider
    0b00100001, //ELEMENT_WEAKNESS Ice, Ethereal
    0b00001100, //ELEMENT_RESIST Hope, Earth
-   0b00000000}, //CONDITION_RESIST
-
-  {"Fosz", //Sort of like a rakshasa, but more chill
+   0b00000000, //CONDITION_RESIST
+   0b01111101}, //CLASS_ALLOW "Fighter", "Ranger", "Wizard", "Barbarian", "Monk", "Bard", "Thief", "Cleric"
+  
+  {"Fosz", //Sort of like a rakshasa, but less intense
    8,
    ATTRIB_DEX, //ATTRIB_BONUS
    ATTRIB_INT, //ATTRIB_PENALTY
    0b00001010, //TRAITS Topsider, Affable
-   0b00000000, //ELEMENT_WEAKNESS
+   0b10000000, //ELEMENT_WEAKNESS Fire
    0b00000000, //ELEMENT_RESIST
-   0b00000000}, //CONDITION_RESIST
+   0b00000000, //CONDITION_RESIST
+   0b01011110}, //CLASS_ALLOW  "Ranger", "Barbarian", "Monk", "Bard", "Thief"
 
   {"Drecon", //Poser, tryhard, stand-in for regular orcs
    12,
@@ -111,17 +119,19 @@ const RaceDescriptionDef RaceDescription[8] =
    0b01010001, //TRAITS BreathWeapon, Subterranean, Lunacy
    0b01111111, //ELEMENT_WEAKNESS All but fire
    0b10001000, //ELEMENT_RESIST Hope, Fire
-   0b00000000}, //CONDITION_RESIST
-
+   0b00000000, //CONDITION_RESIST
+   0b11110110}, //CLASS_ALLOW "Fighter", "Ranger", "Wizard", "Barbarian", "Bard", "Thief"
+   
   {"Construct", // Never levels up, strong early on but expensive to upgrade stats
    10,
    ATTRIB_STR, //ATTRIB_BONUS
    ATTRIB_DEX, //ATTRIB_PENALTY
-   0b00000000, //TRAITS
-   0b00000000, //ELEMENT_WEAKNESS None
-   0b11111111, //ELEMENT_RESIST All
-   0b11111111} //CONDITION_RESIST All
-};
+   0b00000000, //TRAITS NONE
+   0b11111111, //ELEMENT_WEAKNESS ALL
+   0b00000000, //ELEMENT_RESIST NONE
+   0b11111111, //CONDITION_RESIST All
+   0b11111111}, //CLASS_ALLOW All
+  };
 
 /*
   char *NAME;
@@ -228,9 +238,10 @@ const byte ArmorPrice[] =
 #define SKILL_HIDE 1
 #define SKILL_CALMANIMAL 2
 #define SKILL_CALMUNDEAD 3
-#define SKILL_CASTCLERIC 4
-#define SKILL_CASTMAGE 5
-#define SKILL_CASTBARD 6
+#define SKILL_CALMHUMANOID 4
+#define SKILL_CASTCLERIC 5
+#define SKILL_CASTMAGE 6
+#define SKILL_CASTBARD 7
 
 //Traits
 #define TRAIT_DARKVISION 0 //See without fire in combat in low-light environments
@@ -251,6 +262,16 @@ const byte ArmorPrice[] =
 #define CONDITION_BERSERK 5 //Barbarians enter combat with status of berserk for first 4 turns
 #define CONDITION_ZOMBIE 6
 #define CONDITION_VAMPIRE 7
+
+//Elements
+#define ELEMENT_FIRE 0
+#define ELEMENT_WATER 1
+#define ELEMENT_ICE 2
+#define ELEMENT_WIND 3
+#define ELEMENT_HOPE 4
+#define ELEMENT_EARTH 5
+#define ELEMENT_DARK 6
+#define ELEMENT_ETHEREAL 7
 
 //Item Effects 0-16
 //Item Potency 0-16

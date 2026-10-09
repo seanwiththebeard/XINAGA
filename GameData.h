@@ -159,6 +159,7 @@ typedef struct
   byte ELEMENT_WEAKNESS;
   byte ELEMENT_RESIST;
   byte CONDITION_RESIST;
+  byte CLASS_ALLOW;
 }RaceDescriptionDef;
 extern const RaceDescriptionDef const RaceDescription[8];
 extern const RaceDescriptionDef const MonsterRace[];
