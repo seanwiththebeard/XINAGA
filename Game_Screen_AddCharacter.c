@@ -570,8 +570,8 @@ screenName DrawAddCharacterScreen()
         DrawStuff();
   if (CountParty() == 0)
   {
-    //FillParty();
-    //return MapGen;
+    FillParty();
+    return Combat;
   }
         //while(CountParty() != 4)
         //

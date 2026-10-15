@@ -137,7 +137,7 @@ void Initialize(void)
   DrawCharStats();
   DrawCombatMap();
 
-  ResizeMessageWindow();
+  //ResizeMessageWindow();
   }
 
 
@@ -221,6 +221,11 @@ void GetMonsters(void)
     combatMonster[monstersSet].CON = 10;
     combatMonster[monstersSet].WEAPON = 1;
     combatMonster[monstersSet].ARMOR = 1;
+
+    ConsoleBufferAdd(MonsterClass[combatMonster[monstersSet].CLASS].NAME);
+    ConsoleBufferAdd(MonsterRace[combatMonster[monstersSet].RACE].NAME);
+    WriteLineMessageWindow(strTemp, 0);
+    
     ++monstersSet;
 
     ++SelectedCharacter;
@@ -865,7 +870,7 @@ void DrawCharacters(void)
 screenName Update_Combat(void)
 {
   Initialize();
-  ResizeMessageWindow();
+  //ResizeMessageWindow();
   //randseed = 0;
   //srand(randseed);
   ScreenFadeIn();
